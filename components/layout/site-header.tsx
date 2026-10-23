@@ -44,6 +44,7 @@ import {
 
 type SiteHeaderProps = {
   quoteCount?: number
+  onQuoteClick?: () => void
 }
 
 // â”€â”€â”€ Static data â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -239,7 +240,7 @@ function MobileAccordion({ label, children }: { label: string; children: React.R
 
 // â”€â”€â”€ SiteHeader â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-export function SiteHeader({ quoteCount = 0 }: SiteHeaderProps) {
+export function SiteHeader({ quoteCount = 0, onQuoteClick }: SiteHeaderProps) {
   const pathname = usePathname()
   const router = useRouter()
   const [menuOpen, setMenuOpen] = useState(false)
@@ -278,8 +279,8 @@ export function SiteHeader({ quoteCount = 0 }: SiteHeaderProps) {
   }, [pathname])
 
   const goToCart = () => {
-    if (onCartClick) { onCartClick(); return }
-    router.push('/productos')
+    if (onQuoteClick) { onQuoteClick(); return }
+    router.push('/cotizacion')
   }
 
   const submitSearch = (e: React.FormEvent<HTMLFormElement>) => {
@@ -321,7 +322,7 @@ export function SiteHeader({ quoteCount = 0 }: SiteHeaderProps) {
             <span className="hidden items-center gap-1.5 md:flex">
               <Clock className="size-3.5 text-[#60A5FA]" /> Lun–Sáb · 9:00 a 18:00
             </span>
-            <Link href="/cotizador" className="transition hover:text-white">Ventas corporativas</Link>
+            <Link href="/cotizacion" className="transition hover:text-white">Ventas corporativas</Link>
             <Link href="/soporte-ti" className="transition hover:text-white">Mesa de ayuda</Link>
           </div>
         </div>

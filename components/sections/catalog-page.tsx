@@ -14,6 +14,7 @@ import {
   X,
 } from 'lucide-react'
 import { ProductCard } from '@/components/cards/product-card'
+import { QuotePanel } from '@/components/sections/quote-panel'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { SiteHeader } from '@/components/layout/site-header'
 import { categories, products } from '@/lib/catalog'
@@ -35,6 +36,7 @@ export function CatalogPage({
   initialCategory = 'Todas',
 }: CatalogPageProps) {
   const quote = useQuote()
+  const [showQuote, setShowQuote] = useState(false)
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [query, setQuery] = useState(initialQuery)
   const [category, setCategory] = useState(initialCategory)
@@ -102,7 +104,7 @@ export function CatalogPage({
 
   return (
     <main className="min-h-screen bg-white text-[#0F172A]">
-      <SiteHeader quoteCount={quote.count} />
+      <SiteHeader quoteCount={quote.count} onQuoteClick={() => setShowQuote(true)} />
 
       <div className="border-b border-[#E2E8F0] bg-white">
         <div className="mx-auto flex max-w-[1280px] items-center gap-2 px-4 py-3 text-xs text-[#475569] sm:px-6 lg:px-8">
@@ -298,6 +300,18 @@ export function CatalogPage({
       )}
 
       <SiteFooter />
+
+      {showQuote && (
+        <QuotePanel
+          items={quote.quote.items}
+          count={quote.count}
+          onClose={() => setShowQuote(false)}
+          onAdd={quote.addItem}
+          onRemove={quote.removeItem}
+          onSetQty={quote.updateItemQuantity}
+          onUpdateNotes={quote.updateItemNotes}
+        />
+      )}
     </main>
   )
 }
