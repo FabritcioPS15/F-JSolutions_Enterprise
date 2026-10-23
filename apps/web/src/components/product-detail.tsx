@@ -13,7 +13,7 @@ import {
   Plus,
   Share2,
 } from 'lucide-react'
-import { SiteHeader } from '@/components/layout/site-header'
+import { EnhancedHeader } from '@/components/layout/enhanced-header'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { QuotePanel } from '@/components/sections/quote-panel'
 import { findProductBySlug, type Product } from '@/lib/catalog'
@@ -37,7 +37,7 @@ export function ProductDetail({ slug }: ProductDetailProps) {
   if (!product) {
     return (
       <main className="min-h-screen bg-white text-[#0F172A]">
-        <SiteHeader />
+        <EnhancedHeader />
         <section className="mx-auto max-w-[1280px] px-4 py-20 sm:px-6 lg:px-8">
           <h1 className="text-2xl font-bold">Producto no encontrado</h1>
           <p className="mt-2 text-[#475569]">El producto que buscas no existe o ha sido eliminado.</p>
@@ -79,7 +79,7 @@ export function ProductDetail({ slug }: ProductDetailProps) {
 
   return (
     <main className="min-h-screen bg-white text-[#0F172A]">
-      <SiteHeader quoteCount={quote.count} onQuoteClick={() => setShowQuote(true)} />
+      <EnhancedHeader quoteCount={quote.count} onQuoteClick={() => setShowQuote(true)} />
 
       <div className="border-b border-[#E2E8F0] bg-white">
         <div className="mx-auto flex max-w-[1280px] items-center gap-2 px-4 py-3 text-xs text-[#475569] sm:px-6 lg:px-8">

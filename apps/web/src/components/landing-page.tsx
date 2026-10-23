@@ -12,7 +12,7 @@ import {
   X,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { SiteHeader } from '@/components/layout/site-header'
+import { EnhancedHeader } from '@/components/layout/enhanced-header'
 import { ProductCard } from '@/components/cards/product-card'
 import { categories, products } from '@/lib/catalog'
 import { useQuote } from '@/lib/use-quote'
@@ -50,7 +50,7 @@ export function LandingPage() {
 
   return (
     <main className="min-h-screen overflow-x-clip bg-[#f8fafc] text-[#172033]">
-      <SiteHeader quoteCount={quote.count} />
+      <EnhancedHeader quoteCount={quote.count} />
 
       <section id="inicio" className="mx-auto grid max-w-[1280px] gap-4 px-4 pb-5 pt-5 sm:px-6 lg:grid-cols-[1fr_320px] lg:px-8">
         <div className="relative min-h-[350px] overflow-hidden rounded-2xl bg-[#102a56] p-7 text-white sm:p-12">

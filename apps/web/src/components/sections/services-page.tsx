@@ -29,7 +29,7 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 import { SiteFooter } from '@/components/layout/site-footer'
-import { SiteHeader } from '@/components/layout/site-header'
+import { EnhancedHeader } from '@/components/layout/enhanced-header'
 
 type ServiceItem = {
   icon: LucideIcon
@@ -231,7 +231,7 @@ const faqs = [
 export function ServicesPage() {
   return (
     <main className="min-h-screen bg-white text-[#0F172A]">
-      <SiteHeader />
+      <EnhancedHeader />
 
       <section className="relative overflow-hidden bg-white">
         <div className="pointer-events-none absolute -right-32 -top-32 size-96 rounded-full bg-[#22D3EE]/10 blur-3xl" />
