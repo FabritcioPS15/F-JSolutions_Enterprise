@@ -102,6 +102,7 @@ const baseProducts: Product[] = [
     images: [
       'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1525547719571-a2d4ac8945e2?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=800&q=80&auto=format&fit=crop',
     ],
     specs: ['AMD Ryzen 5 7520U', '16 GB RAM · 512 GB SSD', 'Pantalla 15.6" FHD', 'Windows 11 Home'],
     availability: 'available',
@@ -146,6 +147,7 @@ const baseProducts: Product[] = [
     images: [
       'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&q=80&auto=format&fit=crop',
       'https://images.unsplash.com/photo-1593640408182-31c70c8268f5?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?w=800&q=80&auto=format&fit=crop',
     ],
     specs: ['Intel Core i7-13620H', '16 GB RAM · 1 TB SSD', 'RTX 4060 6GB', '144Hz FHD'],
     availability: 'available',
@@ -267,6 +269,11 @@ const baseProducts: Product[] = [
     sku: '24GN650-B',
     description: 'Monitor gaming de 24" con tasa de refresco de 180Hz y tiempo de respuesta de 1ms. Perfecto para juegos competitivos.',
     image: 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=800&q=80&auto=format&fit=crop',
+    images: [
+      'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1547082299-de196ea013d6?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1585792180666-f7347c490ee2?w=800&q=80&auto=format&fit=crop',
+    ],
     specs: ['24" Full HD · 180 Hz', '1 ms · Panel IPS', 'AMD FreeSync', 'HDR10'],
     availability: 'available',
     fullSpecs: [
@@ -321,6 +328,11 @@ const baseProducts: Product[] = [
     sku: 'ASUS-RTX4060-8G',
     description: 'GPU NVIDIA RTX 4060 con 8GB VRAM. Soporta DLSS 3 y Ray Tracing para gaming y renderizado profesional.',
     image: 'https://images.unsplash.com/photo-1591488320449-011701bb6704?w=800&q=80&auto=format&fit=crop',
+    images: [
+      'https://images.unsplash.com/photo-1591488320449-011701bb6704?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1555617981-dac3880eac6e?w=800&q=80&auto=format&fit=crop',
+      'https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?w=800&q=80&auto=format&fit=crop',
+    ],
     specs: ['8 GB GDDR6', 'DLSS 3 · Ray Tracing', 'PCIe 4.0', '3 ventiladores'],
     availability: 'available',
     fullSpecs: [

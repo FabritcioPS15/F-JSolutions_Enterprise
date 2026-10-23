@@ -59,7 +59,7 @@ export function LandingPage() {
             <h1 className="text-4xl font-bold tracking-[-0.06em] sm:text-6xl">Arma tu mundo.<br /><span className="text-[#62b0ff]">Mejora tu juego.</span></h1>
             <p className="mt-5 max-w-md text-base leading-7 text-blue-100">Encuentra laptops, componentes y accesorios con asesoría real, precios competitivos y despacho a todo el Perú.</p>
             <div className="mt-7 flex flex-wrap gap-3">
-              <Button className="bg-[#ff6b35] font-bold hover:bg-[#e85a26]" nativeButton={false} render={<a href="#productos" />}>Ver productos <ArrowRight data-icon="inline-end" /></Button>
+              <a href="#productos" className="inline-flex h-12 items-center gap-2 rounded-lg bg-[#ff6b35] px-6 text-sm font-bold text-white transition hover:bg-[#e85a26]">Ver productos <ArrowRight className="size-4" /></a>
               <Button variant="outline" className="border-white/30 bg-transparent text-white hover:bg-white/10" onClick={() => setShowQuote(true)}>Cotiza tu PC <Calculator data-icon="inline-end" /></Button>
             </div>
           </div>
