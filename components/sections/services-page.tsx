@@ -148,7 +148,7 @@ const plans = [
     copy: 'Para equipos pequeños que necesitan orden y soporte confiable.',
     features: [
       'Hasta 10 equipos',
-      'Soporte remoto 8Ã—5',
+      'Soporte remoto 8×5',
       'Mesa de ayuda por correo',
       'Monitoreo básico',
       'Respaldo en la nube',
@@ -237,10 +237,10 @@ export function ServicesPage() {
         <div className="pointer-events-none absolute -right-32 -top-32 size-96 rounded-full bg-[#22D3EE]/10 blur-3xl" />
         <div className="relative mx-auto grid max-w-[1280px] gap-12 px-4 py-14 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:px-8 lg:py-20">
           <div>
-            <span className="inline-flex items-center gap-2 rounded-full border border-[#2563EB]/30 bg-[#2563EB]/10 px-3 py-1.5 font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-[#2563EB]">
+            <span className="inline-flex items-center gap-2 rounded-full border border-[#2563EB]/30 bg-[#2563EB]/10 px-3 py-1.5 text-[10px] font-medium uppercase tracking-[0.16em] text-[#2563EB]">
               <Sparkles className="size-3.5" /> Servicios TI para empresas
             </span>
-            <h1 className="mt-5 text-4xl font-extrabold leading-[1.05] tracking-[-0.055em] text-[#0F172A] sm:text-6xl">
+            <h1 className="mt-5 text-4xl font-bold leading-[1.05] tracking-[-0.055em] text-[#0F172A] sm:text-6xl">
               La base tecnológica
               <br />
               <span className="text-[#2563EB]">de tu operación.</span>
@@ -279,8 +279,8 @@ export function ServicesPage() {
           <div className="relative">
             <div className="rounded-3xl border border-[#E2E8F0] bg-white p-6 shadow-xl shadow-black/5 sm:p-8">
               <div className="flex items-center justify-between">
-                <p className="text-sm font-extrabold text-[#0F172A]">Nuestro enfoque de trabajo</p>
-                <span className="rounded-full bg-[#22D3EE]/10 px-2.5 py-1 font-mono text-[10px] font-medium uppercase tracking-wider text-[#0E7490]">
+                <p className="font-heading text-sm font-bold text-[#0F172A]">Nuestro enfoque de trabajo</p>
+                <span className="rounded-full bg-[#22D3EE]/10 px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider text-[#0E7490]">
                   Con seguimiento
                 </span>
               </div>
@@ -291,7 +291,7 @@ export function ServicesPage() {
                       <item.icon className="size-5" />
                     </span>
                     <div>
-                      <p className="text-sm font-bold text-[#0F172A]">
+                      <p className="font-heading text-sm font-bold text-[#0F172A]">
                         <span className="mr-2 text-[10px] font-extrabold text-[#475569]">
                           {item.step}
                         </span>
@@ -315,7 +315,7 @@ export function ServicesPage() {
                   <Headset className="size-4" />
                 </span>
                 <div>
-                  <p className="text-xs font-bold text-[#0F172A]">Atención directa</p>
+                  <p className="font-heading text-xs font-bold text-[#0F172A]">Atención directa</p>
                   <p className="text-[10px] text-[#475569]">Con un especialista</p>
                 </div>
               </div>
@@ -327,10 +327,10 @@ export function ServicesPage() {
       <section id="servicios" className="border-y border-[#E2E8F0] bg-[#F7F9FC]">
         <div className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
           <div className="max-w-2xl">
-            <p className="font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-[#0E7490]">
+            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#0E7490]">
               Nuestros servicios
             </p>
-            <h2 className="mt-2 text-3xl font-extrabold tracking-[-0.04em] text-[#0F172A] sm:text-4xl">
+            <h2 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-[#0F172A] sm:text-4xl">
               Todo lo que tu operación necesita
             </h2>
             <p className="mt-3 text-sm leading-6 text-[#475569]">
@@ -348,7 +348,7 @@ export function ServicesPage() {
                 <span className="grid size-12 place-items-center rounded-2xl bg-[#2563EB]/10 text-[#2563EB] transition group-hover:bg-[#2563EB] group-hover:text-white">
                   <service.icon className="size-6" />
                 </span>
-                <h3 className="mt-4 text-base font-extrabold text-[#0F172A]">{service.title}</h3>
+                <h3 className="mt-4 text-base font-bold text-[#0F172A]">{service.title}</h3>
                 <p className="mt-2 text-xs leading-5 text-[#475569]">{service.description}</p>
                 <ul className="mt-4 flex-1 space-y-2">
                   {service.points.map((point) => (
@@ -374,10 +374,10 @@ export function ServicesPage() {
         <div className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-[#0E7490]">
+              <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#0E7490]">
                 Cómo trabajamos
               </p>
-              <h2 className="mt-2 text-3xl font-extrabold tracking-[-0.04em] text-[#0F172A] sm:text-4xl">
+              <h2 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-[#0F172A] sm:text-4xl">
                 Un proceso claro, sin sorpresas
               </h2>
             </div>
@@ -397,7 +397,7 @@ export function ServicesPage() {
                 <span className="absolute right-5 top-5 grid size-9 place-items-center rounded-lg bg-white text-[#2563EB] shadow-sm">
                   <item.icon className="size-4" />
                 </span>
-                <h3 className="mt-2 text-sm font-extrabold text-[#0F172A]">{item.title}</h3>
+                <h3 className="mt-2 text-sm font-bold text-[#0F172A]">{item.title}</h3>
                 <p className="mt-2 text-xs leading-5 text-[#475569]">{item.copy}</p>
                 {index < process.length - 1 && (
                   <span className="absolute -right-3 top-1/2 hidden -translate-y-1/2 text-[#475569] lg:block">
@@ -413,10 +413,10 @@ export function ServicesPage() {
       <section className="border-y border-[#E2E8F0] bg-[#F7F9FC]">
         <div className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
           <div className="text-center">
-            <p className="font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-[#0E7490]">
+            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#0E7490]">
               Planes de soporte
             </p>
-            <h2 className="mt-2 text-3xl font-extrabold tracking-[-0.04em] text-[#0F172A] sm:text-4xl">
+            <h2 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-[#0F172A] sm:text-4xl">
               Elige el nivel de acompañamiento
             </h2>
             <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-[#475569]">
@@ -441,14 +441,14 @@ export function ServicesPage() {
                   </span>
                 )}
                 <p
-                  className={`text-sm font-extrabold uppercase tracking-wide ${
+                  className={`font-heading text-sm font-bold uppercase tracking-wide ${
                     plan.highlighted ? 'text-[#0E7490]' : 'text-[#2563EB]'
                   }`}
                 >
                   {plan.name}
                 </p>
                 <div className="mt-3 flex items-end gap-1">
-                  <span className="font-mono text-4xl font-semibold tracking-tight">{plan.price}</span>
+                  <span className="text-4xl font-semibold tracking-tight">{plan.price}</span>
                   {plan.price.startsWith('S/') && (
                     <span
                       className={`pb-1 text-xs font-semibold ${
@@ -507,7 +507,7 @@ export function ServicesPage() {
         <div className="mx-auto grid max-w-[1280px] grid-cols-2 gap-6 px-4 py-10 sm:px-6 lg:grid-cols-4 lg:px-8">
           {stats.map((stat) => (
             <div key={stat.label} className="text-center">
-              <p className="font-mono text-3xl font-semibold tracking-tight sm:text-4xl">{stat.value}</p>
+              <p className="text-3xl font-semibold tracking-tight sm:text-4xl">{stat.value}</p>
               <p className="mt-1 text-[11px] font-semibold uppercase tracking-wider text-[#475569]">
                 {stat.label}
               </p>
@@ -519,10 +519,10 @@ export function ServicesPage() {
       <section className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
         <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
           <div>
-            <p className="font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-[#0E7490]">
+            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#0E7490]">
               Industrias
             </p>
-            <h2 className="mt-2 text-3xl font-extrabold tracking-[-0.04em] text-[#0F172A] sm:text-4xl">
+            <h2 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-[#0F172A] sm:text-4xl">
               Entendemos tu contexto
             </h2>
             <p className="mt-3 max-w-md text-sm leading-6 text-[#475569]">
@@ -534,7 +534,7 @@ export function ServicesPage() {
                 <TrendingUp className="size-5" />
               </span>
               <div>
-                <p className="text-sm font-bold text-[#0F172A]">Tecnología alineada al negocio</p>
+                <p className="font-heading text-sm font-bold text-[#0F172A]">Tecnología alineada al negocio</p>
                 <p className="text-xs text-[#475569]">
                   Priorizamos lo que impacta en productividad y continuidad.
                 </p>
@@ -551,7 +551,7 @@ export function ServicesPage() {
                   <industry.icon className="size-5" />
                 </span>
                 <div>
-                  <p className="text-sm font-bold text-[#0F172A]">{industry.title}</p>
+                  <p className="font-heading text-sm font-bold text-[#0F172A]">{industry.title}</p>
                   <p className="mt-1 text-xs leading-5 text-[#475569]">{industry.copy}</p>
                 </div>
               </div>
@@ -563,10 +563,10 @@ export function ServicesPage() {
       <section id="faq" className="border-y border-[#E2E8F0] bg-white">
         <div className="mx-auto grid max-w-[1280px] gap-8 px-4 py-12 sm:px-6 lg:grid-cols-[0.85fr_1.15fr] lg:px-8 lg:py-16">
           <div>
-            <p className="font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-[#0E7490]">
+            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#0E7490]">
               Preguntas frecuentes
             </p>
-            <h2 className="mt-2 text-3xl font-extrabold tracking-[-0.04em] text-[#0F172A] sm:text-4xl">
+            <h2 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-[#0F172A] sm:text-4xl">
               Antes de empezar
             </h2>
             <p className="mt-3 text-sm leading-6 text-[#475569]">
@@ -602,10 +602,10 @@ export function ServicesPage() {
           <div className="pointer-events-none absolute -bottom-32 left-1/3 size-80 rounded-full bg-[#22D3EE]/20 blur-3xl" />
           <div className="relative grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
             <div>
-              <p className="font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-[#334155]">
+              <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#334155]">
                 Hablemos de tu proyecto
               </p>
-              <h2 className="mt-3 text-3xl font-extrabold tracking-[-0.04em] sm:text-4xl">
+              <h2 className="mt-3 text-3xl font-bold tracking-[-0.04em] sm:text-4xl">
                 Cuéntanos qué necesitas y armamos una propuesta.
               </h2>
               <p className="mt-3 max-w-xl text-sm leading-6 text-[#334155]">

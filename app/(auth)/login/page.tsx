@@ -8,7 +8,7 @@ export default function LoginPage() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-[#F8FAFC]">
       <div className="w-full max-w-md rounded-2xl border border-[#E2E8F0] bg-white p-8 shadow-lg">
-        <h1 className="text-2xl font-extrabold text-[#0F172A]">Iniciar sesión</h1>
+        <h1 className="text-2xl font-bold text-[#0F172A]">Iniciar sesión</h1>
         <p className="mt-2 text-sm text-[#64748B]">Próximamente: formulario de login.</p>
       </div>
     </main>

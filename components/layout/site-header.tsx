@@ -43,8 +43,7 @@ import {
 // â”€â”€â”€ Types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 type SiteHeaderProps = {
-  cartCount?: number
-  onCartClick?: () => void
+  quoteCount?: number
 }
 
 // â”€â”€â”€ Static data â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
@@ -55,7 +54,7 @@ const navLinks = [
   { label: 'Servicios', href: '/servicios', hasMenu: true },
   { label: 'Soporte TI', href: '/soporte-ti' },
   { label: 'Sistemas', href: '/sistemas', hasMenu: true },
-  { label: 'Cotizador', href: '/cotizador' },
+  { label: 'Cotizador', href: '/cotizacion' },
   { label: 'Contacto', href: '/#contacto' },
 ]
 
@@ -240,7 +239,7 @@ function MobileAccordion({ label, children }: { label: string; children: React.R
 
 // â”€â”€â”€ SiteHeader â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
-export function SiteHeader({ cartCount = 0, onCartClick }: SiteHeaderProps) {
+export function SiteHeader({ quoteCount = 0 }: SiteHeaderProps) {
   const pathname = usePathname()
   const router = useRouter()
   const [menuOpen, setMenuOpen] = useState(false)
@@ -347,10 +346,10 @@ export function SiteHeader({ cartCount = 0, onCartClick }: SiteHeaderProps) {
             aria-label="FJ Tech · Inicio"
             onClick={() => { setMenuOpen(false); closeAll() }}
           >
-            <span className="grid size-10 place-items-center rounded-xl bg-gradient-to-br from-[#3B82F6] to-[#1D4ED8] text-sm font-extrabold tracking-tight text-white shadow-md shadow-[#2563EB]/20">
+            <span className="grid size-10 place-items-center rounded-xl bg-gradient-to-br from-[#3B82F6] to-[#1D4ED8] font-heading text-sm font-bold tracking-tight text-white shadow-md shadow-[#2563EB]/20">
               FJ
             </span>
-            <span className="hidden text-xl font-extrabold tracking-[-0.04em] text-[#0F172A] sm:block lg:text-2xl">
+            <span className="hidden font-heading text-xl font-bold tracking-[-0.04em] text-[#0F172A] sm:block lg:text-2xl">
               FJ <span className="text-[#2563EB]">TECH</span>
             </span>
           </Link>
@@ -408,13 +407,13 @@ export function SiteHeader({ cartCount = 0, onCartClick }: SiteHeaderProps) {
               type="button"
               onClick={goToCart}
               className="relative flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm font-semibold text-[#475569] transition hover:bg-[#F8FAFC] hover:text-[#2563EB]"
-              aria-label={`Abrir carrito, ${cartCount} productos`}
+              aria-label={`Abrir cotización, ${quoteCount} productos`}
             >
               <ShoppingCart className="size-5" />
-              <span className="hidden md:inline">Carrito</span>
-              {cartCount > 0 && (
+              <span className="hidden md:inline">Cotización</span>
+              {quoteCount > 0 && (
                 <span className="absolute -right-1 -top-1 grid size-5 place-items-center rounded-full bg-[#2563EB] text-[10px] font-bold text-white">
-                  {cartCount}
+                  {quoteCount}
                 </span>
               )}
             </button>

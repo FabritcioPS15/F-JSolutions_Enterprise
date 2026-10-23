@@ -36,7 +36,7 @@ export function CartPanel({
       >
         <div className="flex items-center justify-between border-b border-[#E2E8F0] px-6 py-5">
           <div>
-            <h2 className="font-mono text-lg font-semibold tracking-tight text-[#0F172A]">Tu carrito</h2>
+            <h2 className="text-lg font-semibold tracking-tight text-[#0F172A]">Tu carrito</h2>
             <p className="text-xs text-[#475569]">
               {count === 0 ? 'Sin productos por ahora' : `${count} producto(s) seleccionado(s)`}
             </p>
@@ -81,7 +81,7 @@ export function CartPanel({
                     className="size-20 shrink-0 rounded-lg object-cover"
                   />
                   <div className="min-w-0 flex-1">
-                    <p className="font-mono text-[10px] font-medium uppercase tracking-wide text-[#2563EB]">
+                    <p className="text-[10px] font-medium uppercase tracking-wide text-[#2563EB]">
                       {product.brand}
                     </p>
                     <p className="line-clamp-2 text-xs font-bold leading-4 text-[#0F172A]">
@@ -96,7 +96,7 @@ export function CartPanel({
                         >
                           <Minus className="size-3" />
                         </button>
-                        <span className="w-5 text-center font-mono text-xs font-medium">{qty}</span>
+                        <span className="w-5 text-center text-xs font-medium">{qty}</span>
                         <button
                           onClick={() => onAdd(product.id)}
                           aria-label={`Agregar una unidad de ${product.name}`}
@@ -106,7 +106,7 @@ export function CartPanel({
                         </button>
                       </div>
                       <div className="flex items-center gap-2">
-                        <p className="font-mono text-sm font-semibold text-[#0F172A]">
+                        <p className="text-sm font-semibold text-[#0F172A]">
                           {formatPrice(product.price * qty)}
                         </p>
                         <button
@@ -126,7 +126,7 @@ export function CartPanel({
             <div className="border-t border-[#E2E8F0] bg-[#F8FAFC] px-6 py-5">
               <div className="flex items-center justify-between text-sm text-[#475569]">
                 <span>Subtotal</span>
-                <span className="font-mono font-medium text-[#0F172A]">{formatPrice(subtotal)}</span>
+                <span className="font-medium text-[#0F172A]">{formatPrice(subtotal)}</span>
               </div>
               <div className="mt-1 flex items-center justify-between text-sm text-[#475569]">
                 <span>Envío</span>
@@ -134,7 +134,7 @@ export function CartPanel({
               </div>
               <div className="mt-3 flex items-center justify-between border-t border-[#E2E8F0] pt-3">
                 <span className="text-sm font-bold text-[#0F172A]">Total</span>
-                <span className="font-mono text-xl font-semibold text-[#0F172A]">{formatPrice(subtotal)}</span>
+                <span className="text-xl font-semibold text-[#0F172A]">{formatPrice(subtotal)}</span>
               </div>
               <a
                 href="/cotizador"

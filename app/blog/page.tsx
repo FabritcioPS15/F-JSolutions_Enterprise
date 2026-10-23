@@ -12,7 +12,7 @@ export default function BlogPage() {
     <main className="min-h-screen bg-white text-[#0F172A]">
       <SiteHeader />
       <section className="mx-auto max-w-[1280px] px-4 py-20 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-extrabold tracking-tight text-[#0F172A]">Blog</h1>
+        <h1 className="text-4xl font-bold tracking-tight text-[#0F172A]">Blog</h1>
         <p className="mt-4 text-lg text-[#475569]">Próximamente: artículos y noticias tecnológicas.</p>
       </section>
       <SiteFooter />

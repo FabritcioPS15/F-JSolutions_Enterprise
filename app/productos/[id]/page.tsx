@@ -11,7 +11,7 @@ export default function ProductoDetallePage({ params }: { params: { id: string }
     <main className="min-h-screen bg-white text-[#0F172A]">
       <SiteHeader />
       <section className="mx-auto max-w-[1280px] px-4 py-20 sm:px-6 lg:px-8">
-        <h1>Producto #{params.id}</h1>
+        <h1>Producto <span className="font-mono">#{params.id}</span></h1>
       </section>
       <SiteFooter />
     </main>

@@ -13,42 +13,32 @@ import {
   Truck,
   X,
 } from 'lucide-react'
-import { CartPanel } from '@/components/sections/cart-panel'
 import { ProductCard } from '@/components/cards/product-card'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { SiteHeader } from '@/components/layout/site-header'
 import { categories, products } from '@/lib/catalog'
-import { useCart } from '@/lib/use-cart'
-
-const priceRanges = ['Todos', 'Menos de S/ 300', 'S/ 300 â€“ 1,000', 'S/ 1,000 â€“ 3,000', 'Más de S/ 3,000']
+import { useQuote } from '@/lib/use-quote'
 
 const sortOptions = [
   { value: 'relevancia', label: 'Relevancia' },
-  { value: 'precio-asc', label: 'Menor precio' },
-  { value: 'precio-desc', label: 'Mayor precio' },
-  { value: 'rating', label: 'Mejor valorados' },
-  { value: 'nombre', label: 'Nombre Aâ€“Z' },
+  { value: 'nombre', label: 'Nombre A-Z' },
+  { value: 'nombre-desc', label: 'Nombre Z-A' },
 ]
 
 type CatalogPageProps = {
   initialQuery?: string
   initialCategory?: string
-  initialOffers?: boolean
 }
 
 export function CatalogPage({
   initialQuery = '',
   initialCategory = 'Todas',
-  initialOffers = false,
 }: CatalogPageProps) {
-  const cart = useCart()
-  const [showCart, setShowCart] = useState(false)
+  const quote = useQuote()
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [query, setQuery] = useState(initialQuery)
   const [category, setCategory] = useState(initialCategory)
   const [brand, setBrand] = useState('Todas')
-  const [priceRange, setPriceRange] = useState('Todos')
-  const [onlyOffers, setOnlyOffers] = useState(initialOffers)
   const [sort, setSort] = useState('relevancia')
 
   useEffect(() => {
@@ -58,10 +48,6 @@ export function CatalogPage({
   useEffect(() => {
     setCategory(initialCategory)
   }, [initialCategory])
-
-  useEffect(() => {
-    setOnlyOffers(initialOffers)
-  }, [initialOffers])
 
   const availableBrands = useMemo(
     () => Array.from(new Set(products.map((product) => product.brand))).sort(),
@@ -75,27 +61,20 @@ export function CatalogPage({
         !term ||
         product.name.toLowerCase().includes(term) ||
         product.brand.toLowerCase().includes(term) ||
-        product.category.toLowerCase().includes(term)
+        product.category.toLowerCase().includes(term) ||
+        (product.model && product.model.toLowerCase().includes(term)) ||
+        (product.sku && product.sku.toLowerCase().includes(term))
       const matchesCategory = category === 'Todas' || product.category === category
       const matchesBrand = brand === 'Todas' || product.brand === brand
-      const matchesOffer = !onlyOffers || Boolean(product.oldPrice)
-      let matchesPrice = true
-      if (priceRange === 'Menos de S/ 300') matchesPrice = product.price < 300
-      if (priceRange === 'S/ 300 â€“ 1,000') matchesPrice = product.price >= 300 && product.price <= 1000
-      if (priceRange === 'S/ 1,000 â€“ 3,000')
-        matchesPrice = product.price > 1000 && product.price <= 3000
-      if (priceRange === 'Más de S/ 3,000') matchesPrice = product.price > 3000
-      return matchesTerm && matchesCategory && matchesBrand && matchesOffer && matchesPrice
+      return matchesTerm && matchesCategory && matchesBrand
     })
 
     return [...list].sort((a, b) => {
-      if (sort === 'precio-asc') return a.price - b.price
-      if (sort === 'precio-desc') return b.price - a.price
-      if (sort === 'rating') return b.rating - a.rating
       if (sort === 'nombre') return a.name.localeCompare(b.name)
-      return b.reviews - a.reviews
+      if (sort === 'nombre-desc') return b.name.localeCompare(a.name)
+      return 0
     })
-  }, [query, category, brand, priceRange, onlyOffers, sort])
+  }, [query, category, brand, sort])
 
   const resultsText =
     filtered.length === 1 ? '1 producto encontrado' : `${filtered.length} productos encontrados`
@@ -104,17 +83,10 @@ export function CatalogPage({
     setQuery('')
     setCategory('Todas')
     setBrand('Todas')
-    setPriceRange('Todos')
-    setOnlyOffers(false)
     setSort('relevancia')
   }
 
-  const hasFilters =
-    query !== '' ||
-    category !== 'Todas' ||
-    brand !== 'Todas' ||
-    priceRange !== 'Todos' ||
-    onlyOffers
+  const hasFilters = query !== '' || category !== 'Todas' || brand !== 'Todas'
 
   const filterProps = {
     query,
@@ -123,10 +95,6 @@ export function CatalogPage({
     setCategory,
     brand,
     setBrand,
-    priceRange,
-    setPriceRange,
-    onlyOffers,
-    setOnlyOffers,
     brands: availableBrands,
     hasFilters,
     resetFilters,
@@ -134,7 +102,7 @@ export function CatalogPage({
 
   return (
     <main className="min-h-screen bg-white text-[#0F172A]">
-      <SiteHeader cartCount={cart.count} onCartClick={() => setShowCart(true)} />
+      <SiteHeader quoteCount={quote.count} />
 
       <div className="border-b border-[#E2E8F0] bg-white">
         <div className="mx-auto flex max-w-[1280px] items-center gap-2 px-4 py-3 text-xs text-[#475569] sm:px-6 lg:px-8">
@@ -150,15 +118,15 @@ export function CatalogPage({
         <div className="mx-auto max-w-[1280px] px-4 py-8 sm:px-6 lg:px-8">
           <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <p className="font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-[#0E7490]">
+              <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#0E7490]">
                 Catálogo de productos
               </p>
-              <h1 className="mt-2 text-3xl font-extrabold tracking-[-0.04em] text-[#0F172A] sm:text-4xl">
+              <h1 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-[#0F172A] sm:text-4xl">
                 Encuentra la tecnología que necesitas
               </h1>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-[#475569]">
-                Explora equipos, componentes y accesorios para tu hogar, oficina o empresa. Consulta
-                precios y solicita una cotización con orientación para elegir.
+                Explora equipos, componentes y accesorios para tu hogar, oficina o empresa. Solicita
+                una cotización personalizada con orientación para elegir.
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -181,7 +149,7 @@ export function CatalogPage({
           <aside className="hidden lg:block">
             <div className="sticky top-40 rounded-2xl border border-[#E2E8F0] bg-white p-5">
               <div className="flex items-center justify-between">
-                <p className="flex items-center gap-2 text-sm font-extrabold text-[#0F172A]">
+                <p className="flex items-center gap-2 font-heading text-sm font-bold text-[#0F172A]">
                   <SlidersHorizontal className="size-4 text-[#2563EB]" /> Filtros
                 </p>
                 {hasFilters && (
@@ -246,7 +214,7 @@ export function CatalogPage({
             {filtered.length > 0 ? (
               <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 lg:gap-4">
                 {filtered.map((product) => (
-                  <ProductCard key={product.id} product={product} onAdd={cart.add} />
+                  <ProductCard key={product.id} product={product} onAddToQuote={quote.addItem} />
                 ))}
               </div>
             ) : (
@@ -268,7 +236,7 @@ export function CatalogPage({
                     Limpiar filtros
                   </button>
                   <Link
-                    href="/cotizador"
+                    href="/cotizacion"
                     className="inline-flex h-10 items-center gap-2 rounded-lg bg-[#2563EB] px-4 text-xs font-bold text-white"
                   >
                     Cotizar a medida <ArrowRight className="size-4" />
@@ -283,17 +251,17 @@ export function CatalogPage({
                   <Headset className="size-5" />
                 </span>
                 <div>
-                  <p className="text-sm font-extrabold">¿Compras para tu empresa?</p>
+                  <p className="font-heading text-sm font-bold">¿Compras para tu empresa?</p>
                   <p className="mt-1 text-xs leading-5 text-[#475569]">
                     Cotizamos por volumen, emitimos factura y coordinamos la entrega e instalación.
                   </p>
                 </div>
               </div>
               <Link
-                href="/cotizador"
+                href="/cotizacion"
                 className="inline-flex h-10 shrink-0 items-center gap-2 rounded-lg bg-[#2563EB] px-4 text-xs font-bold text-white transition hover:bg-[#1D4ED8]"
               >
-                Hablar con ventas <ArrowRight className="size-4" />
+                Solicitar cotización <ArrowRight className="size-4" />
               </Link>
             </div>
           </div>
@@ -307,7 +275,7 @@ export function CatalogPage({
             className="absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto rounded-t-3xl bg-white p-5"
           >
             <div className="flex items-center justify-between">
-              <p className="flex items-center gap-2 text-base font-extrabold text-[#0F172A]">
+              <p className="flex items-center gap-2 font-heading text-base font-bold text-[#0F172A]">
                 <SlidersHorizontal className="size-4 text-[#2563EB]" /> Filtros
               </p>
               <button
@@ -330,18 +298,6 @@ export function CatalogPage({
       )}
 
       <SiteFooter />
-
-      {showCart && (
-        <CartPanel
-          lines={cart.lines}
-          count={cart.count}
-          subtotal={cart.subtotal}
-          onClose={() => setShowCart(false)}
-          onAdd={cart.add}
-          onRemove={cart.remove}
-          onSetQty={cart.setQty}
-        />
-      )}
     </main>
   )
 }
@@ -353,10 +309,6 @@ type CatalogFiltersProps = {
   setCategory: (value: string) => void
   brand: string
   setBrand: (value: string) => void
-  priceRange: string
-  setPriceRange: (value: string) => void
-  onlyOffers: boolean
-  setOnlyOffers: (value: boolean) => void
   brands: string[]
   hasFilters: boolean
   resetFilters: () => void
@@ -369,10 +321,6 @@ function CatalogFilters({
   setCategory,
   brand,
   setBrand,
-  priceRange,
-  setPriceRange,
-  onlyOffers,
-  setOnlyOffers,
   brands,
   hasFilters,
   resetFilters,
@@ -386,14 +334,14 @@ function CatalogFilters({
           <input
             value={query}
             onChange={(event) => setQuery(event.target.value)}
-            placeholder="Buscar producto..."
+            placeholder="Buscar producto, marca, modelo o SKU..."
             className="h-10 w-full rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] pl-9 pr-3 text-sm outline-none transition focus:border-[#2563EB] focus:bg-white"
           />
         </label>
       </div>
 
       <div>
-        <p className="font-mono text-[10px] font-medium uppercase tracking-[0.13em] text-[#475569]">
+        <p className="text-[10px] font-medium uppercase tracking-[0.13em] text-[#475569]">
           Categorías
         </p>
         <div className="mt-2 space-y-0.5">
@@ -421,7 +369,7 @@ function CatalogFilters({
       </div>
 
       <div>
-        <p className="font-mono text-[10px] font-medium uppercase tracking-[0.13em] text-[#475569]">Marcas</p>
+        <p className="text-[10px] font-medium uppercase tracking-[0.13em] text-[#475569]">Marcas</p>
         <div className="mt-2 flex flex-wrap gap-1.5">
           {['Todas', ...brands].map((item) => (
             <button
@@ -439,37 +387,6 @@ function CatalogFilters({
         </div>
       </div>
 
-      <div>
-        <p className="font-mono text-[10px] font-medium uppercase tracking-[0.13em] text-[#475569]">
-          Rango de precio
-        </p>
-        <div className="mt-2 space-y-0.5">
-          {priceRanges.map((item) => (
-            <button
-              key={item}
-              onClick={() => setPriceRange(item)}
-              className={`flex w-full rounded-lg px-2.5 py-1.5 text-left text-xs font-medium transition ${
-                priceRange === item
-                  ? 'bg-[#2563EB]/10 font-bold text-[#2563EB]'
-                  : 'text-[#475569] hover:bg-[#F8FAFC]'
-              }`}
-            >
-              {item}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <label className="flex cursor-pointer items-center justify-between rounded-lg border border-[#E2E8F0] px-3 py-2.5">
-        <span className="text-xs font-bold text-[#0F172A]">Solo ofertas</span>
-        <input
-          type="checkbox"
-          checked={onlyOffers}
-          onChange={(event) => setOnlyOffers(event.target.checked)}
-          className="size-4 accent-[#2563EB]"
-        />
-      </label>
-
       {hasFilters && (
         <button
           onClick={resetFilters}
@@ -481,4 +398,3 @@ function CatalogFilters({
     </div>
   )
 }
-

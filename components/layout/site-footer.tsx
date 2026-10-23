@@ -51,10 +51,10 @@ export function SiteFooter() {
       <div className="border-b border-[#E2E8F0]">
         <div className="mx-auto grid max-w-[1280px] gap-8 px-4 py-12 sm:px-6 lg:grid-cols-[1.1fr_1fr] lg:items-center lg:px-8">
           <div>
-            <p className="font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-[#0E7490]">
+            <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-[#0E7490]">
               Estemos en contacto
             </p>
-            <h2 className="mt-2 text-2xl font-extrabold tracking-tight text-[#0F172A] sm:text-3xl">
+            <h2 className="mt-2 text-2xl font-bold tracking-tight text-[#0F172A] sm:text-3xl">
               Recibe ofertas, guías y novedades tecnológicas.
             </h2>
             <p className="mt-2 max-w-lg text-sm leading-6 text-[#475569]">
@@ -96,10 +96,10 @@ export function SiteFooter() {
       <div className="mx-auto grid max-w-[1280px] gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1.4fr_1fr_1fr_1fr] lg:px-8">
         <div>
           <Link href="/" className="flex items-center gap-2.5">
-            <span className="grid size-10 place-items-center rounded-xl bg-[#2563EB] text-sm font-extrabold text-white">
+            <span className="grid size-10 place-items-center rounded-xl bg-[#2563EB] font-heading text-sm font-bold text-white">
               FJ
             </span>
-            <span className="font-mono text-lg font-semibold tracking-tight text-[#0F172A]">
+            <span className="font-heading text-lg font-semibold tracking-tight text-[#0F172A]">
               FJ <span className="text-[#2563EB]">TECH</span>
             </span>
           </Link>
@@ -139,7 +139,7 @@ export function SiteFooter() {
 
         {columns.map((column) => (
           <div key={column.title}>
-            <p className="text-sm font-bold text-[#0F172A]">{column.title}</p>
+            <p className="font-heading text-sm font-bold text-[#0F172A]">{column.title}</p>
             <ul className="mt-4 space-y-2.5 text-sm">
               {column.links.map((link) => (
                 <li key={link.label}>
