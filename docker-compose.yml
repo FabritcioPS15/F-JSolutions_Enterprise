@@ -1,0 +1,98 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: fj-solutions-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: fj_solutions
+      POSTGRES_PASSWORD: fj_solutions_password
+      POSTGRES_DB: fj_solutions
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - fj-solutions-network
+
+  # Redis Cache (optional, for future use)
+  redis:
+    image: redis:7-alpine
+    container_name: fj-solutions-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - fj-solutions-network
+
+  # API Backend
+  api:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+    container_name: fj-solutions-api
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://fj_solutions:fj_solutions_password@postgres:5432/fj_solutions
+      PORT: 3001
+      JWT_SECRET: ${JWT_SECRET:-your-secret-key-change-in-production}
+      EMAIL_HOST: ${EMAIL_HOST}
+      EMAIL_PORT: ${EMAIL_PORT:-587}
+      EMAIL_USER: ${EMAIL_USER}
+      EMAIL_PASS: ${EMAIL_PASS}
+    ports:
+      - "3001:3001"
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - fj-solutions-network
+    volumes:
+      - ./apps/api/uploads:/app/uploads
+
+  # Web Frontend (Tienda pública)
+  web:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile
+    container_name: fj-solutions-web
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_API_URL: http://api:3001
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    networks:
+      - fj-solutions-network
+
+  # Admin Panel (Panel de administración)
+  admin:
+    build:
+      context: ./apps/admin
+      dockerfile: Dockerfile
+    container_name: fj-solutions-admin
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      NEXT_PUBLIC_API_URL: http://api:3001
+    ports:
+      - "3002:3000"
+    depends_on:
+      - api
+    networks:
+      - fj-solutions-network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  fj-solutions-network:
+    driver: bridge
