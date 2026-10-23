@@ -5,18 +5,13 @@ import {
   ArrowRight,
   BarChart3,
   Calculator,
-  ChevronDown,
   Heart,
   Laptop,
-  Menu,
-  Search,
   ShoppingCart,
-  SlidersHorizontal,
-  UserRound,
   X,
-  Zap,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { SiteHeader } from '@/components/layout/site-header'
 
 type Product = { name: string; category: string; badge?: string; image: string }
 
@@ -31,7 +26,6 @@ const products: Product[] = [
 ]
 
 export function LandingPage() {
-  const [menuOpen, setMenuOpen] = useState(false)
   const [query, setQuery] = useState('')
   const [category, setCategory] = useState('Todas')
   const [cartCount, setCartCount] = useState(0)
@@ -45,19 +39,8 @@ export function LandingPage() {
   }), [query, category])
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#f8fafc] text-[#172033]">
-      <Topbar />
-      <header className="sticky top-0 z-40 border-b border-[#e5eaf0] bg-white shadow-sm">
-        <div className="mx-auto flex max-w-[1280px] items-center gap-4 px-4 py-3 sm:px-6 lg:gap-8 lg:px-8">
-          <a href="#inicio" className="flex shrink-0 items-center gap-2.5" aria-label="FJ Tech inicio"><span className="flex size-10 items-center justify-center rounded-xl bg-[#155eef] font-black tracking-tight text-white">FJ</span><span className="hidden text-lg font-extrabold tracking-[-0.04em] sm:block">FJ <span className="text-[#155eef]">TECH</span></span></a>
-          <Button variant="outline" className="hidden h-11 shrink-0 gap-2 border-[#dbe2ea] lg:inline-flex"><Menu data-icon="inline-start" /> Todas las categorías <ChevronDown data-icon="inline-end" /></Button>
-          <label className="relative flex min-w-0 flex-1"><span className="sr-only">Buscar productos</span><Search className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94a3b8]" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="¿Qué estás buscando hoy?" className="h-11 w-full rounded-lg border border-[#dbe2ea] bg-[#f8fafc] pl-10 pr-4 text-sm outline-none transition focus:border-[#155eef] focus:bg-white" /></label>
-          <div className="hidden items-center gap-5 lg:flex"><a href="#cuenta" className="flex items-center gap-2 text-sm font-semibold text-[#475569] hover:text-[#155eef]"><UserRound /> Ingresar</a><button onClick={() => setShowCart(!showCart)} className="relative flex items-center gap-2 text-sm font-semibold text-[#475569] hover:text-[#155eef]"><ShoppingCart /><span>Carrito</span>{cartCount > 0 && <span className="absolute -right-3 -top-3 flex size-5 items-center justify-center rounded-full bg-[#ef4444] text-[10px] text-white">{cartCount}</span>}</button></div>
-          <button onClick={() => setMenuOpen(!menuOpen)} aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'} className="rounded-lg p-2 text-[#475569] lg:hidden">{menuOpen ? <X /> : <Menu />}</button>
-        </div>
-        <nav className="hidden border-t border-[#eef2f6] bg-white lg:block"><div className="mx-auto flex max-w-[1280px] items-center gap-7 px-8"><a className="border-b-2 border-[#155eef] py-3 text-sm font-bold text-[#155eef]" href="#inicio">Inicio</a><a href="#productos" className="py-3 text-sm font-semibold text-[#475569] hover:text-[#155eef]">Productos</a><a href="/soporte-ti" className="py-3 text-sm font-semibold text-[#475569] hover:text-[#155eef]">Soporte TI</a><a href="/sistemas" className="py-3 text-sm font-semibold text-[#475569] hover:text-[#155eef]">Crear sistemas</a><a href="/cotizador" className="py-3 text-sm font-semibold text-[#475569] hover:text-[#155eef]">Cotización</a><a href="/productos" className="py-3 text-sm font-semibold text-[#475569] hover:text-[#155eef]">Ofertas</a><a href="#servicios" className="py-3 text-sm font-semibold text-[#475569] hover:text-[#155eef]">Servicios</a><a href="#contacto" className="py-3 text-sm font-semibold text-[#475569] hover:text-[#155eef]">Contacto</a><button onClick={() => setShowCart(true)} className="py-3 text-sm font-semibold text-[#475569] hover:text-[#155eef]">Carrito ({cartCount})</button><span className="ml-auto flex items-center gap-2 py-3 text-sm font-bold text-[#f97316]"><Zap /> Ofertas del día</span></div></nav>
-        {menuOpen && <div className="border-t border-[#eef2f6] px-4 py-3 lg:hidden"><div className="flex flex-col gap-1"><a href="#productos" onClick={() => setMenuOpen(false)} className="rounded-lg px-3 py-3 text-sm font-semibold">Inicio</a>{categories.map((item) => <a key={item} href="#productos" onClick={() => { setCategory(item); setMenuOpen(false) }} className="rounded-lg px-3 py-3 text-sm text-[#475569]">{item}</a>)}<button onClick={() => setShowCart(true)} className="flex items-center gap-2 rounded-lg px-3 py-3 text-left text-sm text-[#475569]"><ShoppingCart /> Carrito ({cartCount})</button></div></div>}
-      </header>
+    <main className="min-h-screen overflow-x-clip bg-[#f8fafc] text-[#172033]">
+      <SiteHeader cartCount={cartCount} onCartClick={() => setShowCart(true)} />
 
       <section id="inicio" className="mx-auto grid max-w-[1280px] gap-4 px-4 pb-5 pt-5 sm:px-6 lg:grid-cols-[1fr_320px] lg:px-8">
         <div className="relative min-h-[350px] overflow-hidden rounded-2xl bg-[#102a56] p-7 text-white sm:p-12"><div className="relative z-10 max-w-xl"><p className="mb-4 text-sm font-bold uppercase tracking-[0.18em] text-[#7dd3fc]">Tecnología para todos</p><h1 className="text-4xl font-black tracking-[-0.06em] sm:text-6xl">Arma tu mundo.<br /><span className="text-[#62b0ff]">Mejora tu juego.</span></h1><p className="mt-5 max-w-md text-base leading-7 text-blue-100">Encuentra laptops, componentes y accesorios con asesoría real, precios competitivos y despacho a todo el Perú.</p><div className="mt-7 flex flex-wrap gap-3"><Button className="bg-[#ff6b35] font-bold hover:bg-[#e85a26]" render={<a href="#productos" />}>Ver productos <ArrowRight data-icon="inline-end" /></Button><Button variant="outline" className="border-white/30 bg-transparent text-white hover:bg-white/10" onClick={() => setShowQuote(true)}>Cotiza tu PC <Calculator data-icon="inline-end" /></Button></div></div><div className="absolute -right-16 -top-20 size-80 rounded-full bg-[#155eef]/40 blur-3xl" /><div className="absolute -bottom-24 right-8 size-72 rounded-full border-[32px] border-[#39b8ff]/20" /></div>
@@ -75,7 +58,6 @@ export function LandingPage() {
   )
 }
 
-function Topbar() { return <div className="bg-[#102a56] px-4 py-2 text-[11px] font-semibold text-blue-100 sm:text-xs"><div className="mx-auto flex max-w-[1280px] flex-wrap items-center justify-between gap-2"><span>Envíos a todo el Perú · Compra online 24/7</span><nav className="flex items-center gap-4" aria-label="Servicios comerciales"><a href="/cotizador" className="hover:text-white">Ventas corporativas</a><a href="/cotizador" className="hover:text-white">Facturación</a><a href="/soporte-ti" className="hover:text-white">Soporte TI</a></nav></div></div> }
 function Feature({ icon, title, copy, onClick }: { icon: React.ReactNode; title: string; copy: string; onClick?: () => void }) { return <button onClick={onClick} className="flex items-center gap-4 rounded-2xl border border-[#e5eaf0] bg-white p-5 text-left transition hover:border-[#9dbaf5] hover:shadow-sm"><span className="flex size-11 shrink-0 items-center justify-center rounded-xl bg-[#e8f0ff] text-[#155eef]">{icon}</span><span><span className="block text-sm font-extrabold">{title}</span><span className="mt-1 block text-xs text-[#64748b]">{copy}</span></span></button> }
 function FilterButton({ children, active, onClick }: { children: React.ReactNode; active: boolean; onClick: () => void }) { return <button onClick={onClick} className={`whitespace-nowrap rounded-full border px-4 py-2 text-sm font-semibold transition ${active ? 'border-[#155eef] bg-[#155eef] text-white' : 'border-[#dbe2ea] bg-white text-[#475569] hover:border-[#155eef]'}`}>{children}</button> }
 function ProductCard({ product, onAdd }: { product: Product; onAdd: () => void }) { return <article className="group relative overflow-hidden rounded-xl border border-[#e5eaf0] bg-white p-3 transition hover:-translate-y-1 hover:shadow-lg sm:p-4"><div className="relative aspect-square overflow-hidden rounded-lg bg-[#f1f5f9]"><img src={product.image} alt={product.name} className="size-full object-cover mix-blend-multiply transition duration-500 group-hover:scale-105" />{product.badge && <span className="absolute left-2 top-2 rounded-md bg-[#ff6b35] px-2 py-1 text-[10px] font-bold text-white">{product.badge}</span>}<button aria-label={`Agregar ${product.name} a favoritos`} className="absolute right-2 top-2 rounded-full bg-white/90 p-2 text-[#64748b] hover:text-[#ef4444]"><Heart /></button></div><p className="mt-3 text-[10px] font-bold uppercase tracking-wider text-[#155eef]">{product.category}</p><h3 className="mt-1 min-h-10 text-sm font-bold leading-5 text-[#172033]">{product.name}</h3><div className="mt-3 flex min-h-6 items-center"><span className="text-xs font-semibold text-[#64748b]">Consulta disponibilidad y cotización</span></div><Button onClick={onAdd} className="mt-3 h-10 w-full bg-[#155eef] text-xs font-bold hover:bg-[#104bc5]">Solicitar cotización</Button></article> }

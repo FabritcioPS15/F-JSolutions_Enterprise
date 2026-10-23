@@ -1,0 +1,147 @@
+// Prisma Schema para F&J Solutions Enterprise Backend
+// Base de datos PostgreSQL recomendada para producción
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  CUSTOMER
+  STAFF
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum QuoteStatus {
+  PENDING
+  REVIEWED
+  SENT
+  ACCEPTED
+  REJECTED
+}
+
+model User {
+  id           String    @id @default(uuid())
+  name         String
+  email        String    @unique
+  passwordHash String
+  role         Role      @default(CUSTOMER)
+  phone        String?
+  company      String?
+  orders       Order[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@map("users")
+}
+
+model Category {
+  id          String    @id @default(uuid())
+  name        String    @unique
+  slug        String    @unique
+  description String?
+  products    Product[]
+  createdAt   DateTime  @default(now())
+
+  @@map("categories")
+}
+
+model Product {
+  id          String      @id @default(uuid())
+  name        String
+  slug        String      @unique
+  description String      @db.Text
+  price       Decimal     @db.Decimal(10, 2)
+  oldPrice    Decimal?    @db.Decimal(10, 2)
+  stock       Int         @default(0)
+  brand       String
+  images      String[]
+  specs       Json?
+  badge       String?
+  rating      Decimal     @default(5.0) @db.Decimal(2, 1)
+  reviews     Int         @default(0)
+  isActive    Boolean     @default(true)
+  categoryId  String
+  category    Category    @relation(fields: [categoryId], references: [id])
+  orderItems  OrderItem[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([categoryId])
+  @@index([slug])
+  @@index([brand])
+  @@map("products")
+}
+
+model Order {
+  id            String      @id @default(uuid())
+  userId        String?
+  user          User?       @relation(fields: [userId], references: [id])
+  customerName  String
+  customerEmail String
+  customerPhone String
+  subtotal      Decimal     @db.Decimal(10, 2)
+  igv           Decimal     @db.Decimal(10, 2)
+  total         Decimal     @db.Decimal(10, 2)
+  status        OrderStatus @default(PENDING)
+  notes         String?     @db.Text
+  items         OrderItem[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id        String   @id @default(uuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  name      String
+  price     Decimal  @db.Decimal(10, 2)
+  quantity  Int
+  subtotal  Decimal  @db.Decimal(10, 2)
+
+  @@map("order_items")
+}
+
+model Cotizacion {
+  id        String      @id @default(uuid())
+  empresa   String
+  contacto  String
+  email     String
+  telefono  String
+  mensaje   String?     @db.Text
+  items     Json?
+  status    QuoteStatus @default(PENDING)
+  createdAt DateTime    @default(now())
+
+  @@map("cotizaciones")
+}
+
+model ContactMessage {
+  id        String   @id @default(uuid())
+  nombre    String
+  email     String
+  telefono  String?
+  empresa   String?
+  asunto    String
+  mensaje   String   @db.Text
+  createdAt DateTime @default(now())
+
+  @@map("contact_messages")
+}
