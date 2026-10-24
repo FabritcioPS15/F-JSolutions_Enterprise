@@ -13,91 +13,81 @@ export const mainNav = [
 
 export const storeCategories = [
   {
-    id: 'components',
-    label: 'Componentes de PC',
+    id: 'pcs',
+    label: 'PC y Servidores',
     icon: 'Cpu',
     items: [
-      { label: 'Procesadores', href: '/productos?categoria=procesadores', subItems: [
-        { label: 'Intel', href: '/productos?categoria=procesadores&marca=intel' },
-        { label: 'AMD', href: '/productos?categoria=procesadores&marca=amd' },
-        { label: 'Ryzen', href: '/productos?categoria=procesadores&marca=ryzen' },
-      ]},
-      { label: 'Placas madre', href: '/productos?categoria=placas-madre', subItems: [
-        { label: 'Intel', href: '/productos?categoria=placas-madre&marca=intel' },
-        { label: 'AMD', href: '/productos?categoria=placas-madre&marca=amd' },
-        { label: 'ASUS', href: '/productos?categoria=placas-madre&marca=asus' },
-      ]},
-      { label: 'Memoria RAM', href: '/productos?categoria=memoria-ram', subItems: [
-        { label: 'DDR4', href: '/productos?categoria=memoria-ram&tipo=ddr4' },
-        { label: 'DDR5', href: '/productos?categoria=memoria-ram&tipo=ddr5' },
-        { label: 'Laptop RAM', href: '/productos?categoria=memoria-ram&tipo=laptop' },
-      ]},
-      { label: 'Tarjetas gráficas', href: '/productos?categoria=tarjetas-graficas', subItems: [
-        { label: 'NVIDIA', href: '/productos?categoria=tarjetas-graficas&marca=nvidia' },
-        { label: 'AMD Radeon', href: '/productos?categoria=tarjetas-graficas&marca=amd' },
-        { label: 'GTX', href: '/productos?categoria=tarjetas-graficas&serie=gtx' },
-      ]},
-      { label: 'Discos SSD', href: '/productos?categoria=discos-ssd' },
+      { label: 'PCs de Escritorio', href: '/productos?categoria=PC y Servidores' },
+      { label: 'Servidores', href: '/productos?categoria=PC y Servidores' },
+      { label: 'Mini PCs', href: '/productos?categoria=PC y Servidores' },
     ],
   },
   {
     id: 'laptops',
-    label: 'Laptops y computadoras',
+    label: 'Laptops',
     icon: 'Laptop',
     items: [
-      { label: 'Laptops de trabajo', href: '/productos?categoria=laptops-trabajo', subItems: [
-        { label: 'Lenovo ThinkPad', href: '/productos?categoria=laptops-trabajo&marca=lenovo' },
-        { label: 'Dell Latitude', href: '/productos?categoria=laptops-trabajo&marca=dell' },
-        { label: 'HP EliteBook', href: '/productos?categoria=laptops-trabajo&marca=hp' },
+      { label: 'Laptops', href: '/productos?categoria=Laptops', subItems: [
+        { label: 'Lenovo', href: '/productos?categoria=Laptops&marca=Lenovo' },
+        { label: 'Dell', href: '/productos?categoria=Laptops&marca=Dell' },
+        { label: 'HP', href: '/productos?categoria=Laptops&marca=HP' },
+        { label: 'ASUS', href: '/productos?categoria=Laptops&marca=ASUS' },
+        { label: 'Acer', href: '/productos?categoria=Laptops&marca=Acer' },
+        { label: 'MSI', href: '/productos?categoria=Laptops&marca=MSI' },
       ]},
-      { label: 'Laptops gaming', href: '/productos?categoria=laptops-gaming', subItems: [
-        { label: 'ASUS ROG', href: '/productos?categoria=laptops-gaming&marca=asus' },
-        { label: 'MSI', href: '/productos?categoria=laptops-gaming&marca=msi' },
-        { label: 'Acer Predator', href: '/productos?categoria=laptops-gaming&marca=acer' },
+      { label: 'Laptops Empresariales', href: '/productos?categoria=Laptops' },
+      { label: 'Laptops Gaming', href: '/productos?categoria=Laptops' },
+    ],
+  },
+  {
+    id: 'components',
+    label: 'Componentes',
+    icon: 'Cpu',
+    items: [
+      { label: 'Procesadores', href: '/productos?categoria=Componentes', subItems: [
+        { label: 'Intel', href: '/productos?categoria=Componentes&marca=Intel' },
+        { label: 'AMD', href: '/productos?categoria=Componentes&marca=AMD' },
       ]},
-      { label: 'Computadoras de escritorio', href: '/productos?categoria=computadoras-escritorio' },
-      { label: 'All-in-One', href: '/productos?categoria=all-in-one' },
-      { label: 'Mini PCs', href: '/productos?categoria=mini-pcs' },
+      { label: 'Tarjetas Gráficas', href: '/productos?categoria=Componentes', subItems: [
+        { label: 'NVIDIA', href: '/productos?categoria=Componentes&marca=NVIDIA' },
+        { label: 'ASUS', href: '/productos?categoria=Componentes&marca=ASUS' },
+        { label: 'MSI', href: '/productos?categoria=Componentes&marca=MSI' },
+      ]},
+      { label: 'Placas Madre', href: '/productos?categoria=Componentes' },
+      { label: 'Fuentes de Poder', href: '/productos?categoria=Cables y Energía' },
     ],
   },
   {
     id: 'monitors',
-    label: 'Monitores y pantallas',
+    label: 'Monitores',
     icon: 'Monitor',
     items: [
-      { label: 'Monitores 4K', href: '/productos?categoria=monitores-4k', subItems: [
-        { label: '27"', href: '/productos?categoria=monitores-4k&tamano=27' },
-        { label: '32"', href: '/productos?categoria=monitores-4k&tamano=32' },
-        { label: '34"', href: '/productos?categoria=monitores-4k&tamano=34' },
+      { label: 'Monitores', href: '/productos?categoria=Monitores', subItems: [
+        { label: 'LG', href: '/productos?categoria=Monitores&marca=LG' },
+        { label: 'Samsung', href: '/productos?categoria=Monitores&marca=Samsung' },
+        { label: 'Dell', href: '/productos?categoria=Monitores&marca=Dell' },
+        { label: 'ASUS', href: '/productos?categoria=Monitores&marca=ASUS' },
       ]},
-      { label: 'Monitores IPS', href: '/productos?categoria=monitores-ips' },
-      { label: 'Monitores gaming', href: '/productos?categoria=monitores-gaming', subItems: [
-        { label: '144Hz', href: '/productos?categoria=monitores-gaming=144hz' },
-        { label: '240Hz', href: '/productos?categoria=monitores-gaming=240hz' },
-        { label: '360Hz', href: '/productos?categoria=monitores-gaming=360hz' },
-      ]},
-      { label: 'Monitores ultrawide', href: '/productos?categoria=monitores-ultrawide' },
-      { label: 'Pantallas táctiles', href: '/productos?categoria=pantallas-tactiles' },
+      { label: 'Gaming', href: '/productos?categoria=Monitores' },
+      { label: 'Profesionales', href: '/productos?categoria=Monitores' },
     ],
   },
   {
     id: 'peripherals',
-    label: 'Periféricos y accesorios',
+    label: 'Periféricos',
     icon: 'MousePointer2',
     items: [
-      { label: 'Teclados', href: '/productos?categoria=teclados', subItems: [
-        { label: 'Mecánicos', href: '/productos?categoria=teclados&tipo=mecanico' },
-        { label: 'Membrana', href: '/productos?categoria=teclados&tipo=membrana' },
-        { label: 'Inalámbricos', href: '/productos?categoria=teclados&tipo=inalambrico' },
+      { label: 'Teclados', href: '/productos?categoria=Periféricos', subItems: [
+        { label: 'Logitech', href: '/productos?categoria=Periféricos&marca=Logitech' },
+        { label: 'Redragon', href: '/productos?categoria=Periféricos&marca=Redragon' },
+        { label: 'Razer', href: '/productos?categoria=Periféricos&marca=Razer' },
       ]},
-      { label: 'Ratones', href: '/productos?categoria=ratones', subItems: [
-        { label: 'Gaming', href: '/productos?categoria=ratones&tipo=gaming' },
-        { label: 'Oficina', href: '/productos?categoria=ratones&tipo=oficina' },
-        { label: 'Inalámbricos', href: '/productos?categoria=ratones&tipo=inalambrico' },
+      { label: 'Mouse', href: '/productos?categoria=Periféricos', subItems: [
+        { label: 'Logitech', href: '/productos?categoria=Periféricos&marca=Logitech' },
+        { label: 'Redragon', href: '/productos?categoria=Periféricos&marca=Redragon' },
       ]},
-      { label: 'Webcams', href: '/productos?categoria=webcams' },
-      { label: 'Auriculares', href: '/productos?categoria=auriculares' },
-      { label: 'Parlantes', href: '/productos?categoria=parlantes' },
+      { label: 'Auriculares', href: '/productos?categoria=Audio y Video' },
+      { label: 'Webcams', href: '/productos?categoria=Accesorios' },
     ],
   },
   {
@@ -105,31 +95,27 @@ export const storeCategories = [
     label: 'Almacenamiento',
     icon: 'HardDrive',
     items: [
-      { label: 'Discos SSD', href: '/productos?categoria=discos-ssd', subItems: [
-        { label: 'NVMe M.2', href: '/productos?categoria=discos-ssd&tipo=nvme' },
-        { label: 'SATA III', href: '/productos?categoria=discos-ssd&tipo=sata' },
-        { label: 'Externos', href: '/productos?categoria=discos-ssd&tipo=externo' },
+      { label: 'SSD', href: '/productos?categoria=Almacenamiento', subItems: [
+        { label: 'Kingston', href: '/productos?categoria=Almacenamiento&marca=Kingston' },
+        { label: 'Samsung', href: '/productos?categoria=Almacenamiento&marca=Samsung' },
+        { label: 'Crucial', href: '/productos?categoria=Almacenamiento&marca=Crucial' },
+        { label: 'WD', href: '/productos?categoria=Almacenamiento&marca=WD' },
       ]},
-      { label: 'Discos HDD', href: '/productos?categoria=discos-hdd' },
-      { label: 'Unidades NVMe', href: '/productos?categoria=unidades-nvme' },
-      { label: 'Memorias USB', href: '/productos?categoria=memorias-usb' },
-      { label: 'Discos externos', href: '/productos?categoria=discos-externos' },
+      { label: 'HDD', href: '/productos?categoria=Almacenamiento' },
+      { label: 'NAS', href: '/productos?categoria=Almacenamiento' },
     ],
   },
   {
     id: 'networks',
-    label: 'Redes y conectividad',
+    label: 'Redes',
     icon: 'Network',
     items: [
-      { label: 'Routers', href: '/productos?categoria=routers', subItems: [
-        { label: 'TP-Link', href: '/productos?categoria=routers&marca=tp-link' },
-        { label: 'Cisco', href: '/productos?categoria=routers&marca=cisco' },
-        { label: 'Linksys', href: '/productos?categoria=routers&marca=linksys' },
+      { label: 'Routers', href: '/productos?categoria=Redes', subItems: [
+        { label: 'TP-Link', href: '/productos?categoria=Redes&marca=TP-Link' },
+        { label: 'Ubiquiti', href: '/productos?categoria=Redes&marca=Ubiquiti' },
       ]},
-      { label: 'Switches', href: '/productos?categoria=switches' },
-      { label: 'Access points', href: '/productos?categoria=access-points' },
-      { label: 'Tarjetas de red', href: '/productos?categoria=tarjetas-red' },
-      { label: 'Cables de red', href: '/productos?categoria=cables-red' },
+      { label: 'Switches', href: '/productos?categoria=Redes' },
+      { label: 'Access Points', href: '/productos?categoria=Redes' },
     ],
   },
   {
@@ -137,33 +123,25 @@ export const storeCategories = [
     label: 'Impresión',
     icon: 'Printer',
     items: [
-      { label: 'Impresoras láser', href: '/productos?categoria=impresoras-laser' },
-      { label: 'Impresoras inyección', href: '/productos?categoria=impresoras-inyeccion' },
-      { label: 'Multifuncionales', href: '/productos?categoria=multifuncionales' },
-      { label: 'Escáneres', href: '/productos?categoria=escaneres' },
-      { label: 'Toner y tinta', href: '/productos?categoria=toner-tinta' },
+      { label: 'Impresoras', href: '/productos?categoria=Impresoras', subItems: [
+        { label: 'HP', href: '/productos?categoria=Impresoras&marca=HP' },
+        { label: 'Epson', href: '/productos?categoria=Impresoras&marca=Epson' },
+        { label: 'Brother', href: '/productos?categoria=Impresoras&marca=Brother' },
+      ]},
+      { label: 'Multifuncionales', href: '/productos?categoria=Impresoras' },
     ],
   },
   {
     id: 'power',
-    label: 'Energía y protección eléctrica',
+    label: 'Cables y Energía',
     icon: 'Zap',
     items: [
-      { label: 'Fuentes de poder', href: '/productos?categoria=fuentes-poder', subItems: [
-        { label: '80 Plus', href: '/productos?categoria=fuentes-poder&watts=80plus' },
-        { label: '750W', href: '/productos?categoria=fuentes-poder&watts=750' },
-        { label: '850W', href: '/productos?categoria=fuentes-poder&watts=850' },
-        { label: '1000W', href: '/productos?categoria=fuentes-poder&watts=1000' },
+      { label: 'UPS', href: '/productos?categoria=Cables y Energía', subItems: [
+        { label: 'Forza', href: '/productos?categoria=Cables y Energía&marca=Forza' },
+        { label: 'APC', href: '/productos?categoria=Cables y Energía&marca=APC' },
       ]},
-      { label: 'UPS', href: '/productos?categoria=ups', subItems: [
-        { label: '600VA', href: '/productos?categoria=ups&va=600' },
-        { label: '1000VA', href: '/productos?categoria=ups&va=1000' },
-        { label: '1500VA', href: '/productos?categoria=ups&va=1500' },
-        { label: '2200VA', href: '/productos?categoria=ups&va=2200' },
-      ]},
-      { label: 'Regletas', href: '/productos?categoria=regletas' },
-      { label: 'Protectores de sobretensión', href: '/productos?categoria=protectores-sobretension' },
-      { label: 'Cableado eléctrico', href: '/productos?categoria=cableado-electrico' },
+      { label: 'Regletas', href: '/productos?categoria=Cables y Energía' },
+      { label: 'Accesorios', href: '/productos?categoria=Accesorios' },
     ],
   },
 ]

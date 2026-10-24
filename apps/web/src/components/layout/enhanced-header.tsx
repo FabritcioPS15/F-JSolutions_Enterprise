@@ -109,7 +109,7 @@ function ThirdLevelSubmenu({ items, onClose }: { items: Array<{ label: string; h
 
 // ─── Componente: Submenú de Categoría ─────────────────────────────────────────────────────────
 
-function CategorySubmenu({ items, onClose }: { items: Array<{ label: string; href: string; subItems?: Array<{ label: string; href: string }> }; onClose: () => void }) {
+function CategorySubmenu({ items, onClose }: { items: Array<{ label: string; href: string; subItems?: Array<{ label: string; href: string }> }>, onClose: () => void }) {
   const ref = useRef<HTMLDivElement>(null)
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null)
   useOnClickOutside(ref, onClose)
@@ -366,21 +366,6 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
               </span>
             </Link>
 
-            {/* Enlaces corporativos secundarios */}
-            <nav className="hidden lg:flex items-center gap-6 text-sm" aria-label="Enlaces corporativos">
-              <Link href="/nosotros" className="text-[#64748B] hover:text-[#2563EB] transition-colors">
-                Sobre nosotros
-              </Link>
-              <Link href="/contacto" className="text-[#64748B] hover:text-[#2563EB] transition-colors">
-                Contacto
-              </Link>
-              <Link href="/nosotros#faq" className="text-[#64748B] hover:text-[#2563EB] transition-colors">
-                Preguntas frecuentes
-              </Link>
-              <Link href="/servicios" className="text-[#64748B] hover:text-[#2563EB] transition-colors">
-                Atención empresarial
-              </Link>
-            </nav>
 
             {/* Buscador */}
             <form onSubmit={submitSearch} className="relative flex-1 max-w-md hidden md:block">
@@ -441,9 +426,8 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
 
       {/* Segunda franja: Navegación principal */}
       <div
-        className={`transition-shadow duration-300 ${
-          scrolled ? 'shadow-[0_4px_20px_-4px_rgba(15,23,42,0.08)]' : 'shadow-none'
-        }`}
+        className={`transition-shadow duration-300 ${scrolled ? 'shadow-[0_4px_20px_-4px_rgba(15,23,42,0.08)]' : 'shadow-none'
+          }`}
       >
         <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
           <nav className="flex items-center gap-1 py-3" aria-label="Navegación principal">
@@ -473,11 +457,10 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                         onClick={() => toggle('store')}
                         aria-expanded={openDropdown === 'store'}
                         aria-haspopup="dialog"
-                        className={`flex h-10 items-center gap-1.5 rounded-lg px-3 text-sm font-semibold transition-colors ${
-                          active
+                        className={`flex h-10 items-center gap-1.5 rounded-lg px-3 text-sm font-semibold transition-colors ${active
                             ? 'text-[#2563EB]'
                             : 'text-[#475569] hover:text-[#2563EB]'
-                        }`}
+                          }`}
                       >
                         {link.label}
                         <ChevronDown
@@ -493,11 +476,10 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                         onClick={() => toggle(dropdownKey)}
                         aria-expanded={openDropdown === dropdownKey}
                         aria-haspopup="dialog"
-                        className={`flex h-10 items-center gap-1.5 rounded-lg px-3 text-sm font-semibold transition-colors ${
-                          active
+                        className={`flex h-10 items-center gap-1.5 rounded-lg px-3 text-sm font-semibold transition-colors ${active
                             ? 'text-[#2563EB]'
                             : 'text-[#475569] hover:text-[#2563EB]'
-                        }`}
+                          }`}
                       >
                         {link.label}
                         <ChevronDown
@@ -511,11 +493,10 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                   ) : (
                     <Link
                       href={link.href}
-                      className={`flex h-10 items-center rounded-lg px-3 text-sm font-semibold transition-colors ${
-                        active
+                      className={`flex h-10 items-center rounded-lg px-3 text-sm font-semibold transition-colors ${active
                           ? 'text-[#2563EB]'
                           : 'text-[#475569] hover:text-[#2563EB]'
-                      }`}
+                        }`}
                     >
                       {link.label}
                     </Link>
@@ -603,29 +584,28 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                         <div className="space-y-1 pl-4 py-2">
                           {(dropdownKey === 'servicios-ti' ? itServicesMenu :
                             dropdownKey === 'infraestructura-ti' ? infrastructureMenu :
-                            dropdownKey === 'desarrollo-de-software' ? softwareDevMenu :
-                            dropdownKey === 'empresa' ? companyMenu : []).map((item) => (
-                            <Link
-                              key={item.href}
-                              href={item.href}
-                              onClick={() => { closeAll(); setMenuOpen(false) }}
-                              className="block rounded-lg px-3 py-2 text-sm text-[#475569] hover:bg-[#F8FAFC] hover:text-[#2563EB] transition-colors"
-                            >
-                              <span className="font-semibold">{item.label}</span>
-                              {item.desc && <span className="block text-xs text-[#64748B] mt-0.5">{item.desc}</span>}
-                            </Link>
-                          ))}
+                              dropdownKey === 'desarrollo-de-software' ? softwareDevMenu :
+                                dropdownKey === 'empresa' ? companyMenu : []).map((item) => (
+                                  <Link
+                                    key={item.href}
+                                    href={item.href}
+                                    onClick={() => { closeAll(); setMenuOpen(false) }}
+                                    className="block rounded-lg px-3 py-2 text-sm text-[#475569] hover:bg-[#F8FAFC] hover:text-[#2563EB] transition-colors"
+                                  >
+                                    <span className="font-semibold">{item.label}</span>
+                                    {item.desc && <span className="block text-xs text-[#64748B] mt-0.5">{item.desc}</span>}
+                                  </Link>
+                                ))}
                         </div>
                       </MobileAccordion>
                     ) : (
                       <Link
                         href={link.href}
                         onClick={() => setMenuOpen(false)}
-                        className={`flex items-center justify-between rounded-lg px-4 py-3 text-sm font-semibold transition-colors ${
-                          active
+                        className={`flex items-center justify-between rounded-lg px-4 py-3 text-sm font-semibold transition-colors ${active
                             ? 'bg-[#EFF6FF] text-[#2563EB]'
                             : 'text-[#475569] hover:bg-[#F8FAFC] hover:text-[#2563EB]'
-                        }`}
+                          }`}
                       >
                         {link.label}
                       </Link>

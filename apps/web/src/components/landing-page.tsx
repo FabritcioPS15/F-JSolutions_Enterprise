@@ -13,6 +13,7 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
+import { SiteFooter } from '@/components/layout/site-footer'
 import { ProductCard } from '@/components/cards/product-card'
 import { categories, products } from '@/lib/catalog'
 import { useQuote } from '@/lib/use-quote'
@@ -135,22 +136,7 @@ export function LandingPage() {
       </section>
 
       {showQuote && <QuoteModal onClose={() => setShowQuote(false)} />}
-      <footer className="bg-[#102a56] px-4 py-10 text-blue-100 sm:px-6 lg:px-8">
-        <div className="mx-auto flex max-w-[1280px] flex-col gap-8 sm:flex-row sm:justify-between">
-          <div>
-            <div className="flex items-center gap-2 font-heading text-lg font-bold text-white">
-              <span className="flex size-9 items-center justify-center rounded-lg bg-[#155eef] text-xs">FJ</span> FJ TECH
-            </div>
-            <p className="mt-3 max-w-xs text-sm leading-6">Tu partner para comprar tecnología y construir el equipo que necesitas.</p>
-          </div>
-          <div className="grid grid-cols-2 gap-x-12 gap-y-3 text-sm">
-            <a href="#productos">Catálogo</a>
-            <a href="#cuenta">Mi cuenta</a>
-            <a href="#contacto">Contacto</a>
-            <a href="#garantia">Garantías</a>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </main>
   )
 }

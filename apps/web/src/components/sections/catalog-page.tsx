@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 import {
   ArrowRight,
   ChevronDown,
@@ -36,19 +37,29 @@ export function CatalogPage({
   initialCategory = 'Todas',
 }: CatalogPageProps) {
   const quote = useQuote()
+  const searchParams = useSearchParams()
   const [showQuote, setShowQuote] = useState(false)
   const [filtersOpen, setFiltersOpen] = useState(false)
-  const [query, setQuery] = useState(initialQuery)
-  const [category, setCategory] = useState(initialCategory)
-  const [brand, setBrand] = useState('Todas')
+  const [query, setQuery] = useState(initialQuery || searchParams?.get('q') || searchParams?.get('query') || '')
+  const [category, setCategory] = useState(initialCategory !== 'Todas' ? initialCategory : searchParams?.get('categoria') || searchParams?.get('category') || 'Todas')
+  const [brand, setBrand] = useState(searchParams?.get('marca') || searchParams?.get('brand') || 'Todas')
   const [sort, setSort] = useState('relevancia')
 
   useEffect(() => {
-    setQuery(initialQuery)
+    const q = searchParams?.get('q') || searchParams?.get('query') || ''
+    const cat = searchParams?.get('categoria') || searchParams?.get('category') || ''
+    const b = searchParams?.get('marca') || searchParams?.get('brand') || ''
+    if (q) setQuery(q)
+    if (cat) setCategory(cat)
+    if (b) setBrand(b)
+  }, [searchParams])
+
+  useEffect(() => {
+    if (initialQuery) setQuery(initialQuery)
   }, [initialQuery])
 
   useEffect(() => {
-    setCategory(initialCategory)
+    if (initialCategory && initialCategory !== 'Todas') setCategory(initialCategory)
   }, [initialCategory])
 
   const availableBrands = useMemo(
