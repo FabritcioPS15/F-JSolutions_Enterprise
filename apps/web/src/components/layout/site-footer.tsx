@@ -24,6 +24,7 @@ const companyLinks = [
   { label: 'Sobre nosotros', href: '/nosotros' },
   { label: 'Proyectos y experiencia', href: '/nosotros#proyectos' },
   { label: 'Cómo trabajamos', href: '/nosotros#metodologia' },
+  { label: 'Mi cuenta', href: '/mi-cuenta' },
   { label: 'Contacto', href: '/contacto' },
 ]
 
@@ -81,11 +82,11 @@ const socialLinks = [
 ]
 
 // ─── Look fijo (independiente del tema) ────────────────────────────────────────
-// Paleta existente del proyecto:
-//   fondo  → --midnight-navy  #0B1220
-//   títulos→ --cloud-white    #F8FAFC
-//   texto  → slate            #94A3B8 / #CBD5E1
-//   acento → --tech-blue      #2563EB / #3B82F6
+// Paleta mejorada con gradientes y efectos:
+//   fondo    → gradient midnight navy
+//   títulos  → --cloud-white    #F8FAFC
+//   texto    → slate            #94A3B8 / #CBD5E1
+//   acento   → --tech-blue      #2563EB / #3B82F6 con glow
 
 const FOCUS =
   'rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3B82F6]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0B1220]'
@@ -102,7 +103,10 @@ function FooterLink({
   children: React.ReactNode
 }) {
   return (
-    <Link href={href} className={`inline-block text-[#CBD5E1] transition-colors hover:text-[#3B82F6] ${FOCUS} ${className}`}>
+    <Link
+      href={href}
+      className={`inline-block text-[#CBD5E1] transition-all duration-300 hover:text-[#3B82F6] hover:translate-x-1 hover:tracking-wide ${FOCUS} ${className}`}
+    >
       {children}
     </Link>
   )
@@ -115,11 +119,11 @@ function SocialIcon({ label, href, children }: { label: string; href: string; ch
       target="_blank"
       rel="noreferrer"
       aria-label={label}
-      className={`grid size-9 place-items-center rounded-lg border border-white/10 text-[#94A3B8] transition-colors hover:border-[#3B82F6]/50 hover:bg-white/5 hover:text-white ${FOCUS}`}
+      className={`group grid size-9 place-items-center rounded-lg border border-white/10 text-[#94A3B8] transition-all duration-300 hover:border-[#3B82F6] hover:bg-gradient-to-br hover:from-[#3B82F6]/20 hover:to-[#2563EB]/20 hover:text-white hover:shadow-lg hover:shadow-[#3B82F6]/30 hover:-translate-y-1 ${FOCUS}`}
     >
       <svg
         viewBox="0 0 24 24"
-        className="size-4"
+        className="size-4 transition-transform duration-300 group-hover:scale-110"
         fill="none"
         stroke="currentColor"
         strokeWidth="1.7"
@@ -139,17 +143,17 @@ export function SiteFooter() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="border-t border-white/10 bg-[#0B1220] text-[#94A3B8]">
+    <footer className="border-t border-white/10 bg-gradient-to-b from-[#0B1220] via-[#0A1120] to-[#080F18] text-[#94A3B8]">
       <div className="mx-auto max-w-[1280px] px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
         <div className="grid gap-x-8 gap-y-10 lg:grid-cols-12">
           {/* Columna de identidad corporativa */}
           <div className="lg:col-span-4">
-            <Link href="/" className={`inline-flex items-center gap-2.5 ${FOCUS}`} aria-label="FJ Solutions · Inicio">
-              <span className="grid size-10 place-items-center rounded-xl bg-[#2563EB] font-heading text-sm font-bold tracking-tight text-white shadow-md shadow-[#2563EB]/30">
+            <Link href="/" className={`inline-flex items-center gap-2.5 group ${FOCUS}`} aria-label="FJ Solutions · Inicio">
+              <span className="grid size-10 place-items-center rounded-xl bg-gradient-to-br from-[#3B82F6] to-[#2563EB] font-heading text-sm font-bold tracking-tight text-white shadow-lg shadow-[#3B82F6]/40 transition-all duration-300 group-hover:shadow-xl group-hover:shadow-[#3B82F6]/50 group-hover:scale-105">
                 FJ
               </span>
-              <span className="font-heading text-xl font-bold tracking-[-0.04em] text-[#F8FAFC]">
-                FJ <span className="text-[#3B82F6]">Solutions</span>
+              <span className="font-heading text-xl font-bold tracking-[-0.04em] text-[#F8FAFC] transition-all duration-300 group-hover:text-white">
+                FJ <span className="text-[#3B82F6] transition-colors duration-300 group-hover:text-[#60A5FA]">Solutions</span>
               </span>
             </Link>
 
@@ -162,27 +166,27 @@ export function SiteFooter() {
               <li>
                 <a
                   href="tel:+51999888777"
-                  className={`flex items-center gap-2.5 text-[#94A3B8] transition-colors hover:text-[#3B82F6] ${FOCUS}`}
+                  className={`flex items-center gap-2.5 text-[#94A3B8] transition-all duration-300 hover:text-[#3B82F6] hover:translate-x-1 ${FOCUS}`}
                 >
-                  <Phone className="size-4 shrink-0" />
+                  <Phone className="size-4 shrink-0 transition-colors duration-300 group-hover:text-[#3B82F6]" />
                   <span className="min-w-0 break-words">+51 999 888 777</span>
                 </a>
               </li>
               <li>
                 <a
                   href="mailto:ventas@fjsolutions.pe"
-                  className={`flex items-center gap-2.5 text-[#94A3B8] transition-colors hover:text-[#3B82F6] ${FOCUS}`}
+                  className={`flex items-center gap-2.5 text-[#94A3B8] transition-all duration-300 hover:text-[#3B82F6] hover:translate-x-1 ${FOCUS}`}
                 >
-                  <Mail className="size-4 shrink-0" />
+                  <Mail className="size-4 shrink-0 transition-colors duration-300 group-hover:text-[#3B82F6]" />
                   <span className="min-w-0 break-words">ventas@fjsolutions.pe</span>
                 </a>
               </li>
               <li className="flex items-start gap-2.5">
-                <MapPin className="mt-0.5 size-4 shrink-0" />
+                <MapPin className="mt-0.5 size-4 shrink-0 text-[#94A3B8]" />
                 <span className="min-w-0 break-words">Av. Javier Prado Este, Lima, Perú</span>
               </li>
               <li className="flex items-center gap-2.5">
-                <Clock className="size-4 shrink-0" />
+                <Clock className="size-4 shrink-0 text-[#94A3B8]" />
                 <span className="min-w-0 break-words">{EMPRESA.horario}</span>
               </li>
             </ul>
@@ -202,8 +206,8 @@ export function SiteFooter() {
             className="grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:col-span-8 lg:grid-cols-4"
           >
             {linkColumns.map((column) => (
-              <div key={column.title}>
-                <h3 className="font-heading text-xs font-bold uppercase tracking-[0.14em] text-[#F8FAFC]">
+              <div key={column.title} className="transition-all duration-300 hover:translate-x-1">
+                <h3 className="font-heading text-xs font-bold uppercase tracking-[0.14em] text-[#F8FAFC] transition-colors duration-300 hover:text-[#3B82F6]">
                   {column.title}
                 </h3>
                 <ul className="mt-4 space-y-3 text-sm">
@@ -220,9 +224,9 @@ export function SiteFooter() {
       </div>
 
       {/* Franja inferior */}
-      <div className="border-t border-white/10">
+      <div className="border-t border-white/10 bg-gradient-to-b from-transparent to-[#050A12]">
         <div className="mx-auto flex max-w-[1280px] flex-col gap-3 px-4 py-5 text-xs text-[#94A3B8] sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
-          <p>© {currentYear} FJ Solutions. Todos los derechos reservados.</p>
+          <p className="transition-colors duration-300 hover:text-[#CBD5E1]">© {currentYear} FJ Solutions. Todos los derechos reservados.</p>
           <ul className="flex flex-wrap items-center gap-x-4 gap-y-2">
             <li>
               <FooterLink href="/nosotros">Términos y condiciones</FooterLink>

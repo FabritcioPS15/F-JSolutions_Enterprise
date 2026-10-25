@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
-import { SiteFooter } from '@/components/layout/site-footer'
 
 export const metadata: Metadata = {
   title: 'Blog | FJ Tech Solutions',
@@ -15,7 +14,6 @@ export default function BlogPage() {
         <h1 className="text-4xl font-bold tracking-tight text-[#0F172A]">Blog</h1>
         <p className="mt-4 text-lg text-[#475569]">Próximamente: artículos y noticias tecnológicas.</p>
       </section>
-      <SiteFooter />
     </main>
   )
 }

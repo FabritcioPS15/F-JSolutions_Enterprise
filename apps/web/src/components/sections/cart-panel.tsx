@@ -1,7 +1,7 @@
 'use client'
 
 import { ArrowRight, Minus, Plus, ShieldCheck, ShoppingCart, Trash2, Truck, X } from 'lucide-react'
-import { formatPrice } from '@/lib/catalog'
+import { formatPrice } from '@/lib/utils/index'
 import type { CartLine } from '@/lib/use-cart'
 
 type CartPanelProps = {
@@ -107,7 +107,7 @@ export function CartPanel({
                       </div>
                       <div className="flex items-center gap-2">
                         <p className="text-sm font-semibold text-[#0F172A]">
-                          {formatPrice(product.price * qty)}
+                          {formatPrice((product.price ?? 0) * qty)}
                         </p>
                         <button
                           onClick={() => onRemove(product.id)}

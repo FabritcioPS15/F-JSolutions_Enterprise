@@ -157,7 +157,13 @@ export const featuredBrands = [
 
 // ─── Menús de Servicios ──────────────────────────────────────────────────────────────────
 
-export const itServicesMenu = [
+export type NavMenuItem = {
+  label: string
+  href: string
+  desc?: string
+}
+
+export const itServicesMenu: NavMenuItem[] = [
   { label: 'Soporte técnico', href: '/soporte-ti', desc: 'Asistencia inmediata para problemas técnicos' },
   { label: 'Mantenimiento de computadoras y laptops', href: '/soporte-ti', desc: 'Servicio preventivo y correctivo' },
   { label: 'Instalación y configuración de software', href: '/soporte-ti', desc: 'Sistemas operativos y aplicaciones' },
@@ -166,7 +172,7 @@ export const itServicesMenu = [
   { label: 'Soluciones de soporte para empresas', href: '/servicios', desc: 'Planes empresariales personalizados' },
 ]
 
-export const infrastructureMenu = [
+export const infrastructureMenu: NavMenuItem[] = [
   { label: 'Redes y conectividad', href: '/servicios', desc: 'Diseño e implementación de redes' },
   { label: 'Cableado estructurado', href: '/servicios', desc: 'Instalación profesional de cableado' },
   { label: 'Configuración de equipos de red', href: '/servicios', desc: 'Routers, switches y access points' },
@@ -174,7 +180,7 @@ export const infrastructureMenu = [
   { label: 'Equipamiento tecnológico empresarial', href: '/servicios', desc: 'Servidores y equipamiento profesional' },
 ]
 
-export const softwareDevMenu = [
+export const softwareDevMenu: NavMenuItem[] = [
   { label: 'Sistemas web a medida', href: '/sistemas', desc: 'Desarrollo de aplicaciones web personalizadas' },
   { label: 'Sistemas de gestión empresarial', href: '/sistemas', desc: 'ERP y sistemas de gestión' },
   { label: 'Automatización de procesos', href: '/sistemas', desc: 'Optimización de flujos de trabajo' },
@@ -184,7 +190,7 @@ export const softwareDevMenu = [
 
 // ─── Menú Empresa ─────────────────────────────────────────────────────────────────────
 
-export const companyMenu = [
+export const companyMenu: NavMenuItem[] = [
   { label: 'Sobre nosotros', href: '/nosotros' },
   { label: 'Proyectos y experiencia', href: '/nosotros#proyectos' },
   { label: 'Cómo trabajamos', href: '/nosotros#metodologia' },

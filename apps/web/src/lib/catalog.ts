@@ -7,6 +7,7 @@ export type Product = {
   model?: string
   sku?: string
   description: string
+  price?: number
   image: string
   images?: string[]
   video?: string

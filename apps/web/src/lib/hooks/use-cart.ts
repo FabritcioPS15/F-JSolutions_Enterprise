@@ -39,7 +39,7 @@ export function useCart() {
   )
 
   const count = lines.reduce((sum, line) => sum + line.qty, 0)
-  const subtotal = lines.reduce((sum, line) => sum + line.product.price * line.qty, 0)
+  const subtotal = lines.reduce((sum, line) => sum + (line.product.price ?? 0) * line.qty, 0)
 
   return { items, add, remove, setQty, lines, count, subtotal }
 }

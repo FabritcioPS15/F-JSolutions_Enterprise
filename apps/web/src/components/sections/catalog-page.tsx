@@ -16,7 +16,6 @@ import {
 } from 'lucide-react'
 import { ProductCard } from '@/components/cards/product-card'
 import { QuotePanel } from '@/components/sections/quote-panel'
-import { SiteFooter } from '@/components/layout/site-footer'
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
 import { categories, products } from '@/lib/catalog'
 import { useQuote } from '@/lib/use-quote'
@@ -52,6 +51,11 @@ export function CatalogPage({
     if (q) setQuery(q)
     if (cat) setCategory(cat)
     if (b) setBrand(b)
+    if (!q && !cat && !b) {
+      setQuery('')
+      setCategory('Todas')
+      setBrand('Todas')
+    }
   }, [searchParams])
 
   useEffect(() => {
@@ -78,7 +82,7 @@ export function CatalogPage({
         (product.model && product.model.toLowerCase().includes(term)) ||
         (product.sku && product.sku.toLowerCase().includes(term))
       const matchesCategory = category === 'Todas' || product.category === category
-      const matchesBrand = brand === 'Todas' || product.brand === brand
+      const matchesBrand = brand === 'Todas' || product.brand.toLowerCase() === brand.toLowerCase()
       return matchesTerm && matchesCategory && matchesBrand
     })
 
@@ -309,8 +313,6 @@ export function CatalogPage({
           </div>
         </div>
       )}
-
-      <SiteFooter />
 
       {showQuote && (
         <QuotePanel

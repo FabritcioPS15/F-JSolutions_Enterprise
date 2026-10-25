@@ -128,6 +128,18 @@ export function useQuote() {
     setQuote(defaultQuote)
   }
 
+  const replaceQuote = (items: QuoteItem[], generalNotes = '') => {
+    const now = new Date().toISOString()
+    const next: Quote = {
+      items,
+      generalNotes,
+      createdAt: now,
+      updatedAt: now,
+    }
+    saveQuoteToStorage(next)
+    setQuoteState(next)
+  }
+
   const setGeneralNotes = (notes: string) => {
     setQuote((prev) => ({ ...prev, generalNotes: notes }))
   }
@@ -142,6 +154,7 @@ export function useQuote() {
     updateItemNotes,
     removeItem,
     clearQuote,
+    replaceQuote,
     setGeneralNotes,
     count,
     isLoaded,

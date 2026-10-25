@@ -28,7 +28,6 @@ import {
   Zap,
   type LucideIcon,
 } from 'lucide-react'
-import { SiteFooter } from '@/components/layout/site-footer'
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
 
 type ServiceItem = {
@@ -656,8 +655,6 @@ export function ServicesPage() {
           </div>
         </div>
       </section>
-
-      <SiteFooter />
     </main>
   )
 }

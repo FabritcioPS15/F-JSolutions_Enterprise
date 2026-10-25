@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import {
   ArrowRight,
   ChevronDown,
+  ChevronRight,
   FileText,
   Menu,
   MousePointer2,
@@ -82,22 +83,18 @@ function MobileAccordion({ label, isOpen, onToggle, children }: { label: string;
 // ─── Componente: Submenú de Tercer Nivel ─────────────────────────────────────────────────────────
 
 function ThirdLevelSubmenu({ items, onClose }: { items: Array<{ label: string; href: string }>; onClose: () => void }) {
-  const ref = useRef<HTMLDivElement>(null)
-  useOnClickOutside(ref, onClose)
-
   return (
     <div
-      ref={ref}
       role="dialog"
-      className="absolute left-full top-0 ml-2 z-50 w-40 rounded-lg border border-[#E2E8F0] bg-white shadow-[0_8px_24px_rgba(15,23,42,0.1)] animate-in fade-in slide-in-from-left-2 duration-200"
+      className="absolute left-full top-0 ml-1 z-50 w-44 rounded-lg border border-[#E2E8F0] bg-white shadow-[0_8px_24px_rgba(15,23,42,0.1)] animate-in fade-in slide-in-from-left-2 duration-150"
     >
-      <div className="p-2">
+      <div className="p-1.5">
         {items.map((item, index) => (
           <Link
             key={index}
             href={item.href}
             onClick={onClose}
-            className="block rounded-md px-3 py-2 text-xs text-[#0F172A] hover:bg-[#F8FAFC] hover:text-[#2563EB] transition-colors"
+            className="block rounded-md px-3 py-2 text-xs font-medium text-[#0F172A] hover:bg-[#EFF6FF] hover:text-[#2563EB] transition-colors"
           >
             {item.label}
           </Link>
@@ -109,18 +106,15 @@ function ThirdLevelSubmenu({ items, onClose }: { items: Array<{ label: string; h
 
 // ─── Componente: Submenú de Categoría ─────────────────────────────────────────────────────────
 
-function CategorySubmenu({ items, onClose }: { items: Array<{ label: string; href: string; subItems?: Array<{ label: string; href: string }> }>, onClose: () => void }) {
-  const ref = useRef<HTMLDivElement>(null)
+function CategorySubmenu({ items, onClose }: { items: Array<{ label: string; href: string; subItems?: Array<{ label: string; href: string }> }>; onClose: () => void }) {
   const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null)
-  useOnClickOutside(ref, onClose)
 
   return (
     <div
-      ref={ref}
       role="dialog"
-      className="absolute left-full top-0 ml-2 z-50 w-56 rounded-lg border border-[#E2E8F0] bg-white shadow-[0_8px_24px_rgba(15,23,42,0.1)] animate-in fade-in slide-in-from-left-2 duration-200"
+      className="absolute left-full top-0 ml-1 z-50 w-56 rounded-lg border border-[#E2E8F0] bg-white shadow-[0_8px_24px_rgba(15,23,42,0.1)] animate-in fade-in slide-in-from-left-2 duration-150"
     >
-      <div className="p-2">
+      <div className="p-1.5">
         {items.map((item, index) => {
           const hasSubmenu = item.subItems && item.subItems.length > 0
           const isOpen = activeSubmenu === item.label
@@ -133,17 +127,19 @@ function CategorySubmenu({ items, onClose }: { items: Array<{ label: string; hre
               onMouseLeave={() => setActiveSubmenu(null)}
             >
               {hasSubmenu ? (
-                <div className="flex items-center justify-between rounded-md px-3 py-2 text-sm text-[#0F172A] hover:bg-[#F8FAFC] hover:text-[#2563EB] transition-colors cursor-pointer">
-                  <span className="font-semibold">{item.label}</span>
-                  <ChevronDown className={`size-3 text-[#64748B] transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+                <div className="flex items-center justify-between rounded-md px-3 py-2 text-sm text-[#0F172A] hover:bg-[#EFF6FF] hover:text-[#2563EB] transition-colors cursor-pointer group">
+                  <Link href={item.href} onClick={onClose} className="flex-1 font-semibold">
+                    {item.label}
+                  </Link>
+                  <ChevronRight className="size-3.5 text-[#94A3B8] group-hover:text-[#2563EB] transition-colors shrink-0" />
                 </div>
               ) : (
                 <Link
                   href={item.href}
                   onClick={onClose}
-                  className="block rounded-md px-3 py-2 text-sm text-[#0F172A] hover:bg-[#F8FAFC] hover:text-[#2563EB] transition-colors"
+                  className="block rounded-md px-3 py-2 text-sm font-semibold text-[#0F172A] hover:bg-[#EFF6FF] hover:text-[#2563EB] transition-colors"
                 >
-                  <span className="font-semibold">{item.label}</span>
+                  {item.label}
                 </Link>
               )}
               {hasSubmenu && isOpen && (
@@ -172,18 +168,18 @@ function StoreMegaMenu({ onClose }: { onClose: () => void }) {
       ref={ref}
       role="dialog"
       aria-label="Categorías de productos"
-      className="absolute left-0 top-[calc(100%+4px)] z-50 w-[1100px] rounded-xl border border-[#E2E8F0] bg-white shadow-[0_12px_40px_rgba(15,23,42,0.12)] animate-in fade-in slide-in-from-top-2 duration-200"
+      className="absolute left-0 top-[calc(100%+4px)] z-50 w-[920px] rounded-xl border border-[#E2E8F0] bg-white shadow-[0_12px_40px_rgba(15,23,42,0.12)] animate-in fade-in slide-in-from-top-2 duration-200"
     >
       <div className="flex">
         {/* Categorías principales */}
-        <div className="flex-1 border-r border-[#F1F5F9] p-6">
-          <h3 className="text-xs font-semibold uppercase tracking-wider text-[#64748B] mb-4">
+        <div className="flex-1 border-r border-[#F1F5F9] p-5">
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-[#64748B] mb-3">
             Categorías
           </h3>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-1">
             {storeCategories.map((category) => {
               const Icon = getIcon(category.icon)
-              const isOpen = activeCategory === category.id
+              const isActive = activeCategory === category.id
 
               return (
                 <div
@@ -192,21 +188,31 @@ function StoreMegaMenu({ onClose }: { onClose: () => void }) {
                   onMouseEnter={() => setActiveCategory(category.id)}
                   onMouseLeave={() => setActiveCategory(null)}
                 >
-                  <div className="group flex items-start gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-[#F8FAFC]">
-                    <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg border border-[#E2E8F0] bg-white text-[#64748B] transition-colors group-hover:border-[#2563EB]/20 group-hover:bg-[#EFF6FF] group-hover:text-[#2563EB]">
+                  <div className={`group flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors cursor-pointer ${
+                    isActive ? 'bg-[#EFF6FF]' : 'hover:bg-[#F8FAFC]'
+                  }`}>
+                    <span className={`flex size-8 shrink-0 items-center justify-center rounded-lg border transition-colors ${
+                      isActive
+                        ? 'border-[#2563EB]/20 bg-[#EFF6FF] text-[#2563EB]'
+                        : 'border-[#E2E8F0] bg-white text-[#64748B] group-hover:border-[#2563EB]/20 group-hover:bg-[#EFF6FF] group-hover:text-[#2563EB]'
+                    }`}>
                       <Icon className="size-4" />
                     </span>
                     <span className="min-w-0 flex-1">
-                      <span className="block text-sm font-semibold leading-snug text-[#0F172A] group-hover:text-[#2563EB]">
+                      <span className={`block text-sm font-semibold leading-snug ${
+                        isActive ? 'text-[#2563EB]' : 'text-[#0F172A] group-hover:text-[#2563EB]'
+                      }`}>
                         {category.label}
                       </span>
                       <span className="block text-xs text-[#64748B]">
-                        {category.items.length} productos
+                        {category.items.length} subcategorías
                       </span>
                     </span>
-                    <ChevronDown className={`size-3.5 text-[#64748B] transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+                    <ChevronRight className={`size-3.5 transition-colors shrink-0 ${
+                      isActive ? 'text-[#2563EB]' : 'text-[#94A3B8] group-hover:text-[#2563EB]'
+                    }`} />
                   </div>
-                  {isOpen && (
+                  {isActive && (
                     <CategorySubmenu
                       items={category.items}
                       onClose={() => { setActiveCategory(null); onClose() }}
@@ -219,24 +225,24 @@ function StoreMegaMenu({ onClose }: { onClose: () => void }) {
         </div>
 
         {/* Sidebar: Marcas destacadas */}
-        <div className="w-64 p-6">
-          <h3 className="text-xs font-semibold uppercase tracking-wider text-[#64748B] mb-4">
+        <div className="w-56 p-5">
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-[#64748B] mb-3">
             Marcas destacadas
           </h3>
-          <div className="space-y-2">
+          <div className="space-y-1">
             {featuredBrands.map((brand) => (
               <Link
                 key={brand.name}
                 href={brand.href}
                 onClick={onClose}
-                className="block text-sm text-[#475569] hover:text-[#2563EB] transition-colors"
+                className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-[#475569] hover:bg-[#F8FAFC] hover:text-[#2563EB] transition-colors"
               >
                 {brand.name}
               </Link>
             ))}
           </div>
 
-          <div className="mt-6 pt-6 border-t border-[#F1F5F9]">
+          <div className="mt-4 pt-4 border-t border-[#F1F5F9]">
             <Link
               href="/productos"
               onClick={onClose}
@@ -366,7 +372,6 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
               </span>
             </Link>
 
-
             {/* Buscador */}
             <form onSubmit={submitSearch} className="relative flex-1 max-w-md hidden md:block">
               <span className="sr-only">Buscar productos</span>
@@ -388,7 +393,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
             {/* Acciones del usuario */}
             <div className="flex items-center gap-2">
               <Link
-                href="/(auth)/login"
+                href="/mi-cuenta"
                 className="hidden items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-[#475569] transition hover:bg-[#F8FAFC] hover:text-[#2563EB] lg:flex"
               >
                 <UserRound className="size-4" />
@@ -593,7 +598,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                                     className="block rounded-lg px-3 py-2 text-sm text-[#475569] hover:bg-[#F8FAFC] hover:text-[#2563EB] transition-colors"
                                   >
                                     <span className="font-semibold">{item.label}</span>
-                                    {item.desc && <span className="block text-xs text-[#64748B] mt-0.5">{item.desc}</span>}
+                                    {item.desc ? <span className="block text-xs text-[#64748B] mt-0.5">{item.desc}</span> : null}
                                   </Link>
                                 ))}
                         </div>
@@ -618,7 +623,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
             {/* Acciones rápidas móvil */}
             <div className="mt-6 pt-6 border-t border-[#F1F5F9] space-y-3">
               <Link
-                href="/(auth)/login"
+                href="/mi-cuenta"
                 onClick={() => setMenuOpen(false)}
                 className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-semibold text-[#475569] hover:bg-[#F8FAFC] hover:text-[#2563EB] transition-colors"
               >

@@ -14,7 +14,6 @@ import {
   Share2,
 } from 'lucide-react'
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
-import { SiteFooter } from '@/components/layout/site-footer'
 import { QuotePanel } from '@/components/sections/quote-panel'
 import { findProductBySlug, type Product } from '@/lib/catalog'
 import { useQuote } from '@/lib/use-quote'
@@ -45,7 +44,6 @@ export function ProductDetail({ slug }: ProductDetailProps) {
             <ChevronLeft className="size-4" /> Volver al catálogo
           </Link>
         </section>
-        <SiteFooter />
       </main>
     )
   }
@@ -297,8 +295,6 @@ export function ProductDetail({ slug }: ProductDetailProps) {
           </div>
         )}
       </section>
-
-      <SiteFooter />
 
       {showQuote && (
         <QuotePanel

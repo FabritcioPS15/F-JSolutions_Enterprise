@@ -1,6 +1,7 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Inter, JetBrains_Mono, Space_Grotesk } from 'next/font/google'
+import { SiteFooter } from '@/components/layout/site-footer'
 import './globals.css'
 
 const inter = Inter({
@@ -64,6 +65,7 @@ export default function RootLayout({
     >
       <body className="antialiased">
         {children}
+        <SiteFooter />
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>
