@@ -68,7 +68,7 @@ function MobileAccordion({ label, isOpen, onToggle, children }: { label: string;
       <button
         type="button"
         onClick={onToggle}
-        className="flex w-full items-center justify-between px-4 py-3 text-sm font-semibold text-[#0F172A]"
+        className="flex w-full items-center justify-between px-3 sm:px-4 py-3 text-sm font-semibold text-[#0F172A]"
       >
         {label}
         <ChevronDown
@@ -86,7 +86,7 @@ function ThirdLevelSubmenu({ items, onClose }: { items: Array<{ label: string; h
   return (
     <div
       role="dialog"
-      className="absolute left-full top-0 ml-1 z-50 w-44 rounded-lg border border-[#E2E8F0] bg-white shadow-[0_8px_24px_rgba(15,23,42,0.1)] animate-in fade-in slide-in-from-left-2 duration-150"
+      className="absolute left-full top-0 ml-1 z-[80] w-44 rounded-lg border border-[#E2E8F0] bg-white shadow-[0_8px_24px_rgba(15,23,42,0.1)] animate-in fade-in slide-in-from-left-2 duration-150"
     >
       <div className="p-1.5">
         {items.map((item, index) => (
@@ -112,7 +112,7 @@ function CategorySubmenu({ items, onClose }: { items: Array<{ label: string; hre
   return (
     <div
       role="dialog"
-      className="absolute left-full top-0 ml-1 z-50 w-56 rounded-lg border border-[#E2E8F0] bg-white shadow-[0_8px_24px_rgba(15,23,42,0.1)] animate-in fade-in slide-in-from-left-2 duration-150"
+      className="absolute left-full top-0 ml-1 z-[70] w-56 rounded-lg border border-[#E2E8F0] bg-white shadow-[0_8px_24px_rgba(15,23,42,0.1)] animate-in fade-in slide-in-from-left-2 duration-150"
     >
       <div className="p-1.5">
         {items.map((item, index) => {
@@ -168,7 +168,7 @@ function StoreMegaMenu({ onClose }: { onClose: () => void }) {
       ref={ref}
       role="dialog"
       aria-label="Categorías de productos"
-      className="absolute left-0 top-[calc(100%+4px)] z-50 w-[920px] rounded-xl border border-[#E2E8F0] bg-white shadow-[0_12px_40px_rgba(15,23,42,0.12)] animate-in fade-in slide-in-from-top-2 duration-200"
+      className="absolute left-0 top-[calc(100%+4px)] z-[60] w-[920px] rounded-xl border border-[#E2E8F0] bg-white shadow-[0_12px_40px_rgba(15,23,42,0.12)] animate-in fade-in slide-in-from-top-2 duration-200"
     >
       <div className="flex">
         {/* Categorías principales */}
@@ -268,7 +268,7 @@ function CompactDropdown({ items, onClose }: { items: Array<{ label: string; hre
     <div
       ref={ref}
       role="dialog"
-      className="absolute left-0 top-[calc(100%+4px)] z-50 w-80 rounded-xl border border-[#E2E8F0] bg-white shadow-[0_12px_40px_rgba(15,23,42,0.12)] animate-in fade-in slide-in-from-top-2 duration-200"
+      className="absolute left-0 top-[calc(100%+4px)] z-[60] w-80 rounded-xl border border-[#E2E8F0] bg-white shadow-[0_12px_40px_rgba(15,23,42,0.12)] animate-in fade-in slide-in-from-top-2 duration-200"
     >
       <div className="p-2">
         {items.map((item, index) => (
@@ -352,22 +352,22 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
   const toggle = (key: string) => setOpenDropdown((prev) => (prev === key ? null : key))
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white">
+    <header className="sticky top-0 z-40 w-full bg-white">
       {/* Primera franja: Logo, enlaces corporativos, buscador, acciones */}
       <div className="border-b border-[#F1F5F9]">
-        <div className="mx-auto max-w-[1400px] px-4 py-3 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-4 lg:gap-6">
+        <div className="mx-auto max-w-[1400px] px-3 py-2.5 sm:px-4 sm:py-3 lg:px-8 lg:py-3">
+          <div className="flex items-center gap-3 lg:gap-6">
             {/* Logo */}
             <Link
               href="/"
-              className="flex shrink-0 items-center gap-3"
+              className="flex shrink-0 items-center gap-2 sm:gap-3"
               aria-label="FJ Solutions · Inicio"
               onClick={() => { setMenuOpen(false); closeAll() }}
             >
-              <span className="grid size-10 place-items-center rounded-xl bg-gradient-to-br from-[#3B82F6] to-[#1D4ED8] font-heading text-sm font-bold tracking-tight text-white shadow-md shadow-[#2563EB]/20">
+              <span className="grid size-9 sm:size-10 place-items-center rounded-xl bg-gradient-to-br from-[#3B82F6] to-[#1D4ED8] font-heading text-sm font-bold tracking-tight text-white shadow-md shadow-[#2563EB]/20">
                 FJ
               </span>
-              <span className="hidden font-heading text-xl font-bold tracking-[-0.04em] text-[#0F172A] sm:block lg:text-2xl">
+              <span className="hidden font-heading text-lg sm:text-xl font-bold tracking-[-0.04em] text-[#0F172A] sm:block lg:text-2xl">
                 FJ <span className="text-[#2563EB]">Solutions</span>
               </span>
             </Link>
@@ -391,7 +391,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
             </form>
 
             {/* Acciones del usuario */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 sm:gap-2">
               <Link
                 href="/mi-cuenta"
                 className="hidden items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-[#475569] transition hover:bg-[#F8FAFC] hover:text-[#2563EB] lg:flex"
@@ -403,11 +403,11 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
               <button
                 type="button"
                 onClick={goToQuote}
-                className="relative flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-[#475569] transition hover:bg-[#F8FAFC] hover:text-[#2563EB]"
+                className="relative flex items-center gap-1.5 sm:gap-2 rounded-lg px-2 sm:px-3 py-2 text-sm font-semibold text-[#475569] transition hover:bg-[#F8FAFC] hover:text-[#2563EB]"
                 aria-label={`Abrir cotización, ${quoteCount} productos`}
               >
-                <FileText className="size-5" />
-                <span className="hidden md:inline">Mi cotización</span>
+                <FileText className="size-4 sm:size-5" />
+                <span className="hidden sm:inline md:inline">Mi cotización</span>
                 {quoteCount > 0 && (
                   <span className="absolute -right-1 -top-1 grid size-5 place-items-center rounded-full bg-[#2563EB] text-[10px] font-bold text-white">
                     {quoteCount}
@@ -420,9 +420,9 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                 onClick={() => setMenuOpen((v) => !v)}
                 aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
                 aria-expanded={menuOpen}
-                className="grid size-10 place-items-center rounded-lg border border-[#E2E8F0] text-[#475569] transition hover:border-[#2563EB]/30 hover:bg-[#F8FAFC] hover:text-[#2563EB] lg:hidden"
+                className="grid size-9 sm:size-10 place-items-center rounded-lg border border-[#E2E8F0] text-[#475569] transition hover:border-[#2563EB]/30 hover:bg-[#F8FAFC] hover:text-[#2563EB] lg:hidden"
               >
-                {menuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+                {menuOpen ? <X className="size-4 sm:size-5" /> : <Menu className="size-4 sm:size-5" />}
               </button>
             </div>
           </div>
@@ -435,7 +435,8 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
           }`}
       >
         <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
-          <nav className="flex items-center gap-1 py-3" aria-label="Navegación principal">
+          <div className="hidden lg:block">
+            <nav className="flex items-center gap-1 py-3" aria-label="Navegación principal">
             {mainNav.map((link, index) => {
               const active = isActive(link.href)
               const dropdownKey = link.label.toLowerCase().replace(/ /g, '-')
@@ -521,13 +522,46 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
               </Link>
             </div>
           </nav>
+          </div>
         </div>
       </div>
 
       {/* Menú móvil */}
       {menuOpen && (
-        <div className="lg:hidden border-t border-[#E2E8F0] bg-white">
-          <div className="mx-auto max-w-[1400px] px-4 py-4 sm:px-6 lg:px-8">
+        <>
+          {/* Backdrop oscuro */}
+          <div
+            className="lg:hidden fixed inset-0 bg-black/50 z-[100] transition-opacity duration-300"
+            onClick={() => setMenuOpen(false)}
+            aria-hidden="true"
+          />
+          {/* Drawer lateral */}
+          <div className="lg:hidden fixed inset-y-0 right-0 w-full max-w-sm bg-white shadow-2xl z-[110] overflow-y-auto transform transition-transform duration-300 ease-in-out">
+            <div className="px-4 py-6">
+            {/* Botón cerrar */}
+            <button
+              type="button"
+              onClick={() => setMenuOpen(false)}
+              className="absolute top-4 right-4 p-2 rounded-lg hover:bg-gray-100 transition-colors"
+              aria-label="Cerrar menú"
+            >
+              <X className="size-5" />
+            </button>
+
+            {/* Logo */}
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2.5 mb-6"
+              aria-label="FJ Solutions · Inicio"
+              onClick={() => { setMenuOpen(false); closeAll() }}
+            >
+              <span className="grid size-10 place-items-center rounded-xl bg-gradient-to-br from-[#3B82F6] to-[#1D4ED8] font-heading text-sm font-bold tracking-tight text-white">
+                FJ
+              </span>
+              <span className="font-heading text-xl font-bold tracking-[-0.04em] text-[#0F172A]">
+                FJ <span className="text-[#2563EB]">Solutions</span>
+              </span>
+            </Link>
             {/* Buscador móvil */}
             <form onSubmit={submitSearch} className="mb-4">
               <div className="relative">
@@ -590,9 +624,9 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                           {(dropdownKey === 'servicios-ti' ? itServicesMenu :
                             dropdownKey === 'infraestructura-ti' ? infrastructureMenu :
                               dropdownKey === 'desarrollo-de-software' ? softwareDevMenu :
-                                dropdownKey === 'empresa' ? companyMenu : []).map((item) => (
+                                dropdownKey === 'empresa' ? companyMenu : []).map((item, index) => (
                                   <Link
-                                    key={item.href}
+                                    key={`${item.href}-${index}`}
                                     href={item.href}
                                     onClick={() => { closeAll(); setMenuOpen(false) }}
                                     className="block rounded-lg px-3 py-2 text-sm text-[#475569] hover:bg-[#F8FAFC] hover:text-[#2563EB] transition-colors"
@@ -607,7 +641,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                       <Link
                         href={link.href}
                         onClick={() => setMenuOpen(false)}
-                        className={`flex items-center justify-between rounded-lg px-4 py-3 text-sm font-semibold transition-colors ${active
+                        className={`flex items-center justify-between rounded-lg px-3 sm:px-4 py-3 text-sm font-semibold transition-colors ${active
                             ? 'bg-[#EFF6FF] text-[#2563EB]'
                             : 'text-[#475569] hover:bg-[#F8FAFC] hover:text-[#2563EB]'
                           }`}
@@ -625,7 +659,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
               <Link
                 href="/mi-cuenta"
                 onClick={() => setMenuOpen(false)}
-                className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-semibold text-[#475569] hover:bg-[#F8FAFC] hover:text-[#2563EB] transition-colors"
+                className="flex items-center gap-3 rounded-lg px-3 sm:px-4 py-3 text-sm font-semibold text-[#475569] hover:bg-[#F8FAFC] hover:text-[#2563EB] transition-colors"
               >
                 <UserRound className="size-5" />
                 Mi cuenta
@@ -633,7 +667,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
               <button
                 type="button"
                 onClick={() => { goToQuote(); setMenuOpen(false) }}
-                className="flex items-center justify-between rounded-lg px-4 py-3 text-sm font-semibold text-[#475569] hover:bg-[#F8FAFC] hover:text-[#2563EB] transition-colors w-full"
+                className="flex items-center justify-between rounded-lg px-3 sm:px-4 py-3 text-sm font-semibold text-[#475569] hover:bg-[#F8FAFC] hover:text-[#2563EB] transition-colors w-full"
               >
                 <div className="flex items-center gap-3">
                   <FileText className="size-5" />
@@ -648,7 +682,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
               <Link
                 href="/contacto"
                 onClick={() => setMenuOpen(false)}
-                className="flex items-center gap-3 rounded-lg px-4 py-3 text-sm font-semibold text-[#2563EB] hover:bg-[#EFF6FF] transition-colors"
+                className="flex items-center gap-3 rounded-lg px-3 sm:px-4 py-3 text-sm font-semibold text-[#2563EB] hover:bg-[#EFF6FF] transition-colors"
               >
                 <MessageSquare className="size-5" />
                 Solicitar asesoría
@@ -670,6 +704,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
             </div>
           </div>
         </div>
+        </>
       )}
     </header>
   )

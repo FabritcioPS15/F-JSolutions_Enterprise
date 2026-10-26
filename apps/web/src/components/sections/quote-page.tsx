@@ -21,6 +21,7 @@ import {
   UserRound,
 } from 'lucide-react'
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
+import { QuoteHero } from '@/components/heroes'
 import { QuotePanel } from '@/components/sections/quote-panel'
 import {
   buildQuoteCode,
@@ -350,20 +351,9 @@ export function QuotePage() {
         </div>
       </div>
 
-      <section className="mx-auto max-w-[1280px] px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
-        <div className="max-w-2xl">
-          <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#2563EB]">
-            Cotización personalizada
-          </p>
-          <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
-            Completa tu solicitud de cotización
-          </h1>
-          <p className="mt-3 text-sm leading-6 text-[#475569]">
-            Revisa tus productos, cuéntanos cómo contactarte y un asesor preparará una propuesta a
-            tu medida.
-          </p>
-        </div>
+      <QuoteHero showSteps />
 
+      <section className="mx-auto max-w-[1280px] px-4 pb-8 pt-2 sm:px-6 lg:px-8 lg:pb-12">
         {/* Pasos */}
         <ol className="mt-8 grid gap-3 sm:grid-cols-3">
           {steps.map((step) => {
@@ -402,7 +392,15 @@ export function QuotePage() {
 
         <div className="mt-8 grid gap-6 lg:grid-cols-[1fr_420px] lg:items-start">
           {/* Formulario */}
-          <form id="quote-form" onSubmit={handleSubmit} className="space-y-5" noValidate>
+          <form
+            id="quote-form"
+            onSubmit={handleSubmit}
+            className="scroll-mt-32 space-y-5"
+            noValidate
+          >
+            <span id="cotizacion-formulario" className="sr-only">
+              Formulario de cotización
+            </span>
             <fieldset disabled={isSubmitting} className="space-y-5">
               <section className="rounded-2xl border border-[#E2E8F0] bg-white p-5 sm:p-6">
                 <div className="flex items-center gap-3">

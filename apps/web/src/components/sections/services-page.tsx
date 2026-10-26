@@ -2,14 +2,12 @@ import Link from 'next/link'
 import {
   ArrowRight,
   ArrowUpRight,
-  BadgeCheck,
   Building2,
   Check,
   ChevronDown,
   ClipboardCheck,
   Cloud,
   Code2,
-  Gauge,
   GraduationCap,
   Handshake,
   Headset,
@@ -20,15 +18,14 @@ import {
   Rocket,
   Server,
   ShieldCheck,
-  Sparkles,
   Target,
   TrendingUp,
   Users,
   Wrench,
-  Zap,
   type LucideIcon,
 } from 'lucide-react'
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
+import { ServiceHero } from '@/components/heroes'
 
 type ServiceItem = {
   icon: LucideIcon
@@ -232,96 +229,25 @@ export function ServicesPage() {
     <main className="min-h-screen bg-white text-[#0F172A]">
       <EnhancedHeader />
 
-      <section className="relative overflow-hidden bg-white">
-        <div className="pointer-events-none absolute -right-32 -top-32 size-96 rounded-full bg-[#22D3EE]/10 blur-3xl" />
-        <div className="relative mx-auto grid max-w-[1280px] gap-12 px-4 py-14 sm:px-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:px-8 lg:py-20">
-          <div>
-            <span className="inline-flex items-center gap-2 rounded-full border border-[#2563EB]/30 bg-[#2563EB]/10 px-3 py-1.5 text-[10px] font-medium uppercase tracking-[0.16em] text-[#2563EB]">
-              <Sparkles className="size-3.5" /> Servicios TI para empresas
-            </span>
-            <h1 className="mt-5 text-4xl font-bold leading-[1.05] tracking-[-0.055em] text-[#0F172A] sm:text-6xl">
-              La base tecnológica
-              <br />
-              <span className="text-[#2563EB]">de tu operación.</span>
-            </h1>
-            <p className="mt-5 max-w-xl text-base leading-7 text-[#475569]">
-              Soporte técnico, mantenimiento, redes e infraestructura para mantener tus equipos y
-              sistemas funcionando, con atención cercana.
-            </p>
-            <div className="mt-7 flex flex-wrap gap-3">
-              <Link
-                href="#contacto"
-                className="inline-flex h-12 items-center gap-2 rounded-xl bg-[#2563EB] px-6 text-sm font-bold text-white shadow-lg shadow-[#2563EB]/20 transition hover:bg-[#1D4ED8]"
-              >
-                Solicitar asesoría <ArrowRight className="size-4" />
-              </Link>
-              <Link
-                href="/soporte-ti"
-                className="inline-flex h-12 items-center gap-2 rounded-xl border border-[#E2E8F0] bg-white px-6 text-sm font-bold text-[#0F172A] transition hover:border-[#2563EB] hover:text-[#2563EB]"
-              >
-                Ver soporte TI <Headset className="size-4" />
-              </Link>
-            </div>
-            <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 text-xs font-semibold text-[#475569]">
-              <span className="flex items-center gap-2">
-                <BadgeCheck className="size-4 text-[#2563EB]" /> Diagnóstico sin costo
-              </span>
-              <span className="flex items-center gap-2">
-                <Zap className="size-4 text-[#2563EB]" /> Atención personalizada
-              </span>
-              <span className="flex items-center gap-2">
-                <ShieldCheck className="size-4 text-[#2563EB]" /> Soporte remoto y en sitio
-              </span>
-            </div>
-          </div>
-
-          <div className="relative">
-            <div className="rounded-3xl border border-[#E2E8F0] bg-white p-6 shadow-xl shadow-black/5 sm:p-8">
-              <div className="flex items-center justify-between">
-                <p className="font-heading text-sm font-bold text-[#0F172A]">Nuestro enfoque de trabajo</p>
-                <span className="rounded-full bg-[#22D3EE]/10 px-2.5 py-1 text-[10px] font-medium uppercase tracking-wider text-[#0E7490]">
-                  Con seguimiento
-                </span>
-              </div>
-              <div className="mt-6 space-y-5">
-                {process.map((item) => (
-                  <div key={item.step} className="flex gap-4">
-                    <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-[#2563EB]/10 text-[#2563EB]">
-                      <item.icon className="size-5" />
-                    </span>
-                    <div>
-                      <p className="font-heading text-sm font-bold text-[#0F172A]">
-                        <span className="mr-2 text-[10px] font-extrabold text-[#475569]">
-                          {item.step}
-                        </span>
-                        {item.title}
-                      </p>
-                      <p className="mt-1 text-xs leading-5 text-[#475569]">{item.copy}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-6 flex items-center justify-between rounded-xl bg-[#F8FAFC] px-4 py-3">
-                <div className="flex items-center gap-2 text-xs font-semibold text-[#475569]">
-                  <Gauge className="size-4 text-[#2563EB]" /> Monitoreo de infraestructura
-                </div>
-                <span className="text-sm font-extrabold text-[#0E7490]">Según plan</span>
-              </div>
-            </div>
-            <div className="absolute -bottom-4 -right-2 hidden rounded-xl border border-[#E2E8F0] bg-white p-3 shadow-lg sm:block">
-              <div className="flex items-center gap-2.5">
-                <span className="grid size-9 place-items-center rounded-lg bg-[#22D3EE]/10 text-[#2563EB]">
-                  <Headset className="size-4" />
-                </span>
-                <div>
-                  <p className="font-heading text-xs font-bold text-[#0F172A]">Atención directa</p>
-                  <p className="text-[10px] text-[#475569]">Con un especialista</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <ServiceHero
+        eyebrow="Servicios TI para empresas"
+        title={
+          <>
+            La base tecnológica de tu operación,{' '}
+            <span className="text-[#2563EB]">sin interrupciones</span>.
+          </>
+        }
+        description="Soporte técnico, mantenimiento, redes e infraestructura para mantener tus equipos y sistemas funcionando, con atención cercana y un plan de trabajo claro."
+        primary={{ label: 'Solicitar asesoría', href: '#contacto' }}
+        secondary={{ label: 'Ver soporte TI', href: '/soporte-ti' }}
+        proof={['Diagnóstico sin costo', 'Atención personalizada', 'Soporte remoto y en sitio']}
+        related={[
+          { label: 'Soporte gestionado', hint: 'Mesa de ayuda y SLA', href: '/soporte-ti', icon: <Headset className="size-3.5" /> },
+          { label: 'Redes y conectividad', hint: 'Wi-Fi y cableado', href: '#servicios', icon: <Network className="size-3.5" /> },
+          { label: 'Servidores y nube', hint: 'Infraestructura escalable', href: '#servicios', icon: <Server className="size-3.5" /> },
+          { label: 'Ciberseguridad', hint: 'Accesos y respaldos', href: '#servicios', icon: <ShieldCheck className="size-3.5" /> },
+        ]}
+      />
 
       <section id="servicios" className="border-y border-[#E2E8F0] bg-[#F7F9FC]">
         <div className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6 lg:px-8 lg:py-16">

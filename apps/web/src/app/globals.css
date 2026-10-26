@@ -6,6 +6,175 @@
 
 html {
   scroll-padding-top: 7rem;
+  overflow-x: hidden;
+}
+
+/* ─── F&J Hero System ─────────────────────────────────────────────────────────
+   Animaciones y utilidades compartidas por las variantes de hero.
+   Se mantienen fuera de capas para que cualquier variante pueda reutilizarlas.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes hero-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -8px, 0);
+  }
+}
+
+@keyframes hero-float-soft {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(0, -5px, 0) rotate(-0.4deg);
+  }
+}
+
+@keyframes hero-dash {
+  to {
+    stroke-dashoffset: -28;
+  }
+}
+
+@keyframes hero-draw {
+  from {
+    stroke-dashoffset: 520;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes hero-grow {
+  from {
+    transform: scaleY(0.08);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes hero-pulse {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1);
+  }
+}
+
+@keyframes hero-scan {
+  0% {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  20%,
+  70% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(120px);
+  }
+}
+
+@layer utilities {
+  .hero-reveal {
+    animation: hero-rise 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .hero-delay-1 {
+    animation-delay: 70ms;
+  }
+
+  .hero-delay-2 {
+    animation-delay: 140ms;
+  }
+
+  .hero-delay-3 {
+    animation-delay: 210ms;
+  }
+
+  .hero-delay-4 {
+    animation-delay: 280ms;
+  }
+
+  .hero-delay-5 {
+    animation-delay: 350ms;
+  }
+
+  .hero-delay-6 {
+    animation-delay: 420ms;
+  }
+
+  .hero-float {
+    animation: hero-float 9s ease-in-out infinite;
+  }
+
+  .hero-float-soft {
+    animation: hero-float-soft 11s ease-in-out infinite;
+  }
+
+  .hero-dash {
+    stroke-dasharray: 5 7;
+    animation: hero-dash 1.8s linear infinite;
+  }
+
+  .hero-draw {
+    stroke-dasharray: 520;
+    animation: hero-draw 2.2s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both;
+  }
+
+  .hero-grow {
+    transform-origin: bottom;
+    animation: hero-grow 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .hero-pulse {
+    animation: hero-pulse 3.4s ease-in-out infinite;
+  }
+
+  .hero-scan {
+    animation: hero-scan 4.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+
+  .hero-grid {
+    background-image: radial-gradient(circle at 1px 1px, rgba(100, 116, 139, 0.22) 1px, transparent 0);
+    background-size: 22px 22px;
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.55) 55%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0.55) 55%, transparent 100%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-reveal,
+  .hero-float,
+  .hero-float-soft,
+  .hero-dash,
+  .hero-draw,
+  .hero-grow,
+  .hero-pulse,
+  .hero-scan {
+    animation: none !important;
+  }
 }
 
 @theme inline {
@@ -179,7 +348,7 @@ html {
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground overflow-x-hidden;
   }
   html,
   body,

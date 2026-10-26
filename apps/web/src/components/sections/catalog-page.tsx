@@ -7,16 +7,14 @@ import {
   ArrowRight,
   ChevronDown,
   Headset,
-  Package,
   Search,
-  ShieldCheck,
   SlidersHorizontal,
-  Truck,
   X,
 } from 'lucide-react'
 import { ProductCard } from '@/components/cards/product-card'
 import { QuotePanel } from '@/components/sections/quote-panel'
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
+import { CatalogHero } from '@/components/heroes'
 import { categories, products } from '@/lib/catalog'
 import { useQuote } from '@/lib/use-quote'
 
@@ -70,6 +68,16 @@ export function CatalogPage({
     () => Array.from(new Set(products.map((product) => product.brand))).sort(),
     [],
   )
+
+  const quickCategories = useMemo(() => {
+    const preferred = ['Laptops', 'Componentes', 'Monitores', 'Redes', 'PC y Servidores']
+    return preferred
+      .map((label) => ({
+        label,
+        count: products.filter((product) => product.category === label).length,
+      }))
+      .filter((item) => item.count > 0)
+  }, [])
 
   const filtered = useMemo(() => {
     const term = query.trim().toLowerCase()
@@ -131,37 +139,15 @@ export function CatalogPage({
         </div>
       </div>
 
-      <section className="border-b border-[#E2E8F0] bg-white">
-        <div className="mx-auto max-w-[1280px] px-4 py-8 sm:px-6 lg:px-8">
-          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#0E7490]">
-                Catálogo de productos
-              </p>
-              <h1 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-[#0F172A] sm:text-4xl">
-                Encuentra la tecnología que necesitas
-              </h1>
-              <p className="mt-2 max-w-2xl text-sm leading-6 text-[#475569]">
-                Explora equipos, componentes y accesorios para tu hogar, oficina o empresa. Solicita
-                una cotización personalizada con orientación para elegir.
-              </p>
-            </div>
-            <div className="flex flex-wrap gap-2">
-              <span className="flex items-center gap-1.5 rounded-full border border-[#E2E8F0] bg-[#F8FAFC] px-3 py-1.5 text-[11px] font-semibold text-[#475569]">
-                <Package className="size-3.5 text-[#2563EB]" /> {products.length} productos
-              </span>
-              <span className="flex items-center gap-1.5 rounded-full border border-[#E2E8F0] bg-[#F8FAFC] px-3 py-1.5 text-[11px] font-semibold text-[#475569]">
-                <Truck className="size-3.5 text-[#2563EB]" /> Envío coordinado
-              </span>
-              <span className="flex items-center gap-1.5 rounded-full border border-[#E2E8F0] bg-[#F8FAFC] px-3 py-1.5 text-[11px] font-semibold text-[#475569]">
-                <ShieldCheck className="size-3.5 text-[#2563EB]" /> Garantía según producto
-              </span>
-            </div>
-          </div>
-        </div>
-      </section>
+      <CatalogHero
+        totalProducts={products.length}
+        categoryCount={categories.length}
+        activeCategory={category}
+        quickCategories={quickCategories}
+        onSelectCategory={setCategory}
+      />
 
-      <section className="mx-auto max-w-[1280px] px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
+      <section id="catalogo" className="mx-auto max-w-[1280px] scroll-mt-32 px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
         <div className="lg:grid lg:grid-cols-[260px_1fr] lg:gap-8">
           <aside className="hidden lg:block">
             <div className="sticky top-40 rounded-2xl border border-[#E2E8F0] bg-white p-5">
