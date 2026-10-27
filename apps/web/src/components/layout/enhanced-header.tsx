@@ -80,78 +80,82 @@ function MobileAccordion({ label, isOpen, onToggle, children }: { label: string;
   )
 }
 
-// ─── Componente: Submenú de Tercer Nivel ─────────────────────────────────────────────────────────
+// ─── Componente: Tienda en el menú móvil ──────────────────────────────────────────────────
 
-function ThirdLevelSubmenu({ items, onClose }: { items: Array<{ label: string; href: string }>; onClose: () => void }) {
-  return (
-    <div
-      role="dialog"
-      className="absolute left-full top-0 ml-1 z-[80] w-44 rounded-lg border border-[#E2E8F0] bg-white shadow-[0_8px_24px_rgba(15,23,42,0.1)] animate-in fade-in slide-in-from-left-2 duration-150"
-    >
-      <div className="p-1.5">
-        {items.map((item, index) => (
-          <Link
-            key={index}
-            href={item.href}
-            onClick={onClose}
-            className="block rounded-md px-3 py-2 text-xs font-medium text-[#0F172A] hover:bg-[#EFF6FF] hover:text-[#2563EB] transition-colors"
-          >
-            {item.label}
-          </Link>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-// ─── Componente: Submenú de Categoría ─────────────────────────────────────────────────────────
-
-function CategorySubmenu({ items, onClose }: { items: Array<{ label: string; href: string; subItems?: Array<{ label: string; href: string }> }>; onClose: () => void }) {
-  const [activeSubmenu, setActiveSubmenu] = useState<string | null>(null)
+function MobileStoreMenu({ onClose }: { onClose: () => void }) {
+  const [openCategory, setOpenCategory] = useState<string | null>(null)
 
   return (
-    <div
-      role="dialog"
-      className="absolute left-full top-0 ml-1 z-[70] w-56 rounded-lg border border-[#E2E8F0] bg-white shadow-[0_8px_24px_rgba(15,23,42,0.1)] animate-in fade-in slide-in-from-left-2 duration-150"
-    >
-      <div className="p-1.5">
-        {items.map((item, index) => {
-          const hasSubmenu = item.subItems && item.subItems.length > 0
-          const isOpen = activeSubmenu === item.label
+    <div className="space-y-0.5 py-2 pl-2 pr-1">
+      {storeCategories.map((category) => {
+        const Icon = getIcon(category.icon)
+        const isOpen = openCategory === category.id
 
-          return (
-            <div
-              key={index}
-              className="relative"
-              onMouseEnter={() => setActiveSubmenu(item.label)}
-              onMouseLeave={() => setActiveSubmenu(null)}
+        return (
+          <div key={category.id}>
+            <button
+              type="button"
+              onClick={() => setOpenCategory(isOpen ? null : category.id)}
+              aria-expanded={isOpen}
+              className="flex w-full items-center gap-2.5 rounded-lg px-2 py-2 text-left text-sm font-semibold text-[#0F172A] transition-colors hover:bg-white"
             >
-              {hasSubmenu ? (
-                <div className="flex items-center justify-between rounded-md px-3 py-2 text-sm text-[#0F172A] hover:bg-[#EFF6FF] hover:text-[#2563EB] transition-colors cursor-pointer group">
-                  <Link href={item.href} onClick={onClose} className="flex-1 font-semibold">
-                    {item.label}
-                  </Link>
-                  <ChevronRight className="size-3.5 text-[#94A3B8] group-hover:text-[#2563EB] transition-colors shrink-0" />
-                </div>
-              ) : (
+              <Icon className="size-4 shrink-0 text-[#64748B]" />
+              <span className="flex-1">{category.label}</span>
+              <ChevronDown
+                className={`size-4 shrink-0 text-[#94A3B8] transition-transform ${isOpen ? 'rotate-180' : ''}`}
+              />
+            </button>
+
+            {isOpen && (
+              <div className="mb-1 ml-3 border-l border-[#E2E8F0] pl-3">
                 <Link
-                  href={item.href}
+                  href={category.items[0]?.href || '/productos'}
                   onClick={onClose}
-                  className="block rounded-md px-3 py-2 text-sm font-semibold text-[#0F172A] hover:bg-[#EFF6FF] hover:text-[#2563EB] transition-colors"
+                  className="block rounded-md px-2 py-1.5 text-xs font-bold text-[#2563EB]"
                 >
-                  {item.label}
+                  Ver todo en {category.label}
                 </Link>
-              )}
-              {hasSubmenu && isOpen && (
-                <ThirdLevelSubmenu
-                  items={item.subItems || []}
-                  onClose={() => { setActiveSubmenu(null); onClose() }}
-                />
-              )}
-            </div>
-          )
-        })}
-      </div>
+
+                {category.items.map((item) => (
+                  <div key={item.label}>
+                    <Link
+                      href={item.href}
+                      onClick={onClose}
+                      className="block rounded-md px-2 py-1.5 text-xs font-medium text-[#475569] transition-colors hover:text-[#2563EB]"
+                    >
+                      {item.label}
+                    </Link>
+
+                    {item.subItems && item.subItems.length > 0 && (
+                      <div className="flex flex-wrap gap-1 px-2 pb-1.5">
+                        {item.subItems.map((subItem) => (
+                          <Link
+                            key={subItem.label}
+                            href={subItem.href}
+                            onClick={onClose}
+                            className="rounded-full border border-[#E2E8F0] bg-white px-2 py-0.5 text-[10px] font-semibold text-[#64748B] transition-colors hover:border-[#2563EB]/40 hover:text-[#2563EB]"
+                          >
+                            {subItem.label}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )
+      })}
+
+      <Link
+        href="/productos"
+        onClick={onClose}
+        className="mt-1 flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-[#2563EB] transition-colors hover:bg-[#EFF6FF]"
+      >
+        <ArrowRight className="size-4" />
+        Ver todos los productos
+      </Link>
     </div>
   )
 }
@@ -160,96 +164,139 @@ function CategorySubmenu({ items, onClose }: { items: Array<{ label: string; hre
 
 function StoreMegaMenu({ onClose }: { onClose: () => void }) {
   const ref = useRef<HTMLDivElement>(null)
-  const [activeCategory, setActiveCategory] = useState<string | null>(null)
+  const [activeCategory, setActiveCategory] = useState(storeCategories[0].id)
   useOnClickOutside(ref, onClose)
+
+  const active = storeCategories.find((category) => category.id === activeCategory) ?? storeCategories[0]
 
   return (
     <div
       ref={ref}
       role="dialog"
       aria-label="Categorías de productos"
-      className="absolute left-0 top-[calc(100%+4px)] z-[60] w-[920px] rounded-xl border border-[#E2E8F0] bg-white shadow-[0_12px_40px_rgba(15,23,42,0.12)] animate-in fade-in slide-in-from-top-2 duration-200"
+      className="absolute left-0 top-[calc(100%+4px)] z-[60] w-[980px] max-w-[calc(100vw-10rem)] overflow-hidden rounded-xl border border-[#E2E8F0] bg-white shadow-[0_12px_40px_rgba(15,23,42,0.12)] animate-in fade-in slide-in-from-top-2 duration-200"
     >
       <div className="flex">
         {/* Categorías principales */}
-        <div className="flex-1 border-r border-[#F1F5F9] p-5">
-          <h3 className="text-xs font-semibold uppercase tracking-wider text-[#64748B] mb-3">
+        <div className="w-[264px] shrink-0 border-r border-[#F1F5F9] p-4">
+          <h3 className="mb-2 px-2 text-[10px] font-bold uppercase tracking-[0.14em] text-[#64748B]">
             Categorías
           </h3>
-          <div className="grid grid-cols-2 gap-1">
+          <div className="space-y-0.5">
             {storeCategories.map((category) => {
               const Icon = getIcon(category.icon)
               const isActive = activeCategory === category.id
 
               return (
-                <div
+                <Link
                   key={category.id}
-                  className="relative"
+                  href={category.items[0]?.href || '/productos'}
                   onMouseEnter={() => setActiveCategory(category.id)}
-                  onMouseLeave={() => setActiveCategory(null)}
-                >
-                  <div className={`group flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors cursor-pointer ${
+                  onFocus={() => setActiveCategory(category.id)}
+                  onClick={onClose}
+                  aria-current={isActive ? 'true' : undefined}
+                  className={`group flex items-center gap-2.5 rounded-lg px-2.5 py-2 transition-colors ${
                     isActive ? 'bg-[#EFF6FF]' : 'hover:bg-[#F8FAFC]'
-                  }`}>
-                    <span className={`flex size-8 shrink-0 items-center justify-center rounded-lg border transition-colors ${
+                  }`}
+                >
+                  <span
+                    className={`flex size-7 shrink-0 items-center justify-center rounded-md border transition-colors ${
                       isActive
-                        ? 'border-[#2563EB]/20 bg-[#EFF6FF] text-[#2563EB]'
-                        : 'border-[#E2E8F0] bg-white text-[#64748B] group-hover:border-[#2563EB]/20 group-hover:bg-[#EFF6FF] group-hover:text-[#2563EB]'
-                    }`}>
-                      <Icon className="size-4" />
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className={`block text-sm font-semibold leading-snug ${
-                        isActive ? 'text-[#2563EB]' : 'text-[#0F172A] group-hover:text-[#2563EB]'
-                      }`}>
-                        {category.label}
-                      </span>
-                      <span className="block text-xs text-[#64748B]">
-                        {category.items.length} subcategorías
-                      </span>
-                    </span>
-                    <ChevronRight className={`size-3.5 transition-colors shrink-0 ${
+                        ? 'border-[#2563EB]/20 bg-white text-[#2563EB]'
+                        : 'border-[#E2E8F0] bg-white text-[#64748B] group-hover:border-[#2563EB]/20 group-hover:text-[#2563EB]'
+                    }`}
+                  >
+                    <Icon className="size-3.5" />
+                  </span>
+                  <span
+                    className={`min-w-0 flex-1 truncate text-sm font-semibold ${
+                      isActive ? 'text-[#2563EB]' : 'text-[#0F172A] group-hover:text-[#2563EB]'
+                    }`}
+                  >
+                    {category.label}
+                  </span>
+                  <ChevronRight
+                    className={`size-3.5 shrink-0 transition-colors ${
                       isActive ? 'text-[#2563EB]' : 'text-[#94A3B8] group-hover:text-[#2563EB]'
-                    }`} />
-                  </div>
-                  {isActive && (
-                    <CategorySubmenu
-                      items={category.items}
-                      onClose={() => { setActiveCategory(null); onClose() }}
-                    />
-                  )}
-                </div>
+                    }`}
+                  />
+                </Link>
               )
             })}
           </div>
         </div>
 
+        {/* Subcategorías de la categoría activa */}
+        <div className="min-w-0 flex-1 p-5">
+          <div className="flex items-center justify-between gap-3">
+            <h3 className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#64748B]">
+              {active.label}
+            </h3>
+            <Link
+              href={active.items[0]?.href || '/productos'}
+              onClick={onClose}
+              className="text-[11px] font-bold text-[#2563EB] transition-colors hover:text-[#1D4ED8]"
+            >
+              Ver categoría
+            </Link>
+          </div>
+
+          <div className="mt-3 grid gap-x-6 gap-y-4 sm:grid-cols-2">
+            {active.items.map((item) => (
+              <div key={item.label}>
+                <Link
+                  href={item.href}
+                  onClick={onClose}
+                  className="block text-sm font-semibold text-[#0F172A] transition-colors hover:text-[#2563EB]"
+                >
+                  {item.label}
+                </Link>
+                {item.subItems && item.subItems.length > 0 && (
+                  <ul className="mt-1.5 space-y-0.5">
+                    {item.subItems.map((subItem) => (
+                      <li key={subItem.label}>
+                        <Link
+                          href={subItem.href}
+                          onClick={onClose}
+                          className="block rounded-md px-2 py-1 text-xs text-[#64748B] transition-colors hover:bg-[#F8FAFC] hover:text-[#2563EB]"
+                        >
+                          {subItem.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Sidebar: Marcas destacadas */}
-        <div className="w-56 p-5">
-          <h3 className="text-xs font-semibold uppercase tracking-wider text-[#64748B] mb-3">
-            Marcas destacadas
+        <div className="w-[190px] shrink-0 border-l border-[#F1F5F9] p-4">
+          <h3 className="mb-2 px-2 text-[10px] font-bold uppercase tracking-[0.14em] text-[#64748B]">
+            Marcas
           </h3>
-          <div className="space-y-1">
+          <div className="space-y-0.5">
             {featuredBrands.map((brand) => (
               <Link
                 key={brand.name}
                 href={brand.href}
                 onClick={onClose}
-                className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-[#475569] hover:bg-[#F8FAFC] hover:text-[#2563EB] transition-colors"
+                className="block rounded-md px-2 py-1.5 text-xs font-medium text-[#475569] transition-colors hover:bg-[#F8FAFC] hover:text-[#2563EB]"
               >
                 {brand.name}
               </Link>
             ))}
           </div>
 
-          <div className="mt-4 pt-4 border-t border-[#F1F5F9]">
+          <div className="mt-3 border-t border-[#F1F5F9] pt-3">
             <Link
               href="/productos"
               onClick={onClose}
-              className="flex items-center gap-2 text-sm font-semibold text-[#2563EB] hover:text-[#1D4ED8] transition-colors"
+              className="flex items-center gap-1.5 px-2 text-xs font-bold text-[#2563EB] transition-colors hover:text-[#1D4ED8]"
             >
-              Ver todos los productos
-              <ArrowRight className="size-4" />
+              Ver todo
+              <ArrowRight className="size-3.5" />
             </Link>
           </div>
         </div>
@@ -326,6 +373,27 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  // Bloquea el scroll de la página mientras el menú móvil está abierto.
+  useEffect(() => {
+    if (!menuOpen) return
+
+    const { body, documentElement } = document
+    const previousBodyOverflow = body.style.overflow
+    const previousBodyPaddingRight = body.style.paddingRight
+    const previousHtmlOverflow = documentElement.style.overflow
+    const scrollbarWidth = window.innerWidth - documentElement.clientWidth
+
+    documentElement.style.overflow = 'hidden'
+    body.style.overflow = 'hidden'
+    if (scrollbarWidth > 0) body.style.paddingRight = `${scrollbarWidth}px`
+
+    return () => {
+      documentElement.style.overflow = previousHtmlOverflow
+      body.style.overflow = previousBodyOverflow
+      body.style.paddingRight = previousBodyPaddingRight
+    }
+  }, [menuOpen])
+
   useEffect(() => {
     setMenuOpen(false)
     closeAll()
@@ -352,6 +420,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
   const toggle = (key: string) => setOpenDropdown((prev) => (prev === key ? null : key))
 
   return (
+    <>
     <header className="sticky top-0 z-40 w-full bg-white">
       {/* Primera franja: Logo, enlaces corporativos, buscador, acciones */}
       <div className="border-b border-[#F1F5F9]">
@@ -373,25 +442,25 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
             </Link>
 
             {/* Buscador */}
-            <form onSubmit={submitSearch} className="relative flex-1 max-w-md hidden md:block">
+            <form onSubmit={submitSearch} className="relative hidden min-w-0 flex-1 md:block lg:max-w-2xl">
               <span className="sr-only">Buscar productos</span>
-              <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#94A3B8]" />
+              <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-[#94A3B8]" />
               <input
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Buscar productos, marcas o soluciones..."
-                className="h-10 w-full rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] pl-10 pr-24 text-sm text-[#0F172A] outline-none transition placeholder:text-[#94A3B8] focus:border-[#2563EB] focus:bg-white focus:ring-2 focus:ring-[#2563EB]/15"
+                className="h-11 w-full rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] pl-10 pr-24 text-sm text-[#0F172A] outline-none transition placeholder:text-[#94A3B8] focus:border-[#2563EB] focus:bg-white focus:ring-2 focus:ring-[#2563EB]/15"
               />
               <button
                 type="submit"
-                className="absolute right-1.5 top-1.5 h-7 rounded-lg bg-[#2563EB] px-3.5 text-xs font-bold text-white transition hover:bg-[#1D4ED8]"
+                className="absolute right-1.5 top-1.5 h-8 rounded-lg bg-[#2563EB] px-4 text-xs font-bold text-white transition hover:bg-[#1D4ED8]"
               >
                 Buscar
               </button>
             </form>
 
             {/* Acciones del usuario */}
-            <div className="flex items-center gap-1.5 sm:gap-2">
+            <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
               <Link
                 href="/mi-cuenta"
                 className="hidden items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-[#475569] transition hover:bg-[#F8FAFC] hover:text-[#2563EB] lg:flex"
@@ -526,32 +595,30 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
         </div>
       </div>
 
-      {/* Menú móvil */}
-      {menuOpen && (
-        <>
-          {/* Backdrop oscuro */}
-          <div
-            className="lg:hidden fixed inset-0 bg-black/50 z-[100] transition-opacity duration-300"
-            onClick={() => setMenuOpen(false)}
-            aria-hidden="true"
-          />
-          {/* Drawer lateral */}
-          <div className="lg:hidden fixed inset-y-0 right-0 w-full max-w-sm bg-white shadow-2xl z-[110] overflow-y-auto transform transition-transform duration-300 ease-in-out">
-            <div className="px-4 py-6">
-            {/* Botón cerrar */}
-            <button
-              type="button"
-              onClick={() => setMenuOpen(false)}
-              className="absolute top-4 right-4 p-2 rounded-lg hover:bg-gray-100 transition-colors"
-              aria-label="Cerrar menú"
-            >
-              <X className="size-5" />
-            </button>
+    </header>
 
-            {/* Logo */}
+    {/* Menú móvil */}
+    {menuOpen && (
+      <>
+        {/* Backdrop oscuro */}
+        <div
+          className="fixed inset-0 z-[100] bg-black/50 lg:hidden"
+          onClick={() => setMenuOpen(false)}
+          aria-hidden="true"
+        />
+
+        {/* Drawer lateral */}
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Menú de navegación"
+          className="fixed inset-y-0 right-0 z-[110] flex w-full max-w-sm flex-col bg-white shadow-2xl lg:hidden"
+        >
+          {/* Cabecera fija */}
+          <div className="flex shrink-0 items-center justify-between gap-3 border-b border-[#F1F5F9] px-4 py-3">
             <Link
               href="/"
-              className="inline-flex items-center gap-2.5 mb-6"
+              className="inline-flex items-center gap-2.5"
               aria-label="FJ Solutions · Inicio"
               onClick={() => { setMenuOpen(false); closeAll() }}
             >
@@ -562,6 +629,19 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                 FJ <span className="text-[#2563EB]">Solutions</span>
               </span>
             </Link>
+
+            <button
+              type="button"
+              onClick={() => setMenuOpen(false)}
+              className="grid size-10 shrink-0 place-items-center rounded-lg border border-[#E2E8F0] text-[#475569] transition-colors hover:bg-[#F8FAFC] hover:text-[#2563EB]"
+              aria-label="Cerrar menú"
+            >
+              <X className="size-5" />
+            </button>
+          </div>
+
+          {/* Contenido desplazable */}
+          <div className="flex-1 overflow-y-auto overscroll-contain px-4 py-5">
             {/* Buscador móvil */}
             <form onSubmit={submitSearch} className="mb-4">
               <div className="relative">
@@ -589,30 +669,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                         isOpen={openDropdown === 'store'}
                         onToggle={() => toggle('store')}
                       >
-                        <div className="space-y-1 pl-4 py-2">
-                          {storeCategories.map((category) => {
-                            const Icon = getIcon(category.icon)
-                            return (
-                              <Link
-                                key={category.id}
-                                href={category.items[0]?.href || '/productos'}
-                                onClick={() => { closeAll(); setMenuOpen(false) }}
-                                className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-[#475569] hover:bg-[#F8FAFC] hover:text-[#2563EB] transition-colors"
-                              >
-                                <Icon className="size-4 text-[#64748B]" />
-                                <span>{category.label}</span>
-                              </Link>
-                            )
-                          })}
-                          <Link
-                            href="/productos"
-                            onClick={() => { closeAll(); setMenuOpen(false) }}
-                            className="flex items-center gap-2 mt-3 rounded-lg px-3 py-2 text-sm font-semibold text-[#2563EB] hover:bg-[#EFF6FF] transition-colors"
-                          >
-                            <ArrowRight className="size-4" />
-                            Ver todos los productos
-                          </Link>
-                        </div>
+                        <MobileStoreMenu onClose={() => { closeAll(); setMenuOpen(false) }} />
                       </MobileAccordion>
                     ) : link.hasMenu ? (
                       <MobileAccordion
@@ -704,8 +761,8 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
             </div>
           </div>
         </div>
-        </>
-      )}
-    </header>
+      </>
+    )}
+    </>
   )
 }

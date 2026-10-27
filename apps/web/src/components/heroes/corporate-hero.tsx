@@ -22,10 +22,6 @@ export function CorporateHero() {
       <div className={`${HERO_CONTAINER} pb-8 pt-6 sm:pb-10 sm:pt-9 lg:pb-16 lg:pt-14`}>
         <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)] lg:gap-12 xl:gap-16">
           <div className="max-w-[620px] order-2 lg:order-1">
-            <HeroEyebrow icon={<MapPin aria-hidden="true" className="size-3.5" />}>
-              Tecnología para empresas · Perú
-            </HeroEyebrow>
-
             <HeroTitle size="lg">
               Tecnología que <HeroAccent>mueve</HeroAccent> tu operación.
             </HeroTitle>
