@@ -17,7 +17,7 @@ export class AuthService {
       email: 'admin@fjsolutions.com.pe',
       role: 'admin',
       passwordHash: 'hash_demo_12345',
-      company: 'F&J Solutions S.A.C.',
+      company: 'F&J Systems S.A.C.',
       createdAt: new Date(),
       updatedAt: new Date(),
     },

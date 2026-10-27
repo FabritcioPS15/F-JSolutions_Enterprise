@@ -1,4 +1,4 @@
-// Prisma Schema para F&J Solutions Enterprise Backend
+// Prisma Schema para F&J Systems Enterprise Backend
 // Base de datos PostgreSQL recomendada para producción
 
 datasource db {

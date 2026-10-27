@@ -14,7 +14,7 @@ import { OpsConsoleVisual } from '@/components/heroes/hero-visuals'
 
 /**
  * Variante A · Hero corporativo principal.
- * Usado en la portada para presentar F&J Solutions y su propuesta integral.
+ * Usado en la portada para presentar F&J Systems y su propuesta integral.
  */
 export function CorporateHero() {
   return (

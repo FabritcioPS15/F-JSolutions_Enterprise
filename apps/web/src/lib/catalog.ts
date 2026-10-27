@@ -3,6 +3,8 @@ export type Product = {
   slug: string
   name: string
   category: string
+  subcategory?: string
+  subSubcategory?: string
   brand: string
   model?: string
   sku?: string
@@ -35,6 +37,249 @@ export type FAQ = {
   answer: string
 }
 
+export type CategoryTaxonomy = {
+  id: string
+  label: string
+  aliases?: string[]
+  subcategories: {
+    id: string
+    label: string
+    subSubcategories?: {
+      id: string
+      label: string
+    }[]
+  }[]
+}
+
+export const categoryTaxonomy: CategoryTaxonomy[] = [
+  {
+    id: 'Impresoras',
+    label: 'Impresoras y Escáneres',
+    aliases: ['Impresoras', 'Impresoras y Escáneres', 'Impresión'],
+    subcategories: [
+      {
+        id: 'tinta-continua',
+        label: 'Impresoras de Tinta Continua',
+        subSubcategories: [
+          { id: 'tanque-tinta', label: 'Tanque de Tinta Wi-Fi' },
+          { id: 'multifuncional-color', label: 'Multifuncional a Color' },
+          { id: 'ecotank-empresarial', label: 'EcoTank Empresarial' },
+        ],
+      },
+      {
+        id: 'cartucho',
+        label: 'Impresoras de Cartucho',
+        subSubcategories: [
+          { id: 'inyeccion-termica', label: 'Inyección Térmica' },
+          { id: 'fotografica', label: 'Fotográfica Compacta' },
+          { id: 'cartuchos-consumibles', label: 'Cartuchos y Consumibles' },
+        ],
+      },
+      {
+        id: 'laser',
+        label: 'Impresoras Láser',
+        subSubcategories: [
+          { id: 'laser-monocromatica', label: 'Láser Monocromática' },
+          { id: 'laser-color', label: 'Láser Color Corporativa' },
+          { id: 'toner', label: 'Tóner y Tambores' },
+        ],
+      },
+      {
+        id: 'escaneres',
+        label: 'Escáneres y Digitalizadores',
+        subSubcategories: [
+          { id: 'escaner-documental-adf', label: 'Escáner de Documentos ADF' },
+          { id: 'escaner-cama-plana', label: 'Escáner Cama Plana' },
+          { id: 'escaner-portatil', label: 'Escáner Portátil' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'Laptops',
+    label: 'Laptops y Portátiles',
+    aliases: ['Laptops'],
+    subcategories: [
+      {
+        id: 'laptops-corporativas',
+        label: 'Laptops Corporativas',
+        subSubcategories: [
+          { id: 'thinkpad', label: 'Lenovo ThinkPad' },
+          { id: 'latitude', label: 'Dell Latitude' },
+          { id: 'probook', label: 'HP ProBook' },
+        ],
+      },
+      {
+        id: 'laptops-gaming',
+        label: 'Laptops Gaming',
+        subSubcategories: [
+          { id: 'tuf-gaming', label: 'ASUS TUF' },
+          { id: 'loq-legion', label: 'Lenovo Legion' },
+        ],
+      },
+      {
+        id: 'laptops-ultraligeras',
+        label: 'Laptops Ultraligeras y Estudio',
+        subSubcategories: [
+          { id: 'ideapad', label: 'IdeaPad Slim' },
+          { id: 'pavilion', label: 'HP Pavilion' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'PC y Servidores',
+    label: 'PC y Servidores',
+    aliases: ['PC y Servidores', 'PCs y Servidores'],
+    subcategories: [
+      {
+        id: 'pcs-escritorio',
+        label: 'PCs de Escritorio y Torres',
+        subSubcategories: [
+          { id: 'pc-gamer', label: 'PC Gamer Custom' },
+          { id: 'pc-corporativa', label: 'Torres Corporativas' },
+        ],
+      },
+      {
+        id: 'servidores',
+        label: 'Servidores Tower y Rack',
+        subSubcategories: [
+          { id: 'servidor-tower', label: 'Servidores Tower' },
+          { id: 'servidor-rack', label: 'Servidores Rackeables' },
+        ],
+      },
+      {
+        id: 'mini-pcs',
+        label: 'Mini PCs y All in One',
+        subSubcategories: [
+          { id: 'mini-pc', label: 'Mini PCs Compactos' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'Componentes',
+    label: 'Componentes de PC',
+    aliases: ['Componentes'],
+    subcategories: [
+      {
+        id: 'procesadores',
+        label: 'Procesadores (CPU)',
+        subSubcategories: [
+          { id: 'cpu-intel', label: 'Intel Core' },
+          { id: 'cpu-amd', label: 'AMD Ryzen' },
+        ],
+      },
+      {
+        id: 'tarjetas-video',
+        label: 'Tarjetas Gráficas (GPU)',
+        subSubcategories: [
+          { id: 'gpu-nvidia', label: 'NVIDIA RTX' },
+          { id: 'gpu-amd', label: 'AMD Radeon' },
+        ],
+      },
+      {
+        id: 'placas-madre',
+        label: 'Placas Madre (Motherboards)',
+      },
+      {
+        id: 'fuentes-poder',
+        label: 'Fuentes de Poder y Gabinetes',
+      },
+    ],
+  },
+  {
+    id: 'Almacenamiento',
+    label: 'Almacenamiento',
+    aliases: ['Almacenamiento'],
+    subcategories: [
+      {
+        id: 'ssd',
+        label: 'Discos Sólidos (SSD)',
+        subSubcategories: [
+          { id: 'ssd-nvme', label: 'M.2 NVMe PCIe' },
+          { id: 'ssd-sata', label: 'SATA 2.5"' },
+        ],
+      },
+      {
+        id: 'hdd',
+        label: 'Discos Duros (HDD)',
+        subSubcategories: [
+          { id: 'hdd-interno', label: 'HDD Interno 3.5"' },
+          { id: 'hdd-externo', label: 'Discos Externos USB' },
+        ],
+      },
+      {
+        id: 'nas',
+        label: 'Servidores de Almacenamiento NAS',
+      },
+    ],
+  },
+  {
+    id: 'Redes',
+    label: 'Redes y Conectividad',
+    aliases: ['Redes'],
+    subcategories: [
+      {
+        id: 'routers-mesh',
+        label: 'Routers y Sistemas Mesh',
+      },
+      {
+        id: 'switches',
+        label: 'Switches Gestionables y PoE',
+      },
+      {
+        id: 'access-points',
+        label: 'Access Points Wi-Fi 6',
+      },
+    ],
+  },
+  {
+    id: 'Monitores',
+    label: 'Monitores',
+    aliases: ['Monitores'],
+    subcategories: [
+      {
+        id: 'monitores-gaming',
+        label: 'Monitores Gaming (144Hz+)',
+      },
+      {
+        id: 'monitores-profesionales',
+        label: 'Monitores Profesionales IPS',
+      },
+    ],
+  },
+  {
+    id: 'Periféricos',
+    label: 'Periféricos',
+    aliases: ['Periféricos'],
+    subcategories: [
+      { id: 'teclados', label: 'Teclados Mecánicos y Oficina' },
+      { id: 'mouse', label: 'Mouse Ergonómico y Gamer' },
+      { id: 'auriculares', label: 'Auriculares y Headsets' },
+    ],
+  },
+  {
+    id: 'Cables y Energía',
+    label: 'Cables y Energía',
+    aliases: ['Cables y Energía'],
+    subcategories: [
+      { id: 'ups', label: 'Sistemas UPS y Baterías' },
+      { id: 'supresores', label: 'Supresores de Picos' },
+    ],
+  },
+]
+
+export function getTaxonomyCategory(catName: string) {
+  if (!catName || catName === 'Todas') return null
+  return categoryTaxonomy.find(
+    (c) =>
+      c.id.toLowerCase() === catName.toLowerCase() ||
+      c.label.toLowerCase() === catName.toLowerCase() ||
+      (c.aliases && c.aliases.some((a) => a.toLowerCase() === catName.toLowerCase()))
+  ) || null
+}
+
 export const categories = [
   'PC y Servidores',
   'Laptops',
@@ -43,7 +288,7 @@ export const categories = [
   'Periféricos',
   'Almacenamiento',
   'Redes',
-  'Impresoras',
+  'Impresoras y Escáneres',
   'Audio y Video',
   'Gaming',
   'Accesorios',
@@ -479,13 +724,15 @@ const baseProducts: Product[] = [
     id: 'hp-smart-tank-580',
     slug: 'hp-smart-tank-580',
     name: 'Impresora HP Smart Tank 580',
-    category: 'Impresoras',
+    category: 'Impresoras y Escáneres',
+    subcategory: 'Impresoras de Tinta Continua',
+    subSubcategory: 'Tanque de Tinta Wi-Fi',
     brand: 'HP',
     model: 'Smart Tank 580',
     sku: 'HP-ST580',
-    description: 'Impresora multifuncional con sistema de tinta continua. Wi-Fi y conexión móvil para impresión flexible.',
+    description: 'Impresora multifuncional con sistema de tanque de tinta continua de alto rendimiento. Wi-Fi y conexión móvil para impresión sin cartuchos.',
     image: 'https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?w=800&q=80&auto=format&fit=crop',
-    specs: ['Multifuncional · Wi-Fi', 'Impresión a color', 'Sistema tinta continua', 'A4'],
+    specs: ['Multifuncional · Wi-Fi', 'Impresión a color sin cartuchos', 'Hasta 12,000 págs en negro', 'Bandeja 100 hojas'],
     availability: 'available',
     relatedProducts: ['epson-ecotank-l3250', 'brother-hl-l2350dw'],
   },
@@ -1000,13 +1247,15 @@ const additionalProducts: Product[] = [
     id: 'epson-ecotank-l3250',
     slug: 'epson-ecotank-l3250',
     name: 'Impresora Epson EcoTank L3250',
-    category: 'Impresoras',
+    category: 'Impresoras y Escáneres',
+    subcategory: 'Impresoras de Tinta Continua',
+    subSubcategory: 'Tanque de Tinta Wi-Fi',
     brand: 'Epson',
     model: 'EcoTank L3250',
     sku: 'EPS-L3250',
-    description: 'Impresora multifuncional con sistema de tinta continua. Wi-Fi Direct y eco-friendly.',
+    description: 'Impresora multifuncional con sistema de tinta continua EcoTank sin cartuchos. Wi-Fi Direct y costo por página ultrabajo.',
     image: 'https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?w=800&q=80&auto=format&fit=crop',
-    specs: ['Multifuncional · Wi-Fi', 'Impresión a color', 'Sistema tinta continua', 'Costo por página bajo'],
+    specs: ['Multifuncional · Wi-Fi Direct', 'Impresión a color EcoTank', 'Hasta 4,500 págs negro', 'Resolución 5760 x 1440 dpi'],
     availability: 'available',
     relatedProducts: ['hp-smart-tank-580', 'brother-hl-l2350dw'],
   },
@@ -1014,15 +1263,81 @@ const additionalProducts: Product[] = [
     id: 'brother-hl-l2350dw',
     slug: 'brother-hl-l2350dw',
     name: 'Impresora Brother HL-L2350DW',
-    category: 'Impresoras',
+    category: 'Impresoras y Escáneres',
+    subcategory: 'Impresoras Láser',
+    subSubcategory: 'Láser Monocromática',
     brand: 'Brother',
     model: 'HL-L2350DW',
     sku: 'BRO-HL2350DW',
-    description: 'Impresora láser monocromática con dúplex automático. Wi-Fi y alto rendimiento.',
+    description: 'Impresora láser monocromática compacta con dúplex automático y Wi-Fi de alta velocidad para oficinas.',
     image: 'https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?w=800&q=80&auto=format&fit=crop',
-    specs: ['Láser monocromático', 'Dúplex · Wi-Fi', '30 ppm', '2500 páginas duty cycle'],
+    specs: ['Láser monocromático', 'Dúplex automático · Wi-Fi', 'Velocidad 32 ppm', 'Bandeja 250 hojas'],
     availability: 'available',
     relatedProducts: ['hp-smart-tank-580', 'epson-ecotank-l3250'],
+  },
+  {
+    id: 'hp-deskjet-2775',
+    slug: 'hp-deskjet-ink-advantage-2775',
+    name: 'Impresora HP DeskJet Ink Advantage 2775',
+    category: 'Impresoras y Escáneres',
+    subcategory: 'Impresoras de Cartucho',
+    subSubcategory: 'Inyección Térmica',
+    brand: 'HP',
+    model: 'DeskJet 2775',
+    sku: 'HP-DJ2775',
+    description: 'Impresora todo-en-uno inalámbrica basada en cartuchos de tinta original HP Advantage. Copia, escanea e imprime desde el smartphone.',
+    image: 'https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?w=800&q=80&auto=format&fit=crop',
+    specs: ['Sistema por 2 cartuchos', 'Wi-Fi con restablecimiento', 'Escáner plano', 'Impresión móvil con HP Smart'],
+    availability: 'available',
+    relatedProducts: ['hp-smart-tank-580', 'canon-pixma-ts3420'],
+  },
+  {
+    id: 'canon-pixma-ts3420',
+    slug: 'canon-pixma-ts3420',
+    name: 'Impresora Multifuncional Canon PIXMA TS3420',
+    category: 'Impresoras y Escáneres',
+    subcategory: 'Impresoras de Cartucho',
+    subSubcategory: 'Inyección Térmica',
+    brand: 'Canon',
+    model: 'PIXMA TS3420',
+    sku: 'CAN-TS3420',
+    description: 'Impresora compacta inalámbrica que funciona con cartuchos FINE de alta resolución. Ideal para documentos y fotos nítidas.',
+    image: 'https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?w=800&q=80&auto=format&fit=crop',
+    specs: ['2 Cartuchos FINE', 'Wi-Fi integrado', 'Pantalla LCD 1.5"', 'Resolución 4800 x 1200 dpi'],
+    availability: 'available',
+    relatedProducts: ['hp-deskjet-2775'],
+  },
+  {
+    id: 'epson-workforce-es-400-ii',
+    slug: 'epson-workforce-es-400-ii',
+    name: 'Escáner Epson WorkForce ES-400 II Dúplex',
+    category: 'Impresoras y Escáneres',
+    subcategory: 'Escáneres y Digitalizadores',
+    subSubcategory: 'Escáner de Documentos ADF',
+    brand: 'Epson',
+    model: 'ES-400 II',
+    sku: 'EPS-ES400II',
+    description: 'Escáner dúplex a color de alta velocidad con alimentador automático de 50 hojas para empresas y digitalización masiva.',
+    image: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&q=80&auto=format&fit=crop',
+    specs: ['35 ppm / 70 ipm', 'Alimentador ADF 50 hojas', 'Escaneo dúplex de 1 pasada', 'Software OCR searchable PDF'],
+    availability: 'available',
+    relatedProducts: ['epson-ecotank-l3250'],
+  },
+  {
+    id: 'hp-color-laserjet-pro-4203dw',
+    slug: 'hp-color-laserjet-pro-4203dw',
+    name: 'Impresora Láser Color HP LaserJet Pro 4203dw',
+    category: 'Impresoras y Escáneres',
+    subcategory: 'Impresoras Láser',
+    subSubcategory: 'Láser Color Corporativa',
+    brand: 'HP',
+    model: 'LaserJet 4203dw',
+    sku: 'HP-LJ4203DW',
+    description: 'Impresora láser a color corporativa con alta velocidad de producción, seguridad HP Wolf Pro y tóner TerraJet.',
+    image: 'https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?w=800&q=80&auto=format&fit=crop',
+    specs: ['35 ppm a Color y B/N', 'Dúplex automático rápido', 'Seguridad Wolf Pro', 'Ethernet Gigabit + Wi-Fi'],
+    availability: 'available',
+    relatedProducts: ['brother-hl-l2350dw'],
   },
   {
     id: 'tp-link-deco-x50-2pack',

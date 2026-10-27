@@ -191,9 +191,9 @@ export const softwareDevMenu: NavMenuItem[] = [
 // ─── Menú Empresa ─────────────────────────────────────────────────────────────────────
 
 export const companyMenu: NavMenuItem[] = [
-  { label: 'Sobre nosotros', href: '/nosotros' },
-  { label: 'Proyectos y experiencia', href: '/nosotros#proyectos' },
-  { label: 'Cómo trabajamos', href: '/nosotros#metodologia' },
-  { label: 'Preguntas frecuentes', href: '/nosotros#faq' },
-  { label: 'Contacto', href: '/contacto' },
+  { label: 'Sobre nosotros', href: '/nosotros', desc: 'Trayectoria, valores y equipo técnico' },
+  { label: 'Proyectos y experiencia', href: '/proyectos', desc: 'Casos de éxito y sectores atendidos' },
+  { label: 'Cómo trabajamos', href: '/como-trabajamos', desc: 'Metodología, etapas y garantías' },
+  { label: 'Preguntas frecuentes', href: '/preguntas-frecuentes', desc: 'Respuestas a consultas habituales' },
+  { label: 'Contacto', href: '/contacto', desc: 'Canales directos de atención y cotización' },
 ]

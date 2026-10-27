@@ -22,15 +22,15 @@ const serviceLinks = [
 
 const companyLinks = [
   { label: 'Sobre nosotros', href: '/nosotros' },
-  { label: 'Proyectos y experiencia', href: '/nosotros#proyectos' },
-  { label: 'Cómo trabajamos', href: '/nosotros#metodologia' },
+  { label: 'Proyectos y experiencia', href: '/proyectos' },
+  { label: 'Cómo trabajamos', href: '/como-trabajamos' },
   { label: 'Mi cuenta', href: '/mi-cuenta' },
   { label: 'Contacto', href: '/contacto' },
 ]
 
 const supportLinks = [
   { label: 'Contacto y ventas', href: '/contacto' },
-  { label: 'Preguntas frecuentes', href: '/nosotros#faq' },
+  { label: 'Preguntas frecuentes', href: '/preguntas-frecuentes' },
   { label: 'Atención empresarial', href: '/servicios' },
 ]
 

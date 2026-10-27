@@ -63,7 +63,7 @@ const channels = [
     icon: HelpCircle,
     title: 'Tengo una duda',
     copy: 'Revisa cómo trabajamos, qué incluye un proyecto y las preguntas más comunes.',
-    href: '/nosotros#faq',
+    href: '/preguntas-frecuentes',
     cta: 'Ver preguntas frecuentes',
   },
 ]

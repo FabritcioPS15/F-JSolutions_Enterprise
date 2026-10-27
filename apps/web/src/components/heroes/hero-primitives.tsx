@@ -4,7 +4,7 @@ import { ArrowRight, ArrowUpRight, Check } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 /**
- * Sistema de hero de F&J Solutions.
+ * Sistema de hero de F&J Systems.
  *
  * Reglas compartidas:
  * - Fondo claro, superficies blancas y bordes sutiles.

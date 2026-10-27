@@ -1,16 +1,19 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import {
   ArrowRight,
+  ArrowUpRight,
   ChevronDown,
   ChevronRight,
+  Clock,
   Cpu,
   FileText,
   HardDrive,
   Laptop,
+  Loader2,
   Mail,
   Menu,
   MessageSquare,
@@ -20,10 +23,15 @@ import {
   Phone,
   Printer,
   Search,
+  Sparkles,
+  Tag,
+  Trash2,
+  TrendingUp,
   UserRound,
   X,
   Zap,
 } from 'lucide-react'
+import { products as catalogProducts, categories as catalogCategories } from '@/lib/catalog'
 import { mainNav, storeCategories, featuredBrands, itServicesMenu, infrastructureMenu, softwareDevMenu, companyMenu } from '@/lib/navigation'
 
 // ─── Types ───────────────────────────────────────────────────────────────────────────────
@@ -427,6 +435,385 @@ function CompactDropdown({ items, onClose }: { items: Array<{ label: string; hre
   )
 }
 
+// ─── Componente: Search Autocomplete ─────────────────────────────────────────────────────
+
+const RECENT_SEARCHES_KEY = 'fj-recent-searches'
+const MAX_RECENT = 5
+const MAX_SUGGESTIONS = 6
+
+function getRecentSearches(): string[] {
+  if (typeof window === 'undefined') return []
+  try {
+    return JSON.parse(localStorage.getItem(RECENT_SEARCHES_KEY) || '[]')
+  } catch {
+    return []
+  }
+}
+
+function saveRecentSearch(term: string) {
+  if (typeof window === 'undefined') return
+  const recent = getRecentSearches().filter((s) => s !== term)
+  recent.unshift(term)
+  localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(recent.slice(0, MAX_RECENT)))
+}
+
+function removeRecentSearch(term: string) {
+  if (typeof window === 'undefined') return
+  const recent = getRecentSearches().filter((s) => s !== term)
+  localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(recent))
+}
+
+type SearchResult = {
+  type: 'product' | 'category' | 'recent'
+  label: string
+  sublabel?: string
+  href: string
+  image?: string
+}
+
+function SearchAutocomplete({
+  query,
+  setQuery,
+  onSubmit,
+  variant = 'desktop',
+}: {
+  query: string
+  setQuery: (q: string) => void
+  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void
+  variant?: 'desktop' | 'mobile'
+}) {
+  const router = useRouter()
+  const [focused, setFocused] = useState(false)
+  const [activeIndex, setActiveIndex] = useState(-1)
+  const [recentSearches, setRecentSearches] = useState<string[]>([])
+  const containerRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
+  const listRef = useRef<HTMLDivElement>(null)
+
+  // Load recent searches on mount
+  useEffect(() => {
+    setRecentSearches(getRecentSearches())
+  }, [])
+
+  // Compute suggestions
+  const suggestions = useMemo((): SearchResult[] => {
+    const trimmed = query.trim().toLowerCase()
+
+    if (!trimmed) {
+      // Show recent searches + popular categories when empty
+      const recents: SearchResult[] = recentSearches.map((s) => ({
+        type: 'recent' as const,
+        label: s,
+        href: `/productos?q=${encodeURIComponent(s)}`,
+      }))
+
+      const popularCategories: SearchResult[] = catalogCategories.slice(0, 4).map((cat) => ({
+        type: 'category' as const,
+        label: cat,
+        sublabel: 'Categoría',
+        href: `/productos?categoria=${encodeURIComponent(cat)}`,
+      }))
+
+      return [...recents, ...popularCategories]
+    }
+
+    // Search products
+    const matched = catalogProducts.filter((p) => {
+      const haystack = `${p.name} ${p.brand} ${p.category} ${p.model || ''} ${p.sku || ''}`.toLowerCase()
+      return trimmed.split(/\s+/).every((word) => haystack.includes(word))
+    })
+
+    const productResults: SearchResult[] = matched.slice(0, MAX_SUGGESTIONS).map((p) => ({
+      type: 'product' as const,
+      label: p.name,
+      sublabel: `${p.brand} · ${p.category}`,
+      href: `/productos/${p.slug}`,
+      image: p.image,
+    }))
+
+    // Also match categories
+    const matchedCategories = catalogCategories
+      .filter((cat) => cat.toLowerCase().includes(trimmed))
+      .slice(0, 2)
+      .map((cat) => ({
+        type: 'category' as const,
+        label: cat,
+        sublabel: 'Ver categoría',
+        href: `/productos?categoria=${encodeURIComponent(cat)}`,
+      }))
+
+    return [...matchedCategories, ...productResults].slice(0, MAX_SUGGESTIONS + 2)
+  }, [query, recentSearches])
+
+  const showDropdown = focused && suggestions.length > 0
+
+  // Reset index when suggestions change
+  useEffect(() => {
+    setActiveIndex(-1)
+  }, [suggestions])
+
+  // Click outside
+  useEffect(() => {
+    const handler = (e: MouseEvent | TouchEvent) => {
+      if (!containerRef.current?.contains(e.target as Node)) {
+        setFocused(false)
+      }
+    }
+    document.addEventListener('mousedown', handler)
+    document.addEventListener('touchstart', handler)
+    return () => {
+      document.removeEventListener('mousedown', handler)
+      document.removeEventListener('touchstart', handler)
+    }
+  }, [])
+
+  const navigate = useCallback(
+    (result: SearchResult) => {
+      if (query.trim()) {
+        saveRecentSearch(query.trim())
+        setRecentSearches(getRecentSearches())
+      }
+      setFocused(false)
+      router.push(result.href)
+    },
+    [query, router],
+  )
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (!showDropdown) return
+
+      switch (e.key) {
+        case 'ArrowDown':
+          e.preventDefault()
+          setActiveIndex((prev) => (prev < suggestions.length - 1 ? prev + 1 : 0))
+          break
+        case 'ArrowUp':
+          e.preventDefault()
+          setActiveIndex((prev) => (prev > 0 ? prev - 1 : suggestions.length - 1))
+          break
+        case 'Enter':
+          if (activeIndex >= 0 && suggestions[activeIndex]) {
+            e.preventDefault()
+            navigate(suggestions[activeIndex])
+          }
+          break
+        case 'Escape':
+          setFocused(false)
+          inputRef.current?.blur()
+          break
+      }
+    },
+    [showDropdown, activeIndex, suggestions, navigate],
+  )
+
+  // Scroll active item into view
+  useEffect(() => {
+    if (activeIndex < 0 || !listRef.current) return
+    const items = listRef.current.querySelectorAll('[data-search-item]')
+    items[activeIndex]?.scrollIntoView({ block: 'nearest' })
+  }, [activeIndex])
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    if (query.trim()) {
+      saveRecentSearch(query.trim())
+      setRecentSearches(getRecentSearches())
+    }
+    setFocused(false)
+    onSubmit(e)
+  }
+
+  const handleDeleteRecent = (term: string, e: React.MouseEvent) => {
+    e.stopPropagation()
+    e.preventDefault()
+    removeRecentSearch(term)
+    setRecentSearches(getRecentSearches())
+  }
+
+  const isDesktop = variant === 'desktop'
+
+  return (
+    <div ref={containerRef} className={isDesktop ? 'relative hidden min-w-0 flex-1 md:block lg:max-w-2xl' : 'relative mb-4'}>
+      <form onSubmit={handleSubmit}>
+        {isDesktop && <span className="sr-only">Buscar productos</span>}
+        <Search
+          className={`pointer-events-none absolute top-1/2 size-4 -translate-y-1/2 transition-colors ${
+            focused ? 'text-[#2563EB]' : 'text-[#94A3B8]'
+          } ${isDesktop ? 'left-3.5' : 'left-3'}`}
+        />
+        <input
+          ref={inputRef}
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onFocus={() => setFocused(true)}
+          onKeyDown={handleKeyDown}
+          placeholder="Buscar productos, marcas o soluciones..."
+          autoComplete="off"
+          role="combobox"
+          aria-expanded={showDropdown}
+          aria-autocomplete="list"
+          aria-controls="search-suggestions"
+          aria-activedescendant={activeIndex >= 0 ? `search-item-${activeIndex}` : undefined}
+          className={`w-full rounded-lg border bg-[#F8FAFC] text-sm text-[#0F172A] outline-none transition placeholder:text-[#94A3B8] focus:border-[#2563EB] focus:bg-white focus:ring-2 focus:ring-[#2563EB]/15 ${
+            isDesktop ? 'h-11 pl-10 pr-24 border-[#E2E8F0]' : 'h-10 pl-9 pr-20 border-[#E2E8F0]'
+          }`}
+        />
+        <button
+          type="submit"
+          className={`absolute font-bold text-white transition hover:bg-[#1D4ED8] ${
+            isDesktop
+              ? 'right-1.5 top-1.5 h-8 rounded-lg bg-[#2563EB] px-4 text-xs'
+              : 'right-1 top-1 h-8 rounded-md bg-[#2563EB] px-2.5 text-xs'
+          }`}
+        >
+          Buscar
+        </button>
+      </form>
+
+      {/* Autocomplete dropdown */}
+      {showDropdown && (
+        <div
+          id="search-suggestions"
+          role="listbox"
+          ref={listRef}
+          className={`absolute left-0 right-0 z-[80] mt-1.5 max-h-[420px] overflow-y-auto overscroll-contain rounded-xl border border-[#E2E8F0] bg-white shadow-[0_12px_40px_rgba(15,23,42,0.12)] animate-in fade-in slide-in-from-top-2 duration-150 ${
+            isDesktop ? 'top-full' : 'top-full'
+          }`}
+        >
+          {/* Section label */}
+          {!query.trim() && recentSearches.length > 0 && (
+            <div className="flex items-center gap-1.5 border-b border-[#F1F5F9] px-3.5 pb-1.5 pt-3">
+              <Clock className="size-3 text-[#94A3B8]" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#94A3B8]">Recientes</span>
+            </div>
+          )}
+
+          {!query.trim() && recentSearches.length === 0 && (
+            <div className="flex items-center gap-1.5 border-b border-[#F1F5F9] px-3.5 pb-1.5 pt-3">
+              <TrendingUp className="size-3 text-[#94A3B8]" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#94A3B8]">Categorías populares</span>
+            </div>
+          )}
+
+          {query.trim() && (
+            <div className="flex items-center gap-1.5 border-b border-[#F1F5F9] px-3.5 pb-1.5 pt-3">
+              <Sparkles className="size-3 text-[#2563EB]" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#94A3B8]">Sugerencias</span>
+              <span className="ml-auto rounded-full bg-[#EFF6FF] px-1.5 py-0.5 text-[9px] font-bold text-[#2563EB]">
+                {suggestions.length}
+              </span>
+            </div>
+          )}
+
+          <div className="p-1.5">
+            {suggestions.map((result, index) => (
+              <button
+                key={`${result.type}-${result.label}-${index}`}
+                id={`search-item-${index}`}
+                data-search-item
+                type="button"
+                role="option"
+                aria-selected={activeIndex === index}
+                onMouseEnter={() => setActiveIndex(index)}
+                onClick={() => navigate(result)}
+                className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors ${
+                  activeIndex === index ? 'bg-[#EFF6FF]' : 'hover:bg-[#F8FAFC]'
+                }`}
+              >
+                {/* Icon / image */}
+                {result.type === 'product' && result.image ? (
+                  <div className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-[#E2E8F0] bg-white">
+                    <img
+                      src={result.image}
+                      alt=""
+                      className="size-full object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+                ) : result.type === 'category' ? (
+                  <div className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-[#DBEAFE] bg-[#EFF6FF]">
+                    <Tag className="size-3.5 text-[#2563EB]" />
+                  </div>
+                ) : (
+                  <div className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-[#E2E8F0] bg-[#F8FAFC]">
+                    <Clock className="size-3.5 text-[#94A3B8]" />
+                  </div>
+                )}
+
+                {/* Text */}
+                <div className="min-w-0 flex-1">
+                  <p className={`truncate text-sm font-medium ${
+                    activeIndex === index ? 'text-[#2563EB]' : 'text-[#0F172A]'
+                  }`}>
+                    {result.label}
+                  </p>
+                  {result.sublabel && (
+                    <p className="mt-0.5 truncate text-[11px] text-[#94A3B8]">
+                      {result.sublabel}
+                    </p>
+                  )}
+                </div>
+
+                {/* Actions */}
+                {result.type === 'recent' ? (
+                  <button
+                    type="button"
+                    onClick={(e) => handleDeleteRecent(result.label, e)}
+                    className="shrink-0 rounded-md p-1 text-[#CBD5E1] transition-colors hover:bg-red-50 hover:text-red-400"
+                    aria-label={`Eliminar "${result.label}" de recientes`}
+                  >
+                    <X className="size-3" />
+                  </button>
+                ) : (
+                  <ArrowUpRight className={`size-3.5 shrink-0 ${
+                    activeIndex === index ? 'text-[#2563EB]' : 'text-[#CBD5E1]'
+                  }`} />
+                )}
+              </button>
+            ))}
+          </div>
+
+          {/* Footer */}
+          {query.trim() && (
+            <div className="border-t border-[#F1F5F9] px-3.5 py-2.5">
+              <button
+                type="button"
+                onClick={() => {
+                  saveRecentSearch(query.trim())
+                  setRecentSearches(getRecentSearches())
+                  setFocused(false)
+                  router.push(`/productos?q=${encodeURIComponent(query.trim())}`)
+                }}
+                className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-xs font-semibold text-[#2563EB] transition-colors hover:bg-[#EFF6FF]"
+              >
+                <Search className="size-3.5" />
+                Ver todos los resultados para &quot;{query.trim()}&quot;
+                <ArrowRight className="ml-auto size-3.5" />
+              </button>
+            </div>
+          )}
+
+          {/* Keyboard hint */}
+          <div className="hidden items-center gap-3 border-t border-[#F1F5F9] px-3.5 py-2 md:flex">
+            <span className="flex items-center gap-1 text-[10px] text-[#94A3B8]">
+              <kbd className="rounded border border-[#E2E8F0] bg-[#F8FAFC] px-1 py-0.5 font-mono text-[9px]">↑↓</kbd>
+              navegar
+            </span>
+            <span className="flex items-center gap-1 text-[10px] text-[#94A3B8]">
+              <kbd className="rounded border border-[#E2E8F0] bg-[#F8FAFC] px-1 py-0.5 font-mono text-[9px]">Enter</kbd>
+              seleccionar
+            </span>
+            <span className="flex items-center gap-1 text-[10px] text-[#94A3B8]">
+              <kbd className="rounded border border-[#E2E8F0] bg-[#F8FAFC] px-1 py-0.5 font-mono text-[9px]">Esc</kbd>
+              cerrar
+            </span>
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 // ─── Componente: Enhanced Header ─────────────────────────────────────────────────────────
 
 export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderProps) {
@@ -548,23 +935,13 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
               </span>
             </Link>
 
-            {/* Buscador */}
-            <form onSubmit={submitSearch} className="relative hidden min-w-0 flex-1 md:block lg:max-w-2xl">
-              <span className="sr-only">Buscar productos</span>
-              <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-[#94A3B8]" />
-              <input
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                placeholder="Buscar productos, marcas o soluciones..."
-                className="h-11 w-full rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] pl-10 pr-24 text-sm text-[#0F172A] outline-none transition placeholder:text-[#94A3B8] focus:border-[#2563EB] focus:bg-white focus:ring-2 focus:ring-[#2563EB]/15"
-              />
-              <button
-                type="submit"
-                className="absolute right-1.5 top-1.5 h-8 rounded-lg bg-[#2563EB] px-4 text-xs font-bold text-white transition hover:bg-[#1D4ED8]"
-              >
-                Buscar
-              </button>
-            </form>
+            {/* Buscador con autocompletado */}
+            <SearchAutocomplete
+              query={query}
+              setQuery={setQuery}
+              onSubmit={submitSearch}
+              variant="desktop"
+            />
 
             {/* Acciones del usuario */}
             <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
@@ -756,24 +1133,13 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
 
           {/* Contenido desplazable */}
           <div className="flex-1 overflow-y-auto overscroll-contain px-3.5 py-4">
-            {/* Buscador móvil */}
-            <form onSubmit={submitSearch} className="mb-4">
-              <div className="relative">
-                <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#94A3B8]" />
-                <input
-                  value={query}
-                  onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Buscar productos, marcas..."
-                  className="h-10 w-full rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] pl-9 pr-20 text-sm text-[#0F172A] outline-none transition placeholder:text-[#94A3B8] focus:border-[#2563EB] focus:bg-white focus:ring-2 focus:ring-[#2563EB]/15"
-                />
-                <button
-                  type="submit"
-                  className="absolute right-1 top-1 h-8 rounded-md bg-[#2563EB] px-2.5 text-xs font-bold text-white transition hover:bg-[#1D4ED8]"
-                >
-                  Buscar
-                </button>
-              </div>
-            </form>
+            {/* Buscador móvil con autocompletado */}
+            <SearchAutocomplete
+              query={query}
+              setQuery={setQuery}
+              onSubmit={submitSearch}
+              variant="mobile"
+            />
 
             {/* Navegación principal móvil */}
             <nav className="space-y-1.5" aria-label="Navegación móvil">

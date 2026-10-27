@@ -229,7 +229,7 @@ const capabilities = [
 
 const faqs = [
   {
-    q: '¿Cómo empieza un proyecto con F&J Solutions?',
+    q: '¿Cómo empieza un proyecto con F&J Systems?',
     a: 'Agendamos una conversación de diagnóstico sin costo. Revisamos tu necesidad, el estado actual de tu operación y las prioridades reales. Con esa información preparamos una propuesta con alcance, etapas, entregables y costos.',
   },
   {
@@ -264,7 +264,7 @@ export function AboutPage() {
       <EnhancedHeader />
 
       <EditorialHero
-        eyebrow="Sobre F&J Solutions"
+        eyebrow="Sobre F&J Systems"
         title={
           <>
             Entendemos tu operación antes de proponer{' '}
@@ -275,8 +275,8 @@ export function AboutPage() {
         meta={['Lima, Perú', 'Atención remota y en sitio', 'Empresas y equipos de trabajo']}
         actions={
           <>
-            <HeroAction href="#contacto">Hablemos de tu proyecto</HeroAction>
-            <HeroAction href="#proyectos" variant="secondary">
+            <HeroAction href="/contacto">Hablemos de tu proyecto</HeroAction>
+            <HeroAction href="/proyectos" variant="secondary">
               Ver proyectos y experiencia
             </HeroAction>
           </>
@@ -316,7 +316,7 @@ export function AboutPage() {
 
               <div className="mt-5 max-w-[62ch] space-y-4 text-sm leading-7 text-[#475569] sm:text-[15px]">
                 <p>
-                  F&J Solutions nació resolviendo necesidades concretas: equipos que fallaban, redes
+                  F&J Systems nació resolviendo necesidades concretas: equipos que fallaban, redes
                   que no alcanzaban y procesos que dependían de hojas de cálculo. Con los años, ese
                   trabajo se convirtió en una práctica integral de infraestructura, soporte y
                   desarrollo.
@@ -392,13 +392,13 @@ export function AboutPage() {
               </p>
             </div>
             <Link
-              href="/servicios"
-              className="group inline-flex h-11 w-fit items-center gap-2 rounded-xl border border-[#E2E8F0] bg-white px-4 text-sm font-bold text-[#0F172A] transition hover:border-[#2563EB]/40 hover:text-[#1D4ED8]"
+              href="/proyectos"
+              className="group inline-flex h-11 w-fit items-center gap-2 rounded-xl bg-[#2563EB] px-4 text-sm font-bold text-white transition hover:bg-[#1D4ED8]"
             >
-              Ver servicios TI
-              <ArrowUpRight
+              Ver casos de éxito completos
+              <ArrowRight
                 aria-hidden="true"
-                className="size-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                className="size-4 transition-transform group-hover:translate-x-0.5"
               />
             </Link>
           </div>
@@ -465,17 +465,29 @@ export function AboutPage() {
       {/* Cómo trabajamos */}
       <section id="metodologia" className="scroll-mt-32 bg-white">
         <div className={`${CONTAINER} py-14 sm:py-16 lg:py-20`}>
-          <div className="max-w-2xl">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#2563EB]">
-              Cómo trabajamos
-            </p>
-            <h2 className="mt-3 font-heading text-[clamp(1.8rem,1.1rem+2.2vw,2.85rem)] font-bold leading-[1.08] tracking-[-0.045em] text-[#0F172A]">
-              Un proceso claro, de la primera conversación al soporte.
-            </h2>
-            <p className="mt-4 max-w-xl text-sm leading-6 text-[#475569]">
-              No improvisamos sobre tu operación. Cada etapa tiene un objetivo, un responsable y un
-              entregable concreto.
-            </p>
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-2xl">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#2563EB]">
+                Cómo trabajamos
+              </p>
+              <h2 className="mt-3 font-heading text-[clamp(1.8rem,1.1rem+2.2vw,2.85rem)] font-bold leading-[1.08] tracking-[-0.045em] text-[#0F172A]">
+                Un proceso claro, de la primera conversación al soporte.
+              </h2>
+              <p className="mt-4 max-w-xl text-sm leading-6 text-[#475569]">
+                No improvisamos sobre tu operación. Cada etapa tiene un objetivo, un responsable y un
+                entregable concreto.
+              </p>
+            </div>
+            <Link
+              href="/como-trabajamos"
+              className="group inline-flex h-11 w-fit items-center gap-2 rounded-xl border border-[#E2E8F0] bg-white px-4 text-sm font-bold text-[#0F172A] transition hover:border-[#2563EB]/40 hover:text-[#1D4ED8]"
+            >
+              Conocer metodología y garantías
+              <ArrowRight
+                aria-hidden="true"
+                className="size-4 transition-transform group-hover:translate-x-0.5"
+              />
+            </Link>
           </div>
 
           <div className="mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -602,13 +614,21 @@ export function AboutPage() {
                 Si tu caso no aparece aquí, escríbenos. Respondemos con una orientación concreta, no
                 con una plantilla.
               </p>
-              <Link
-                href="#contacto"
-                className="mt-6 inline-flex h-11 items-center gap-2 rounded-xl border border-[#E2E8F0] bg-white px-4 text-sm font-bold text-[#0F172A] transition hover:border-[#2563EB]/40 hover:text-[#1D4ED8]"
-              >
-                Hacer otra consulta
-                <ArrowRight aria-hidden="true" className="size-4" />
-              </Link>
+              <div className="mt-6 flex flex-wrap gap-2.5">
+                <Link
+                  href="/preguntas-frecuentes"
+                  className="inline-flex h-11 items-center gap-2 rounded-xl bg-[#2563EB] px-4 text-sm font-bold text-white transition hover:bg-[#1D4ED8]"
+                >
+                  Ver centro de preguntas frecuentes
+                  <ArrowRight aria-hidden="true" className="size-4" />
+                </Link>
+                <Link
+                  href="/contacto"
+                  className="inline-flex h-11 items-center gap-2 rounded-xl border border-[#E2E8F0] bg-white px-4 text-sm font-bold text-[#0F172A] transition hover:border-[#2563EB]/40 hover:text-[#1D4ED8]"
+                >
+                  Consultar al equipo
+                </Link>
+              </div>
 
               <div className="mt-8 hidden items-center gap-3 rounded-2xl border border-[#EEF2F7] bg-[#F8FAFC] p-4 lg:flex">
                 <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-white text-[#2563EB] shadow-sm">

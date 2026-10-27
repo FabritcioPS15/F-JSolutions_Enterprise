@@ -1,6 +1,6 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
-import { Inter, JetBrains_Mono, Space_Grotesk } from 'next/font/google'
+import { Inter, Space_Grotesk } from 'next/font/google'
 import { SiteFooter } from '@/components/layout/site-footer'
 import './globals.css'
 
@@ -16,14 +16,10 @@ const spaceGrotesk = Space_Grotesk({
   display: 'swap',
 })
 
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ['latin'],
-  variable: '--font-jetbrains-mono',
-  display: 'swap',
-})
+
 
 export const metadata: Metadata = {
-  title: 'F&J Solutions | Tecnología que mueve',
+  title: 'F&J Systems | Soluciones tecnológicas para empresas',
   description: 'Desarrollo de software, infraestructura TI y hardware corporativo para empresas que quieren avanzar.',
   generator: 'v0.app',
   icons: {
@@ -61,7 +57,7 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`}
+      className={`${inter.variable} ${spaceGrotesk.variable}`}
     >
       <body className="antialiased">
         {children}

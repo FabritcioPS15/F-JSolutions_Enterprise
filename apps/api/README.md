@@ -1,4 +1,4 @@
-# F&J Solutions Enterprise - Backend REST API
+# F&J Systems Enterprise - Backend REST API
 
 Arquitectura de backend empresarial construida con **Node.js, Express, TypeScript, Zod y Prisma ORM**.
 
