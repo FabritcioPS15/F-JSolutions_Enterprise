@@ -1,19 +1,12 @@
 import type { Metadata } from 'next'
-import { EnhancedHeader } from '@/components/layout/enhanced-header'
+import { AboutPage } from '@/components/sections/about-page'
 
 export const metadata: Metadata = {
-  title: 'Nosotros | FJ Tech Solutions',
-  description: 'Conoce al equipo detrás de FJ Tech Solutions. Más de 10 años brindando tecnología de calidad a empresas en Lima, Perú.',
+  title: 'Sobre nosotros, proyectos y experiencia | FJ Solutions',
+  description:
+    'Conoce a F&J Solutions: nuestro equipo, proyectos y experiencia en infraestructura TI, soporte y desarrollo de software. Cómo trabajamos, preguntas frecuentes y contacto.',
 }
 
 export default function NosotrosPage() {
-  return (
-    <main className="min-h-screen bg-white text-[#0F172A]">
-      <EnhancedHeader />
-      <section className="mx-auto max-w-[1280px] px-4 py-20 sm:px-6 lg:px-8">
-        <h1 className="text-4xl font-bold tracking-tight text-[#0F172A]">Sobre FJ Tech Solutions</h1>
-        <p className="mt-4 text-lg text-[#475569]">Próximamente: historia, equipo y valores.</p>
-      </section>
-    </main>
-  )
+  return <AboutPage />
 }

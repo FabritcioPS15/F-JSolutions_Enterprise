@@ -80,7 +80,7 @@ export function HeroTitle({ children, className, size = 'xl', as: Tag = 'h1' }: 
   return (
     <Tag
       className={cn(
-        'hero-reveal hero-delay-1 mt-5 max-w-[20ch] text-balance font-heading font-bold leading-[1.02] tracking-[-0.05em] text-[#0F172A]',
+        'hero-reveal hero-delay-1 mt-4 sm:mt-5 max-w-[20ch] text-balance font-heading font-bold leading-[1.08] sm:leading-[1.04] tracking-[-0.04em] text-[#0F172A]',
         HERO_TITLE_SIZE[size],
         className,
       )}
@@ -103,7 +103,7 @@ export function HeroLead({ children, className }: HeroLeadProps) {
   return (
     <p
       className={cn(
-        'hero-reveal hero-delay-2 mt-5 max-w-[54ch] text-[0.975rem] leading-7 text-[#475569] sm:text-base',
+        'hero-reveal hero-delay-2 mt-4 sm:mt-5 max-w-[54ch] text-[0.95rem] leading-relaxed text-[#475569] sm:text-base',
         className,
       )}
     >
@@ -116,7 +116,7 @@ export function HeroActions({ children, className }: { children: ReactNode; clas
   return (
     <div
       className={cn(
-        'hero-reveal hero-delay-3 mt-7 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:items-center',
+        'hero-reveal hero-delay-3 mt-6 sm:mt-7 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap sm:items-center',
         className,
       )}
     >
@@ -131,6 +131,7 @@ type HeroActionProps = {
   variant?: 'primary' | 'secondary' | 'quiet'
   arrow?: boolean
   className?: string
+  onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void
 }
 
 const actionVariants = {
@@ -148,10 +149,12 @@ export function HeroAction({
   variant = 'primary',
   arrow = true,
   className,
+  onClick,
 }: HeroActionProps) {
   return (
     <Link
       href={href}
+      onClick={onClick}
       className={cn(
         'group inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl px-5 text-sm font-bold transition duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/40 focus-visible:ring-offset-2 sm:w-auto',
         actionVariants[variant],

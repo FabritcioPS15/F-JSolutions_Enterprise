@@ -5,8 +5,8 @@
 @custom-variant dark (&:is(.dark *));
 
 html {
-  scroll-padding-top: 7rem;
-  overflow-x: hidden;
+  scroll-padding-top: 5rem;
+  overflow-x: clip;
 }
 
 /* ─── F&J Hero System ─────────────────────────────────────────────────────────
@@ -348,7 +348,8 @@ html {
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground overflow-x-hidden;
+    @apply bg-background text-foreground;
+    overflow-x: clip;
   }
   html,
   body,

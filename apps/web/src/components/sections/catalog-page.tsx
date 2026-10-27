@@ -147,7 +147,7 @@ export function CatalogPage({
         onSelectCategory={setCategory}
       />
 
-      <section id="catalogo" className="mx-auto max-w-[1280px] scroll-mt-32 px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
+      <section id="catalogo" className="mx-auto max-w-[1280px] scroll-mt-20 sm:scroll-mt-24 lg:scroll-mt-28 px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
         <div className="lg:grid lg:grid-cols-[260px_1fr] lg:gap-8">
           <aside className="hidden lg:block">
             <div className="sticky top-40 rounded-2xl border border-[#E2E8F0] bg-white p-5">

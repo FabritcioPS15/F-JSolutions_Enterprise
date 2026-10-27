@@ -152,17 +152,30 @@ export function CatalogHero({
     .filter((product): product is Product => Boolean(product))
   const [primary, ...rest] = featured
 
+  const scrollToCatalog = () => {
+    if (typeof window !== 'undefined') {
+      const target = document.getElementById('catalogo')
+      if (target) {
+        const navHeight = 75
+        const elementPosition = target.getBoundingClientRect().top
+        const offsetPosition = elementPosition + window.pageYOffset - navHeight
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth',
+        })
+      }
+    }
+  }
+
   const handleSelect = (category: string) => {
     onSelectCategory?.(category)
-    if (typeof document !== 'undefined') {
-      document.getElementById('catalogo')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }
+    scrollToCatalog()
   }
 
   return (
     <HeroSection>
-      <div className={`${HERO_CONTAINER} pb-10 pt-9 sm:pb-12 sm:pt-11 lg:pb-14 lg:pt-12`}>
-        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.96fr)] lg:gap-12 xl:gap-16">
+      <div className={`${HERO_CONTAINER} pb-8 pt-6 sm:pb-12 sm:pt-10 lg:pb-14 lg:pt-12`}>
+        <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.96fr)] lg:gap-12 xl:gap-16">
           <div className="max-w-[620px]">
             <HeroEyebrow icon={<Package aria-hidden="true" className="size-3.5" />}>
               Catálogo corporativo
@@ -177,7 +190,7 @@ export function CatalogHero({
               que necesitas y recibe una cotización con asesoría real, sin comprar a ciegas.
             </HeroLead>
 
-            <div className="hero-reveal hero-delay-3 mt-6 flex flex-wrap items-center gap-2">
+            <div className="hero-reveal hero-delay-3 mt-5 sm:mt-6 flex flex-wrap items-center gap-2">
               <span className="inline-flex items-center gap-1.5 rounded-full border border-[#E2E8F0] bg-white px-2.5 py-1.5 text-[10.5px] font-semibold text-[#475569] shadow-sm">
                 <Package aria-hidden="true" className="size-3 text-[#2563EB]" />
                 {totalProducts} productos
@@ -193,13 +206,21 @@ export function CatalogHero({
             </div>
 
             <HeroActions>
-              <HeroAction href="#catalogo">Ver catálogo completo</HeroAction>
+              <HeroAction
+                href="#catalogo"
+                onClick={(e) => {
+                  e.preventDefault()
+                  scrollToCatalog()
+                }}
+              >
+                Ver catálogo completo
+              </HeroAction>
               <HeroAction href="/cotizacion" variant="secondary">
                 Solicitar cotización
               </HeroAction>
             </HeroActions>
 
-            <div className="hero-reveal hero-delay-4 mt-7">
+            <div className="hero-reveal hero-delay-4 mt-6 sm:mt-7">
               <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#64748B]">
                 Accesos rápidos
               </p>
@@ -261,6 +282,10 @@ export function CatalogHero({
                 </div>
                 <a
                   href="#catalogo"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    scrollToCatalog()
+                  }}
                   className="inline-flex shrink-0 items-center gap-1 rounded-md px-1.5 py-1 text-[9px] font-bold text-[#1D4ED8] transition hover:bg-[#EFF6FF]"
                 >
                   Ver todo <ArrowRight aria-hidden="true" className="size-3" />

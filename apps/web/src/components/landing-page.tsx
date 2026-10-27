@@ -55,7 +55,7 @@ export function LandingPage() {
   )
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#f8fafc] text-[#172033]">
+    <main className="min-h-screen overflow-x-clip bg-[#f8fafc] text-[#172033]">
       <EnhancedHeader quoteCount={quote.count} />
 
       <CorporateHero />
@@ -82,7 +82,7 @@ export function LandingPage() {
         </div>
       </section>
 
-      <section id="productos" className="mx-auto max-w-[1280px] px-4 py-8 sm:py-10 sm:px-6 lg:px-8">
+      <section id="productos" className="mx-auto max-w-[1280px] scroll-mt-20 sm:scroll-mt-24 px-4 py-8 sm:py-10 sm:px-6 lg:px-8">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#155eef] sm:text-sm">Selección FJ Tech</p>
@@ -125,7 +125,7 @@ export function LandingPage() {
         </div>
       </section>
 
-      <section id="servicios" className="border-y border-[#e5eaf0] bg-white px-4 py-8 sm:py-10 sm:px-6 lg:px-8">
+      <section id="servicios" className="border-y border-[#e5eaf0] bg-white scroll-mt-20 sm:scroll-mt-24 px-4 py-8 sm:py-10 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-[1280px]">
           <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#155eef] sm:text-sm">Servicios para empresas</p>
           <h2 className="mt-2 text-2xl font-bold tracking-[-0.05em] sm:text-3xl">Soporte TI en cada etapa</h2>

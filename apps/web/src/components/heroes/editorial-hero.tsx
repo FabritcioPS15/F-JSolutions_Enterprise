@@ -54,14 +54,17 @@ export function EditorialHero({
             <HeroLead className="max-w-[62ch]">{description}</HeroLead>
 
             {meta && meta.length > 0 && (
-              <div className="hero-reveal hero-delay-3 mt-5 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[11px] font-semibold text-[#64748B]">
-                {meta.map((item, index) => (
-                  <span key={item} className="inline-flex items-center gap-2">
-                    {index > 0 && <span aria-hidden="true" className="size-1 rounded-full bg-[#CBD5E1]" />}
+              <ul className="hero-reveal hero-delay-3 mt-5 flex flex-wrap items-center gap-1.5">
+                {meta.map((item) => (
+                  <li
+                    key={item}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-[#E2E8F0] bg-white/80 px-2.5 py-1 text-[10.5px] font-semibold text-[#475569] backdrop-blur"
+                  >
+                    <span aria-hidden="true" className="size-1 rounded-full bg-[#22D3EE]" />
                     {item}
-                  </span>
+                  </li>
                 ))}
-              </div>
+              </ul>
             )}
 
             {actions && <HeroActions>{actions}</HeroActions>}

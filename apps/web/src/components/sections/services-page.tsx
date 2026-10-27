@@ -249,7 +249,7 @@ export function ServicesPage() {
         ]}
       />
 
-      <section id="servicios" className="border-y border-[#E2E8F0] bg-[#F7F9FC]">
+      <section id="servicios" className="scroll-mt-20 sm:scroll-mt-24 lg:scroll-mt-28 border-y border-[#E2E8F0] bg-[#F7F9FC]">
         <div className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
           <div className="max-w-2xl">
             <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#0E7490]">
@@ -485,7 +485,7 @@ export function ServicesPage() {
         </div>
       </section>
 
-      <section id="faq" className="border-y border-[#E2E8F0] bg-white">
+      <section id="faq" className="scroll-mt-20 sm:scroll-mt-24 lg:scroll-mt-28 border-y border-[#E2E8F0] bg-white">
         <div className="mx-auto grid max-w-[1280px] gap-8 px-4 py-12 sm:px-6 lg:grid-cols-[0.85fr_1.15fr] lg:px-8 lg:py-16">
           <div>
             <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#0E7490]">
@@ -521,7 +521,7 @@ export function ServicesPage() {
         </div>
       </section>
 
-      <section id="contacto" className="px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+      <section id="contacto" className="scroll-mt-20 sm:scroll-mt-24 lg:scroll-mt-28 px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
         <div className="relative mx-auto max-w-[1280px] overflow-hidden rounded-3xl border border-[#2563EB]/20 bg-gradient-to-br from-[#EFF6FF] via-white to-[#F8FAFC] px-6 py-10 shadow-sm sm:px-10 lg:px-14 lg:py-14">
           <div className="pointer-events-none absolute -right-24 -top-24 size-80 rounded-full bg-[#2563EB]/10 blur-2xl" />
           <div className="pointer-events-none absolute -bottom-32 left-1/3 size-80 rounded-full bg-[#22D3EE]/20 blur-3xl" />

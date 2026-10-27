@@ -127,7 +127,7 @@ export function ServicePage({ kind }: ServicePageProps) {
 
       <section
         id="solicitud"
-        className="mx-auto max-w-[1180px] scroll-mt-32 px-4 pb-14 pt-4 sm:px-6 lg:px-8"
+        className="mx-auto max-w-[1180px] scroll-mt-20 sm:scroll-mt-24 lg:scroll-mt-28 px-4 pb-14 pt-4 sm:px-6 lg:px-8"
       >
         <div className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-start lg:gap-12">
           <div>

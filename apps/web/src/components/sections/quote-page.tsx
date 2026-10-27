@@ -353,7 +353,10 @@ export function QuotePage() {
 
       <QuoteHero showSteps />
 
-      <section className="mx-auto max-w-[1280px] px-4 pb-8 pt-2 sm:px-6 lg:px-8 lg:pb-12">
+      <section
+        id="cotizacion-formulario"
+        className="mx-auto max-w-[1280px] scroll-mt-20 sm:scroll-mt-24 lg:scroll-mt-28 px-4 pb-8 pt-2 sm:px-6 lg:px-8 lg:pb-12"
+      >
         {/* Pasos */}
         <ol className="mt-8 grid gap-3 sm:grid-cols-3">
           {steps.map((step) => {

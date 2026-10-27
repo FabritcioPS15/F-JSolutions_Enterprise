@@ -7,15 +7,22 @@ import {
   ArrowRight,
   ChevronDown,
   ChevronRight,
+  Cpu,
   FileText,
+  HardDrive,
+  Laptop,
+  Mail,
   Menu,
+  MessageSquare,
+  Monitor,
   MousePointer2,
+  Network,
+  Phone,
+  Printer,
   Search,
   UserRound,
   X,
-  Phone,
-  Mail,
-  MessageSquare,
+  Zap,
 } from 'lucide-react'
 import { mainNav, storeCategories, featuredBrands, itServicesMenu, infrastructureMenu, softwareDevMenu, companyMenu } from '@/lib/navigation'
 
@@ -46,14 +53,14 @@ function useOnClickOutside(ref: React.RefObject<HTMLElement | null>, handler: ()
 // ─── Componente: Icono mapeador ───────────────────────────────────────────────────────────
 
 const iconMap: Record<string, React.ElementType> = {
-  Cpu: require('lucide-react').Cpu,
-  Laptop: require('lucide-react').Laptop,
-  Monitor: require('lucide-react').Monitor,
-  MousePointer2: require('lucide-react').MousePointer2,
-  HardDrive: require('lucide-react').HardDrive,
-  Network: require('lucide-react').Network,
-  Printer: require('lucide-react').Printer,
-  Zap: require('lucide-react').Zap,
+  Cpu,
+  Laptop,
+  Monitor,
+  MousePointer2,
+  HardDrive,
+  Network,
+  Printer,
+  Zap,
 }
 
 function getIcon(iconName: string) {
@@ -62,20 +69,61 @@ function getIcon(iconName: string) {
 
 // ─── Componente: Mobile Accordion ─────────────────────────────────────────────────────────────
 
-function MobileAccordion({ label, isOpen, onToggle, children }: { label: string; isOpen: boolean; onToggle: () => void; children: React.ReactNode }) {
+function MobileAccordion({
+  label,
+  isOpen,
+  onToggle,
+  children,
+  badge,
+  active,
+}: {
+  label: string
+  isOpen: boolean
+  onToggle: () => void
+  children: React.ReactNode
+  badge?: string
+  active?: boolean
+}) {
   return (
-    <div className="overflow-hidden rounded-xl border border-[#F1F5F9]">
+    <div
+      className={`overflow-hidden rounded-xl border transition-colors duration-200 ${
+        isOpen
+          ? 'border-[#2563EB]/40 bg-white shadow-sm'
+          : active
+          ? 'border-[#2563EB]/30 bg-[#EFF6FF]/20'
+          : 'border-[#E2E8F0] bg-white'
+      }`}
+    >
       <button
         type="button"
         onClick={onToggle}
-        className="flex w-full items-center justify-between px-3 sm:px-4 py-3 text-sm font-semibold text-[#0F172A]"
+        aria-expanded={isOpen}
+        className="flex w-full items-center justify-between px-3.5 py-3 text-left text-sm font-semibold transition-colors"
       >
-        {label}
+        <span className="flex items-center gap-2">
+          <span className={isOpen || active ? 'text-[#2563EB]' : 'text-[#0F172A]'}>
+            {label}
+          </span>
+          {active && !isOpen && (
+            <span className="size-1.5 rounded-full bg-[#2563EB]" />
+          )}
+          {badge && (
+            <span className="rounded-full bg-[#EFF6FF] px-2 py-0.5 text-[10px] font-bold text-[#2563EB]">
+              {badge}
+            </span>
+          )}
+        </span>
         <ChevronDown
-          className={`size-4 text-[#64748B] transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+          className={`size-4 shrink-0 transition-transform duration-200 ${
+            isOpen ? 'rotate-180 text-[#2563EB]' : 'text-[#64748B]'
+          }`}
         />
       </button>
-      {isOpen && <div className="border-t border-[#F1F5F9] bg-[#F8FAFC]">{children}</div>}
+      {isOpen && (
+        <div className="border-t border-[#F1F5F9] bg-[#F8FAFC]/70 p-2.5 animate-in fade-in-50 duration-150">
+          {children}
+        </div>
+      )}
     </div>
   )
 }
@@ -85,76 +133,121 @@ function MobileAccordion({ label, isOpen, onToggle, children }: { label: string;
 function MobileStoreMenu({ onClose }: { onClose: () => void }) {
   const [openCategory, setOpenCategory] = useState<string | null>(null)
 
+  const toggleCategory = (categoryId: string) => {
+    setOpenCategory((prev) => (prev === categoryId ? null : categoryId))
+  }
+
   return (
-    <div className="space-y-0.5 py-2 pl-2 pr-1">
+    <div className="space-y-1">
       {storeCategories.map((category) => {
         const Icon = getIcon(category.icon)
         const isOpen = openCategory === category.id
 
         return (
-          <div key={category.id}>
+          <div
+            key={category.id}
+            className={`rounded-lg transition-colors ${
+              isOpen ? 'border border-[#E2E8F0] bg-white shadow-xs' : 'hover:bg-white/80'
+            }`}
+          >
             <button
               type="button"
-              onClick={() => setOpenCategory(isOpen ? null : category.id)}
+              onClick={() => toggleCategory(category.id)}
               aria-expanded={isOpen}
-              className="flex w-full items-center gap-2.5 rounded-lg px-2 py-2 text-left text-sm font-semibold text-[#0F172A] transition-colors hover:bg-white"
+              className="flex w-full items-center gap-2.5 px-2.5 py-2 text-left text-sm font-semibold text-[#0F172A]"
             >
-              <Icon className="size-4 shrink-0 text-[#64748B]" />
-              <span className="flex-1">{category.label}</span>
+              <span
+                className={`flex size-7 shrink-0 items-center justify-center rounded-md border transition-colors ${
+                  isOpen
+                    ? 'border-[#2563EB]/25 bg-[#EFF6FF] text-[#2563EB]'
+                    : 'border-[#E2E8F0] bg-white text-[#64748B]'
+                }`}
+              >
+                <Icon className="size-3.5" />
+              </span>
+              <span className={`flex-1 truncate ${isOpen ? 'text-[#2563EB]' : ''}`}>
+                {category.label}
+              </span>
               <ChevronDown
-                className={`size-4 shrink-0 text-[#94A3B8] transition-transform ${isOpen ? 'rotate-180' : ''}`}
+                className={`size-3.5 shrink-0 text-[#94A3B8] transition-transform duration-200 ${
+                  isOpen ? 'rotate-180 text-[#2563EB]' : ''
+                }`}
               />
             </button>
 
             {isOpen && (
-              <div className="mb-1 ml-3 border-l border-[#E2E8F0] pl-3">
+              <div className="border-t border-[#F1F5F9] px-3 pb-3 pt-2">
                 <Link
                   href={category.items[0]?.href || '/productos'}
                   onClick={onClose}
-                  className="block rounded-md px-2 py-1.5 text-xs font-bold text-[#2563EB]"
+                  className="mb-2 flex items-center justify-between rounded-md bg-[#EFF6FF] px-2.5 py-1.5 text-xs font-bold text-[#2563EB] transition-colors hover:bg-[#DBEAFE]"
                 >
-                  Ver todo en {category.label}
+                  <span>Ver todo en {category.label}</span>
+                  <ArrowRight className="size-3" />
                 </Link>
 
-                {category.items.map((item) => (
-                  <div key={item.label}>
-                    <Link
-                      href={item.href}
-                      onClick={onClose}
-                      className="block rounded-md px-2 py-1.5 text-xs font-medium text-[#475569] transition-colors hover:text-[#2563EB]"
-                    >
-                      {item.label}
-                    </Link>
+                <div className="space-y-2">
+                  {category.items.map((item) => (
+                    <div key={item.label} className="space-y-1">
+                      <Link
+                        href={item.href}
+                        onClick={onClose}
+                        className="block rounded-md px-1.5 py-1 text-xs font-medium text-[#334155] transition-colors hover:text-[#2563EB]"
+                      >
+                        {item.label}
+                      </Link>
 
-                    {item.subItems && item.subItems.length > 0 && (
-                      <div className="flex flex-wrap gap-1 px-2 pb-1.5">
-                        {item.subItems.map((subItem) => (
-                          <Link
-                            key={subItem.label}
-                            href={subItem.href}
-                            onClick={onClose}
-                            className="rounded-full border border-[#E2E8F0] bg-white px-2 py-0.5 text-[10px] font-semibold text-[#64748B] transition-colors hover:border-[#2563EB]/40 hover:text-[#2563EB]"
-                          >
-                            {subItem.label}
-                          </Link>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                ))}
+                      {item.subItems && item.subItems.length > 0 && (
+                        <div className="flex flex-wrap gap-1 pl-1">
+                          {item.subItems.map((subItem) => (
+                            <Link
+                              key={subItem.label}
+                              href={subItem.href}
+                              onClick={onClose}
+                              className="rounded-full border border-[#E2E8F0] bg-white px-2 py-0.5 text-[10px] font-medium text-[#64748B] transition-colors hover:border-[#2563EB]/40 hover:text-[#2563EB]"
+                            >
+                              {subItem.label}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
           </div>
         )
       })}
 
+      {/* Marcas destacadas en Tienda Móvil */}
+      <div className="pt-1.5">
+        <div className="rounded-lg border border-[#E2E8F0] bg-white p-2.5">
+          <p className="mb-1.5 text-[10px] font-bold uppercase tracking-wider text-[#64748B]">
+            Marcas destacadas
+          </p>
+          <div className="flex flex-wrap gap-1">
+            {featuredBrands.map((brand) => (
+              <Link
+                key={brand.name}
+                href={brand.href}
+                onClick={onClose}
+                className="rounded-md border border-[#E2E8F0] bg-[#F8FAFC] px-2 py-1 text-[11px] font-semibold text-[#334155] transition-colors hover:border-[#2563EB]/40 hover:bg-[#EFF6FF] hover:text-[#2563EB]"
+              >
+                {brand.name}
+              </Link>
+            ))}
+          </div>
+        </div>
+      </div>
+
       <Link
         href="/productos"
         onClick={onClose}
-        className="mt-1 flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-[#2563EB] transition-colors hover:bg-[#EFF6FF]"
+        className="mt-2 flex items-center justify-center gap-2 rounded-lg bg-[#2563EB] px-3 py-2 text-xs font-bold text-white shadow-xs transition hover:bg-[#1D4ED8]"
       >
-        <ArrowRight className="size-4" />
-        Ver todos los productos
+        <span>Ver todos los productos</span>
+        <ArrowRight className="size-3.5" />
       </Link>
     </div>
   )
@@ -341,6 +434,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
   const router = useRouter()
   const [menuOpen, setMenuOpen] = useState(false)
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
+  const [openMobileSection, setOpenMobileSection] = useState<string | null>(null)
   const [query, setQuery] = useState('')
   const [scrolled, setScrolled] = useState(false)
 
@@ -353,14 +447,18 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
   const closeAll = () => setOpenDropdown(null)
 
   useOnClickOutside(storeRef, () => { if (openDropdown === 'store') closeAll() })
-  useOnClickOutside(servicesRef, () => { if (openDropdown === 'services') closeAll() })
-  useOnClickOutside(infrastructureRef, () => { if (openDropdown === 'infrastructure') closeAll() })
-  useOnClickOutside(softwareRef, () => { if (openDropdown === 'software') closeAll() })
-  useOnClickOutside(companyRef, () => { if (openDropdown === 'company') closeAll() })
+  useOnClickOutside(servicesRef, () => { if (openDropdown === 'servicios-ti') closeAll() })
+  useOnClickOutside(infrastructureRef, () => { if (openDropdown === 'infraestructura-ti') closeAll() })
+  useOnClickOutside(softwareRef, () => { if (openDropdown === 'desarrollo-de-software') closeAll() })
+  useOnClickOutside(companyRef, () => { if (openDropdown === 'empresa') closeAll() })
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') { closeAll(); setMenuOpen(false) }
+      if (e.key === 'Escape') {
+        closeAll()
+        setMenuOpen(false)
+        setOpenMobileSection(null)
+      }
     }
     document.addEventListener('keydown', handler)
     return () => document.removeEventListener('keydown', handler)
@@ -397,6 +495,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
   useEffect(() => {
     setMenuOpen(false)
     closeAll()
+    setOpenMobileSection(null)
   }, [pathname])
 
   const goToQuote = () => {
@@ -408,6 +507,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
     e.preventDefault()
     const term = query.trim()
     setMenuOpen(false)
+    setOpenMobileSection(null)
     router.push(term ? `/productos?q=${encodeURIComponent(term)}` : '/productos')
   }
 
@@ -418,12 +518,19 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
   }
 
   const toggle = (key: string) => setOpenDropdown((prev) => (prev === key ? null : key))
+  const toggleMobile = (key: string) => setOpenMobileSection((prev) => (prev === key ? null : key))
 
   return (
     <>
-    <header className="sticky top-0 z-40 w-full bg-white">
+    <header
+      className={`sticky top-0 z-50 w-full bg-white transition-all duration-200 ${
+        scrolled
+          ? 'border-b border-slate-200/90 shadow-md shadow-slate-900/5'
+          : 'border-b border-[#F1F5F9]'
+      }`}
+    >
       {/* Primera franja: Logo, enlaces corporativos, buscador, acciones */}
-      <div className="border-b border-[#F1F5F9]">
+      <div>
         <div className="mx-auto max-w-[1400px] px-3 py-2.5 sm:px-4 sm:py-3 lg:px-8 lg:py-3">
           <div className="flex items-center gap-3 lg:gap-6">
             {/* Logo */}
@@ -436,7 +543,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
               <span className="grid size-9 sm:size-10 place-items-center rounded-xl bg-gradient-to-br from-[#3B82F6] to-[#1D4ED8] font-heading text-sm font-bold tracking-tight text-white shadow-md shadow-[#2563EB]/20">
                 FJ
               </span>
-              <span className="hidden font-heading text-lg sm:text-xl font-bold tracking-[-0.04em] text-[#0F172A] sm:block lg:text-2xl">
+              <span className="font-heading text-base font-bold tracking-[-0.03em] text-[#0F172A] sm:text-xl lg:text-2xl">
                 FJ <span className="text-[#2563EB]">Solutions</span>
               </span>
             </Link>
@@ -499,10 +606,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
       </div>
 
       {/* Segunda franja: Navegación principal */}
-      <div
-        className={`transition-shadow duration-300 ${scrolled ? 'shadow-[0_4px_20px_-4px_rgba(15,23,42,0.08)]' : 'shadow-none'
-          }`}
-      >
+      <div>
         <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
           <div className="hidden lg:block">
             <nav className="flex items-center gap-1 py-3" aria-label="Navegación principal">
@@ -600,19 +704,22 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
     {/* Menú móvil */}
     {menuOpen && (
       <>
-        {/* Backdrop oscuro */}
+        {/* Backdrop oscuro con blur y fade suave */}
         <div
-          className="fixed inset-0 z-[100] bg-black/50 lg:hidden"
-          onClick={() => setMenuOpen(false)}
+          className="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-xs transition-opacity animate-in fade-in duration-200 lg:hidden"
+          onClick={() => {
+            setMenuOpen(false)
+            setOpenMobileSection(null)
+          }}
           aria-hidden="true"
         />
 
-        {/* Drawer lateral */}
+        {/* Drawer lateral con animación fluida */}
         <div
           role="dialog"
           aria-modal="true"
           aria-label="Menú de navegación"
-          className="fixed inset-y-0 right-0 z-[110] flex w-full max-w-sm flex-col bg-white shadow-2xl lg:hidden"
+          className="fixed inset-y-0 right-0 z-[110] flex w-full max-w-[340px] sm:max-w-sm flex-col bg-white shadow-2xl transition-transform animate-in slide-in-from-right duration-250 lg:hidden"
         >
           {/* Cabecera fija */}
           <div className="flex shrink-0 items-center justify-between gap-3 border-b border-[#F1F5F9] px-4 py-3">
@@ -620,28 +727,35 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
               href="/"
               className="inline-flex items-center gap-2.5"
               aria-label="FJ Solutions · Inicio"
-              onClick={() => { setMenuOpen(false); closeAll() }}
+              onClick={() => {
+                setMenuOpen(false)
+                closeAll()
+                setOpenMobileSection(null)
+              }}
             >
-              <span className="grid size-10 place-items-center rounded-xl bg-gradient-to-br from-[#3B82F6] to-[#1D4ED8] font-heading text-sm font-bold tracking-tight text-white">
+              <span className="grid size-9 place-items-center rounded-xl bg-gradient-to-br from-[#3B82F6] to-[#1D4ED8] font-heading text-sm font-bold tracking-tight text-white shadow-md shadow-[#2563EB]/20">
                 FJ
               </span>
-              <span className="font-heading text-xl font-bold tracking-[-0.04em] text-[#0F172A]">
+              <span className="font-heading text-lg font-bold tracking-[-0.04em] text-[#0F172A]">
                 FJ <span className="text-[#2563EB]">Solutions</span>
               </span>
             </Link>
 
             <button
               type="button"
-              onClick={() => setMenuOpen(false)}
-              className="grid size-10 shrink-0 place-items-center rounded-lg border border-[#E2E8F0] text-[#475569] transition-colors hover:bg-[#F8FAFC] hover:text-[#2563EB]"
+              onClick={() => {
+                setMenuOpen(false)
+                setOpenMobileSection(null)
+              }}
+              className="grid size-9 shrink-0 place-items-center rounded-lg border border-[#E2E8F0] text-[#475569] transition-colors hover:bg-[#F8FAFC] hover:text-[#2563EB]"
               aria-label="Cerrar menú"
             >
-              <X className="size-5" />
+              <X className="size-4 sm:size-5" />
             </button>
           </div>
 
           {/* Contenido desplazable */}
-          <div className="flex-1 overflow-y-auto overscroll-contain px-4 py-5">
+          <div className="flex-1 overflow-y-auto overscroll-contain px-3.5 py-4">
             {/* Buscador móvil */}
             <form onSubmit={submitSearch} className="mb-4">
               <div className="relative">
@@ -649,61 +763,112 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                 <input
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Buscar productos..."
-                  className="h-10 w-full rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] pl-10 pr-4 text-sm text-[#0F172A] outline-none transition placeholder:text-[#94A3B8] focus:border-[#2563EB] focus:bg-white focus:ring-2 focus:ring-[#2563EB]/15"
+                  placeholder="Buscar productos, marcas..."
+                  className="h-10 w-full rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] pl-9 pr-20 text-sm text-[#0F172A] outline-none transition placeholder:text-[#94A3B8] focus:border-[#2563EB] focus:bg-white focus:ring-2 focus:ring-[#2563EB]/15"
                 />
+                <button
+                  type="submit"
+                  className="absolute right-1 top-1 h-8 rounded-md bg-[#2563EB] px-2.5 text-xs font-bold text-white transition hover:bg-[#1D4ED8]"
+                >
+                  Buscar
+                </button>
               </div>
             </form>
 
             {/* Navegación principal móvil */}
-            <nav className="space-y-1" aria-label="Navegación móvil">
+            <nav className="space-y-1.5" aria-label="Navegación móvil">
               {mainNav.map((link, index) => {
                 const active = isActive(link.href)
                 const dropdownKey = link.label.toLowerCase().replace(/ /g, '-')
+                const isSectionOpen = openMobileSection === dropdownKey
+
+                const getSubmenu = () => {
+                  switch (dropdownKey) {
+                    case 'servicios-ti':
+                      return itServicesMenu
+                    case 'infraestructura-ti':
+                      return infrastructureMenu
+                    case 'desarrollo-de-software':
+                      return softwareDevMenu
+                    case 'empresa':
+                      return companyMenu
+                    default:
+                      return []
+                  }
+                }
 
                 return (
                   <div key={index}>
                     {link.hasMegaMenu ? (
                       <MobileAccordion
                         label={link.label}
-                        isOpen={openDropdown === 'store'}
-                        onToggle={() => toggle('store')}
+                        isOpen={openMobileSection === 'store'}
+                        onToggle={() => toggleMobile('store')}
+                        active={active}
+                        badge="Catálogo"
                       >
-                        <MobileStoreMenu onClose={() => { closeAll(); setMenuOpen(false) }} />
+                        <MobileStoreMenu
+                          onClose={() => {
+                            setOpenMobileSection(null)
+                            setMenuOpen(false)
+                          }}
+                        />
                       </MobileAccordion>
                     ) : link.hasMenu ? (
                       <MobileAccordion
                         label={link.label}
-                        isOpen={openDropdown === dropdownKey}
-                        onToggle={() => toggle(dropdownKey)}
+                        isOpen={isSectionOpen}
+                        onToggle={() => toggleMobile(dropdownKey)}
+                        active={active}
                       >
-                        <div className="space-y-1 pl-4 py-2">
-                          {(dropdownKey === 'servicios-ti' ? itServicesMenu :
-                            dropdownKey === 'infraestructura-ti' ? infrastructureMenu :
-                              dropdownKey === 'desarrollo-de-software' ? softwareDevMenu :
-                                dropdownKey === 'empresa' ? companyMenu : []).map((item, index) => (
-                                  <Link
-                                    key={`${item.href}-${index}`}
-                                    href={item.href}
-                                    onClick={() => { closeAll(); setMenuOpen(false) }}
-                                    className="block rounded-lg px-3 py-2 text-sm text-[#475569] hover:bg-[#F8FAFC] hover:text-[#2563EB] transition-colors"
-                                  >
-                                    <span className="font-semibold">{item.label}</span>
-                                    {item.desc ? <span className="block text-xs text-[#64748B] mt-0.5">{item.desc}</span> : null}
-                                  </Link>
-                                ))}
+                        <div className="space-y-1">
+                          {getSubmenu().map((item, itemIdx) => {
+                            const isItemActive = isActive(item.href)
+                            return (
+                              <Link
+                                key={`${item.href}-${itemIdx}`}
+                                href={item.href}
+                                onClick={() => {
+                                  setOpenMobileSection(null)
+                                  setMenuOpen(false)
+                                }}
+                                className={`group flex items-start justify-between rounded-lg p-2.5 transition-colors ${
+                                  isItemActive
+                                    ? 'bg-white text-[#2563EB] shadow-xs'
+                                    : 'text-[#334155] hover:bg-white hover:text-[#2563EB]'
+                                }`}
+                              >
+                                <div className="min-w-0 flex-1">
+                                  <span className="block text-xs font-bold tracking-tight">
+                                    {item.label}
+                                  </span>
+                                  {item.desc && (
+                                    <span className="mt-0.5 block text-[11px] leading-tight text-[#64748B] group-hover:text-[#475569]">
+                                      {item.desc}
+                                    </span>
+                                  )}
+                                </div>
+                                <ChevronRight className="mt-0.5 size-3.5 shrink-0 text-[#94A3B8] group-hover:text-[#2563EB]" />
+                              </Link>
+                            )
+                          })}
                         </div>
                       </MobileAccordion>
                     ) : (
                       <Link
                         href={link.href}
-                        onClick={() => setMenuOpen(false)}
-                        className={`flex items-center justify-between rounded-lg px-3 sm:px-4 py-3 text-sm font-semibold transition-colors ${active
-                            ? 'bg-[#EFF6FF] text-[#2563EB]'
-                            : 'text-[#475569] hover:bg-[#F8FAFC] hover:text-[#2563EB]'
-                          }`}
+                        onClick={() => {
+                          setOpenMobileSection(null)
+                          setMenuOpen(false)
+                        }}
+                        className={`flex items-center justify-between rounded-xl border px-3.5 py-3 text-sm font-semibold transition-colors ${
+                          active
+                            ? 'border-[#2563EB]/40 bg-[#EFF6FF] text-[#2563EB]'
+                            : 'border-[#E2E8F0] bg-white text-[#0F172A] hover:bg-[#F8FAFC] hover:text-[#2563EB]'
+                        }`}
                       >
-                        {link.label}
+                        <span>{link.label}</span>
+                        <ChevronRight className="size-4 text-[#94A3B8]" />
                       </Link>
                     )}
                   </div>
@@ -712,50 +877,77 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
             </nav>
 
             {/* Acciones rápidas móvil */}
-            <div className="mt-6 pt-6 border-t border-[#F1F5F9] space-y-3">
+            <div className="mt-5 space-y-2 border-t border-[#F1F5F9] pt-4">
               <Link
                 href="/mi-cuenta"
-                onClick={() => setMenuOpen(false)}
-                className="flex items-center gap-3 rounded-lg px-3 sm:px-4 py-3 text-sm font-semibold text-[#475569] hover:bg-[#F8FAFC] hover:text-[#2563EB] transition-colors"
+                onClick={() => {
+                  setMenuOpen(false)
+                  setOpenMobileSection(null)
+                }}
+                className="flex items-center gap-3 rounded-xl border border-[#E2E8F0] px-3.5 py-2.5 text-sm font-semibold text-[#334155] transition-colors hover:bg-[#F8FAFC] hover:text-[#2563EB]"
               >
-                <UserRound className="size-5" />
-                Mi cuenta
+                <div className="grid size-8 place-items-center rounded-lg bg-[#F1F5F9] text-[#64748B]">
+                  <UserRound className="size-4" />
+                </div>
+                <span>Mi cuenta</span>
               </Link>
+
               <button
                 type="button"
-                onClick={() => { goToQuote(); setMenuOpen(false) }}
-                className="flex items-center justify-between rounded-lg px-3 sm:px-4 py-3 text-sm font-semibold text-[#475569] hover:bg-[#F8FAFC] hover:text-[#2563EB] transition-colors w-full"
+                onClick={() => {
+                  setMenuOpen(false)
+                  setOpenMobileSection(null)
+                  goToQuote()
+                }}
+                className="flex w-full items-center justify-between rounded-xl border border-[#E2E8F0] px-3.5 py-2.5 text-sm font-semibold text-[#334155] transition-colors hover:bg-[#F8FAFC] hover:text-[#2563EB]"
               >
                 <div className="flex items-center gap-3">
-                  <FileText className="size-5" />
-                  Mi cotización
+                  <div className="grid size-8 place-items-center rounded-lg bg-[#EFF6FF] text-[#2563EB]">
+                    <FileText className="size-4" />
+                  </div>
+                  <span>Mi cotización</span>
                 </div>
-                {quoteCount > 0 && (
+                {quoteCount > 0 ? (
                   <span className="grid size-6 place-items-center rounded-full bg-[#2563EB] text-xs font-bold text-white">
                     {quoteCount}
                   </span>
+                ) : (
+                  <span className="text-xs font-normal text-[#94A3B8]">0 items</span>
                 )}
               </button>
+
               <Link
                 href="/contacto"
-                onClick={() => setMenuOpen(false)}
-                className="flex items-center gap-3 rounded-lg px-3 sm:px-4 py-3 text-sm font-semibold text-[#2563EB] hover:bg-[#EFF6FF] transition-colors"
+                onClick={() => {
+                  setMenuOpen(false)
+                  setOpenMobileSection(null)
+                }}
+                className="flex items-center justify-center gap-2 rounded-xl bg-[#2563EB] px-4 py-2.5 text-sm font-semibold text-white shadow-xs transition hover:bg-[#1D4ED8]"
               >
-                <MessageSquare className="size-5" />
-                Solicitar asesoría
+                <MessageSquare className="size-4" />
+                <span>Solicitar asesoría</span>
               </Link>
             </div>
 
             {/* Contacto móvil */}
-            <div className="mt-6 pt-6 border-t border-[#F1F5F9]">
-              <div className="space-y-2 text-sm text-[#64748B]">
-                <a href="tel:+51999888777" className="flex items-center gap-2 hover:text-[#2563EB] transition-colors">
-                  <Phone className="size-4" />
-                  +51 999 888 777
+            <div className="mt-5 border-t border-[#F1F5F9] pt-4">
+              <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-[#94A3B8]">
+                Atención directa
+              </p>
+              <div className="space-y-1.5 text-xs text-[#64748B]">
+                <a
+                  href="tel:+51999888777"
+                  className="flex items-center gap-2 rounded-lg p-1.5 transition-colors hover:bg-[#F8FAFC] hover:text-[#2563EB]"
+                >
+                  <Phone className="size-3.5 text-[#2563EB]" />
+                  <span>+51 999 888 777</span>
                 </a>
-                <a href="mailto:ventas@fjsolutions.pe" className="flex items-center gap-2 hover:text-[#2563EB] transition-colors">
-                  <Mail className="size-4" />
-                  ventas@fjsolutions.pe
+                <a
+                  href="mailto:ventas@fjsolutions.pe"
+                  className="flex items-center gap-2 rounded-lg p-1.5 transition-colors hover:bg-[#F8FAFC] hover:text-[#2563EB]"
+                >
+                  <Mail className="size-3.5 text-[#2563EB]" />
+                  <span>ventas@fjsolutions.pe</span>
                 </a>
               </div>
             </div>
