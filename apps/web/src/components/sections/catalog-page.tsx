@@ -4,9 +4,11 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import {
+  AppWindow,
   ArrowDownAZ,
   ArrowRight,
   Boxes,
+  Cable,
   Check,
   ChevronDown,
   ChevronRight,
@@ -15,6 +17,7 @@ import {
   Gamepad2,
   HardDrive,
   Headset,
+  House,
   Keyboard,
   Laptop,
   Layers,
@@ -25,8 +28,7 @@ import {
   Router as RouterIcon,
   Search,
   Server,
-  SlidersHorizontal,
-  Sparkles,
+  Smartphone,
   Tag,
   X,
   type LucideIcon,
@@ -49,7 +51,7 @@ const categoryIconMap: Record<string, LucideIcon> = {
   Componentes: Cpu,
   'Componentes de PC': Cpu,
   Monitores: Monitor,
-  'Periféricos': Keyboard,
+  Periféricos: Keyboard,
   Almacenamiento: HardDrive,
   Redes: RouterIcon,
   'Redes y Conectividad': RouterIcon,
@@ -57,6 +59,11 @@ const categoryIconMap: Record<string, LucideIcon> = {
   Impresoras: Printer,
   'Audio y Video': Headset,
   Gaming: Gamepad2,
+  Accesorios: Package,
+  Software: AppWindow,
+  Telefonía: Smartphone,
+  'Hogar inteligente': House,
+  'Cables y Energía': Cable,
 }
 
 const sortOptions = [
@@ -83,6 +90,7 @@ function CustomFilterDropdown({
   searchable = false,
   searchPlaceholder = 'Buscar...',
   className = '',
+  showCountInstead = false,
 }: {
   label: string
   value: string
@@ -92,6 +100,7 @@ function CustomFilterDropdown({
   searchable?: boolean
   searchPlaceholder?: string
   className?: string
+  showCountInstead?: boolean
 }) {
   const [isOpen, setIsOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
@@ -121,6 +130,9 @@ function CustomFilterDropdown({
   const selectedOption = options.find((opt) => opt.value === value)
   const isCustomSelected = value !== 'Todas' && value !== 'relevancia'
 
+  // Si showCountInstead es true y hay un filtro activo, mostrar solo el número
+  const displayValue = showCountInstead && isCustomSelected ? '1' : (selectedOption?.label || value)
+
   return (
     <div className={`relative ${className}`} ref={dropdownRef}>
       {/* Botón Trigger */}
@@ -144,7 +156,7 @@ function CustomFilterDropdown({
           )}
           <span className="font-normal text-[#64748B]">{label}:</span>
           <span className="max-w-[130px] truncate font-bold sm:max-w-[180px]">
-            {selectedOption?.label || value}
+            {displayValue}
           </span>
         </div>
         <ChevronDown
@@ -228,6 +240,64 @@ function CustomFilterDropdown({
         </div>
       )}
     </div>
+  )
+}
+
+// ─── Componente: Card de Categoría ───────────────────────────────────────────────────────
+
+type CategoryCardData = {
+  id: string
+  label: string
+  count: number
+  subcategories: string[]
+}
+
+function CategoryCard({
+  category,
+  onSelect,
+}: {
+  category: CategoryCardData
+  onSelect: (label: string) => void
+}) {
+  const Icon = categoryIconMap[category.label] ?? Package
+
+  return (
+    <button
+      type="button"
+      onClick={() => onSelect(category.label)}
+      className="group flex h-full flex-col rounded-2xl border border-[#E2E8F0] bg-white p-5 text-left transition duration-300 hover:-translate-y-0.5 hover:border-[#2563EB]/40 hover:shadow-[0_18px_40px_-28px_rgba(15,23,42,0.35)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/30"
+    >
+      <div className="flex w-full items-start justify-between gap-3">
+        <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-[#EFF6FF] text-[#2563EB] transition group-hover:bg-[#2563EB] group-hover:text-white">
+          <Icon aria-hidden="true" className="size-6" strokeWidth={1.7} />
+        </span>
+        <span className="rounded-full bg-[#F1F5F9] px-2 py-0.5 text-[10px] font-bold text-[#64748B]">
+          {category.count} {category.count === 1 ? 'producto' : 'productos'}
+        </span>
+      </div>
+
+      <h3 className="mt-4 text-sm font-bold text-[#0F172A] transition group-hover:text-[#1D4ED8]">
+        {category.label}
+      </h3>
+
+      {category.subcategories.length > 0 ? (
+        <p className="mt-1 line-clamp-2 text-[11px] leading-relaxed text-[#64748B]">
+          {category.subcategories.slice(0, 3).join(' · ')}
+        </p>
+      ) : (
+        <p className="mt-1 text-[11px] leading-relaxed text-[#64748B]">
+          Explora los productos disponibles en esta categoría.
+        </p>
+      )}
+
+      <span className="mt-auto inline-flex items-center gap-1 pt-4 text-[11px] font-bold text-[#2563EB]">
+        Ver categoría
+        <ArrowRight
+          aria-hidden="true"
+          className="size-3.5 transition-transform group-hover:translate-x-0.5"
+        />
+      </span>
+    </button>
   )
 }
 
@@ -387,9 +457,6 @@ export function CatalogPage({
     })
   }, [query, category, subcategory, subSubcategory, brand, sort, activeTaxonomy])
 
-  const resultsText =
-    filtered.length === 1 ? '1 producto encontrado' : `${filtered.length} productos disponibles`
-
   // Contadores de categorías
   const categoryCounts = useMemo(() => {
     const counts: Record<string, number> = {}
@@ -400,6 +467,38 @@ export function CatalogPage({
     })
     return counts
   }, [])
+
+  // Cards de categorías para la vista de catálogo completo
+  const categoryCards = useMemo<CategoryCardData[]>(() => {
+    const cards: CategoryCardData[] = categoryTaxonomy.map((cat) => ({
+      id: cat.id,
+      label: cat.label,
+      count: categoryCounts[cat.label] || 0,
+      subcategories: cat.subcategories.map((sub) => sub.label),
+    }))
+
+    Object.entries(categoryCounts).forEach(([label, count]) => {
+      const exists = cards.some((card) => card.label.toLowerCase() === label.toLowerCase())
+      if (!exists) {
+        cards.push({ id: label, label, count, subcategories: [] })
+      }
+    })
+
+    return cards.filter((card) => card.count > 0)
+  }, [categoryCounts])
+
+  const isCatalogOverview =
+    category === 'Todas' &&
+    brand === 'Todas' &&
+    subcategory === 'Todas' &&
+    subSubcategory === 'Todas' &&
+    query.trim() === ''
+
+  const resultsText = isCatalogOverview
+    ? `${categoryCards.length} categorías · ${products.length} productos disponibles`
+    : filtered.length === 1
+      ? '1 producto encontrado'
+      : `${filtered.length} productos disponibles`
 
   // Contadores de subcategorías
   const subcategoryCounts = useMemo(() => {
@@ -428,6 +527,7 @@ export function CatalogPage({
     setCategory(catLabel)
     setSubcategory('Todas')
     setSubSubcategory('Todas')
+    setBrand('Todas')
   }
 
   const handleSelectSubcategory = (subLabel: string) => {
@@ -462,12 +562,28 @@ export function CatalogPage({
     return 'Catálogo Completo de Productos'
   }, [subSubcategory, subcategory, category, activeTaxonomy])
 
+  // Opciones para el dropdown de Categorías
+  const categoryDropdownOptions = useMemo<DropdownOption[]>(() => {
+    const allOpt: DropdownOption = {
+      value: 'Todas',
+      label: 'Todas',
+      count: products.length,
+    }
+    const catOpts: DropdownOption[] = categoryCards.map((card) => ({
+      value: card.label,
+      label: card.label,
+      count: card.count,
+      icon: categoryIconMap[card.label],
+    }))
+    return [allOpt, ...catOpts]
+  }, [categoryCards])
+
   // Opciones para el dropdown de Subcategorías
   const subcategoryDropdownOptions = useMemo<DropdownOption[]>(() => {
     if (!activeTaxonomy) return []
     const allOpt: DropdownOption = {
       value: 'Todas',
-      label: `Todas en ${activeTaxonomy.label}`,
+      label: 'Todas',
       count: categoryCounts[activeTaxonomy.label] || 0,
     }
     const subOpts: DropdownOption[] = activeTaxonomy.subcategories.map((sub) => ({
@@ -483,7 +599,7 @@ export function CatalogPage({
     if (!availableSubSubcategories.length) return []
     const allOpt: DropdownOption = {
       value: 'Todas',
-      label: 'Todos los tipos',
+      label: 'Todos',
     }
     const typeOpts: DropdownOption[] = availableSubSubcategories.map((t) => ({
       value: t.label,
@@ -496,7 +612,7 @@ export function CatalogPage({
   const brandDropdownOptions = useMemo<DropdownOption[]>(() => {
     const allOpt: DropdownOption = {
       value: 'Todas',
-      label: 'Todas las marcas',
+      label: 'Todas',
       count: filtered.length,
     }
     const bOpts: DropdownOption[] = availableBrands.map((b) => ({
@@ -525,6 +641,7 @@ export function CatalogPage({
               setCategory('Todas')
               setSubcategory('Todas')
               setSubSubcategory('Todas')
+              setBrand('Todas')
             }}
             className={`font-semibold transition hover:text-[#2563EB] ${
               category === 'Todas' ? 'text-[#2563EB]' : 'text-[#475569]'
@@ -578,66 +695,6 @@ export function CatalogPage({
         </div>
       </nav>
 
-      {/* ── Selector de Categorías Nivel 1 (Pestañas horizontales elegantes) ────── */}
-      <section className="border-b border-[#E2E8F0] bg-white py-4" aria-label="Categorías principales">
-        <div className="mx-auto max-w-[1360px] px-4 sm:px-6 lg:px-8">
-          <div className="no-scrollbar flex items-center gap-2 overflow-x-auto pb-1">
-            <button
-              type="button"
-              onClick={() => handleSelectCategory('Todas')}
-              className={`inline-flex shrink-0 items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-bold transition-all ${
-                category === 'Todas'
-                  ? 'bg-[#2563EB] text-white shadow-sm'
-                  : 'border border-[#E2E8F0] bg-white text-[#475569] hover:border-[#CBD5E1] hover:bg-[#F8FAFC]'
-              }`}
-            >
-              <Boxes className="size-4" />
-              Todas las categorías
-              <span
-                className={`rounded-full px-1.5 py-0.2 text-[10px] font-bold ${
-                  category === 'Todas' ? 'bg-white/20 text-white' : 'bg-[#F1F5F9] text-[#64748B]'
-                }`}
-              >
-                {products.length}
-              </span>
-            </button>
-
-            {categoryTaxonomy.map((cat) => {
-              const active =
-                category !== 'Todas' &&
-                (activeTaxonomy?.id === cat.id || category.toLowerCase() === cat.label.toLowerCase())
-              const Icon = categoryIconMap[cat.label] || categoryIconMap[cat.id] || Package
-              const count = categoryCounts[cat.label] || 0
-
-              return (
-                <button
-                  key={cat.id}
-                  type="button"
-                  onClick={() => handleSelectCategory(cat.label)}
-                  className={`inline-flex shrink-0 items-center gap-2 rounded-xl px-4 py-2.5 text-xs font-bold transition-all ${
-                    active
-                      ? 'bg-[#2563EB] text-white shadow-sm'
-                      : 'border border-[#E2E8F0] bg-white text-[#475569] hover:border-[#CBD5E1] hover:bg-[#F8FAFC]'
-                  }`}
-                >
-                  <Icon className="size-4" />
-                  {cat.label}
-                  {count > 0 && (
-                    <span
-                      className={`rounded-full px-1.5 py-0.2 text-[10px] font-bold ${
-                        active ? 'bg-white/20 text-white' : 'bg-[#F1F5F9] text-[#64748B]'
-                      }`}
-                    >
-                      {count}
-                    </span>
-                  )}
-                </button>
-              )
-            })}
-          </div>
-        </div>
-      </section>
-
       {/* ── Contenedor Principal de Productos (FULL WIDTH) ──────────────────────── */}
       <section className="mx-auto max-w-[1360px] px-4 py-8 sm:px-6 lg:px-8">
         {/* Barra superior de herramientas: Título + Buscador + Dropdowns personalizados */}
@@ -675,6 +732,19 @@ export function CatalogPage({
                 )}
               </div>
 
+              {/* 0. Dropdown Personalizado de Categorías (solo en vista general) */}
+              {category === 'Todas' && (
+                <CustomFilterDropdown
+                  label="Categoría"
+                  icon={Boxes}
+                  value={category}
+                  options={categoryDropdownOptions}
+                  onChange={handleSelectCategory}
+                  searchable={categoryCards.length > 6}
+                  searchPlaceholder="Buscar categoría..."
+                />
+              )}
+
               {/* 1. Dropdown Personalizado de Subcategorías (disponible en la fila) */}
               {availableSubcategories.length > 0 && (
                 <CustomFilterDropdown
@@ -683,6 +753,7 @@ export function CatalogPage({
                   value={subcategory}
                   options={subcategoryDropdownOptions}
                   onChange={handleSelectSubcategory}
+                  showCountInstead
                 />
               )}
 
@@ -694,28 +765,33 @@ export function CatalogPage({
                   value={subSubcategory}
                   options={subSubcategoryDropdownOptions}
                   onChange={handleSelectSubSubcategory}
+                  showCountInstead
                 />
               )}
 
               {/* 3. Dropdown Personalizado de Marcas con buscador interno */}
-              <CustomFilterDropdown
-                label="Marca"
-                icon={Filter}
-                value={brand}
-                options={brandDropdownOptions}
-                onChange={(val) => setBrand(val)}
-                searchable={availableBrands.length > 5}
-                searchPlaceholder="Buscar marca..."
-              />
+              {!isCatalogOverview && (
+                <CustomFilterDropdown
+                  label="Marca"
+                  icon={Filter}
+                  value={brand}
+                  options={brandDropdownOptions}
+                  onChange={(val) => setBrand(val)}
+                  searchable={availableBrands.length > 5}
+                  searchPlaceholder="Buscar marca..."
+                />
+              )}
 
               {/* 4. Dropdown Personalizado de Ordenamiento */}
-              <CustomFilterDropdown
-                label="Ordenar"
-                icon={ArrowDownAZ}
-                value={sort}
-                options={sortOptions}
-                onChange={(val) => setSort(val)}
-              />
+              {!isCatalogOverview && (
+                <CustomFilterDropdown
+                  label="Ordenar"
+                  icon={ArrowDownAZ}
+                  value={sort}
+                  options={sortOptions}
+                  onChange={(val) => setSort(val)}
+                />
+              )}
 
               {/* Botón limpiar filtros */}
               {hasFilters && (
@@ -726,98 +802,12 @@ export function CatalogPage({
                   title="Restablecer todos los filtros"
                 >
                   <RotateCcw className="size-3.5" />
-                  <span className="hidden sm:inline">Limpiar</span>
                 </button>
               )}
             </div>
           </div>
 
-          {/* ── Subcategorías DIRECTAMENTE en la fila de productos (Chips rápidos) ──── */}
-          {availableSubcategories.length > 0 && (
-            <div className="mt-4 border-t border-[#F1F5F9] pt-3.5">
-              <div className="flex flex-col gap-2.5 lg:flex-row lg:items-center lg:justify-between">
-                {/* Fila de subcategorías */}
-                <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
-                  <span className="shrink-0 text-[11px] font-bold uppercase tracking-wider text-[#2563EB]">
-                    Subcategorías:
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => handleSelectSubcategory('Todas')}
-                    className={`shrink-0 rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
-                      subcategory === 'Todas'
-                        ? 'bg-[#2563EB] text-white shadow-xs'
-                        : 'border border-[#E2E8F0] bg-white text-[#475569] hover:border-[#CBD5E1] hover:bg-[#F8FAFC]'
-                    }`}
-                  >
-                    Todas
-                  </button>
-                  {availableSubcategories.map((sub) => {
-                    const active = subcategory.toLowerCase() === sub.label.toLowerCase()
-                    const count = subcategoryCounts[sub.label] || 0
-                    return (
-                      <button
-                        key={sub.id}
-                        type="button"
-                        onClick={() => handleSelectSubcategory(sub.label)}
-                        className={`shrink-0 inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
-                          active
-                            ? 'bg-[#2563EB] text-white shadow-xs'
-                            : 'border border-[#E2E8F0] bg-white text-[#475569] hover:border-[#CBD5E1] hover:bg-[#F8FAFC]'
-                        }`}
-                      >
-                        {sub.label}
-                        {count > 0 && (
-                          <span
-                            className={`rounded-full px-1.5 py-0.2 text-[10px] ${
-                              active ? 'bg-white/20 text-white font-bold' : 'bg-[#F1F5F9] text-[#64748B]'
-                            }`}
-                          >
-                            {count}
-                          </span>
-                        )}
-                      </button>
-                    )
-                  })}
-                </div>
 
-                {/* Fila de tipos / sub-subcategorías */}
-                {availableSubSubcategories.length > 0 && (
-                  <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar pt-1 lg:pt-0">
-                    <span className="shrink-0 text-[11px] font-medium text-[#64748B]">Tipos:</span>
-                    <button
-                      type="button"
-                      onClick={() => handleSelectSubSubcategory('Todas')}
-                      className={`shrink-0 rounded-md px-2 py-1 text-[11px] font-semibold transition ${
-                        subSubcategory === 'Todas'
-                          ? 'bg-[#0F172A] text-white'
-                          : 'bg-[#F1F5F9] text-[#64748B] hover:text-[#0F172A]'
-                      }`}
-                    >
-                      Todos
-                    </button>
-                    {availableSubSubcategories.map((typeItem) => {
-                      const active = subSubcategory.toLowerCase() === typeItem.label.toLowerCase()
-                      return (
-                        <button
-                          key={typeItem.id}
-                          type="button"
-                          onClick={() => handleSelectSubSubcategory(typeItem.label)}
-                          className={`shrink-0 rounded-md px-2 py-1 text-[11px] font-semibold transition ${
-                            active
-                              ? 'bg-[#0F172A] text-white'
-                              : 'bg-[#F1F5F9] text-[#64748B] hover:bg-[#E2E8F0] hover:text-[#0F172A]'
-                          }`}
-                        >
-                          {typeItem.label}
-                        </button>
-                      )
-                    })}
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
 
           {/* Chips de filtros activos */}
           {hasFilters && (
@@ -833,6 +823,7 @@ export function CatalogPage({
                       setCategory('Todas')
                       setSubcategory('Todas')
                       setSubSubcategory('Todas')
+                      setBrand('Todas')
                     }}
                     className="hover:text-[#1D4ED8]"
                     aria-label="Quitar filtro de categoría"
@@ -904,9 +895,27 @@ export function CatalogPage({
           )}
         </div>
 
-        {/* ── Grilla de Productos AGRANDADA ────────────────────────────────────── */}
+        {/* ── Catálogo completo: cards de categorías / Grilla de productos ──────── */}
         <div className="mt-8">
-          {filtered.length > 0 ? (
+          {isCatalogOverview ? (
+            <>
+              <div className="mb-4 flex items-center gap-2">
+                <Boxes aria-hidden="true" className="size-4 text-[#2563EB]" />
+                <p className="text-xs font-semibold text-[#64748B]">
+                  Selecciona una categoría para ver sus productos
+                </p>
+              </div>
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {categoryCards.map((card) => (
+                  <CategoryCard
+                    key={card.id}
+                    category={card}
+                    onSelect={handleSelectCategory}
+                  />
+                ))}
+              </div>
+            </>
+          ) : filtered.length > 0 ? (
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 sm:gap-7">
               {filtered.map((product) => (
                 <ProductCard key={product.id} product={product} onAddToQuote={quote.addItem} />
