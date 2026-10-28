@@ -14,7 +14,7 @@ import {
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
 import { CorporateHero } from '@/components/heroes'
 import { ProductCard } from '@/components/cards/product-card'
-import { categories, products } from '@/lib/catalog'
+import { categories, products, getTaxonomyCategory } from '@/lib/catalog'
 import { useQuote } from '@/lib/use-quote'
 
 const businessLinks = ['Ventas corporativas', 'Facturación electrónica', 'Soporte postventa', 'Garantías y devoluciones', 'Despachos y entregas', 'Medios de pago']
@@ -49,10 +49,18 @@ export function LandingPage() {
     [],
   )
 
-  const filteredProducts = useMemo(
-    () => featuredProducts.filter((product) => category === 'Todas' || product.category === category),
-    [category],
-  )
+  const filteredProducts = useMemo(() => {
+    if (category === 'Todas') return featuredProducts
+
+    return featuredProducts.filter((product) => {
+      const productTax = getTaxonomyCategory(product.category)
+      // Coincidencia por nombre de categoría exacto o por taxonomía
+      return (
+        product.category.toLowerCase() === category.toLowerCase() ||
+        (productTax && productTax.label.toLowerCase() === category.toLowerCase())
+      )
+    })
+  }, [category, featuredProducts])
 
   return (
     <main className="min-h-screen overflow-x-clip bg-[#f8fafc] text-[#172033]">

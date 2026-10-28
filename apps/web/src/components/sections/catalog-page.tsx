@@ -261,42 +261,67 @@ function CategoryCard({
 }) {
   const Icon = categoryIconMap[category.label] ?? Package
 
+  // Generar imagen placeholder basada en la categoría
+  const categoryImages: Record<string, string> = {
+    'PC y Servidores': 'https://images.unsplash.com/photo-1555629900-1f3e98f75c19?w=600&q=80',
+    'Laptops': 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&q=80',
+    'Laptops y Portátiles': 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&q=80',
+    'Componentes': 'https://images.unsplash.com/photo-1591488320449-011701bb6704?w=600&q=80',
+    'Componentes de PC': 'https://images.unsplash.com/photo-1591488320449-011701bb6704?w=600&q=80',
+    'Monitores': 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=600&q=80',
+    'Periféricos': 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=600&q=80',
+    'Almacenamiento': 'https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?w=600&q=80',
+    'Redes': 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=600&q=80',
+    'Redes y Conectividad': 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=600&q=80',
+    'Impresoras y Escáneres': 'https://images.unsplash.com/photo-1562848297-1f456b0c8f3c?w=600&q=80',
+    'Impresoras': 'https://images.unsplash.com/photo-1562848297-1f456b0c8f3c?w=600&q=80',
+    'Audio y Video': 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=600&q=80',
+    'Gaming': 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600&q=80',
+    'Accesorios': 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=600&q=80',
+    'Software': 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&q=80',
+    'Telefonía': 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&q=80',
+    'Hogar inteligente': 'https://images.unsplash.com/photo-1558002038-109070169f96?w=600&q=80',
+    'Cables y Energía': 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80',
+  }
+
+  const imageUrl = categoryImages[category.label] || 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80'
+
   return (
     <button
       type="button"
       onClick={() => onSelect(category.label)}
-      className="group flex h-full flex-col rounded-2xl border border-[#E2E8F0] bg-white p-5 text-left transition duration-300 hover:-translate-y-0.5 hover:border-[#2563EB]/40 hover:shadow-[0_18px_40px_-28px_rgba(15,23,42,0.35)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/30"
+      className="group relative aspect-[4/3] overflow-hidden rounded-2xl transition duration-300 hover:-translate-y-1 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/30"
     >
-      <div className="flex w-full items-start justify-between gap-3">
-        <span className="grid size-12 shrink-0 place-items-center rounded-xl bg-[#EFF6FF] text-[#2563EB] transition group-hover:bg-[#2563EB] group-hover:text-white">
-          <Icon aria-hidden="true" className="size-6" strokeWidth={1.7} />
-        </span>
-        <span className="rounded-full bg-[#F1F5F9] px-2 py-0.5 text-[10px] font-bold text-[#64748B]">
-          {category.count} {category.count === 1 ? 'producto' : 'productos'}
-        </span>
+      {/* Imagen de fondo */}
+      <img
+        src={imageUrl}
+        alt={category.label}
+        className="size-full object-cover transition-transform duration-500 group-hover:scale-110"
+      />
+
+      {/* Overlay gradiente */}
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+
+      {/* Contenido */}
+      <div className="absolute inset-0 flex flex-col justify-end p-5 text-left">
+        <div className="flex items-center gap-2">
+          <span className="rounded-full bg-[#2563EB]/90 px-2 py-0.5 text-[10px] font-bold text-white backdrop-blur-sm">
+            {category.count} {category.count === 1 ? 'producto' : 'productos'}
+          </span>
+        </div>
+
+        <h3 className="mt-3 text-lg font-bold text-white transition group-hover:text-[#60A5FA]">
+          {category.label}
+        </h3>
+
+        <div className="mt-2 flex items-center gap-1.5 text-xs font-semibold text-white/80 transition group-hover:text-white">
+          Ver categoría
+          <ArrowRight
+            aria-hidden="true"
+            className="size-3.5 transition-transform group-hover:translate-x-1"
+          />
+        </div>
       </div>
-
-      <h3 className="mt-4 text-sm font-bold text-[#0F172A] transition group-hover:text-[#1D4ED8]">
-        {category.label}
-      </h3>
-
-      {category.subcategories.length > 0 ? (
-        <p className="mt-1 line-clamp-2 text-[11px] leading-relaxed text-[#64748B]">
-          {category.subcategories.slice(0, 3).join(' · ')}
-        </p>
-      ) : (
-        <p className="mt-1 text-[11px] leading-relaxed text-[#64748B]">
-          Explora los productos disponibles en esta categoría.
-        </p>
-      )}
-
-      <span className="mt-auto inline-flex items-center gap-1 pt-4 text-[11px] font-bold text-[#2563EB]">
-        Ver categoría
-        <ArrowRight
-          aria-hidden="true"
-          className="size-3.5 transition-transform group-hover:translate-x-0.5"
-        />
-      </span>
     </button>
   )
 }
