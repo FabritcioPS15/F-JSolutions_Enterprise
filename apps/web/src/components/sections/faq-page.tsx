@@ -205,7 +205,6 @@ export function FaqPage() {
         {/* Hero Editorial */}
         <EditorialHero
           id="hero-faq"
-          eyebrow="Centro de Ayuda"
           title={
             <>
               Preguntas frecuentes y <span className="text-[#2563EB]">respuestas claras</span>

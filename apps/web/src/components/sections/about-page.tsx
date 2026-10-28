@@ -264,7 +264,6 @@ export function AboutPage() {
       <EnhancedHeader />
 
       <EditorialHero
-        eyebrow="Sobre F&J Systems"
         title={
           <>
             Entendemos tu operación antes de proponer{' '}
@@ -272,7 +271,6 @@ export function AboutPage() {
           </>
         }
         description="Somos un equipo de infraestructura, soporte y desarrollo de software en Lima. Trabajamos con empresas que necesitan decisiones técnicas claras, implementaciones ordenadas y un aliado que siga ahí después de la entrega."
-        meta={['Lima, Perú', 'Atención remota y en sitio', 'Empresas y equipos de trabajo']}
         actions={
           <>
             <HeroAction href="/contacto">Hablemos de tu proyecto</HeroAction>

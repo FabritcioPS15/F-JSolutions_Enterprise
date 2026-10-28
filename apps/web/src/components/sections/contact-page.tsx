@@ -74,7 +74,6 @@ export function ContactPage() {
       <EnhancedHeader />
 
       <EditorialHero
-        eyebrow="Contacto"
         title={
           <>
             Conversemos sobre lo que tu empresa{' '}
@@ -82,7 +81,6 @@ export function ContactPage() {
           </>
         }
         description="Cuéntanos qué está pasando, qué quieres implementar o qué decisión técnica necesitas tomar. Te respondemos con un siguiente paso concreto, no con un discurso de ventas."
-        meta={['Respuesta en menos de 24 h hábiles', 'Lima, Perú', 'Lun-Sáb · 9:00 a 18:00']}
         actions={
           <>
             <HeroAction href="#formulario">Escribir un mensaje</HeroAction>
@@ -351,17 +349,6 @@ function ContactCard() {
           <p className="mt-1 text-[9.5px] leading-4 text-[#64748B]">
             Si tu caso es urgente, llámanos directamente.
           </p>
-        </div>
-
-        <div className="mt-3 flex items-center justify-between gap-2 text-[9.5px]">
-          <span className="inline-flex items-center gap-1.5 text-[#64748B]">
-            <Clock aria-hidden="true" className="size-3" />
-            {EMPRESA.horario}
-          </span>
-          <span className="inline-flex items-center gap-1.5 font-semibold text-[#1D4ED8]">
-            <span aria-hidden="true" className="size-1.5 rounded-full bg-[#22C55E]" />
-            Disponible
-          </span>
         </div>
       </div>
     </div>

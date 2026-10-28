@@ -183,7 +183,6 @@ export function HowWeWorkPage() {
         {/* Hero Editorial */}
         <EditorialHero
           id="hero-como-trabajamos"
-          eyebrow="Nuestra Metodología"
           title={
             <>
               Procesos claros, <span className="text-[#2563EB]">entregas a tiempo</span> y sin sorpresas

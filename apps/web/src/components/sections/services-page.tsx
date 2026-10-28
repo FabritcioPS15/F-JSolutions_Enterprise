@@ -230,7 +230,6 @@ export function ServicesPage() {
       <EnhancedHeader />
 
       <ServiceHero
-        eyebrow="Servicios TI para empresas"
         title={
           <>
             La base tecnológica de tu operación,{' '}

@@ -7,7 +7,6 @@ import {
   HeroActions,
   HeroEyebrow,
   HeroLead,
-  HeroProof,
   HeroSection,
   HeroTitle,
 } from '@/components/heroes/hero-primitives'
@@ -18,7 +17,6 @@ type DetailHeroProps = {
   description: string
   primary: { label: string; href: string }
   secondary?: { label: string; href: string }
-  proof?: string[]
   visual: ReactNode
   backHref?: string
   backLabel?: string
@@ -34,7 +32,6 @@ export function DetailHero({
   description,
   primary,
   secondary,
-  proof,
   visual,
   backHref = '/servicios',
   backLabel = 'Volver a servicios',
@@ -52,8 +49,6 @@ export function DetailHero({
 
         <div className="mt-5 grid items-center gap-10 lg:grid-cols-[minmax(0,1.02fr)_minmax(0,0.9fr)] lg:gap-12 xl:gap-16">
           <div className="max-w-[620px]">
-            <HeroEyebrow>{eyebrow}</HeroEyebrow>
-
             <HeroTitle size="lg">{title}</HeroTitle>
 
             <HeroLead>{description}</HeroLead>
@@ -66,8 +61,6 @@ export function DetailHero({
                 </HeroAction>
               )}
             </HeroActions>
-
-            {proof && proof.length > 0 && <HeroProof items={proof} />}
           </div>
 
           {visual}

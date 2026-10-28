@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils'
 
 type EditorialHeroProps = {
   id?: string
-  eyebrow: string
+  eyebrow?: string
   title: ReactNode
   description: string
   meta?: string[]
@@ -47,7 +47,7 @@ export function EditorialHero({
           )}
         >
           <div className="max-w-[780px]">
-            <HeroEyebrow>{eyebrow}</HeroEyebrow>
+            {eyebrow ? <HeroEyebrow>{eyebrow}</HeroEyebrow> : null}
 
             <HeroTitle size={size}>{title}</HeroTitle>
 

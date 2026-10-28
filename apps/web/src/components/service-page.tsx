@@ -121,7 +121,6 @@ export function ServicePage({ kind }: ServicePageProps) {
           primaryHref="#solicitud"
           secondaryLabel="Ver productos"
           secondaryHref="/productos"
-          showSteps
         />
       )}
 

@@ -259,7 +259,6 @@ export function ProjectsPage() {
         {/* Hero Editorial */}
         <EditorialHero
           id="hero-proyectos"
-          eyebrow="Proyectos y Casos de Éxito"
           title={
             <>
               Experiencia comprobada en{' '}

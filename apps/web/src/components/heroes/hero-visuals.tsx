@@ -43,10 +43,6 @@ export function OpsConsoleVisual() {
               <p className="truncate text-[9.5px] text-[#64748B]">Infraestructura y soporte F&amp;J</p>
             </div>
           </div>
-          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[#BBF7D0] bg-[#F0FDF4] px-2 py-1 text-[8.5px] font-bold uppercase tracking-wider text-[#15803D]">
-            <span aria-hidden="true" className="hero-pulse size-1.5 rounded-full bg-[#22C55E]" />
-            Operativo
-          </span>
         </div>
 
         <div className="p-4 sm:p-5">
@@ -215,12 +211,6 @@ export function QuoteSummaryVisual() {
                 <span className="shrink-0 rounded-md border border-[#E2E8F0] bg-[#F8FAFC] px-1.5 py-0.5 font-mono text-[9px] font-bold text-[#475569]">
                   ×{row.qty}
                 </span>
-                <span
-                  aria-hidden="true"
-                  className={`size-1.5 shrink-0 rounded-full ${
-                    index < 2 ? 'bg-[#22C55E]' : 'bg-[#CBD5E1]'
-                  }`}
-                />
               </div>
             ))}
           </div>
@@ -329,10 +319,6 @@ export function InfrastructureVisual() {
               <p className="truncate text-[9.5px] text-[#64748B]">Servicios conectados y monitoreados</p>
             </div>
           </div>
-          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[#BBF7D0] bg-[#F0FDF4] px-2 py-1 text-[8.5px] font-bold uppercase tracking-wider text-[#15803D]">
-            <span aria-hidden="true" className="hero-pulse size-1.5 rounded-full bg-[#22C55E]" />
-            Activo
-          </span>
         </div>
 
         <div className="p-3.5 sm:p-4">
@@ -360,10 +346,6 @@ export function InfrastructureVisual() {
               <p className="mt-0.5 hidden text-[8px] leading-3 text-[#64748B] sm:block">
                 Servidores · Redes · Respaldos
               </p>
-              <span className="mt-1 inline-flex items-center gap-1 text-[7.5px] font-bold uppercase tracking-wider text-[#15803D]">
-                <span aria-hidden="true" className="size-1 rounded-full bg-[#22C55E]" />
-                En línea
-              </span>
             </div>
 
             {infrastructureNodes.map((node) => (
@@ -478,10 +460,6 @@ export function SupportVisual() {
                 <p className="text-[10px] font-bold text-[#0F172A]">Especialista asignado</p>
                 <p className="text-[8.5px] text-[#64748B]">Diagnóstico, seguimiento y cierre</p>
               </div>
-              <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-white px-2 py-1 text-[8px] font-bold text-[#1D4ED8] shadow-sm">
-                <span aria-hidden="true" className="hero-pulse size-1 rounded-full bg-[#22C55E]" />
-                En línea
-              </span>
             </div>
           </div>
 
@@ -547,10 +525,6 @@ export function SoftwareVisual() {
                 <p className="text-[10px] font-bold text-[#0F172A]">Panel de operaciones</p>
                 <p className="text-[8px] text-[#64748B]">Procesos, integraciones y actividad</p>
               </div>
-              <span className="inline-flex items-center gap-1 rounded-full border border-[#BBF7D0] bg-[#F0FDF4] px-1.5 py-0.5 text-[7px] font-bold uppercase tracking-wider text-[#15803D]">
-                <span aria-hidden="true" className="hero-pulse size-1 rounded-full bg-[#22C55E]" />
-                En vivo
-              </span>
             </div>
 
             <div className="mt-2.5 grid grid-cols-3 gap-1.5">

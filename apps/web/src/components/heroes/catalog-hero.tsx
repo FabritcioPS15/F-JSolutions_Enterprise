@@ -20,7 +20,6 @@ import {
   HeroAccent,
   HeroAction,
   HeroActions,
-  HeroEyebrow,
   HeroLead,
   HeroSection,
   HeroTitle,
@@ -177,10 +176,6 @@ export function CatalogHero({
       <div className={`${HERO_CONTAINER} pb-8 pt-6 sm:pb-12 sm:pt-10 lg:pb-14 lg:pt-12`}>
         <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.96fr)] lg:gap-12 xl:gap-16">
           <div className="max-w-[620px]">
-            <HeroEyebrow icon={<Package aria-hidden="true" className="size-3.5" />}>
-              Catálogo corporativo
-            </HeroEyebrow>
-
             <HeroTitle size="lg">
               Equipos y tecnología para <HeroAccent>cada área</HeroAccent> de tu empresa.
             </HeroTitle>
@@ -189,21 +184,6 @@ export function CatalogHero({
               Explora laptops, componentes, monitores, redes y equipamiento profesional. Agrega lo
               que necesitas y recibe una cotización con asesoría real, sin comprar a ciegas.
             </HeroLead>
-
-            <div className="hero-reveal hero-delay-3 mt-5 sm:mt-6 flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-[#E2E8F0] bg-white px-2.5 py-1.5 text-[10.5px] font-semibold text-[#475569] shadow-sm">
-                <Package aria-hidden="true" className="size-3 text-[#2563EB]" />
-                {totalProducts} productos
-              </span>
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-[#E2E8F0] bg-white px-2.5 py-1.5 text-[10.5px] font-semibold text-[#475569] shadow-sm">
-                <Boxes aria-hidden="true" className="size-3 text-[#2563EB]" />
-                {categoryCount} categorías
-              </span>
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-[#E2E8F0] bg-white px-2.5 py-1.5 text-[10.5px] font-semibold text-[#475569] shadow-sm">
-                <ShieldCheck aria-hidden="true" className="size-3 text-[#2563EB]" />
-                Cotización asistida
-              </span>
-            </div>
 
             <HeroActions>
               <HeroAction
@@ -219,49 +199,6 @@ export function CatalogHero({
                 Solicitar cotización
               </HeroAction>
             </HeroActions>
-
-            <div className="hero-reveal hero-delay-4 mt-6 sm:mt-7">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#64748B]">
-                Accesos rápidos
-              </p>
-              <div className="mt-2.5 flex flex-wrap gap-1.5">
-                {quickCategories.map((category) => {
-                  const Icon = categoryIcons[category.label] ?? Package
-                  const isActive = activeCategory === category.label
-                  return (
-                    <button
-                      key={category.label}
-                      type="button"
-                      onClick={() => handleSelect(category.label)}
-                      aria-pressed={isActive}
-                      className={cn(
-                        'group inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-2 text-[10.5px] font-semibold transition',
-                        isActive
-                          ? 'border-[#2563EB] bg-[#2563EB] text-white shadow-sm'
-                          : 'border-[#E2E8F0] bg-white text-[#475569] hover:border-[#2563EB]/40 hover:text-[#1D4ED8]',
-                      )}
-                    >
-                      <Icon
-                        aria-hidden="true"
-                        className={cn(
-                          'size-3.5',
-                          isActive ? 'text-white' : 'text-[#2563EB]',
-                        )}
-                      />
-                      {category.label}
-                      <span
-                        className={cn(
-                          'rounded px-1 font-mono text-[8.5px]',
-                          isActive ? 'bg-white/20 text-white' : 'bg-[#F1F5F9] text-[#64748B]',
-                        )}
-                      >
-                        {category.count}
-                      </span>
-                    </button>
-                  )
-                })}
-              </div>
-            </div>
           </div>
 
           <div className="hero-reveal hero-delay-2 relative mx-auto w-full max-w-[560px] lg:max-w-none">
