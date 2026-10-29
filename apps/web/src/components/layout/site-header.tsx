@@ -358,16 +358,16 @@ export function SiteHeader({ quoteCount = 0, onQuoteClick }: SiteHeaderProps) {
           {/* Logo */}
           <Link
             href="/"
-            className="flex shrink-0 items-center gap-3"
-            aria-label="FJ Tech · Inicio"
+            className="flex shrink-0 items-center gap-3 group"
+            aria-label="F&J Systems · Inicio"
             onClick={() => { setMenuOpen(false); closeAll() }}
           >
-            <span className="grid size-10 place-items-center rounded-xl bg-gradient-to-br from-[#3B82F6] to-[#1D4ED8] font-heading text-sm font-bold tracking-tight text-white shadow-md shadow-[#2563EB]/20">
-              FJ
-            </span>
-            <span className="hidden font-heading text-xl font-bold tracking-[-0.04em] text-[#0F172A] sm:block lg:text-2xl">
-              FJ <span className="text-[#2563EB]">TECH</span>
-            </span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/logo.png"
+              alt="F&J Systems"
+              className="h-10 sm:h-11 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
+            />
           </Link>
 
           {/* Categories dropdown trigger */}

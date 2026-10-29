@@ -1,53 +1,73 @@
 import Link from 'next/link'
-import { Clock, Mail, MapPin, Phone } from 'lucide-react'
 import { EMPRESA } from '@/lib/constants'
 
-// ─── Navegación del footer (enlaces reales del sitio) ──────────────────────────
+// ─── Tipos y Estructura de Navegación (4 Columnas) ───────────────────────────
 
-const productLinks = [
-  { label: 'Catálogo de productos', href: '/productos' },
-  { label: 'PC y Servidores', href: '/productos?categoria=PC y Servidores' },
-  { label: 'Laptops', href: '/productos?categoria=Laptops' },
-  { label: 'Componentes', href: '/productos?categoria=Componentes' },
-  { label: 'Monitores', href: '/productos?categoria=Monitores' },
-]
+interface FooterNavLink {
+  label: string
+  href: string
+}
 
-const serviceLinks = [
-  { label: 'Servicios TI', href: '/servicios' },
-  { label: 'Soporte Técnico', href: '/soporte-ti' },
-  { label: 'Infraestructura TI', href: '/servicios' },
-  { label: 'Desarrollo de Software', href: '/sistemas' },
-  { label: 'Cotización', href: '/cotizacion' },
-]
+interface FooterColumn {
+  title: string
+  links: FooterNavLink[]
+}
 
-const companyLinks = [
-  { label: 'Sobre nosotros', href: '/nosotros' },
-  { label: 'Proyectos y experiencia', href: '/proyectos' },
-  { label: 'Cómo trabajamos', href: '/como-trabajamos' },
-  { label: 'Mi cuenta', href: '/mi-cuenta' },
-  { label: 'Contacto', href: '/contacto' },
-]
-
-const supportLinks = [
-  { label: 'Contacto y ventas', href: '/contacto' },
-  { label: 'Preguntas frecuentes', href: '/preguntas-frecuentes' },
-  { label: 'Atención empresarial', href: '/servicios' },
-]
-
-const linkColumns = [
-  { title: 'Productos', links: productLinks },
-  { title: 'Servicios', links: serviceLinks },
-  { title: 'Empresa', links: companyLinks },
-  { title: 'Soporte al cliente', links: supportLinks },
-]
-
-const socialLinks = [
+const FOOTER_COLUMNS: FooterColumn[] = [
   {
+    title: 'Productos y equipos TI',
+    links: [
+      { label: 'Computadoras y laptops', href: '/productos?categoria=PC y Servidores' },
+      { label: 'Componentes y periféricos', href: '/productos?categoria=Componentes' },
+      { label: 'Monitores y pantallas', href: '/productos?categoria=Monitores' },
+      { label: 'Accesorios tecnológicos', href: '/productos?categoria=Accesorios' },
+      { label: 'Equipos de redes e infraestructura', href: '/productos?categoria=Redes' },
+      { label: 'Ver todos los productos', href: '/productos' },
+    ],
+  },
+  {
+    title: 'Servicios tecnológicos',
+    links: [
+      { label: 'Soporte técnico', href: '/soporte-ti' },
+      { label: 'Infraestructura TI', href: '/servicios' },
+      { label: 'Redes y conectividad', href: '/servicios' },
+      { label: 'Mantenimiento de equipos', href: '/soporte-ti' },
+      { label: 'Desarrollo de software', href: '/sistemas' },
+      { label: 'Automatización de procesos', href: '/sistemas' },
+    ],
+  },
+  {
+    title: 'Soluciones empresariales',
+    links: [
+      { label: 'Soluciones para empresas', href: '/nosotros' },
+      { label: 'Implementación tecnológica', href: '/como-trabajamos' },
+      { label: 'Sistemas y aplicaciones', href: '/sistemas' },
+      { label: 'Consultoría TI', href: '/servicios' },
+      { label: 'Proyectos tecnológicos', href: '/proyectos' },
+    ],
+  },
+  {
+    title: 'Atención y cotizaciones',
+    links: [
+      { label: 'Solicitar cotización', href: '/cotizacion' },
+      { label: 'Consultar productos', href: '/cotizador' },
+      { label: 'Atención empresarial', href: '/contacto' },
+      { label: 'Preguntas frecuentes', href: '/preguntas-frecuentes' },
+      { label: 'Contacto', href: '/contacto' },
+    ],
+  },
+]
+
+// Redes sociales oficiales configuradas en EMPRESA
+const SOCIAL_NETWORKS = [
+  {
+    id: 'facebook',
     label: 'Facebook',
     href: EMPRESA.redesSociales.facebook,
     path: <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />,
   },
   {
+    id: 'instagram',
     label: 'Instagram',
     href: EMPRESA.redesSociales.instagram,
     path: (
@@ -59,6 +79,7 @@ const socialLinks = [
     ),
   },
   {
+    id: 'linkedin',
     label: 'LinkedIn',
     href: EMPRESA.redesSociales.linkedin,
     path: (
@@ -70,6 +91,7 @@ const socialLinks = [
     ),
   },
   {
+    id: 'whatsapp',
     label: 'WhatsApp',
     href: EMPRESA.redesSociales.whatsapp,
     path: (
@@ -79,177 +101,128 @@ const socialLinks = [
       </>
     ),
   },
-]
+].filter((item) => Boolean(item.href))
 
-// ─── Look fijo (independiente del tema) ────────────────────────────────────────
-// Paleta mejorada con gradientes y efectos:
-//   fondo    → gradient midnight navy
-//   títulos  → --cloud-white    #F8FAFC
-//   texto    → slate            #94A3B8 / #CBD5E1
-//   acento   → --tech-blue      #2563EB / #3B82F6 con glow
-
-const FOCUS =
-  'rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3B82F6]/60 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0B1220]'
-
-// ─── Componentes de apoyo ──────────────────────────────────────────────────────
-
-function FooterLink({
-  href,
-  className = '',
-  children,
-}: {
-  href: string
-  className?: string
-  children: React.ReactNode
-}) {
-  return (
-    <Link
-      href={href}
-      className={`inline-block text-[#CBD5E1] transition-all duration-300 hover:text-[#3B82F6] hover:translate-x-1 hover:tracking-wide ${FOCUS} ${className}`}
-    >
-      {children}
-    </Link>
-  )
-}
-
-function SocialIcon({ label, href, children }: { label: string; href: string; children: React.ReactNode }) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noreferrer"
-      aria-label={label}
-      className={`group grid size-9 place-items-center rounded-lg border border-white/10 text-[#94A3B8] transition-all duration-300 hover:border-[#3B82F6] hover:bg-gradient-to-br hover:from-[#3B82F6]/20 hover:to-[#2563EB]/20 hover:text-white hover:shadow-lg hover:shadow-[#3B82F6]/30 hover:-translate-y-1 ${FOCUS}`}
-    >
-      <svg
-        viewBox="0 0 24 24"
-        className="size-4 transition-transform duration-300 group-hover:scale-110"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.7"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        aria-hidden="true"
-      >
-        {children}
-      </svg>
-    </a>
-  )
-}
-
-// ─── Footer ────────────────────────────────────────────────────────────────────
+const FOCUS_STYLE =
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0B132B]'
 
 export function SiteFooter() {
   const currentYear = new Date().getFullYear()
 
   return (
-    <footer className="border-t border-white/10 bg-gradient-to-b from-[#0B1220] via-[#0A1120] to-[#080F18] text-[#94A3B8]">
-      <div className="mx-auto max-w-[1280px] px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-14">
-        <div className="grid gap-x-6 gap-y-8 lg:grid-cols-12">
-          {/* Columna de identidad corporativa */}
-          <div className="lg:col-span-4">
-            <Link href="/" className={`inline-flex items-center gap-2.5 group ${FOCUS}`} aria-label="FJ Solutions · Inicio">
-              <span className="grid size-10 place-items-center rounded-xl bg-gradient-to-br from-[#3B82F6] to-[#2563EB] font-heading text-sm font-bold tracking-tight text-white shadow-lg shadow-[#3B82F6]/40 transition-all duration-300 group-hover:shadow-xl group-hover:shadow-[#3B82F6]/50 group-hover:scale-105">
-                FJ
-              </span>
-              <span className="font-heading text-xl font-bold tracking-[-0.04em] text-[#F8FAFC] transition-all duration-300 group-hover:text-white">
-                FJ <span className="text-[#3B82F6] transition-colors duration-300 group-hover:text-[#60A5FA]">Solutions</span>
-              </span>
-            </Link>
+    <footer
+      className="border-t border-[#1E293B]/80 bg-[#0B132B] text-[#94A3B8] selection:bg-[#2563EB]/25 selection:text-white"
+      aria-label="Pie de página"
+    >
+      <div className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6 sm:py-14 lg:px-8 lg:py-16">
+        {/* ─── A. Cabecera del Footer: Logotipo oficial & Redes Sociales ─── */}
+        <div className="flex flex-col gap-6 pb-10 sm:flex-row sm:items-center sm:justify-between border-b border-[#1E293B]/80">
+          {/* Logotipo F&J Systems */}
+          <Link
+            href="/"
+            className={`group inline-flex items-center gap-3 ${FOCUS_STYLE} rounded-lg`}
+            aria-label="F&J Systems · Inicio"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <div className="bg-white rounded-xl px-2.5 py-1.5 shadow-sm transition-transform duration-200 group-hover:scale-105 motion-reduce:transition-none">
+              <img
+                src="/images/logo.png"
+                alt="F&J Systems"
+                className="h-8 sm:h-9 w-auto object-contain"
+              />
+            </div>
+          </Link>
 
-            <p className="mt-4 max-w-sm text-sm leading-6 text-[#94A3B8]">
-              Vendemos tecnología, implementamos infraestructura TI y desarrollamos sistemas para
-              empresas que buscan soluciones tecnológicas confiables y eficaces.
-            </p>
-
-            <ul className="mt-6 space-y-3 text-sm">
-              <li>
+          {/* Redes Sociales: botones circulares discretos */}
+          {SOCIAL_NETWORKS.length > 0 && (
+            <div className="flex items-center gap-2.5" aria-label="Redes sociales oficiales">
+              {SOCIAL_NETWORKS.map((social) => (
                 <a
-                  href="tel:+51999888777"
-                  className={`flex items-center gap-2.5 text-[#94A3B8] transition-all duration-300 hover:text-[#3B82F6] hover:translate-x-1 ${FOCUS}`}
+                  key={social.id}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={social.label}
+                  className={`grid size-9 place-items-center rounded-full border border-[#1E293B] bg-[#0F172A]/70 text-[#94A3B8] transition duration-200 hover:border-[#2563EB]/60 hover:bg-[#1E293B] hover:text-white motion-reduce:transition-none ${FOCUS_STYLE}`}
                 >
-                  <Phone className="size-4 shrink-0 transition-colors duration-300 group-hover:text-[#3B82F6]" />
-                  <span className="min-w-0 break-words">+51 999 888 777</span>
+                  <svg
+                    viewBox="0 0 24 24"
+                    className="size-4"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.7"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    {social.path}
+                  </svg>
                 </a>
-              </li>
-              <li>
-                <a
-                  href="mailto:ventas@fjsolutions.pe"
-                  className={`flex items-center gap-2.5 text-[#94A3B8] transition-all duration-300 hover:text-[#3B82F6] hover:translate-x-1 ${FOCUS}`}
-                >
-                  <Mail className="size-4 shrink-0 transition-colors duration-300 group-hover:text-[#3B82F6]" />
-                  <span className="min-w-0 break-words">ventas@fjsolutions.pe</span>
-                </a>
-              </li>
-              <li className="flex items-start gap-2.5">
-                <MapPin className="mt-0.5 size-4 shrink-0 text-[#94A3B8]" />
-                <span className="min-w-0 break-words">Av. Javier Prado Este, Lima, Perú</span>
-              </li>
-              <li className="flex items-center gap-2.5">
-                <Clock className="size-4 shrink-0 text-[#94A3B8]" />
-                <span className="min-w-0 break-words">{EMPRESA.horario}</span>
-              </li>
-            </ul>
-
-            <div className="mt-6 flex flex-wrap items-center gap-2.5">
-              {socialLinks.map((social) => (
-                <SocialIcon key={social.label} label={social.label} href={social.href}>
-                  {social.path}
-                </SocialIcon>
               ))}
             </div>
-          </div>
-
-          {/* Columnas de navegación - En móvil solo muestra 2 columnas */}
-          <nav
-            aria-label="Enlaces del sitio"
-            className="grid gap-x-6 gap-y-8 sm:grid-cols-2 lg:col-span-8 lg:grid-cols-4"
-          >
-            {linkColumns.slice(0, 2).map((column) => (
-              <div key={column.title} className="transition-all duration-300 hover:translate-x-1">
-                <h3 className="font-heading text-xs font-bold uppercase tracking-[0.14em] text-[#F8FAFC] transition-colors duration-300 hover:text-[#3B82F6]">
-                  {column.title}
-                </h3>
-                <ul className="mt-4 space-y-3 text-sm">
-                  {column.links.map((link) => (
-                    <li key={link.label}>
-                      <FooterLink href={link.href}>{link.label}</FooterLink>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-            {/* En tablet y desktop muestra las otras 2 columnas */}
-            {linkColumns.slice(2).map((column) => (
-              <div key={column.title} className="hidden sm:block transition-all duration-300 hover:translate-x-1">
-                <h3 className="font-heading text-xs font-bold uppercase tracking-[0.14em] text-[#F8FAFC] transition-colors duration-300 hover:text-[#3B82F6]">
-                  {column.title}
-                </h3>
-                <ul className="mt-4 space-y-3 text-sm">
-                  {column.links.map((link) => (
-                    <li key={link.label}>
-                      <FooterLink href={link.href}>{link.label}</FooterLink>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </nav>
+          )}
         </div>
-      </div>
 
-      {/* Franja inferior */}
-      <div className="border-t border-white/10 bg-gradient-to-b from-transparent to-[#050A12]">
-        <div className="mx-auto flex max-w-[1280px] flex-col gap-3 px-4 py-4 text-xs text-[#94A3B8] sm:flex-row sm:items-center sm:justify-between sm:px-6 sm:py-5 lg:px-8">
-          <p className="transition-colors duration-300 hover:text-[#CBD5E1]">© {currentYear} FJ Solutions. Todos los derechos reservados.</p>
-          <ul className="flex flex-wrap items-center gap-x-4 gap-y-2">
-            <li>
-              <FooterLink href="/nosotros">Términos y condiciones</FooterLink>
-            </li>
-            <li>
-              <FooterLink href="/nosotros">Política de privacidad</FooterLink>
-            </li>
-          </ul>
+        {/* ─── B. Navegación Principal en Cuatro Columnas ─── */}
+        <nav
+          aria-label="Navegación del pie de página"
+          className="grid grid-cols-1 gap-8 py-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-10"
+        >
+          {FOOTER_COLUMNS.map((column) => (
+            <div key={column.title} className="flex flex-col">
+              <h2 className="font-heading text-[13px] font-bold uppercase tracking-[0.12em] text-[#F8FAFC]">
+                {column.title}
+              </h2>
+              <ul className="mt-4 space-y-2.5 text-sm">
+                {column.links.map((link) => (
+                  <li key={link.label}>
+                    <Link
+                      href={link.href}
+                      className={`inline-block text-[#94A3B8] transition-colors duration-200 hover:text-[#38BDF8] motion-reduce:transition-none ${FOCUS_STYLE} rounded-sm`}
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </nav>
+
+        {/* ─── C & D. Separador y Franja Legal Inferior ─── */}
+        <div className="border-t border-[#1E293B]/80 pt-8">
+          <div className="flex flex-col gap-4 text-xs text-[#64748B] sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-[#94A3B8]">
+              &copy; {currentYear} F&J Systems. Todos los derechos reservados.
+            </p>
+
+            <ul className="flex flex-wrap items-center gap-x-5 gap-y-2">
+              <li>
+                <Link
+                  href="/nosotros"
+                  className={`transition-colors duration-200 hover:text-[#CBD5E1] motion-reduce:transition-none ${FOCUS_STYLE} rounded-sm`}
+                >
+                  Términos y condiciones
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/nosotros"
+                  className={`transition-colors duration-200 hover:text-[#CBD5E1] motion-reduce:transition-none ${FOCUS_STYLE} rounded-sm`}
+                >
+                  Política de privacidad
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/preguntas-frecuentes"
+                  className={`transition-colors duration-200 hover:text-[#CBD5E1] motion-reduce:transition-none ${FOCUS_STYLE} rounded-sm`}
+                >
+                  Información legal
+                </Link>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </footer>

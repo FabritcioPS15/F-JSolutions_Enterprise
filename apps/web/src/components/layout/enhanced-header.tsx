@@ -923,16 +923,16 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
             {/* Logo */}
             <Link
               href="/"
-              className="flex shrink-0 items-center gap-2 sm:gap-3"
-              aria-label="FJ Solutions · Inicio"
+              className="flex shrink-0 items-center gap-2 sm:gap-3 group"
+              aria-label="F&J Systems · Inicio"
               onClick={() => { setMenuOpen(false); closeAll() }}
             >
-              <span className="grid size-9 sm:size-10 place-items-center rounded-xl bg-gradient-to-br from-[#3B82F6] to-[#1D4ED8] font-heading text-sm font-bold tracking-tight text-white shadow-md shadow-[#2563EB]/20">
-                FJ
-              </span>
-              <span className="font-heading text-base font-bold tracking-[-0.03em] text-[#0F172A] sm:text-xl lg:text-2xl">
-                FJ <span className="text-[#2563EB]">Solutions</span>
-              </span>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/images/logo.png"
+                alt="F&J Systems"
+                className="h-10 sm:h-11 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
+              />
             </Link>
 
             {/* Buscador con autocompletado */}
@@ -1102,20 +1102,20 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
           <div className="flex shrink-0 items-center justify-between gap-3 border-b border-[#F1F5F9] px-4 py-3">
             <Link
               href="/"
-              className="inline-flex items-center gap-2.5"
-              aria-label="FJ Solutions · Inicio"
+              className="inline-flex items-center gap-2.5 group"
+              aria-label="F&J Systems · Inicio"
               onClick={() => {
                 setMenuOpen(false)
                 closeAll()
                 setOpenMobileSection(null)
               }}
             >
-              <span className="grid size-9 place-items-center rounded-xl bg-gradient-to-br from-[#3B82F6] to-[#1D4ED8] font-heading text-sm font-bold tracking-tight text-white shadow-md shadow-[#2563EB]/20">
-                FJ
-              </span>
-              <span className="font-heading text-lg font-bold tracking-[-0.04em] text-[#0F172A]">
-                FJ <span className="text-[#2563EB]">Solutions</span>
-              </span>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/images/logo.png"
+                alt="F&J Systems"
+                className="h-9 sm:h-10 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
+              />
             </Link>
 
             <button
