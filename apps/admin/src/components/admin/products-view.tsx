@@ -615,7 +615,7 @@ export function ProductsView({
                         </td>
                         <td className="px-2.5 py-3">
                           <p className="max-w-[150px] truncate text-[11.5px] font-semibold text-slate-700">
-                            {product.category}
+                            {product.category || 'Sin categoría'}
                           </p>
                           <p className="mt-0.5 max-w-[150px] truncate text-[10px] text-slate-400">
                             {product.subcategory ?? 'Sin subcategoría'}
@@ -778,7 +778,7 @@ export function ProductsView({
                       {product.name}
                     </Link>
                     <p className="mt-1 truncate text-[10.5px] text-slate-400">
-                      {product.category}
+                      {product.category || 'Sin categoría'}
                       {product.subcategory ? ` · ${product.subcategory}` : ''}
                     </p>
 

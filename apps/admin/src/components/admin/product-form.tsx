@@ -13,9 +13,11 @@ import {
   ChevronRight,
   ChevronUp,
   CircleDollarSign,
+  Crop,
   Eye,
   FolderTree,
   Globe,
+  HardDrive,
   Image as ImageIcon,
   ImagePlus,
   Info,
@@ -32,6 +34,7 @@ import {
 } from 'lucide-react'
 import { useAdmin } from '@/components/admin/admin-provider'
 import { CategoryGlyph } from '@/components/admin/category-icon'
+import { ImageCropDialog } from '@/components/admin/image-crop-dialog'
 import { Modal } from '@/components/admin/modal'
 import { ProductThumb } from '@/components/admin/product-thumb'
 import { useToast } from '@/components/admin/toast'
@@ -154,7 +157,24 @@ function createDraft(product: AdminProduct | undefined, defaultMinStock: number)
   }
 }
 
-const MAX_UPLOAD_BYTES = 1_500_000
+const MAX_UPLOAD_BYTES = 15_000_000
+
+type CropTarget =
+  | { kind: 'main' }
+  | { kind: 'gallery'; index: number }
+  | { kind: 'new' }
+
+type CropRequest = {
+  id: string
+  source: string
+  target: CropTarget
+}
+
+function formatBytes(bytes: number) {
+  if (bytes <= 0) return '0 KB'
+  if (bytes < 1024 * 1024) return `${Math.max(1, Math.round(bytes / 1024))} KB`
+  return `${(bytes / (1024 * 1024)).toFixed(1).replace('.', ',')} MB`
+}
 
 const quickAddLabels = {
   category: { title: 'Nueva categoría', placeholder: 'Ej. Cámaras de seguridad' },
@@ -190,6 +210,8 @@ export function ProductForm({
   )
   const [slugTouched, setSlugTouched] = useState(mode === 'edit')
   const [galleryInput, setGalleryInput] = useState('')
+  const [cropQueue, setCropQueue] = useState<CropRequest[]>([])
+  const [draggingImage, setDraggingImage] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [quickAdd, setQuickAdd] = useState<'category' | 'subcategory' | 'type' | 'brand' | null>(
     null
@@ -200,6 +222,16 @@ export function ProductForm({
     JSON.stringify(createDraft(product, settings.lowStockThreshold))
   )
   const dirty = JSON.stringify(draft) !== initialSnapshot
+  const activeCrop = cropQueue[0] ?? null
+  const storedImageBytes = useMemo(
+    () =>
+      [draft.image, ...draft.images].reduce(
+        (total, image) =>
+          total + (image.startsWith('data:') ? Math.ceil((image.length * 3) / 4) : 0),
+        0
+      ),
+    [draft.image, draft.images]
+  )
 
   useEffect(() => {
     if (!dirty) return
@@ -396,19 +428,96 @@ export function ProductForm({
     setQuickName('')
   }
 
-  function readImage(file: File, onLoad: (dataUrl: string) => void) {
+  function requestCrop(source: string, target: CropTarget) {
+    setCropQueue((prev) => [
+      ...prev,
+      {
+        id: `crop-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        source,
+        target,
+      },
+    ])
+  }
+
+  function fileToDataUrl(file: File): Promise<string | null> {
     if (!file.type.startsWith('image/')) {
-      toast.error('Archivo no compatible', 'Selecciona un archivo de imagen.')
-      return
+      toast.error('Archivo no compatible', 'Selecciona una imagen JPG, PNG o WebP.')
+      return Promise.resolve(null)
     }
     if (file.size > MAX_UPLOAD_BYTES) {
-      toast.error('Imagen demasiado pesada', 'Usa una URL para archivos mayores a 1.5 MB.')
+      toast.error(
+        'Imagen demasiado pesada',
+        `El archivo supera ${formatBytes(MAX_UPLOAD_BYTES)}. Comprímelo antes de subirlo.`
+      )
+      return Promise.resolve(null)
+    }
+    return new Promise((resolve) => {
+      const reader = new FileReader()
+      reader.onload = () => resolve(String(reader.result))
+      reader.onerror = () => {
+        toast.error('No se pudo leer la imagen')
+        resolve(null)
+      }
+      reader.readAsDataURL(file)
+    })
+  }
+
+  async function requestUploads(files: File[], target: 'main' | 'new') {
+    const sources: string[] = []
+    for (const file of files) {
+      const source = await fileToDataUrl(file)
+      if (source) sources.push(source)
+    }
+    if (!sources.length) return
+    if (target === 'main') {
+      requestCrop(sources[0], { kind: 'main' })
       return
     }
-    const reader = new FileReader()
-    reader.onload = () => onLoad(String(reader.result))
-    reader.onerror = () => toast.error('No se pudo leer la imagen')
-    reader.readAsDataURL(file)
+    sources.forEach((source) => requestCrop(source, { kind: 'new' }))
+  }
+
+  function handleImageDrop(event: React.DragEvent<HTMLDivElement>) {
+    event.preventDefault()
+    setDraggingImage(false)
+    const files = Array.from(event.dataTransfer.files).filter((file) =>
+      file.type.startsWith('image/')
+    )
+    if (!files.length) {
+      toast.error('Archivo no compatible', 'Arrastra una imagen JPG, PNG o WebP.')
+      return
+    }
+    void requestUploads(files, 'main')
+  }
+
+  function handleCropApply(dataUrl: string) {
+    const active = cropQueue[0]
+    if (!active) return
+    const target = active.target
+    if (target.kind === 'main') {
+      setDraft((prev) => ({ ...prev, image: dataUrl }))
+    } else if (target.kind === 'gallery') {
+      setDraft((prev) => ({
+        ...prev,
+        images: prev.images.map((image, index) => (index === target.index ? dataUrl : image)),
+      }))
+    } else {
+      setDraft((prev) => ({ ...prev, images: [...prev.images, dataUrl] }))
+    }
+    setCropQueue((prev) => prev.slice(1))
+  }
+
+  function useAsCover(index: number) {
+    setDraft((prev) => {
+      const cover = prev.images[index]
+      if (!cover) return prev
+      const images = [...prev.images]
+      if (prev.image) {
+        images[index] = prev.image
+      } else {
+        images.splice(index, 1)
+      }
+      return { ...prev, image: cover, images }
+    })
   }
 
   function validate() {
@@ -456,6 +565,17 @@ export function ProductForm({
       return
     }
 
+    if (storedImageBytes > 3_000_000) {
+      toast.error(
+        'Las imágenes ocupan demasiado espacio',
+        'Reduce la galería o usa URLs externas. El panel guarda las imágenes en este navegador y tiene un límite de almacenamiento.'
+      )
+      document
+        .getElementById('product-section-images')
+        ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      return
+    }
+
     setSubmitting(true)
     const input: ProductInput = {
       name: draft.name.trim(),
@@ -499,6 +619,20 @@ export function ProductForm({
 
   const isEdit = mode === 'edit'
 
+  const formSections = [
+    { id: 'product-section-general', label: 'General', icon: Info },
+    { id: 'product-section-taxonomy', label: 'Categorización', icon: FolderTree },
+    { id: 'product-section-commercial', label: 'Comercial', icon: CircleDollarSign },
+    { id: 'product-section-specs', label: 'Especificaciones', icon: ListChecks },
+    { id: 'product-section-images', label: 'Imágenes', icon: ImageIcon },
+    { id: 'product-section-seo', label: 'SEO', icon: Globe },
+    { id: 'product-section-publish', label: 'Publicación', icon: Eye },
+  ]
+
+  function scrollToSection(id: string) {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
   return (
     <div className="space-y-5">
       <nav aria-label="Migas de pan" className="flex items-center gap-1.5 text-xs text-slate-400">
@@ -531,6 +665,28 @@ export function ProductForm({
         }
       />
 
+      <nav
+        aria-label="Secciones del formulario"
+        className="sticky top-16 z-20 -mx-1 overflow-x-auto rounded-xl border border-slate-200/80 bg-white p-1.5 shadow-xs"
+      >
+        <div className="flex min-w-max gap-0.5">
+          {formSections.map((section) => {
+            const Icon = section.icon
+            return (
+              <button
+                key={section.id}
+                type="button"
+                onClick={() => scrollToSection(section.id)}
+                className="inline-flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-[11px] font-semibold text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
+              >
+                <Icon className="size-3.5 text-slate-400" aria-hidden="true" />
+                {section.label}
+              </button>
+            )
+          })}
+        </div>
+      </nav>
+
       <form
         id="product-form"
         onSubmit={handleSubmit}
@@ -539,6 +695,7 @@ export function ProductForm({
       >
         <div className="space-y-5">
           <SectionCard
+            id="product-section-general"
             title="Información general"
             description="Datos visibles en la ficha del producto."
             icon={Info}
@@ -669,6 +826,7 @@ export function ProductForm({
           </SectionCard>
 
           <SectionCard
+            id="product-section-taxonomy"
             title="Categorización"
             description="Organiza el producto dentro de la taxonomía del catálogo."
             icon={FolderTree}
@@ -827,6 +985,7 @@ export function ProductForm({
           </SectionCard>
 
           <SectionCard
+            id="product-section-commercial"
             title="Información comercial"
             description="Precio referencial, visibilidad y control de stock."
             icon={CircleDollarSign}
@@ -992,6 +1151,7 @@ export function ProductForm({
           </SectionCard>
 
           <SectionCard
+            id="product-section-specs"
             title="Especificaciones"
             description="Puntos clave que se muestran en la ficha pública."
             icon={ListChecks}
@@ -1051,62 +1211,172 @@ export function ProductForm({
           </SectionCard>
 
           <SectionCard
+            id="product-section-images"
             title="Imágenes"
-            description="Imagen principal y galería del producto."
+            description="Sube, encuadra y ordena las imágenes del producto."
             icon={ImageIcon}
+            bodyClassName="space-y-5"
+            action={
+              <span
+                className={cn(
+                  'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-semibold ring-1 ring-inset',
+                  storedImageBytes > 2_000_000
+                    ? 'bg-amber-50 text-amber-700 ring-amber-600/20'
+                    : 'bg-slate-50 text-slate-500 ring-slate-200'
+                )}
+                title="Peso aproximado de las imágenes guardadas en este navegador"
+              >
+                <HardDrive className="size-3" aria-hidden="true" />
+                {formatBytes(storedImageBytes)}
+              </span>
+            }
           >
-            <div className="grid gap-5 sm:grid-cols-[200px_minmax(0,1fr)]">
+            <div className="grid gap-5 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
               <div>
-                <div className="relative aspect-[4/3] overflow-hidden rounded-xl border border-slate-200 bg-slate-50">
-                  <ProductThumb src={draft.image} alt={draft.name || 'Producto'} className="size-full object-contain" />
-                  {draft.image && (
-                    <button
-                      type="button"
-                      onClick={() => setField('image', '')}
-                      className="absolute right-2 top-2 grid size-7 place-items-center rounded-lg bg-white/90 text-slate-500 shadow-sm transition hover:text-red-600"
-                      aria-label="Quitar imagen principal"
-                    >
-                      <X className="size-3.5" />
-                    </button>
+                <div
+                  onDragOver={(event) => {
+                    event.preventDefault()
+                    setDraggingImage(true)
+                  }}
+                  onDragLeave={(event) => {
+                    if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+                      setDraggingImage(false)
+                    }
+                  }}
+                  onDrop={handleImageDrop}
+                  className={cn(
+                    'group relative aspect-[4/3] overflow-hidden rounded-2xl border-2 border-dashed transition',
+                    draggingImage
+                      ? 'border-blue-400 bg-blue-50/60'
+                      : draft.image
+                        ? 'border-transparent bg-slate-50 ring-1 ring-inset ring-slate-200'
+                        : 'border-slate-200 bg-slate-50/60 hover:border-blue-300 hover:bg-blue-50/30'
+                  )}
+                >
+                  {draft.image ? (
+                    <>
+                      <ProductThumb
+                        src={draft.image}
+                        alt={draft.imageAlt || draft.name || 'Producto'}
+                        className="size-full rounded-none object-contain ring-0"
+                      />
+                      <span className="absolute left-3 top-3 rounded-md bg-white/90 px-1.5 py-0.5 text-[9.5px] font-bold uppercase tracking-[0.12em] text-slate-500 shadow-sm">
+                        Portada
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setDraft((prev) => ({ ...prev, image: '' }))}
+                        className="absolute right-2.5 top-2.5 grid size-7 place-items-center rounded-lg bg-white/90 text-slate-500 shadow-sm transition hover:text-red-600"
+                        aria-label="Quitar imagen principal"
+                      >
+                        <X className="size-3.5" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => requestCrop(draft.image, { kind: 'main' })}
+                        className="absolute inset-x-3 bottom-3 inline-flex h-9 items-center justify-center gap-2 rounded-xl bg-white/95 text-[11px] font-semibold text-slate-800 shadow-lg backdrop-blur transition hover:bg-white"
+                      >
+                        <Crop className="size-3.5" aria-hidden="true" />
+                        Ajustar encuadre
+                      </button>
+                    </>
+                  ) : (
+                    <label className="flex size-full cursor-pointer flex-col items-center justify-center gap-2 px-6 text-center">
+                      <span className="grid size-12 place-items-center rounded-2xl bg-white text-slate-400 shadow-xs ring-1 ring-slate-200">
+                        <ImagePlus className="size-5" aria-hidden="true" />
+                      </span>
+                      <span className="text-xs font-semibold text-slate-700">
+                        Arrastra la imagen principal
+                      </span>
+                      <span className="max-w-[240px] text-[10.5px] leading-relaxed text-slate-400">
+                        o haz clic para seleccionar un archivo JPG, PNG o WebP
+                      </span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="sr-only"
+                        onChange={(event) => {
+                          const files = Array.from(event.target.files ?? [])
+                          event.currentTarget.value = ''
+                          void requestUploads(files, 'main')
+                        }}
+                      />
+                    </label>
+                  )}
+
+                  {draggingImage && (
+                    <div className="pointer-events-none absolute inset-0 grid place-items-center bg-blue-600/10 ring-2 ring-inset ring-blue-500">
+                      <span className="rounded-xl bg-white px-3 py-2 text-xs font-semibold text-blue-700 shadow-lg">
+                        Suelta para {draft.image ? 'reemplazar la portada' : 'subir la imagen'}
+                      </span>
+                    </div>
                   )}
                 </div>
-                <p className="mt-2 text-center text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-400">
-                  Imagen principal
+
+                <div className="mt-3 flex flex-wrap items-center gap-2">
+                  <label className={cn(btnSecondary, 'h-9 cursor-pointer px-3 text-xs')}>
+                    <Upload className="size-3.5" aria-hidden="true" />
+                    {draft.image ? 'Reemplazar' : 'Subir imagen'}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="sr-only"
+                      onChange={(event) => {
+                        const files = Array.from(event.target.files ?? [])
+                        event.currentTarget.value = ''
+                        void requestUploads(files, 'main')
+                      }}
+                    />
+                  </label>
+                  {draft.image && (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => requestCrop(draft.image, { kind: 'main' })}
+                        className={cn(btnSecondary, 'h-9 px-3 text-xs')}
+                      >
+                        <Crop className="size-3.5" aria-hidden="true" />
+                        Encuadrar
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setDraft((prev) => ({ ...prev, image: '' }))}
+                        className="inline-flex h-9 items-center gap-1.5 rounded-xl px-2.5 text-xs font-semibold text-slate-500 transition hover:bg-red-50 hover:text-red-600"
+                      >
+                        <X className="size-3.5" aria-hidden="true" />
+                        Quitar
+                      </button>
+                    </>
+                  )}
+                </div>
+
+                <p className="mt-2 text-[10px] leading-relaxed text-slate-400">
+                  {draft.image.startsWith('data:')
+                    ? 'Imagen optimizada y guardada en este navegador.'
+                    : draft.image
+                      ? 'Imagen externa por URL. El encuadre depende de los permisos del servidor de origen.'
+                      : 'La imagen se muestra en la ficha y en las tarjetas del catálogo.'}
                 </p>
               </div>
 
               <div className="space-y-3">
-                <Field label="URL de la imagen" htmlFor="product-image" hint="Pega una URL pública de imagen.">
+                <Field
+                  label="Imagen por URL"
+                  htmlFor="product-image"
+                  hint="Alternativa a la subida. Se usa tal cual, sin optimizar."
+                >
                   <div className="relative">
                     <Link2 className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
                     <input
                       id="product-image"
                       value={draft.image.startsWith('data:') ? '' : draft.image}
-                      onChange={(event) => setField('image', event.target.value)}
+                      onChange={(event) => setDraft((prev) => ({ ...prev, image: event.target.value }))}
                       placeholder="https://…"
                       className={cn(inputClass, 'pl-9 text-xs')}
                       autoComplete="off"
                     />
                   </div>
                 </Field>
-
-                <div className="flex flex-wrap items-center gap-2">
-                  <label className={cn(btnSecondary, 'cursor-pointer')}>
-                    <Upload className="size-3.5" aria-hidden="true" />
-                    Subir archivo
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="sr-only"
-                      onChange={(event) => {
-                        const file = event.target.files?.[0]
-                        if (file) readImage(file, (dataUrl) => setField('image', dataUrl))
-                        event.currentTarget.value = ''
-                      }}
-                    />
-                  </label>
-                  <span className="text-[10px] text-slate-400">JPG/PNG · hasta 1.5 MB</span>
-                </div>
 
                 <Field
                   label="Texto alternativo de la imagen"
@@ -1123,96 +1393,157 @@ export function ProductForm({
                   />
                 </Field>
 
-                <div className="border-t border-slate-100 pt-3">
-                  <p className="mb-2 text-[11px] font-semibold text-slate-700">
-                    Galería ({draft.images.length})
+                <div className="flex items-start gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-3">
+                  <Info className="mt-0.5 size-3.5 shrink-0 text-slate-400" aria-hidden="true" />
+                  <p className="text-[10.5px] leading-relaxed text-slate-500">
+                    Al subir un archivo se abre el editor de encuadre y la imagen se guarda
+                    optimizada en 4:3. El panel usa el almacenamiento del navegador, así que evita
+                    acumular decenas de fotos pesadas.
                   </p>
-                  {draft.images.length > 0 && (
-                    <div className="mb-3 grid grid-cols-3 gap-2 sm:grid-cols-4">
-                      {draft.images.map((image, index) => (
-                        <div
-                          key={`${image.slice(0, 24)}-${index}`}
-                          className="group relative aspect-square overflow-hidden rounded-lg border border-slate-200 bg-slate-50"
-                        >
-                          <ProductThumb src={image} alt={`Imagen ${index + 1}`} className="size-full object-contain" />
-                          <button
-                            type="button"
-                            onClick={() => removeGalleryImage(index)}
-                            className="absolute right-1 top-1 grid size-6 place-items-center rounded-md bg-white/90 text-slate-500 shadow-sm transition hover:text-red-600"
-                            aria-label={`Quitar imagen ${index + 1}`}
-                          >
-                            <X className="size-3" />
-                          </button>
-                          <div className="absolute inset-x-1 bottom-1 flex justify-center gap-1">
-                            <button
-                              type="button"
-                              onClick={() => moveGalleryImage(index, -1)}
-                              disabled={index === 0}
-                              className="grid size-6 place-items-center rounded-md bg-white/90 text-slate-500 shadow-sm transition hover:text-slate-900 disabled:opacity-40"
-                              aria-label={`Mover imagen ${index + 1} a la izquierda`}
-                            >
-                              <ChevronLeft className="size-3" />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => moveGalleryImage(index, 1)}
-                              disabled={index === draft.images.length - 1}
-                              className="grid size-6 place-items-center rounded-md bg-white/90 text-slate-500 shadow-sm transition hover:text-slate-900 disabled:opacity-40"
-                              aria-label={`Mover imagen ${index + 1} a la derecha`}
-                            >
-                              <ChevronRight className="size-3" />
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                  <div className="flex gap-2">
-                    <input
-                      value={galleryInput}
-                      onChange={(event) => setGalleryInput(event.target.value)}
-                      onKeyDown={(event) => {
-                        if (event.key === 'Enter') {
-                          event.preventDefault()
-                          addGalleryUrl()
-                        }
-                      }}
-                      placeholder="Añadir URL a la galería…"
-                      className={cn(inputClass, 'h-9 text-xs')}
+                </div>
+              </div>
+            </div>
+
+            <div className="border-t border-slate-100 pt-5">
+              <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-slate-500">
+                    Galería · {draft.images.length}
+                  </p>
+                  <p className="mt-0.5 text-[10.5px] text-slate-400">
+                    Usa la estrella para convertir una imagen en la portada del producto.
+                  </p>
+                </div>
+                <label className={cn(btnSecondary, 'h-8 cursor-pointer px-2.5 text-xs')}>
+                  <ImagePlus className="size-3.5" aria-hidden="true" />
+                  Añadir imágenes
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    className="sr-only"
+                    onChange={(event) => {
+                      const files = Array.from(event.target.files ?? [])
+                      event.currentTarget.value = ''
+                      void requestUploads(files, 'new')
+                    }}
+                  />
+                </label>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4">
+                {draft.images.map((image, index) => (
+                  <div
+                    key={`${image.slice(0, 24)}-${index}`}
+                    className="group relative aspect-square overflow-hidden rounded-xl border border-slate-200 bg-slate-50"
+                  >
+                    <ProductThumb
+                      src={image}
+                      alt={`Imagen ${index + 1} de la galería`}
+                      className="size-full rounded-none object-contain ring-0"
                     />
                     <button
                       type="button"
-                      onClick={addGalleryUrl}
-                      className={cn(btnSecondary, 'h-9 shrink-0 px-2.5')}
-                      aria-label="Añadir imagen a la galería"
+                      onClick={() => requestCrop(image, { kind: 'gallery', index })}
+                      className="absolute left-1.5 top-1.5 grid size-6 place-items-center rounded-md bg-white/90 text-slate-500 shadow-sm transition hover:text-blue-600"
+                      aria-label={`Ajustar encuadre de la imagen ${index + 1}`}
                     >
-                      <Plus className="size-4" />
+                      <Crop className="size-3" />
                     </button>
-                    <label className={cn(btnSecondary, 'h-9 shrink-0 cursor-pointer px-2.5')} aria-label="Subir imágenes">
-                      <ImagePlus className="size-4" aria-hidden="true" />
-                      <input
-                        type="file"
-                        accept="image/*"
-                        multiple
-                        className="sr-only"
-                        onChange={(event) => {
-                          const files = Array.from(event.target.files ?? [])
-                          files.forEach((file) =>
-                            readImage(file, (dataUrl) =>
-                              setDraft((prev) => ({ ...prev, images: [...prev.images, dataUrl] }))
-                            )
-                          )
-                          event.currentTarget.value = ''
-                        }}
-                      />
-                    </label>
+                    <button
+                      type="button"
+                      onClick={() => removeGalleryImage(index)}
+                      className="absolute right-1.5 top-1.5 grid size-6 place-items-center rounded-md bg-white/90 text-slate-500 shadow-sm transition hover:text-red-600"
+                      aria-label={`Quitar imagen ${index + 1}`}
+                    >
+                      <X className="size-3" />
+                    </button>
+                    <div className="absolute inset-x-1.5 bottom-1.5 flex items-center justify-between gap-1 opacity-0 transition group-focus-within:opacity-100 group-hover:opacity-100">
+                      <button
+                        type="button"
+                        onClick={() => useAsCover(index)}
+                        className="grid size-6 place-items-center rounded-md bg-white/90 text-slate-500 shadow-sm transition hover:text-amber-500"
+                        aria-label={`Usar la imagen ${index + 1} como portada`}
+                        title="Usar como portada"
+                      >
+                        <Star className="size-3" />
+                      </button>
+                      <div className="flex gap-1">
+                        <button
+                          type="button"
+                          onClick={() => moveGalleryImage(index, -1)}
+                          disabled={index === 0}
+                          className="grid size-6 place-items-center rounded-md bg-white/90 text-slate-500 shadow-sm transition hover:text-slate-900 disabled:opacity-40"
+                          aria-label={`Mover imagen ${index + 1} a la izquierda`}
+                        >
+                          <ChevronLeft className="size-3" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => moveGalleryImage(index, 1)}
+                          disabled={index === draft.images.length - 1}
+                          className="grid size-6 place-items-center rounded-md bg-white/90 text-slate-500 shadow-sm transition hover:text-slate-900 disabled:opacity-40"
+                          aria-label={`Mover imagen ${index + 1} a la derecha`}
+                        >
+                          <ChevronRight className="size-3" />
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                ))}
+
+                <label className="flex aspect-square cursor-pointer flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-slate-200 bg-slate-50/60 text-slate-400 transition hover:border-blue-300 hover:bg-blue-50/40 hover:text-blue-500">
+                  <ImagePlus className="size-5" aria-hidden="true" />
+                  <span className="text-[10px] font-semibold">Añadir</span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    className="sr-only"
+                    onChange={(event) => {
+                      const files = Array.from(event.target.files ?? [])
+                      event.currentTarget.value = ''
+                      void requestUploads(files, 'new')
+                    }}
+                  />
+                </label>
               </div>
+
+              <div className="mt-3 flex gap-2">
+                <input
+                  value={galleryInput}
+                  onChange={(event) => setGalleryInput(event.target.value)}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                      event.preventDefault()
+                      addGalleryUrl()
+                    }
+                  }}
+                  placeholder="Añadir URL a la galería…"
+                  className={cn(inputClass, 'h-9 text-xs')}
+                  aria-label="URL de imagen para la galería"
+                />
+                <button
+                  type="button"
+                  onClick={addGalleryUrl}
+                  className={cn(btnSecondary, 'h-9 shrink-0 px-2.5')}
+                  aria-label="Añadir imagen a la galería"
+                >
+                  <Plus className="size-4" />
+                </button>
+              </div>
+
+              {storedImageBytes > 2_000_000 && (
+                <p className="mt-2 text-[10px] font-medium leading-relaxed text-amber-600">
+                  Las imágenes ocupan {formatBytes(storedImageBytes)} y se acercan al límite del
+                  almacenamiento local. Considera usar URLs externas o reducir la galería.
+                </p>
+              )}
             </div>
           </SectionCard>
 
           <SectionCard
+            id="product-section-seo"
             title="SEO y buscadores"
             description="Metadatos para la ficha pública y resultados de búsqueda."
             icon={Globe}
@@ -1279,6 +1610,7 @@ export function ProductForm({
           </SectionCard>
 
           <SectionCard
+            id="product-section-publish"
             title="Publicación"
             description="Controla la visibilidad del producto en la tienda."
             icon={Eye}
@@ -1397,7 +1729,7 @@ export function ProductForm({
           </div>
         </div>
 
-        <aside className="space-y-4 xl:sticky xl:top-24">
+        <aside className="space-y-4 xl:sticky xl:top-28">
           <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xs">
             <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3">
               <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-slate-500">
@@ -1600,6 +1932,19 @@ export function ProductForm({
           />
         </label>
       </Modal>
+
+      <ImageCropDialog
+        open={Boolean(activeCrop)}
+        source={activeCrop?.source ?? ''}
+        title="Encuadrar imagen"
+        description={
+          cropQueue.length > 1
+            ? `Imagen 1 de ${cropQueue.length}. Arrastra para moverla y ajusta el zoom.`
+            : 'Arrastra para mover la imagen y ajusta el zoom. Se guardará en formato 4:3.'
+        }
+        onClose={() => setCropQueue([])}
+        onApply={handleCropApply}
+      />
     </div>
   )
 }

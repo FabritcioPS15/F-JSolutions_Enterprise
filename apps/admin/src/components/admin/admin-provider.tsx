@@ -40,6 +40,7 @@ type AdminContextValue = {
   activity: ActivityEntry[]
   createProduct: (input: ProductInput) => AdminProduct
   updateProduct: (id: string, input: ProductInput) => void
+  unlinkProductTaxonomy: (id: string, level: 'category' | 'subcategory' | 'type') => boolean
   deleteProduct: (id: string) => void
   duplicateProduct: (id: string) => AdminProduct | null
   toggleProductStatus: (id: string) => void
@@ -381,6 +382,43 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         ]
       )
     )
+  }
+
+  function unlinkProductTaxonomy(id: string, level: 'category' | 'subcategory' | 'type') {
+    const current = data.products.find((product) => product.id === id)
+    if (!current) return false
+    if (level === 'category' && !current.category) return false
+    if (level === 'subcategory' && !current.subcategory) return false
+    if (level === 'type' && !current.subSubcategory) return false
+
+    const detail =
+      level === 'category'
+        ? `Desvinculado de la categoría “${current.category}”`
+        : level === 'subcategory'
+          ? `Desvinculado de la subcategoría “${current.subcategory ?? ''}”`
+          : `Desvinculado del tipo “${current.subSubcategory ?? ''}”`
+
+    const patch =
+      level === 'category'
+        ? { category: '', subcategory: undefined, subSubcategory: undefined }
+        : level === 'subcategory'
+          ? { subcategory: undefined, subSubcategory: undefined }
+          : { subSubcategory: undefined }
+
+    setData((prev) =>
+      appendActivity(
+        {
+          ...prev,
+          products: prev.products.map((product) =>
+            product.id === id
+              ? { ...product, ...patch, updatedAt: new Date().toISOString() }
+              : product
+          ),
+        },
+        [createActivity('updated', current.name, { productId: id, detail })]
+      )
+    )
+    return true
   }
 
   function deleteProduct(id: string) {
@@ -945,6 +983,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         activity: data.activity,
         createProduct,
         updateProduct,
+        unlinkProductTaxonomy,
         deleteProduct,
         duplicateProduct,
         toggleProductStatus,

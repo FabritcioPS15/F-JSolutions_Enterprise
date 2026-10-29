@@ -109,6 +109,7 @@ export function StatCard({
 }
 
 export function SectionCard({
+  id,
   title,
   description,
   icon: Icon,
@@ -117,6 +118,7 @@ export function SectionCard({
   className,
   bodyClassName,
 }: {
+  id?: string
   title: string
   description?: string
   icon?: LucideIcon
@@ -127,8 +129,9 @@ export function SectionCard({
 }) {
   return (
     <section
+      id={id}
       className={cn(
-        'overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xs',
+        'scroll-mt-32 overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xs',
         className
       )}
     >

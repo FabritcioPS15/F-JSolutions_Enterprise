@@ -20,7 +20,7 @@ export function Modal({
   description?: string
   children: ReactNode
   footer?: ReactNode
-  size?: 'sm' | 'md' | 'lg'
+  size?: 'sm' | 'md' | 'lg' | 'xl'
 }) {
   const panelRef = useRef<HTMLDivElement>(null)
 
@@ -93,7 +93,8 @@ export function Modal({
           'relative flex max-h-[92vh] w-full flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl ring-1 ring-slate-900/5 animate-in slide-in-from-bottom-4 fade-in-0 duration-200 sm:rounded-2xl sm:zoom-in-95',
           size === 'sm' && 'sm:max-w-md',
           size === 'md' && 'sm:max-w-lg',
-          size === 'lg' && 'sm:max-w-2xl'
+          size === 'lg' && 'sm:max-w-2xl',
+          size === 'xl' && 'sm:max-w-4xl'
         )}
       >
         <div className="flex items-start justify-between gap-4 border-b border-slate-100 px-6 py-5">

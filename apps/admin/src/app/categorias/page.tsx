@@ -1,8 +1,10 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
+import Link from 'next/link'
 import {
   ChevronDown,
+  ChevronRight,
   FolderTree,
   Layers,
   Package,
@@ -11,18 +13,21 @@ import {
   Search,
   Tag,
   Trash2,
+  Unlink,
   X,
 } from 'lucide-react'
 import { useAdmin } from '@/components/admin/admin-provider'
 import { CategoryGlyph } from '@/components/admin/category-icon'
 import { ConfirmDialog } from '@/components/admin/confirm-dialog'
 import { Modal } from '@/components/admin/modal'
+import { ProductThumb } from '@/components/admin/product-thumb'
 import { useToast } from '@/components/admin/toast'
 import {
   EmptyState,
   Field,
   PageHeader,
   Select,
+  StatusBadge,
   btnPrimary,
   btnSecondary,
   iconButton,
@@ -30,7 +35,7 @@ import {
   textareaClass,
 } from '@/components/admin/ui'
 import { formatNumber, slugify } from '@/lib/admin/format'
-import type { Category, CategoryStatus } from '@/lib/admin/types'
+import type { AdminProduct, Category, CategoryStatus } from '@/lib/admin/types'
 import { cn } from '@/lib/utils'
 
 type NodeKind = 'category' | 'subcategory' | 'type'
@@ -56,6 +61,15 @@ type DeleteTarget = {
   categoryId: string
   subcategoryId?: string
   subSubcategoryId?: string
+}
+
+type LinkedTarget = {
+  kind: NodeKind
+  label: string
+  path: string
+  category: string
+  subcategory?: string
+  type?: string
 }
 
 type CategoryDraft = {
@@ -84,6 +98,18 @@ const kindLabels: Record<NodeKind, string> = {
   type: 'tipo',
 }
 
+const levelBadgeLabels: Record<NodeKind, string> = {
+  category: 'Categoría',
+  subcategory: 'Subcategoría',
+  type: 'Tipo',
+}
+
+const levelStyles: Record<NodeKind, string> = {
+  category: 'bg-slate-100 text-slate-600 ring-slate-500/15',
+  subcategory: 'bg-blue-50 text-blue-700 ring-blue-600/15',
+  type: 'bg-teal-50 text-teal-700 ring-teal-600/15',
+}
+
 const addPlaceholders: Record<NodeKind, string> = {
   category: 'Ej. Cámaras de seguridad',
   subcategory: 'Ej. Winsurf',
@@ -92,6 +118,16 @@ const addPlaceholders: Record<NodeKind, string> = {
 
 function plural(count: number, singular: string, pluralForm: string) {
   return `${count} ${count === 1 ? singular : pluralForm}`
+}
+
+function unlinkHint(target: LinkedTarget) {
+  if (target.kind === 'category') {
+    return 'Se quitará la categoría junto con su subcategoría y tipo. El producto quedará sin clasificar.'
+  }
+  if (target.kind === 'subcategory') {
+    return `Se quitará la subcategoría “${target.label}” y su tipo. El producto seguirá en “${target.category}”.`
+  }
+  return `Se quitará el tipo “${target.label}”. El producto seguirá en “${target.subcategory}”.`
 }
 
 export default function CategoriasPage() {
@@ -109,12 +145,14 @@ export default function CategoriasPage() {
     addSubSubcategory,
     renameSubSubcategory,
     removeSubSubcategory,
+    unlinkProductTaxonomy,
   } = useAdmin()
   const toast = useToast()
 
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState<'all' | CategoryStatus>('all')
   const [expanded, setExpanded] = useState<string[]>([])
+  const [expandedSubcategories, setExpandedSubcategories] = useState<string[]>([])
   const [addTarget, setAddTarget] = useState<AddTarget | null>(null)
   const [name, setName] = useState('')
   const [editTarget, setEditTarget] = useState<EditTarget | null>(null)
@@ -122,6 +160,8 @@ export default function CategoriasPage() {
   const [metaTarget, setMetaTarget] = useState<Category | null>(null)
   const [metaDraft, setMetaDraft] = useState<CategoryDraft | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<DeleteTarget | null>(null)
+  const [linkedTarget, setLinkedTarget] = useState<LinkedTarget | null>(null)
+  const [unlinkTargetId, setUnlinkTargetId] = useState<string | null>(null)
   const initialized = useRef(false)
 
   useEffect(() => {
@@ -169,6 +209,19 @@ export default function CategoriasPage() {
 
   const searching = search.trim().length > 0 || statusFilter !== 'all'
 
+  const linkedProducts = useMemo(() => {
+    if (!linkedTarget) return []
+    return products
+      .filter(
+        (product) =>
+          product.category === linkedTarget.category &&
+          (linkedTarget.subcategory === undefined ||
+            product.subcategory === linkedTarget.subcategory) &&
+          (linkedTarget.type === undefined || product.subSubcategory === linkedTarget.type)
+      )
+      .sort((a, b) => a.name.localeCompare(b.name))
+  }, [linkedTarget, products])
+
   const activeCategories = categories.filter((category) => category.status === 'active').length
   const inactiveCategories = categories.length - activeCategories
 
@@ -185,6 +238,37 @@ export default function CategoriasPage() {
     setExpanded((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     )
+  }
+
+  function toggleSubcategoryTypes(categoryId: string, subcategoryId: string) {
+    const key = `${categoryId}:${subcategoryId}`
+    setExpandedSubcategories((prev) =>
+      prev.includes(key) ? prev.filter((item) => item !== key) : [...prev, key]
+    )
+  }
+
+  function openLinked(target: LinkedTarget) {
+    setUnlinkTargetId(null)
+    setLinkedTarget(target)
+  }
+
+  function closeLinked() {
+    setUnlinkTargetId(null)
+    setLinkedTarget(null)
+  }
+
+  function handleUnlink(product: AdminProduct) {
+    if (!linkedTarget) return
+    const removed = unlinkProductTaxonomy(product.id, linkedTarget.kind)
+    if (!removed) {
+      toast.error('No se pudo desvincular', 'El producto ya no tiene esa clasificación.')
+      return
+    }
+    toast.success(
+      'Producto desvinculado',
+      `${product.name} · ${levelBadgeLabels[linkedTarget.kind]}`
+    )
+    setUnlinkTargetId(null)
   }
 
   function openAdd(target: AddTarget) {
@@ -255,6 +339,11 @@ export default function CategoriasPage() {
       setExpanded((prev) =>
         prev.includes(addTarget.categoryId) ? prev : [...prev, addTarget.categoryId]
       )
+    }
+
+    if (addTarget.kind === 'type') {
+      const key = `${addTarget.categoryId}:${addTarget.subcategoryId}`
+      setExpandedSubcategories((prev) => (prev.includes(key) ? prev : [...prev, key]))
     }
 
     toast.success('Elemento creado', clean)
@@ -470,16 +559,37 @@ export default function CategoriasPage() {
             return (
               <section
                 key={category.id}
-                className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xs"
+                className={cn(
+                  'relative overflow-hidden rounded-2xl border bg-white shadow-xs transition-colors',
+                  isOpen ? 'border-slate-300' : 'border-slate-200/80'
+                )}
               >
-                <div className="flex items-center gap-2 px-3 py-3 sm:px-4">
+                {isOpen && (
+                  <span
+                    className="absolute inset-y-0 left-0 w-[3px] bg-slate-900"
+                    aria-hidden="true"
+                  />
+                )}
+                <div
+                  className={cn(
+                    'flex items-center gap-2 px-3 py-3 transition-colors sm:px-4',
+                    isOpen && 'bg-slate-50/70'
+                  )}
+                >
                   <button
                     type="button"
                     onClick={() => toggleExpanded(category.id)}
                     className="flex min-w-0 flex-1 items-center gap-3 text-left"
                     aria-expanded={isOpen}
                   >
-                    <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-slate-50 text-slate-500 ring-1 ring-slate-200/70">
+                    <span
+                      className={cn(
+                        'grid size-10 shrink-0 place-items-center rounded-xl ring-1 transition-colors',
+                        isOpen
+                          ? 'bg-slate-900 text-white ring-slate-900'
+                          : 'bg-slate-50 text-slate-500 ring-slate-200/70'
+                      )}
+                    >
                       <CategoryGlyph label={category.label} />
                     </span>
                     <span className="min-w-0 flex-1">
@@ -566,7 +676,10 @@ export default function CategoriasPage() {
                     <button
                       type="button"
                       onClick={() => toggleExpanded(category.id)}
-                      className={iconButton}
+                      className={cn(
+                        iconButton,
+                        isOpen && 'bg-slate-100 text-slate-900 hover:bg-slate-200'
+                      )}
                       aria-label={isOpen ? 'Contraer categoría' : 'Expandir categoría'}
                       aria-expanded={isOpen}
                     >
@@ -579,6 +692,37 @@ export default function CategoriasPage() {
 
                 {isOpen && (
                   <div className="border-t border-slate-100 bg-slate-50/60 p-3 sm:p-4">
+                    <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <span className="inline-flex items-center gap-1 rounded-md bg-blue-50 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-blue-700 ring-1 ring-inset ring-blue-600/15">
+                          <Layers className="size-2.5" aria-hidden="true" />
+                          Subcategorías
+                        </span>
+                        <span className="text-[10.5px] text-slate-500">
+                          {plural(subcategoryCount, 'subcategoría', 'subcategorías')}
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          openLinked({
+                            kind: 'category',
+                            label: category.label,
+                            path: category.label,
+                            category: category.label,
+                          })
+                        }
+                        className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-[10.5px] font-semibold text-slate-600 transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900"
+                        title={`Ver productos vinculados a ${category.label}`}
+                      >
+                        <Package className="size-3.5" aria-hidden="true" />
+                        {count === 0
+                          ? 'Sin productos vinculados'
+                          : `Ver ${plural(count, 'producto vinculado', 'productos vinculados')}`}
+                        <ChevronRight className="size-3" aria-hidden="true" />
+                      </button>
+                    </div>
+
                     {category.subcategories.length === 0 ? (
                       <div className="rounded-xl border border-dashed border-slate-300 bg-white/70 px-4 py-6 text-center">
                         <p className="text-[11px] font-semibold text-slate-600">
@@ -616,144 +760,239 @@ export default function CategoriasPage() {
                           )
                           .map((sub) => {
                             const subCount = productCount(category.label, sub.label)
+                            const subTaxonomyKey = `${category.id}:${sub.id}`
+                            const searchTerm = search.trim().toLowerCase()
+                            const typesOpen =
+                              expandedSubcategories.includes(subTaxonomyKey) ||
+                              (searchTerm.length > 0 &&
+                                sub.subSubcategories.some((type) =>
+                                  type.label.toLowerCase().includes(searchTerm)
+                                ))
                             return (
                               <div
                                 key={sub.id}
-                                className="relative rounded-xl border border-slate-200 bg-white p-3 pl-4"
+                                className="relative overflow-hidden rounded-xl border border-blue-100 bg-white p-3 pl-4 shadow-xs"
                               >
                                 <span
-                                  className="absolute inset-y-3 left-0 w-0.5 rounded-full bg-slate-200"
+                                  className="absolute inset-y-3 left-0 w-[3px] rounded-full bg-blue-500"
                                   aria-hidden="true"
                                 />
-                                <div className="flex items-center gap-2">
+                                <div className="flex flex-wrap items-start gap-2">
                                   <div className="min-w-0 flex-1">
-                                    <div className="flex flex-wrap items-center gap-x-1.5">
-                                      <p className="truncate text-[11.5px] font-semibold text-slate-800">
+                                    <div className="flex flex-wrap items-center gap-2">
+                                      <span className="inline-flex items-center gap-1 rounded-md bg-blue-50 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-blue-700 ring-1 ring-inset ring-blue-600/15">
+                                        <Layers className="size-2.5" aria-hidden="true" />
+                                        Subcategoría
+                                      </span>
+                                      <p className="truncate text-[12px] font-semibold text-slate-900">
                                         {sub.label}
                                       </p>
-                                      <span className="text-[10px] text-slate-400">
-                                        {plural(subCount, 'producto', 'productos')}
-                                      </span>
                                     </div>
-                                    <p className="mt-0.5 text-[10px] text-slate-400">
-                                      {plural(sub.subSubcategories.length, 'tipo', 'tipos')}
-                                    </p>
+                                    <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          openLinked({
+                                            kind: 'subcategory',
+                                            label: sub.label,
+                                            path: `${category.label} › ${sub.label}`,
+                                            category: category.label,
+                                            subcategory: sub.label,
+                                          })
+                                        }
+                                        className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-semibold text-blue-700 transition hover:bg-blue-100 hover:text-blue-800"
+                                        title={`Ver productos vinculados a ${sub.label}`}
+                                      >
+                                        <Package className="size-3" aria-hidden="true" />
+                                        {plural(subCount, 'producto', 'productos')}
+                                        <ChevronRight className="size-3" aria-hidden="true" />
+                                      </button>
+                                      {sub.subSubcategories.length === 0 ? (
+                                        <span className="text-[10px] text-slate-400">Sin tipos</span>
+                                      ) : (
+                                        <button
+                                          type="button"
+                                          onClick={() =>
+                                            toggleSubcategoryTypes(category.id, sub.id)
+                                          }
+                                          className={cn(
+                                            'inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10px] font-medium transition',
+                                            typesOpen
+                                              ? 'bg-teal-50 text-teal-700'
+                                              : 'text-teal-600 hover:bg-teal-50'
+                                          )}
+                                          aria-expanded={typesOpen}
+                                          title={typesOpen ? 'Ocultar tipos' : 'Mostrar tipos'}
+                                        >
+                                          <Tag className="size-3" aria-hidden="true" />
+                                          {plural(sub.subSubcategories.length, 'tipo', 'tipos')}
+                                          <ChevronDown
+                                            className={cn(
+                                              'size-3 transition-transform',
+                                              typesOpen && 'rotate-180'
+                                            )}
+                                          />
+                                        </button>
+                                      )}
+                                    </div>
                                   </div>
-                                  <button
-                                    type="button"
-                                    onClick={() =>
-                                      openAdd({
-                                        kind: 'type',
-                                        categoryId: category.id,
-                                        categoryLabel: category.label,
-                                        subcategoryId: sub.id,
-                                        subcategoryLabel: sub.label,
-                                      })
-                                    }
-                                    className="inline-flex h-7 items-center gap-1 rounded-lg px-2 text-[10.5px] font-semibold text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
-                                  >
-                                    <Plus className="size-3" aria-hidden="true" />
-                                    Tipo
-                                  </button>
-                                  <button
-                                    type="button"
-                                    onClick={() =>
-                                      openEdit({
-                                        kind: 'subcategory',
-                                        id: sub.id,
-                                        label: sub.label,
-                                        categoryId: category.id,
-                                        categoryLabel: category.label,
-                                        subcategoryId: sub.id,
-                                        subcategoryLabel: sub.label,
-                                      })
-                                    }
-                                    className="grid size-7 place-items-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
-                                    title="Renombrar subcategoría"
-                                    aria-label={`Renombrar subcategoría ${sub.label}`}
-                                  >
-                                    <Pencil className="size-3" />
-                                  </button>
-                                  <button
-                                    type="button"
-                                    onClick={() =>
-                                      setDeleteTarget({
-                                        kind: 'subcategory',
-                                        label: sub.label,
-                                        categoryId: category.id,
-                                        subcategoryId: sub.id,
-                                      })
-                                    }
-                                    disabled={subCount > 0}
-                                    className="grid size-7 place-items-center rounded-lg text-slate-400 transition hover:bg-red-50 hover:text-red-600 disabled:opacity-30"
-                                    title={
-                                      subCount > 0
-                                        ? `No se puede eliminar: tiene ${plural(subCount, 'producto', 'productos')}`
-                                        : 'Eliminar subcategoría'
-                                    }
-                                    aria-label={`Eliminar subcategoría ${sub.label}`}
-                                  >
-                                    <Trash2 className="size-3.5" />
-                                  </button>
+                                  <div className="flex shrink-0 items-center gap-0.5">
+                                    <button
+                                      type="button"
+                                      onClick={() =>
+                                        openAdd({
+                                          kind: 'type',
+                                          categoryId: category.id,
+                                          categoryLabel: category.label,
+                                          subcategoryId: sub.id,
+                                          subcategoryLabel: sub.label,
+                                        })
+                                      }
+                                      className="inline-flex h-7 items-center gap-1 rounded-lg px-2 text-[10.5px] font-semibold text-teal-600 transition hover:bg-teal-50 hover:text-teal-800"
+                                      title="Añadir tipo"
+                                      aria-label={`Añadir tipo a ${sub.label}`}
+                                    >
+                                      <Plus className="size-3" aria-hidden="true" />
+                                      Tipo
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() =>
+                                        openEdit({
+                                          kind: 'subcategory',
+                                          id: sub.id,
+                                          label: sub.label,
+                                          categoryId: category.id,
+                                          categoryLabel: category.label,
+                                          subcategoryId: sub.id,
+                                          subcategoryLabel: sub.label,
+                                        })
+                                      }
+                                      className="grid size-7 place-items-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+                                      title="Renombrar subcategoría"
+                                      aria-label={`Renombrar subcategoría ${sub.label}`}
+                                    >
+                                      <Pencil className="size-3" />
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() =>
+                                        setDeleteTarget({
+                                          kind: 'subcategory',
+                                          label: sub.label,
+                                          categoryId: category.id,
+                                          subcategoryId: sub.id,
+                                        })
+                                      }
+                                      disabled={subCount > 0}
+                                      className="grid size-7 place-items-center rounded-lg text-slate-400 transition hover:bg-red-50 hover:text-red-600 disabled:opacity-30"
+                                      title={
+                                        subCount > 0
+                                          ? `No se puede eliminar: tiene ${plural(subCount, 'producto', 'productos')}`
+                                          : 'Eliminar subcategoría'
+                                      }
+                                      aria-label={`Eliminar subcategoría ${sub.label}`}
+                                    >
+                                      <Trash2 className="size-3.5" />
+                                    </button>
+                                  </div>
                                 </div>
 
-                                {sub.subSubcategories.length > 0 && (
-                                  <div className="mt-2 flex flex-wrap gap-1.5 border-t border-slate-100 pt-2">
+                                {typesOpen && (
+                                  <div className="mt-2.5 space-y-1.5 border-t border-slate-100 pt-2.5">
                                     {sub.subSubcategories.map((type) => {
-                                      const typeCount = productCount(category.label, sub.label, type.label)
+                                      const typeCount = productCount(
+                                        category.label,
+                                        sub.label,
+                                        type.label
+                                      )
                                       return (
-                                        <span
+                                        <div
                                           key={type.id}
-                                          className="inline-flex items-center gap-1 rounded-md border border-slate-200 bg-slate-50 py-1 pl-2 pr-1 text-[10px] font-medium text-slate-600"
+                                          className="relative overflow-hidden rounded-lg border border-teal-100 bg-white p-2.5 pl-3.5"
                                         >
-                                          {type.label}
-                                          {typeCount > 0 && (
-                                            <span className="rounded-full bg-slate-200 px-1.5 text-[9px] font-bold text-slate-600">
-                                              {typeCount}
-                                            </span>
-                                          )}
-                                          <button
-                                            type="button"
-                                            onClick={() =>
-                                              openEdit({
-                                                kind: 'type',
-                                                id: type.id,
-                                                label: type.label,
-                                                categoryId: category.id,
-                                                categoryLabel: category.label,
-                                                subcategoryId: sub.id,
-                                                subcategoryLabel: sub.label,
-                                              })
-                                            }
-                                            className="rounded p-0.5 text-slate-400 transition hover:bg-white hover:text-slate-700"
-                                            title="Renombrar tipo"
-                                            aria-label={`Renombrar tipo ${type.label}`}
-                                          >
-                                            <Pencil className="size-3" />
-                                          </button>
-                                          <button
-                                            type="button"
-                                            onClick={() =>
-                                              setDeleteTarget({
-                                                kind: 'type',
-                                                label: type.label,
-                                                categoryId: category.id,
-                                                subcategoryId: sub.id,
-                                                subSubcategoryId: type.id,
-                                              })
-                                            }
-                                            disabled={typeCount > 0}
-                                            className="rounded p-0.5 text-slate-400 transition hover:bg-white hover:text-red-600 disabled:opacity-30"
-                                            title={
-                                              typeCount > 0
-                                                ? `No se puede eliminar: tiene ${plural(typeCount, 'producto', 'productos')}`
-                                                : 'Eliminar tipo'
-                                            }
-                                            aria-label={`Eliminar tipo ${type.label}`}
-                                          >
-                                            <X className="size-3" />
-                                          </button>
-                                        </span>
+                                          <span
+                                            className="absolute inset-y-2.5 left-0 w-[3px] rounded-full bg-teal-500"
+                                            aria-hidden="true"
+                                          />
+                                          <div className="flex flex-wrap items-start gap-2">
+                                            <div className="min-w-0 flex-1">
+                                              <div className="flex flex-wrap items-center gap-2">
+                                                <span className="inline-flex items-center gap-1 rounded-md bg-teal-50 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-teal-700 ring-1 ring-inset ring-teal-600/15">
+                                                  <Tag className="size-2.5" aria-hidden="true" />
+                                                  Tipo
+                                                </span>
+                                                <p className="truncate text-[11.5px] font-semibold text-slate-900">
+                                                  {type.label}
+                                                </p>
+                                              </div>
+                                              <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                                                <button
+                                                  type="button"
+                                                  onClick={() =>
+                                                    openLinked({
+                                                      kind: 'type',
+                                                      label: type.label,
+                                                      path: `${category.label} › ${sub.label} › ${type.label}`,
+                                                      category: category.label,
+                                                      subcategory: sub.label,
+                                                      type: type.label,
+                                                    })
+                                                  }
+                                                  className="inline-flex items-center gap-1 rounded-full bg-teal-50 px-2 py-0.5 text-[10px] font-semibold text-teal-700 transition hover:bg-teal-100 hover:text-teal-800"
+                                                  title={`Ver productos vinculados a ${type.label}`}
+                                                >
+                                                  <Package className="size-3" aria-hidden="true" />
+                                                  {plural(typeCount, 'producto', 'productos')}
+                                                  <ChevronRight className="size-3" aria-hidden="true" />
+                                                </button>
+                                              </div>
+                                            </div>
+                                            <div className="flex shrink-0 items-center gap-0.5">
+                                              <button
+                                                type="button"
+                                                onClick={() =>
+                                                  openEdit({
+                                                    kind: 'type',
+                                                    id: type.id,
+                                                    label: type.label,
+                                                    categoryId: category.id,
+                                                    categoryLabel: category.label,
+                                                    subcategoryId: sub.id,
+                                                    subcategoryLabel: sub.label,
+                                                  })
+                                                }
+                                                className="grid size-7 place-items-center rounded-lg text-slate-400 transition hover:bg-teal-50 hover:text-teal-700"
+                                                title="Renombrar tipo"
+                                                aria-label={`Renombrar tipo ${type.label}`}
+                                              >
+                                                <Pencil className="size-3" />
+                                              </button>
+                                              <button
+                                                type="button"
+                                                onClick={() =>
+                                                  setDeleteTarget({
+                                                    kind: 'type',
+                                                    label: type.label,
+                                                    categoryId: category.id,
+                                                    subcategoryId: sub.id,
+                                                    subSubcategoryId: type.id,
+                                                  })
+                                                }
+                                                disabled={typeCount > 0}
+                                                className="grid size-7 place-items-center rounded-lg text-slate-400 transition hover:bg-red-50 hover:text-red-600 disabled:opacity-30"
+                                                title={
+                                                  typeCount > 0
+                                                    ? `No se puede eliminar: tiene ${plural(typeCount, 'producto', 'productos')}`
+                                                    : 'Eliminar tipo'
+                                                }
+                                                aria-label={`Eliminar tipo ${type.label}`}
+                                              >
+                                                <Trash2 className="size-3.5" />
+                                              </button>
+                                            </div>
+                                          </div>
+                                        </div>
                                       )
                                     })}
                                   </div>
@@ -988,6 +1227,132 @@ export default function CategoriasPage() {
                 inputMode="numeric"
               />
             </Field>
+          </div>
+        )}
+      </Modal>
+
+      <Modal
+        open={Boolean(linkedTarget)}
+        onClose={closeLinked}
+        title={linkedTarget ? `Productos en ${linkedTarget.label}` : 'Productos vinculados'}
+        description="Productos que usan esta rama de la taxonomía en su clasificación."
+        size="lg"
+        footer={
+          <button type="button" className={btnSecondary} onClick={closeLinked}>
+            Cerrar
+          </button>
+        }
+      >
+        {linkedTarget && (
+          <div className="space-y-3">
+            <div className="flex flex-wrap items-center gap-2 rounded-xl border border-slate-200/80 bg-slate-50 px-3 py-2">
+              <span
+                className={cn(
+                  'inline-flex items-center rounded-md px-2 py-0.5 text-[9.5px] font-bold uppercase tracking-wide ring-1 ring-inset',
+                  levelStyles[linkedTarget.kind]
+                )}
+              >
+                {levelBadgeLabels[linkedTarget.kind]}
+              </span>
+              <span className="min-w-0 flex-1 truncate font-mono text-[10.5px] text-slate-500">
+                {linkedTarget.path}
+              </span>
+              <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-semibold text-slate-600 ring-1 ring-inset ring-slate-200">
+                {plural(linkedProducts.length, 'producto', 'productos')}
+              </span>
+            </div>
+
+            {linkedProducts.length === 0 ? (
+              <EmptyState
+                icon={Package}
+                title="Sin productos vinculados"
+                description={`Ningún producto usa esta ${kindLabels[linkedTarget.kind]} en su clasificación actual.`}
+                action={
+                  <Link
+                    href="/productos/nuevo"
+                    className={btnPrimary}
+                    onClick={closeLinked}
+                  >
+                    <Plus className="size-4" aria-hidden="true" />
+                    Crear producto
+                  </Link>
+                }
+              />
+            ) : (
+              <ul className="max-h-[52vh] space-y-1.5 overflow-y-auto pr-0.5">
+                {linkedProducts.map((product) => (
+                  <li
+                    key={product.id}
+                    className="overflow-hidden rounded-xl border border-slate-200/80 bg-white transition hover:border-slate-300"
+                  >
+                    <div className="flex items-center gap-1.5 p-1.5 pl-2.5">
+                      <Link
+                        href={`/productos/${product.id}`}
+                        onClick={closeLinked}
+                        className="group flex min-w-0 flex-1 items-center gap-3 rounded-lg p-1"
+                      >
+                        <ProductThumb
+                          src={product.image}
+                          alt={product.name}
+                          className="size-11 shrink-0"
+                        />
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate text-[12px] font-semibold text-slate-900">
+                            {product.name}
+                          </p>
+                          <p className="mt-0.5 truncate text-[10px] text-slate-400">
+                            {product.sku}
+                            {product.subcategory ? ` · ${product.subcategory}` : ''}
+                            {product.subSubcategory ? ` › ${product.subSubcategory}` : ''}
+                          </p>
+                        </div>
+                        <span className="hidden shrink-0 sm:inline-flex">
+                          <StatusBadge status={product.status} />
+                        </span>
+                        <ChevronRight
+                          className="size-4 shrink-0 text-slate-300 transition group-hover:text-slate-500"
+                          aria-hidden="true"
+                        />
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => setUnlinkTargetId(product.id)}
+                        className="inline-flex h-8 shrink-0 items-center gap-1 rounded-lg px-2 text-[10.5px] font-semibold text-slate-400 transition hover:bg-red-50 hover:text-red-600"
+                        title={`Desvincular de ${kindLabels[linkedTarget.kind]}`}
+                        aria-label={`Desvincular ${product.name} de ${kindLabels[linkedTarget.kind]}`}
+                      >
+                        <Unlink className="size-3.5" aria-hidden="true" />
+                        <span className="hidden sm:inline">Desvincular</span>
+                      </button>
+                    </div>
+                    {unlinkTargetId === product.id && (
+                      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 bg-slate-50/80 px-3 py-2">
+                        <p className="text-[10.5px] leading-relaxed text-slate-600">
+                          {unlinkHint(linkedTarget)}
+                        </p>
+                        <div className="flex shrink-0 gap-1.5">
+                          <button
+                            type="button"
+                            onClick={() => setUnlinkTargetId(null)}
+                            className={cn(btnSecondary, 'h-7 px-2.5 text-[10.5px]')}
+                          >
+                            Cancelar
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleUnlink(product)}
+                            className="inline-flex h-7 items-center gap-1 rounded-lg bg-red-600 px-2.5 text-[10.5px] font-semibold text-white transition hover:bg-red-700"
+                          >
+                            <Unlink className="size-3" aria-hidden="true" />
+                            Desvincular
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         )}
       </Modal>
