@@ -4,12 +4,14 @@ import { useMemo, useState } from 'react'
 import {
   BadgeCheck,
   Building2,
+  ImagePlus,
   Package,
   Pencil,
   Plus,
   Search,
   Tag,
   Trash2,
+  Upload,
   X,
 } from 'lucide-react'
 import { useAdmin } from '@/components/admin/admin-provider'
@@ -43,6 +45,53 @@ type BrandDraft = {
 
 type EditTarget = { mode: 'create' } | { mode: 'edit'; id: string }
 
+const MAX_LOGO_BYTES = 5_000_000
+const MAX_LOGO_SIDE = 512
+
+function readFileAsDataUrl(file: File): Promise<string | null> {
+  return new Promise((resolve) => {
+    const reader = new FileReader()
+    reader.onload = () => resolve(String(reader.result))
+    reader.onerror = () => resolve(null)
+    reader.readAsDataURL(file)
+  })
+}
+
+function resizeLogo(source: string): Promise<string> {
+  return new Promise((resolve) => {
+    const image = new Image()
+    image.onload = () => {
+      const largest = Math.max(image.naturalWidth, image.naturalHeight)
+      if (!largest) {
+        resolve(source)
+        return
+      }
+      const scale = Math.min(1, MAX_LOGO_SIDE / largest)
+      const canvas = document.createElement('canvas')
+      canvas.width = Math.max(1, Math.round(image.naturalWidth * scale))
+      canvas.height = Math.max(1, Math.round(image.naturalHeight * scale))
+      const context = canvas.getContext('2d')
+      if (!context) {
+        resolve(source)
+        return
+      }
+      context.imageSmoothingEnabled = true
+      context.imageSmoothingQuality = 'high'
+      context.drawImage(image, 0, 0, canvas.width, canvas.height)
+      let dataUrl = canvas.toDataURL('image/webp', 0.92)
+      if (!dataUrl.startsWith('data:image/webp')) {
+        dataUrl = canvas.toDataURL('image/png')
+      }
+      if (dataUrl.length > 700_000) {
+        dataUrl = canvas.toDataURL('image/webp', 0.72)
+      }
+      resolve(dataUrl)
+    }
+    image.onerror = () => resolve(source)
+    image.src = source
+  })
+}
+
 function toDraft(brand?: Brand): BrandDraft {
   return {
     name: brand?.name ?? '',
@@ -63,6 +112,7 @@ export default function MarcasPage() {
   const [target, setTarget] = useState<EditTarget | null>(null)
   const [draft, setDraft] = useState<BrandDraft>(() => toDraft())
   const [slugTouched, setSlugTouched] = useState(false)
+  const [logoDragging, setLogoDragging] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState<Brand | null>(null)
 
   const brandStats = useMemo(() => {
@@ -123,6 +173,30 @@ export default function MarcasPage() {
       if (key === 'name' && !slugTouched) next.slug = slugify(String(value))
       return next
     })
+  }
+
+  async function applyLogoFile(file: File) {
+    if (!file.type.startsWith('image/')) {
+      toast.error('Archivo no compatible', 'Selecciona una imagen PNG, JPG, WebP o SVG.')
+      return
+    }
+    if (file.size > MAX_LOGO_BYTES) {
+      toast.error('Archivo demasiado pesado', 'El logo supera 5 MB. Usa una imagen más ligera.')
+      return
+    }
+    const source = await readFileAsDataUrl(file)
+    if (!source) {
+      toast.error('No se pudo leer la imagen', 'Intenta con otro archivo.')
+      return
+    }
+    updateDraft('logo', await resizeLogo(source))
+  }
+
+  function handleLogoDrop(event: React.DragEvent<HTMLDivElement>) {
+    event.preventDefault()
+    setLogoDragging(false)
+    const file = event.dataTransfer.files[0]
+    if (file) void applyLogoFile(file)
   }
 
   function handleSave() {
@@ -430,19 +504,90 @@ export default function MarcasPage() {
           </Field>
 
           <Field
-            label="Logo (URL)"
+            label="Logo"
             htmlFor="brand-logo"
-            hint="Opcional. URL pública de una imagen."
             className="sm:col-span-2"
           >
-            <input
-              id="brand-logo"
-              value={draft.logo}
-              onChange={(event) => updateDraft('logo', event.target.value)}
-              className={inputClass}
-              placeholder="https://…/logo.png"
-              inputMode="url"
-            />
+            <div className="flex items-start gap-3">
+              <div
+                onDragOver={(event) => {
+                  event.preventDefault()
+                  setLogoDragging(true)
+                }}
+                onDragLeave={(event) => {
+                  if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+                    setLogoDragging(false)
+                  }
+                }}
+                onDrop={handleLogoDrop}
+                className={cn(
+                  'grid size-16 shrink-0 place-items-center overflow-hidden rounded-xl border-2 border-dashed transition',
+                  logoDragging
+                    ? 'border-blue-400 bg-blue-50/60'
+                    : draft.logo
+                      ? 'border-transparent bg-white ring-1 ring-inset ring-slate-200'
+                      : 'border-slate-200 bg-slate-50/60'
+                )}
+                title="Arrastra un logo aquí"
+              >
+                {draft.logo ? (
+                  <ProductThumb
+                    src={draft.logo}
+                    alt={`Logo de ${draft.name || 'la marca'}`}
+                    className="size-full rounded-none ring-0"
+                  />
+                ) : (
+                  <ImagePlus className="size-5 text-slate-400" aria-hidden="true" />
+                )}
+              </div>
+
+              <div className="min-w-0 flex-1 space-y-2">
+                <div className="flex flex-wrap items-center gap-2">
+                  <label className={cn(btnSecondary, 'h-9 cursor-pointer px-3 text-xs')}>
+                    <Upload className="size-3.5" aria-hidden="true" />
+                    {draft.logo ? 'Reemplazar' : 'Subir imagen'}
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="sr-only"
+                      onChange={(event) => {
+                        const file = event.target.files?.[0]
+                        event.currentTarget.value = ''
+                        if (file) void applyLogoFile(file)
+                      }}
+                    />
+                  </label>
+                  {draft.logo && (
+                    <button
+                      type="button"
+                      onClick={() => updateDraft('logo', '')}
+                      className="inline-flex h-9 items-center gap-1.5 rounded-xl px-2.5 text-xs font-semibold text-slate-500 transition hover:bg-red-50 hover:text-red-600"
+                    >
+                      <X className="size-3.5" aria-hidden="true" />
+                      Quitar
+                    </button>
+                  )}
+                  <span className="text-[10px] text-slate-400">o arrastra el archivo</span>
+                </div>
+
+                <input
+                  id="brand-logo"
+                  value={draft.logo.startsWith('data:') ? '' : draft.logo}
+                  onChange={(event) => updateDraft('logo', event.target.value)}
+                  className={cn(inputClass, 'text-xs')}
+                  placeholder="https://…/logo.png"
+                  inputMode="url"
+                />
+
+                <p className="text-[10px] leading-relaxed text-slate-400">
+                  {draft.logo.startsWith('data:')
+                    ? 'Archivo cargado desde tu equipo y optimizado a 512 px; se guarda en este navegador.'
+                    : draft.logo
+                      ? 'Logo enlazado por URL. Se usará tal cual, sin optimizar.'
+                      : 'Sube un archivo o pega la URL pública de un logo.'}
+                </p>
+              </div>
+            </div>
           </Field>
 
           <Field label="Estado" htmlFor="brand-status" hint="Inactiva no se ofrece en formularios nuevos.">

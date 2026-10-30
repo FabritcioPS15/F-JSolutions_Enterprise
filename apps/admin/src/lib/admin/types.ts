@@ -86,6 +86,85 @@ export type StoreSettings = {
   lowStockThreshold: number
 }
 
+export type ClientSegment = 'empresa' | 'persona'
+
+export type ClientStatus = 'active' | 'inactive'
+
+export type Client = {
+  id: string
+  name: string
+  company: string
+  documentType?: 'ruc' | 'dni'
+  documentNumber?: string
+  email: string
+  phone: string
+  city: string
+  address: string
+  segment: ClientSegment
+  status: ClientStatus
+  notes: string
+  createdAt: string
+  updatedAt: string
+}
+
+export type ClientInput = Omit<Client, 'id' | 'createdAt' | 'updatedAt'>
+
+export type QuoteStatus = 'draft' | 'sent' | 'answered' | 'closed'
+
+export type QuoteLine = {
+  id: string
+  productId?: string
+  name: string
+  sku?: string
+  quantity: number
+  unitPrice: number
+}
+
+export type Quote = {
+  id: string
+  code: string
+  clientId?: string
+  clientName: string
+  clientCompany: string
+  clientEmail: string
+  clientPhone: string
+  status: QuoteStatus
+  items: QuoteLine[]
+  notes: string
+  validUntil: string
+  createdAt: string
+  updatedAt: string
+}
+
+export type QuoteInput = Omit<Quote, 'id' | 'code' | 'createdAt' | 'updatedAt'>
+
+export type RequestStatus = 'new' | 'review' | 'attended' | 'discarded'
+
+export type RequestChannel = 'web' | 'email' | 'whatsapp' | 'phone'
+
+export type ServiceRequest = {
+  id: string
+  code: string
+  name: string
+  company: string
+  email: string
+  phone: string
+  topic: string
+  message: string
+  channel: RequestChannel
+  status: RequestStatus
+  clientId?: string
+  quoteId?: string
+  notes: string
+  createdAt: string
+  updatedAt: string
+}
+
+export type RequestInput = Omit<
+  ServiceRequest,
+  'id' | 'code' | 'createdAt' | 'updatedAt' | 'clientId' | 'quoteId'
+>
+
 export type ActivityType =
   | 'created'
   | 'updated'
@@ -109,6 +188,9 @@ export type AdminData = {
   products: AdminProduct[]
   categories: Category[]
   brands: Brand[]
+  clients: Client[]
+  quotes: Quote[]
+  requests: ServiceRequest[]
   settings: StoreSettings
   activity: ActivityEntry[]
 }

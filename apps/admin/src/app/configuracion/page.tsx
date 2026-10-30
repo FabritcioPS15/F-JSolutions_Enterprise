@@ -60,6 +60,9 @@ export default function ConfiguracionPage() {
     products,
     categories,
     brands,
+    clients,
+    quotes,
+    requests,
     settings,
     updateSettings,
     exportData,
@@ -85,8 +88,17 @@ export default function ConfiguracionPage() {
   )
 
   const usageKb = useMemo(
-    () => storageSizeInKb({ products, categories, brands, settings }),
-    [products, categories, brands, settings]
+    () =>
+      storageSizeInKb({
+        products,
+        categories,
+        brands,
+        clients,
+        quotes,
+        requests,
+        settings,
+      }),
+    [products, categories, brands, clients, quotes, requests, settings]
   )
   const usagePercent = Math.min(100, Math.max(1, Math.round((usageKb / 5120) * 100)))
 
@@ -376,6 +388,9 @@ export default function ConfiguracionPage() {
                   { label: 'Productos', value: products.length },
                   { label: 'Categorías', value: categories.length },
                   { label: 'Marcas', value: brands.length },
+                  { label: 'Clientes', value: clients.length },
+                  { label: 'Cotizaciones', value: quotes.length },
+                  { label: 'Solicitudes', value: requests.length },
                 ].map((item) => (
                   <div key={item.label} className="rounded-xl bg-slate-50 px-2 py-2.5">
                     <dd className="font-heading text-sm font-bold text-slate-900">
@@ -488,7 +503,7 @@ export default function ConfiguracionPage() {
       <ConfirmDialog
         open={confirmReset}
         title="Restaurar catálogo demo"
-        description="Se eliminarán todos los productos, categorías y marcas actuales, y se cargarán nuevamente los datos de ejemplo. Esta acción no se puede deshacer."
+        description="Se eliminarán el catálogo, los clientes, las cotizaciones y las solicitudes actuales, y se cargarán nuevamente los datos de ejemplo. Esta acción no se puede deshacer."
         confirmLabel="Restaurar demo"
         onConfirm={handleReset}
         onClose={() => setConfirmReset(false)}

@@ -10,7 +10,9 @@ import {
   Copy,
   EyeOff,
   FileEdit,
+  FileText,
   FolderTree,
+  Inbox,
   Package,
   PackagePlus,
   Pencil,
@@ -18,6 +20,7 @@ import {
   Sparkles,
   Tags,
   Trash2,
+  Users,
   type LucideIcon,
 } from 'lucide-react'
 import { useAdmin } from '@/components/admin/admin-provider'
@@ -54,7 +57,7 @@ const activityMeta: Record<
 }
 
 export default function DashboardPage() {
-  const { products, categories, brands, settings, activity } = useAdmin()
+  const { products, categories, brands, clients, quotes, requests, settings, activity } = useAdmin()
 
   const published = products.filter((product) => product.status === 'active')
   const drafts = products.filter((product) => product.status === 'draft')
@@ -87,6 +90,11 @@ export default function DashboardPage() {
   const draftPct = publishedPct + (drafts.length / total) * 100
 
   const recent = activity.slice(0, 6)
+  const newRequests = requests.filter((request) => request.status === 'new').length
+  const openQuotes = quotes.filter(
+    (quote) => quote.status === 'draft' || quote.status === 'sent'
+  ).length
+  const activeClients = clients.filter((client) => client.status === 'active').length
 
   return (
     <div className="space-y-6">
@@ -264,6 +272,60 @@ export default function DashboardPage() {
             aria-hidden="true"
           />
         </a>
+      </div>
+
+      <div className="grid gap-3 sm:grid-cols-3">
+        {[
+          {
+            href: '/solicitudes',
+            label: 'Solicitudes nuevas',
+            value: newRequests,
+            hint: 'Consultas sin revisar en la bandeja',
+            icon: Inbox,
+          },
+          {
+            href: '/cotizaciones',
+            label: 'Cotizaciones abiertas',
+            value: openQuotes,
+            hint: 'Borradores y enviadas por responder',
+            icon: FileText,
+          },
+          {
+            href: '/clientes',
+            label: 'Clientes activos',
+            value: activeClients,
+            hint: 'Cuentas con actividad comercial',
+            icon: Users,
+          },
+        ].map((item) => {
+          const Icon = item.icon
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="group flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs transition hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md"
+            >
+              <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-slate-50 text-slate-500 ring-1 ring-slate-200/70">
+                <Icon className="size-[18px]" aria-hidden="true" />
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">
+                  {item.label}
+                </span>
+                <span className="mt-1 flex items-baseline gap-2">
+                  <span className="font-heading text-xl font-bold leading-none text-slate-900">
+                    {item.value}
+                  </span>
+                  <span className="truncate text-[10px] text-slate-400">{item.hint}</span>
+                </span>
+              </span>
+              <ArrowUpRight
+                className="size-4 shrink-0 text-slate-300 transition group-hover:text-slate-500"
+                aria-hidden="true"
+              />
+            </Link>
+          )
+        })}
       </div>
 
       <div className="grid gap-4 xl:grid-cols-3">

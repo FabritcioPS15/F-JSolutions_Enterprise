@@ -8,7 +8,7 @@ import {
   type ReactNode,
 } from 'react'
 import { createSeedData } from '@/lib/admin/seed'
-import { slugify, statusLabels } from '@/lib/admin/format'
+import { buildQuoteCode, buildRequestCode, slugify, statusLabels } from '@/lib/admin/format'
 import type {
   ActivityEntry,
   ActivityType,
@@ -16,8 +16,17 @@ import type {
   AdminProduct,
   Brand,
   Category,
+  Client,
+  ClientInput,
   ProductInput,
   ProductStatus,
+  Quote,
+  QuoteInput,
+  QuoteLine,
+  QuoteStatus,
+  RequestInput,
+  RequestStatus,
+  ServiceRequest,
   StoreSettings,
 } from '@/lib/admin/types'
 
@@ -31,11 +40,21 @@ export type BrandPatch = Partial<
   Pick<Brand, 'name' | 'slug' | 'description' | 'logo' | 'status' | 'order'>
 >
 
+export type RequestPatch = Partial<
+  Pick<
+    ServiceRequest,
+    'name' | 'company' | 'email' | 'phone' | 'topic' | 'message' | 'channel' | 'status' | 'notes'
+  >
+>
+
 type AdminContextValue = {
   hydrated: boolean
   products: AdminProduct[]
   categories: Category[]
   brands: Brand[]
+  clients: Client[]
+  quotes: Quote[]
+  requests: ServiceRequest[]
   settings: StoreSettings
   activity: ActivityEntry[]
   createProduct: (input: ProductInput) => AdminProduct
@@ -65,6 +84,18 @@ type AdminContextValue = {
   addBrand: (label: string, patch?: BrandPatch) => boolean
   updateBrand: (id: string, patch: BrandPatch) => boolean
   removeBrand: (id: string) => boolean
+  createClient: (input: ClientInput) => Client
+  updateClient: (id: string, input: ClientInput) => void
+  removeClient: (id: string) => void
+  createQuote: (input: QuoteInput) => Quote
+  updateQuote: (id: string, input: QuoteInput) => void
+  removeQuote: (id: string) => void
+  setQuoteStatus: (id: string, status: QuoteStatus) => void
+  createRequest: (input: RequestInput) => ServiceRequest
+  updateRequest: (id: string, patch: RequestPatch) => void
+  removeRequest: (id: string) => void
+  setRequestStatus: (id: string, status: RequestStatus) => void
+  convertRequestToQuote: (id: string) => Quote | null
   updateSettings: (settings: StoreSettings) => void
   resetData: () => void
   exportData: () => string
@@ -273,6 +304,89 @@ function normalizeBrand(raw: unknown, index = 0): Brand {
   }
 }
 
+function normalizeClient(raw: Record<string, unknown>): Client {
+  const name = String(raw.name ?? 'Cliente')
+  return {
+    id: String(raw.id ?? uid('cliente')),
+    name,
+    company: String(raw.company ?? ''),
+    documentType:
+      raw.documentType === 'dni' || raw.documentType === 'ruc' ? raw.documentType : undefined,
+    documentNumber: raw.documentNumber ? String(raw.documentNumber) : undefined,
+    email: String(raw.email ?? ''),
+    phone: String(raw.phone ?? ''),
+    city: String(raw.city ?? ''),
+    address: String(raw.address ?? ''),
+    segment: raw.segment === 'persona' ? 'persona' : 'empresa',
+    status: raw.status === 'inactive' ? 'inactive' : 'active',
+    notes: String(raw.notes ?? ''),
+    createdAt: String(raw.createdAt ?? new Date().toISOString()),
+    updatedAt: String(raw.updatedAt ?? new Date().toISOString()),
+  }
+}
+
+const quoteStatuses: QuoteStatus[] = ['draft', 'sent', 'answered', 'closed']
+
+function normalizeQuoteLine(raw: Record<string, unknown>): QuoteLine {
+  return {
+    id: String(raw.id ?? uid('linea')),
+    productId: raw.productId ? String(raw.productId) : undefined,
+    name: String(raw.name ?? 'Producto'),
+    sku: raw.sku ? String(raw.sku) : undefined,
+    quantity: Math.max(1, Math.trunc(Number(raw.quantity) || 1)),
+    unitPrice: Math.max(0, Number(raw.unitPrice) || 0),
+  }
+}
+
+function normalizeQuote(raw: Record<string, unknown>): Quote {
+  return {
+    id: String(raw.id ?? uid('cotizacion')),
+    code: String(raw.code ?? 'COT-SIN-CODIGO'),
+    clientId: raw.clientId ? String(raw.clientId) : undefined,
+    clientName: String(raw.clientName ?? 'Cliente'),
+    clientCompany: String(raw.clientCompany ?? ''),
+    clientEmail: String(raw.clientEmail ?? ''),
+    clientPhone: String(raw.clientPhone ?? ''),
+    status: quoteStatuses.includes(raw.status as QuoteStatus)
+      ? (raw.status as QuoteStatus)
+      : 'draft',
+    items: Array.isArray(raw.items)
+      ? (raw.items as Record<string, unknown>[]).map(normalizeQuoteLine)
+      : [],
+    notes: String(raw.notes ?? ''),
+    validUntil: String(raw.validUntil ?? ''),
+    createdAt: String(raw.createdAt ?? new Date().toISOString()),
+    updatedAt: String(raw.updatedAt ?? new Date().toISOString()),
+  }
+}
+
+const requestStatuses: RequestStatus[] = ['new', 'review', 'attended', 'discarded']
+
+function normalizeRequest(raw: Record<string, unknown>): ServiceRequest {
+  return {
+    id: String(raw.id ?? uid('solicitud')),
+    code: String(raw.code ?? 'SOL-SIN-CODIGO'),
+    name: String(raw.name ?? 'Contacto'),
+    company: String(raw.company ?? ''),
+    email: String(raw.email ?? ''),
+    phone: String(raw.phone ?? ''),
+    topic: String(raw.topic ?? 'Consulta'),
+    message: String(raw.message ?? ''),
+    channel:
+      raw.channel === 'email' || raw.channel === 'whatsapp' || raw.channel === 'phone'
+        ? raw.channel
+        : 'web',
+    status: requestStatuses.includes(raw.status as RequestStatus)
+      ? (raw.status as RequestStatus)
+      : 'new',
+    clientId: raw.clientId ? String(raw.clientId) : undefined,
+    quoteId: raw.quoteId ? String(raw.quoteId) : undefined,
+    notes: String(raw.notes ?? ''),
+    createdAt: String(raw.createdAt ?? new Date().toISOString()),
+    updatedAt: String(raw.updatedAt ?? new Date().toISOString()),
+  }
+}
+
 function parseData(raw: string): AdminData {
   const parsed = JSON.parse(raw) as unknown
   const record = parsed as { data?: unknown }
@@ -295,6 +409,15 @@ function parseData(raw: string): AdminData {
     brands: Array.isArray(payload.brands)
       ? (payload.brands as unknown[]).map((brand, index) => normalizeBrand(brand, index))
       : seed.brands,
+    clients: Array.isArray(payload.clients)
+      ? (payload.clients as Record<string, unknown>[]).map(normalizeClient)
+      : seed.clients,
+    quotes: Array.isArray(payload.quotes)
+      ? (payload.quotes as Record<string, unknown>[]).map(normalizeQuote)
+      : seed.quotes,
+    requests: Array.isArray(payload.requests)
+      ? (payload.requests as Record<string, unknown>[]).map(normalizeRequest)
+      : seed.requests,
     settings: {
       ...seed.settings,
       ...settings,
@@ -327,7 +450,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     try {
       window.localStorage.setItem(
         ADMIN_STORAGE_KEY,
-        JSON.stringify({ version: 2, data })
+        JSON.stringify({ version: 3, data })
       )
     } catch (error) {
       console.warn('No se pudo guardar el catálogo local.', error)
@@ -956,6 +1079,196 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     return true
   }
 
+  function createClient(input: ClientInput) {
+    const now = new Date().toISOString()
+    const client: Client = { ...input, id: uid('cliente'), createdAt: now, updatedAt: now }
+    setData((prev) => ({ ...prev, clients: [client, ...prev.clients] }))
+    return client
+  }
+
+  function updateClient(id: string, input: ClientInput) {
+    const now = new Date().toISOString()
+    setData((prev) => ({
+      ...prev,
+      clients: prev.clients.map((client) =>
+        client.id === id ? { ...client, ...input, updatedAt: now } : client
+      ),
+      quotes: prev.quotes.map((quote) =>
+        quote.clientId === id
+          ? {
+              ...quote,
+              clientName: input.name,
+              clientCompany: input.company,
+              clientEmail: input.email,
+              clientPhone: input.phone,
+            }
+          : quote
+      ),
+    }))
+  }
+
+  function removeClient(id: string) {
+    setData((prev) => ({
+      ...prev,
+      clients: prev.clients.filter((client) => client.id !== id),
+      quotes: prev.quotes.map((quote) =>
+        quote.clientId === id ? { ...quote, clientId: undefined } : quote
+      ),
+      requests: prev.requests.map((request) =>
+        request.clientId === id ? { ...request, clientId: undefined } : request
+      ),
+    }))
+  }
+
+  function nextQuoteCode(prev: AdminData) {
+    const taken = new Set(prev.quotes.map((quote) => quote.code))
+    let code = buildQuoteCode()
+    while (taken.has(code)) code = buildQuoteCode()
+    return code
+  }
+
+  function createQuote(input: QuoteInput) {
+    const now = new Date().toISOString()
+    const quote: Quote = {
+      ...input,
+      id: uid('cotizacion'),
+      code: nextQuoteCode(data),
+      createdAt: now,
+      updatedAt: now,
+    }
+    setData((prev) => ({ ...prev, quotes: [quote, ...prev.quotes] }))
+    return quote
+  }
+
+  function updateQuote(id: string, input: QuoteInput) {
+    setData((prev) => ({
+      ...prev,
+      quotes: prev.quotes.map((quote) =>
+        quote.id === id ? { ...quote, ...input, updatedAt: new Date().toISOString() } : quote
+      ),
+    }))
+  }
+
+  function setQuoteStatus(id: string, status: QuoteStatus) {
+    setData((prev) => ({
+      ...prev,
+      quotes: prev.quotes.map((quote) =>
+        quote.id === id ? { ...quote, status, updatedAt: new Date().toISOString() } : quote
+      ),
+    }))
+  }
+
+  function removeQuote(id: string) {
+    setData((prev) => ({
+      ...prev,
+      quotes: prev.quotes.filter((quote) => quote.id !== id),
+      requests: prev.requests.map((request) =>
+        request.quoteId === id ? { ...request, quoteId: undefined } : request
+      ),
+    }))
+  }
+
+  function createRequest(input: RequestInput) {
+    const now = new Date().toISOString()
+    const taken = new Set(data.requests.map((request) => request.code))
+    let code = buildRequestCode()
+    while (taken.has(code)) code = buildRequestCode()
+    const request: ServiceRequest = {
+      ...input,
+      id: uid('solicitud'),
+      code,
+      createdAt: now,
+      updatedAt: now,
+    }
+    setData((prev) => ({ ...prev, requests: [request, ...prev.requests] }))
+    return request
+  }
+
+  function updateRequest(id: string, patch: RequestPatch) {
+    setData((prev) => ({
+      ...prev,
+      requests: prev.requests.map((request) =>
+        request.id === id
+          ? { ...request, ...patch, updatedAt: new Date().toISOString() }
+          : request
+      ),
+    }))
+  }
+
+  function setRequestStatus(id: string, status: RequestStatus) {
+    updateRequest(id, { status })
+  }
+
+  function removeRequest(id: string) {
+    setData((prev) => ({
+      ...prev,
+      requests: prev.requests.filter((request) => request.id !== id),
+    }))
+  }
+
+  function convertRequestToQuote(id: string) {
+    const request = data.requests.find((item) => item.id === id)
+    if (!request) return null
+
+    if (request.quoteId) {
+      const existing = data.quotes.find((quote) => quote.id === request.quoteId)
+      if (existing) return existing
+    }
+
+    const now = new Date().toISOString()
+    const email = request.email.trim().toLowerCase()
+    const linked =
+      (email
+        ? data.clients.find((client) => client.email.trim().toLowerCase() === email)
+        : undefined) ?? null
+    const client: Client =
+      linked ?? {
+        id: uid('cliente'),
+        name: request.name,
+        company: request.company,
+        email: request.email,
+        phone: request.phone,
+        city: '',
+        address: '',
+        segment: request.company ? 'empresa' : 'persona',
+        status: 'active',
+        notes: '',
+        createdAt: now,
+        updatedAt: now,
+      }
+
+    const quote: Quote = {
+      id: uid('cotizacion'),
+      code: nextQuoteCode(data),
+      clientId: client.id,
+      clientName: request.name,
+      clientCompany: request.company,
+      clientEmail: request.email,
+      clientPhone: request.phone,
+      status: 'draft',
+      items: [],
+      notes: request.message,
+      validUntil: new Date(Date.now() + 15 * 86_400_000).toISOString().slice(0, 10),
+      createdAt: now,
+      updatedAt: now,
+    }
+
+    setData((prev) => ({
+      ...prev,
+      clients: prev.clients.some((item) => item.id === client.id)
+        ? prev.clients
+        : [client, ...prev.clients],
+      quotes: [quote, ...prev.quotes],
+      requests: prev.requests.map((item) =>
+        item.id === id
+          ? { ...item, clientId: client.id, quoteId: quote.id, status: 'review', updatedAt: now }
+          : item
+      ),
+    }))
+
+    return quote
+  }
+
   function updateSettings(settings: StoreSettings) {
     setData((prev) => ({ ...prev, settings }))
   }
@@ -965,7 +1278,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
   }
 
   function exportData() {
-    return JSON.stringify({ version: 2, data }, null, 2)
+    return JSON.stringify({ version: 3, data }, null, 2)
   }
 
   function importData(raw: string) {
@@ -979,6 +1292,9 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         products: data.products,
         categories: data.categories,
         brands: data.brands,
+        clients: data.clients,
+        quotes: data.quotes,
+        requests: data.requests,
         settings: data.settings,
         activity: data.activity,
         createProduct,
@@ -1003,6 +1319,18 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         addBrand,
         updateBrand,
         removeBrand,
+        createClient,
+        updateClient,
+        removeClient,
+        createQuote,
+        updateQuote,
+        removeQuote,
+        setQuoteStatus,
+        createRequest,
+        updateRequest,
+        removeRequest,
+        setRequestStatus,
+        convertRequestToQuote,
         updateSettings,
         resetData,
         exportData,

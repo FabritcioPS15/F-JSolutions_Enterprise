@@ -38,6 +38,8 @@ type NavItem = {
   icon: LucideIcon
   exact?: boolean
   badge?: number
+  badgeHint?: string
+  badgeTone?: 'amber' | 'blue'
   planned?: boolean
 }
 
@@ -58,6 +60,9 @@ function getBreadcrumb(pathname: string) {
   if (pathname.startsWith('/productos/')) return { section: 'Catálogo', title: 'Detalle del producto' }
   if (pathname === '/categorias') return { section: 'Catálogo', title: 'Categorías' }
   if (pathname === '/marcas') return { section: 'Catálogo', title: 'Marcas' }
+  if (pathname === '/cotizaciones') return { section: 'Comercial', title: 'Cotizaciones' }
+  if (pathname === '/clientes') return { section: 'Comercial', title: 'Clientes' }
+  if (pathname === '/solicitudes') return { section: 'Comercial', title: 'Solicitudes recibidas' }
   if (pathname === '/actividad') return { section: 'General', title: 'Actividad reciente' }
   if (pathname === '/configuracion') return { section: 'Sistema', title: 'Configuración' }
   return { section: 'Panel', title: 'Administración' }
@@ -66,7 +71,7 @@ function getBreadcrumb(pathname: string) {
 export function AdminShell({ children }: { children: ReactNode }) {
   const pathname = usePathname()
   const router = useRouter()
-  const { products, settings } = useAdmin()
+  const { products, quotes, requests, settings } = useAdmin()
   const [open, setOpen] = useState(false)
   const [collapsed, setCollapsed] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
@@ -134,6 +139,8 @@ export function AdminShell({ children }: { children: ReactNode }) {
     const state = getStockState(product)
     return state === 'low' || state === 'out'
   }).length
+  const draftQuoteCount = quotes.filter((quote) => quote.status === 'draft').length
+  const newRequestCount = requests.filter((request) => request.status === 'new').length
 
   const sections: NavSection[] = [
     {
@@ -146,7 +153,16 @@ export function AdminShell({ children }: { children: ReactNode }) {
     {
       label: 'Catálogo',
       items: [
-        { href: '/productos', label: 'Productos', icon: Package, badge: lowStockCount },
+        {
+          href: '/productos',
+          label: 'Productos',
+          icon: Package,
+          badge: lowStockCount,
+          badgeHint:
+            lowStockCount === 1
+              ? '1 producto requiere reposición'
+              : `${lowStockCount} productos requieren reposición`,
+        },
         { href: '/categorias', label: 'Categorías', icon: FolderTree },
         { href: '/marcas', label: 'Marcas', icon: Tags },
         { href: '/atributos', label: 'Atributos y especificaciones', icon: SlidersHorizontal, planned: true },
@@ -155,9 +171,28 @@ export function AdminShell({ children }: { children: ReactNode }) {
     {
       label: 'Comercial',
       items: [
-        { href: '/cotizaciones', label: 'Cotizaciones', icon: FileText, planned: true },
-        { href: '/clientes', label: 'Clientes', icon: Users, planned: true },
-        { href: '/solicitudes', label: 'Solicitudes recibidas', icon: Inbox, planned: true },
+        {
+          href: '/cotizaciones',
+          label: 'Cotizaciones',
+          icon: FileText,
+          badge: draftQuoteCount,
+          badgeHint:
+            draftQuoteCount === 1
+              ? '1 cotización en borrador'
+              : `${draftQuoteCount} cotizaciones en borrador`,
+          badgeTone: 'blue',
+        },
+        { href: '/clientes', label: 'Clientes', icon: Users },
+        {
+          href: '/solicitudes',
+          label: 'Solicitudes recibidas',
+          icon: Inbox,
+          badge: newRequestCount,
+          badgeHint:
+            newRequestCount === 1
+              ? '1 solicitud nueva'
+              : `${newRequestCount} solicitudes nuevas`,
+        },
       ],
     },
     {
@@ -331,11 +366,14 @@ export function AdminShell({ children }: { children: ReactNode }) {
                         {!!item.badge && item.badge > 0 && (
                           <span
                             className={cn(
-                              'ml-auto rounded-full bg-amber-400/15 px-1.5 py-0.5 text-[10px] font-bold tabular-nums text-amber-300 ring-1 ring-inset ring-amber-400/20',
+                              'ml-auto rounded-full px-1.5 py-0.5 text-[10px] font-bold tabular-nums ring-1 ring-inset',
+                              item.badgeTone === 'blue'
+                                ? 'bg-blue-400/15 text-blue-300 ring-blue-400/20'
+                                : 'bg-amber-400/15 text-amber-300 ring-amber-400/20',
                               collapsed && 'lg:hidden'
                             )}
-                            title={`${item.badge} productos requieren reposición`}
-                            aria-label={`${item.badge} productos requieren reposición`}
+                            title={item.badgeHint ?? `${item.badge} pendientes`}
+                            aria-label={item.badgeHint ?? `${item.badge} pendientes`}
                           >
                             {item.badge}
                           </span>

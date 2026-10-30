@@ -158,11 +158,51 @@ function createDraft(product: AdminProduct | undefined, defaultMinStock: number)
 }
 
 const MAX_UPLOAD_BYTES = 15_000_000
+const PRODUCT_IMAGE_WIDTH = 1200
+const PRODUCT_IMAGE_HEIGHT = 900
 
-type CropTarget =
-  | { kind: 'main' }
-  | { kind: 'gallery'; index: number }
-  | { kind: 'new' }
+function optimizeProductImage(source: string): Promise<string> {
+  return new Promise((resolve) => {
+    const image = new Image()
+    image.onload = () => {
+      const scale = Math.max(
+        PRODUCT_IMAGE_WIDTH / image.naturalWidth,
+        PRODUCT_IMAGE_HEIGHT / image.naturalHeight
+      )
+      const drawWidth = image.naturalWidth * scale
+      const drawHeight = image.naturalHeight * scale
+      const canvas = document.createElement('canvas')
+      canvas.width = PRODUCT_IMAGE_WIDTH
+      canvas.height = PRODUCT_IMAGE_HEIGHT
+      const context = canvas.getContext('2d')
+      if (!context) {
+        resolve(source)
+        return
+      }
+      context.imageSmoothingEnabled = true
+      context.imageSmoothingQuality = 'high'
+      context.drawImage(
+        image,
+        (PRODUCT_IMAGE_WIDTH - drawWidth) / 2,
+        (PRODUCT_IMAGE_HEIGHT - drawHeight) / 2,
+        drawWidth,
+        drawHeight
+      )
+      let dataUrl = canvas.toDataURL('image/webp', 0.9)
+      if (!dataUrl.startsWith('data:image/webp')) {
+        dataUrl = canvas.toDataURL('image/jpeg', 0.9)
+      }
+      if (dataUrl.length > 1_400_000) {
+        dataUrl = canvas.toDataURL('image/webp', 0.72)
+      }
+      resolve(dataUrl)
+    }
+    image.onerror = () => resolve(source)
+    image.src = source
+  })
+}
+
+type CropTarget = { kind: 'main' } | { kind: 'gallery'; index: number }
 
 type CropRequest = {
   id: string
@@ -182,6 +222,49 @@ const quickAddLabels = {
   type: { title: 'Nuevo tipo', placeholder: 'Ej. Modelos 4K' },
   brand: { title: 'Nueva marca', placeholder: 'Ej. Logitech' },
 } as const
+
+const wizardSteps = [
+  {
+    id: 'general',
+    label: 'General',
+    description: 'Nombre, identificadores y descripción.',
+    fields: ['name', 'sku'],
+  },
+  {
+    id: 'taxonomy',
+    label: 'Categorización',
+    description: 'Categoría, subcategoría, tipo y marca.',
+    fields: ['category', 'brand'],
+  },
+  {
+    id: 'commercial',
+    label: 'Comercial',
+    description: 'Precio, costo y control de stock.',
+    fields: ['price', 'cost', 'stock', 'minStock'],
+  },
+  {
+    id: 'media',
+    label: 'Contenido',
+    description: 'Especificaciones, portada y galería.',
+    fields: [],
+  },
+  {
+    id: 'publish',
+    label: 'Publicación',
+    description: 'Visibilidad, destacado y metadatos SEO.',
+    fields: [],
+  },
+] as const
+
+const sectionWizardStep: Record<string, number> = {
+  'product-section-general': 0,
+  'product-section-taxonomy': 1,
+  'product-section-commercial': 2,
+  'product-section-specs': 3,
+  'product-section-images': 3,
+  'product-section-seo': 4,
+  'product-section-publish': 4,
+}
 
 export function ProductForm({
   mode,
@@ -204,10 +287,13 @@ export function ProductForm({
   } = useAdmin()
   const router = useRouter()
   const toast = useToast()
+  const isEdit = mode === 'edit'
+  const isWizard = mode === 'create'
 
   const [draft, setDraft] = useState<Draft>(() =>
     createDraft(product, settings.lowStockThreshold)
   )
+  const [step, setStep] = useState(0)
   const [slugTouched, setSlugTouched] = useState(mode === 'edit')
   const [galleryInput, setGalleryInput] = useState('')
   const [cropQueue, setCropQueue] = useState<CropRequest[]>([])
@@ -262,6 +348,13 @@ export function ProductForm({
   const stockNumber = Number(draft.stock) || 0
   const minStockNumber = Number(draft.minStock) || 0
   const margin = getMargin({ price: priceNumber, cost: costNumber })
+
+  const currentWizardStep = wizardSteps[step]
+  const isLastStep = step === wizardSteps.length - 1
+
+  function sectionVisible(id: string) {
+    return !isWizard || sectionWizardStep[id] === step
+  }
 
   const completeness = useMemo(() => {
     const checks = [
@@ -469,11 +562,13 @@ export function ProductForm({
       if (source) sources.push(source)
     }
     if (!sources.length) return
+    const optimized = await Promise.all(sources.map(optimizeProductImage))
     if (target === 'main') {
-      requestCrop(sources[0], { kind: 'main' })
+      setDraft((prev) => ({ ...prev, image: optimized[0] }))
+      toast.success('Imagen actualizada', 'Optimizada en 4:3. Puedes ajustar el encuadre cuando quieras.')
       return
     }
-    sources.forEach((source) => requestCrop(source, { kind: 'new' }))
+    setDraft((prev) => ({ ...prev, images: [...prev.images, ...optimized] }))
   }
 
   function handleImageDrop(event: React.DragEvent<HTMLDivElement>) {
@@ -495,13 +590,11 @@ export function ProductForm({
     const target = active.target
     if (target.kind === 'main') {
       setDraft((prev) => ({ ...prev, image: dataUrl }))
-    } else if (target.kind === 'gallery') {
+    } else {
       setDraft((prev) => ({
         ...prev,
         images: prev.images.map((image, index) => (index === target.index ? dataUrl : image)),
       }))
-    } else {
-      setDraft((prev) => ({ ...prev, images: [...prev.images, dataUrl] }))
     }
     setCropQueue((prev) => prev.slice(1))
   }
@@ -520,7 +613,7 @@ export function ProductForm({
     })
   }
 
-  function validate() {
+  function collectErrors() {
     const next: Record<string, string> = {}
     if (draft.name.trim().length < 3) next.name = 'Escribe un nombre de al menos 3 caracteres.'
     if (!draft.sku.trim()) next.sku = 'El SKU es obligatorio.'
@@ -545,22 +638,81 @@ export function ProductForm({
     if (draft.cost !== '' && (Number.isNaN(Number(draft.cost)) || Number(draft.cost) < 0)) {
       next.cost = 'El costo debe ser un número positivo.'
     }
-    setErrors(next)
+    return next
+  }
 
-    const firstKey = Object.keys(next)[0]
-    if (firstKey) {
-      const element = document.getElementById(`product-${firstKey}`)
-      element?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-      ;(element as HTMLInputElement | null)?.focus()
+  function focusField(key: string) {
+    const element = document.getElementById(`product-${key}`)
+    element?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    ;(element as HTMLInputElement | null)?.focus()
+  }
+
+  function validate(keys?: readonly string[]) {
+    const all = collectErrors()
+    if (!keys) {
+      setErrors(all)
+      return { ok: Object.keys(all).length === 0, firstKey: Object.keys(all)[0] }
     }
+    const scoped: Record<string, string> = {}
+    for (const key of keys) {
+      if (all[key]) scoped[key] = all[key]
+    }
+    setErrors((prev) => {
+      const next = { ...prev }
+      for (const key of keys) delete next[key]
+      return { ...next, ...scoped }
+    })
+    return { ok: Object.keys(scoped).length === 0, firstKey: Object.keys(scoped)[0] }
+  }
 
-    return Object.keys(next).length === 0
+  function goNext() {
+    if (!isWizard) return
+    const { ok, firstKey } = validate(currentWizardStep.fields)
+    if (!ok) {
+      if (firstKey) window.requestAnimationFrame(() => focusField(firstKey))
+      toast.error(
+        'Faltan datos',
+        `Completa los campos obligatorios de “${currentWizardStep.label}”.`
+      )
+      return
+    }
+    setStep((prev) => Math.min(prev + 1, wizardSteps.length - 1))
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  function goBack() {
+    setStep((prev) => Math.max(prev - 1, 0))
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  function goToStep(index: number) {
+    if (!isWizard || index > step) return
+    setStep(index)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  function handleFormKeyDown(event: React.KeyboardEvent<HTMLFormElement>) {
+    if (!isWizard || isLastStep || event.key !== 'Enter') return
+    const target = event.target as HTMLElement
+    if (target.tagName === 'TEXTAREA' || target.tagName === 'BUTTON') return
+    event.preventDefault()
+    goNext()
   }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     if (submitting) return
-    if (!validate()) {
+    const { ok, firstKey } = validate()
+    if (!ok) {
+      if (firstKey) {
+        if (isWizard) {
+          const targetStep = wizardSteps.findIndex((item) =>
+            (item.fields as readonly string[]).includes(firstKey)
+          )
+          if (targetStep >= 0) setStep(targetStep)
+        }
+        window.setTimeout(() => focusField(firstKey), 60)
+      }
       toast.error('Revisa el formulario', 'Hay campos obligatorios sin completar.')
       return
     }
@@ -617,8 +769,6 @@ export function ProductForm({
     router.push('/productos')
   }
 
-  const isEdit = mode === 'edit'
-
   const formSections = [
     { id: 'product-section-general', label: 'General', icon: Info },
     { id: 'product-section-taxonomy', label: 'Categorización', icon: FolderTree },
@@ -650,50 +800,107 @@ export function ProductForm({
         description={
           isEdit
             ? 'Actualiza la información comercial, el inventario y la publicación.'
-            : 'Completa la información para agregar un producto al catálogo local.'
+            : 'Completa los pasos para agregar un producto al catálogo local.'
         }
         actions={
           <>
             <Link href="/productos" className={btnSecondary} onClick={handleCancel}>
               Cancelar
             </Link>
-            <button type="submit" form="product-form" className={btnPrimary} disabled={submitting}>
-              <Save className="size-4" aria-hidden="true" />
-              {submitting ? 'Guardando…' : isEdit ? 'Guardar cambios' : 'Crear producto'}
-            </button>
+            {isEdit ? (
+              <button type="submit" form="product-form" className={btnPrimary} disabled={submitting}>
+                <Save className="size-4" aria-hidden="true" />
+                {submitting ? 'Guardando…' : 'Guardar cambios'}
+              </button>
+            ) : (
+              <span className="inline-flex h-9 items-center rounded-xl border border-slate-200 bg-white px-3 text-[11px] font-semibold text-slate-600 shadow-xs">
+                Paso {step + 1} de {wizardSteps.length}
+              </span>
+            )}
           </>
         }
       />
 
-      <nav
-        aria-label="Secciones del formulario"
-        className="sticky top-16 z-20 -mx-1 overflow-x-auto rounded-xl border border-slate-200/80 bg-white p-1.5 shadow-xs"
-      >
-        <div className="flex min-w-max gap-0.5">
-          {formSections.map((section) => {
-            const Icon = section.icon
-            return (
-              <button
-                key={section.id}
-                type="button"
-                onClick={() => scrollToSection(section.id)}
-                className="inline-flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-[11px] font-semibold text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
-              >
-                <Icon className="size-3.5 text-slate-400" aria-hidden="true" />
-                {section.label}
-              </button>
-            )
-          })}
-        </div>
-      </nav>
+      {isWizard ? (
+        <nav
+          aria-label="Pasos para crear el producto"
+          className="sticky top-16 z-20 -mx-1 overflow-x-auto rounded-xl border border-slate-200/80 bg-white p-2 shadow-xs"
+        >
+          <ol className="flex min-w-max items-center gap-1">
+            {wizardSteps.map((wizardStep, index) => {
+              const active = index === step
+              const done = index < step
+              return (
+                <li key={wizardStep.id} className="flex items-center gap-1">
+                  <button
+                    type="button"
+                    onClick={() => goToStep(index)}
+                    disabled={index > step}
+                    aria-current={active ? 'step' : undefined}
+                    className={cn(
+                      'inline-flex h-9 items-center gap-2 rounded-lg px-2.5 text-[11px] font-semibold transition',
+                      active
+                        ? 'bg-blue-50 text-blue-700 ring-1 ring-inset ring-blue-600/15'
+                        : done
+                          ? 'text-slate-600 hover:bg-slate-100'
+                          : 'text-slate-400'
+                    )}
+                  >
+                    <span
+                      className={cn(
+                        'grid size-5 shrink-0 place-items-center rounded-full text-[10px] font-bold ring-1',
+                        active
+                          ? 'bg-blue-600 text-white ring-blue-600'
+                          : done
+                            ? 'bg-slate-900 text-white ring-slate-900'
+                            : 'bg-slate-50 text-slate-400 ring-slate-200'
+                      )}
+                    >
+                      {done ? <Check className="size-3" aria-hidden="true" /> : index + 1}
+                    </span>
+                    {wizardStep.label}
+                  </button>
+                  {index < wizardSteps.length - 1 && (
+                    <span className="h-px w-3 bg-slate-200 sm:w-5" aria-hidden="true" />
+                  )}
+                </li>
+              )
+            })}
+          </ol>
+        </nav>
+      ) : (
+        <nav
+          aria-label="Secciones del formulario"
+          className="sticky top-16 z-20 -mx-1 overflow-x-auto rounded-xl border border-slate-200/80 bg-white p-1.5 shadow-xs"
+        >
+          <div className="flex min-w-max gap-0.5">
+            {formSections.map((section) => {
+              const Icon = section.icon
+              return (
+                <button
+                  key={section.id}
+                  type="button"
+                  onClick={() => scrollToSection(section.id)}
+                  className="inline-flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-[11px] font-semibold text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
+                >
+                  <Icon className="size-3.5 text-slate-400" aria-hidden="true" />
+                  {section.label}
+                </button>
+              )
+            })}
+          </div>
+        </nav>
+      )}
 
       <form
         id="product-form"
         onSubmit={handleSubmit}
+        onKeyDown={handleFormKeyDown}
         noValidate
         className="grid items-start gap-5 xl:grid-cols-[minmax(0,1fr)_340px]"
       >
         <div className="space-y-5">
+          {sectionVisible('product-section-general') && (
           <SectionCard
             id="product-section-general"
             title="Información general"
@@ -824,7 +1031,9 @@ export function ProductForm({
               </Field>
             </div>
           </SectionCard>
+          )}
 
+          {sectionVisible('product-section-taxonomy') && (
           <SectionCard
             id="product-section-taxonomy"
             title="Categorización"
@@ -983,7 +1192,9 @@ export function ProductForm({
               </div>
             </div>
           </SectionCard>
+          )}
 
+          {sectionVisible('product-section-commercial') && (
           <SectionCard
             id="product-section-commercial"
             title="Información comercial"
@@ -1149,7 +1360,9 @@ export function ProductForm({
               )}
             </div>
           </SectionCard>
+          )}
 
+          {sectionVisible('product-section-specs') && (
           <SectionCard
             id="product-section-specs"
             title="Especificaciones"
@@ -1209,7 +1422,9 @@ export function ProductForm({
               </p>
             </div>
           </SectionCard>
+          )}
 
+          {sectionVisible('product-section-images') && (
           <SectionCard
             id="product-section-images"
             title="Imágenes"
@@ -1396,9 +1611,9 @@ export function ProductForm({
                 <div className="flex items-start gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-3">
                   <Info className="mt-0.5 size-3.5 shrink-0 text-slate-400" aria-hidden="true" />
                   <p className="text-[10.5px] leading-relaxed text-slate-500">
-                    Al subir un archivo se abre el editor de encuadre y la imagen se guarda
-                    optimizada en 4:3. El panel usa el almacenamiento del navegador, así que evita
-                    acumular decenas de fotos pesadas.
+                    Al subir un archivo se optimiza automáticamente en 4:3 y queda listo. Si
+                    quieres, usa “Encuadrar” para moverlo o acercarlo. El panel guarda las
+                    imágenes en este navegador, así que evita acumular fotos pesadas.
                   </p>
                 </div>
               </div>
@@ -1541,7 +1756,9 @@ export function ProductForm({
               )}
             </div>
           </SectionCard>
+          )}
 
+          {sectionVisible('product-section-seo') && (
           <SectionCard
             id="product-section-seo"
             title="SEO y buscadores"
@@ -1608,7 +1825,9 @@ export function ProductForm({
               </p>
             </div>
           </SectionCard>
+          )}
 
+          {sectionVisible('product-section-publish') && (
           <SectionCard
             id="product-section-publish"
             title="Publicación"
@@ -1708,25 +1927,70 @@ export function ProductForm({
               </span>
             </label>
           </SectionCard>
+          )}
 
-          <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs">
-            <p className="text-xs text-slate-500">
-              {dirty ? (
-                <span className="font-semibold text-amber-600">Cambios sin guardar.</span>
-              ) : (
-                'Todos los cambios están guardados.'
-              )}
-            </p>
-            <div className="flex flex-wrap gap-2">
-              <Link href="/productos" className={btnSecondary} onClick={handleCancel}>
-                Cancelar
-              </Link>
-              <button type="submit" form="product-form" className={btnPrimary} disabled={submitting}>
-                <Save className="size-4" aria-hidden="true" />
-                {submitting ? 'Guardando…' : isEdit ? 'Guardar cambios' : 'Crear producto'}
-              </button>
+          {isWizard ? (
+            <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <button
+                  type="button"
+                  onClick={goBack}
+                  disabled={step === 0}
+                  className={cn(btnSecondary, 'w-full justify-center sm:w-auto')}
+                >
+                  <ChevronLeft className="size-4" aria-hidden="true" />
+                  Anterior
+                </button>
+                <div className="order-first text-center sm:order-none sm:text-right">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">
+                    Paso {step + 1} de {wizardSteps.length}
+                  </p>
+                  <p className="text-[11px] font-semibold text-slate-700">
+                    {currentWizardStep.label} · {currentWizardStep.description}
+                  </p>
+                </div>
+                {isLastStep ? (
+                  <button
+                    type="submit"
+                    form="product-form"
+                    className={cn(btnPrimary, 'w-full justify-center sm:w-auto')}
+                    disabled={submitting}
+                  >
+                    <Save className="size-4" aria-hidden="true" />
+                    {submitting ? 'Guardando…' : 'Crear producto'}
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={goNext}
+                    className={cn(btnPrimary, 'w-full justify-center sm:w-auto')}
+                  >
+                    Siguiente
+                    <ChevronRight className="size-4" aria-hidden="true" />
+                  </button>
+                )}
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs">
+              <p className="text-xs text-slate-500">
+                {dirty ? (
+                  <span className="font-semibold text-amber-600">Cambios sin guardar.</span>
+                ) : (
+                  'Todos los cambios están guardados.'
+                )}
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <Link href="/productos" className={btnSecondary} onClick={handleCancel}>
+                  Cancelar
+                </Link>
+                <button type="submit" form="product-form" className={btnPrimary} disabled={submitting}>
+                  <Save className="size-4" aria-hidden="true" />
+                  {submitting ? 'Guardando…' : 'Guardar cambios'}
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         <aside className="space-y-4 xl:sticky xl:top-28">

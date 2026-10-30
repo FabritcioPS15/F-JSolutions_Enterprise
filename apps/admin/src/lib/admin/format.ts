@@ -1,4 +1,16 @@
-import type { AdminProduct, Currency, ProductAvailability, ProductStatus, StockState } from './types'
+import type {
+  AdminProduct,
+  ClientSegment,
+  ClientStatus,
+  Currency,
+  ProductAvailability,
+  ProductStatus,
+  QuoteLine,
+  QuoteStatus,
+  RequestChannel,
+  RequestStatus,
+  StockState,
+} from './types'
 
 export function slugify(value: string): string {
   return value
@@ -80,6 +92,80 @@ export const statusDescriptions: Record<ProductStatus, string> = {
   active: 'Visible en la tienda y disponible para cotizar.',
   draft: 'Oculto al público mientras terminas de editarlo.',
   archived: 'Fuera del catálogo activo. Puedes restaurarlo cuando quieras.',
+}
+
+export const clientStatusLabels: Record<ClientStatus, string> = {
+  active: 'Activo',
+  inactive: 'Inactivo',
+}
+
+export const clientSegmentLabels: Record<ClientSegment, string> = {
+  empresa: 'Empresa',
+  persona: 'Persona',
+}
+
+export const quoteStatusLabels: Record<QuoteStatus, string> = {
+  draft: 'Borrador',
+  sent: 'Enviada',
+  answered: 'Respondida',
+  closed: 'Cerrada',
+}
+
+export const requestStatusLabels: Record<RequestStatus, string> = {
+  new: 'Nueva',
+  review: 'En revisión',
+  attended: 'Atendida',
+  discarded: 'Descartada',
+}
+
+export const requestChannelLabels: Record<RequestChannel, string> = {
+  web: 'Formulario web',
+  email: 'Correo',
+  whatsapp: 'WhatsApp',
+  phone: 'Teléfono',
+}
+
+export function quoteItemCount(items: Pick<QuoteLine, 'quantity'>[]): number {
+  return items.reduce((total, item) => total + (Number.isFinite(item.quantity) ? item.quantity : 0), 0)
+}
+
+export function quoteTotals(
+  items: Pick<QuoteLine, 'quantity' | 'unitPrice'>[],
+  igvPercent: number
+) {
+  const total = items.reduce(
+    (sum, item) => sum + Math.max(0, item.quantity) * Math.max(0, item.unitPrice),
+    0
+  )
+  const rate = Math.min(100, Math.max(0, igvPercent)) / 100
+  const net = rate > 0 ? total / (1 + rate) : total
+  return {
+    total: Math.round(total * 100) / 100,
+    net: Math.round(net * 100) / 100,
+    tax: Math.round((total - net) * 100) / 100,
+  }
+}
+
+export function buildQuoteCode(date = new Date()): string {
+  const stamp = date.toISOString().slice(0, 10).replace(/-/g, '')
+  const random = Math.random().toString(36).slice(2, 6).toUpperCase()
+  return `COT-${stamp}-${random}`
+}
+
+export function buildRequestCode(date = new Date()): string {
+  const stamp = date.toISOString().slice(0, 10).replace(/-/g, '')
+  const random = Math.random().toString(36).slice(2, 6).toUpperCase()
+  return `SOL-${stamp}-${random}`
+}
+
+export function initials(value: string): string {
+  const words = value
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+  if (words.length === 0) return '—'
+  if (words.length === 1) return words[0].slice(0, 2).toUpperCase()
+  return `${words[0][0]}${words[words.length - 1][0]}`.toUpperCase()
 }
 
 export function getMargin(product: Pick<AdminProduct, 'price' | 'cost'>): number | null {
