@@ -633,7 +633,7 @@ function SearchAutocomplete({
   const isDesktop = variant === 'desktop'
 
   return (
-    <div ref={containerRef} className={isDesktop ? 'relative hidden min-w-0 flex-1 md:block lg:max-w-2xl' : 'relative mb-4'}>
+    <div ref={containerRef} className={isDesktop ? 'relative hidden w-full max-w-2xl md:block' : 'relative mb-4'}>
       <form onSubmit={handleSubmit}>
         {isDesktop && <span className="sr-only">Buscar productos</span>}
         <Search
@@ -898,11 +898,14 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
     router.push(term ? `/productos?q=${encodeURIComponent(term)}` : '/productos')
   }
 
-  const isActive = (href: string) => {
+  const isPathActive = (href: string) => {
     if (!pathname) return false
     if (href === '/') return pathname === '/'
     return pathname === href || pathname.startsWith(`${href}/`)
   }
+
+  const isActive = (item: { href: string; activeMatch?: string[] }) =>
+    (item.activeMatch ?? [item.href]).some(isPathActive)
 
   const toggle = (key: string) => setOpenDropdown((prev) => (prev === key ? null : key))
   const toggleMobile = (key: string) => setOpenMobileSection((prev) => (prev === key ? null : key))
@@ -931,17 +934,19 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
               <img
                 src="/images/logo.png"
                 alt="F&J Systems"
-                className="h-10 sm:h-11 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
+                className="h-12 sm:h-14 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
               />
             </Link>
 
             {/* Buscador con autocompletado */}
-            <SearchAutocomplete
-              query={query}
-              setQuery={setQuery}
-              onSubmit={submitSearch}
-              variant="desktop"
-            />
+            <div className="hidden min-w-0 flex-1 justify-center md:flex">
+              <SearchAutocomplete
+                query={query}
+                setQuery={setQuery}
+                onSubmit={submitSearch}
+                variant="desktop"
+              />
+            </div>
 
             {/* Acciones del usuario */}
             <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
@@ -988,7 +993,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
           <div className="hidden lg:block">
             <nav className="flex items-center gap-1 py-3" aria-label="Navegación principal">
             {mainNav.map((link, index) => {
-              const active = isActive(link.href)
+              const active = isActive(link)
               const dropdownKey = link.label.toLowerCase().replace(/ /g, '-')
               const refMap: Record<string, React.RefObject<HTMLDivElement | null>> = {
                 tienda: storeRef,
@@ -1114,7 +1119,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
               <img
                 src="/images/logo.png"
                 alt="F&J Systems"
-                className="h-9 sm:h-10 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
+                className="h-11 sm:h-12 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
               />
             </Link>
 
@@ -1144,7 +1149,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
             {/* Navegación principal móvil */}
             <nav className="space-y-1.5" aria-label="Navegación móvil">
               {mainNav.map((link, index) => {
-                const active = isActive(link.href)
+                const active = isActive(link)
                 const dropdownKey = link.label.toLowerCase().replace(/ /g, '-')
                 const isSectionOpen = openMobileSection === dropdownKey
 
@@ -1189,7 +1194,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                       >
                         <div className="space-y-1">
                           {getSubmenu().map((item, itemIdx) => {
-                            const isItemActive = isActive(item.href)
+                            const isItemActive = isPathActive(item.href)
                             return (
                               <Link
                                 key={`${item.href}-${itemIdx}`}

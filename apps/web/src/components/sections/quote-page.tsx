@@ -21,7 +21,6 @@ import {
   UserRound,
 } from 'lucide-react'
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
-import { QuoteHero } from '@/components/heroes'
 import { QuotePanel } from '@/components/sections/quote-panel'
 import {
   buildQuoteCode,
@@ -350,8 +349,6 @@ export function QuotePage() {
           <span className="font-semibold text-[#0F172A]">Cotización</span>
         </div>
       </div>
-
-      <QuoteHero showSteps />
 
       <section
         id="cotizacion-formulario"

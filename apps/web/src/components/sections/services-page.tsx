@@ -3,6 +3,7 @@ import {
   ArrowRight,
   ArrowUpRight,
   Building2,
+  CalendarRange,
   Check,
   ChevronDown,
   ClipboardCheck,
@@ -11,10 +12,12 @@ import {
   GraduationCap,
   Handshake,
   Headset,
+  HelpCircle,
   Laptop,
   Mail,
   Network,
   Phone,
+  RefreshCw,
   Rocket,
   Server,
   ShieldCheck,
@@ -290,6 +293,107 @@ export function ServicesPage() {
                 </Link>
               </article>
             ))}
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="alquiler"
+        className="scroll-mt-20 sm:scroll-mt-24 lg:scroll-mt-28 px-4 py-10 sm:px-6 lg:px-8 lg:py-14"
+      >
+        <div className="relative mx-auto max-w-[1280px] overflow-hidden rounded-3xl border border-dashed border-[#CBD5E1] bg-gradient-to-br from-white via-[#F8FAFC] to-[#EFF6FF] p-6 sm:p-10 lg:p-12">
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute -right-6 -top-16 select-none text-[220px] font-extrabold leading-none text-[#2563EB]/10"
+          >
+            ?
+          </span>
+          <div className="relative grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
+            <div>
+              <span className="inline-flex items-center gap-2 rounded-full border border-[#CBD5E1] bg-white px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-[#475569]">
+                <HelpCircle className="size-3.5 text-[#2563EB]" /> En evaluación
+              </span>
+              <h2 className="mt-4 max-w-2xl text-3xl font-bold tracking-[-0.04em] text-[#0F172A] sm:text-4xl">
+                ¿Y si prefieres <span className="text-[#2563EB]">alquilar</span> en lugar de
+                comprar?
+              </h2>
+              <p className="mt-3 max-w-xl text-sm leading-6 text-[#475569]">
+                Estamos pensando en sumar alquiler de laptops, PCs y equipos de oficina para
+                proyectos puntuales, eventos o reemplazos temporales. Aún no es un servicio
+                disponible, pero si te interesa cuéntanoslo: tu respuesta nos ayuda a decidir.
+              </p>
+              <div className="mt-6 flex flex-wrap gap-2">
+                {['Laptops por proyecto', 'Equipos para eventos', 'Reemplazos temporales'].map(
+                  (chip) => (
+                    <span
+                      key={chip}
+                      className="rounded-full border border-[#E2E8F0] bg-white px-3 py-1 text-[11px] font-semibold text-[#475569]"
+                    >
+                      {chip}
+                    </span>
+                  ),
+                )}
+              </div>
+              <div className="mt-7 flex flex-wrap gap-3">
+                <Link
+                  href="/contacto"
+                  className="inline-flex h-11 items-center gap-2 rounded-xl bg-[#2563EB] px-5 text-sm font-bold text-white transition hover:bg-[#1D4ED8]"
+                >
+                  Me interesa alquilar <ArrowRight className="size-4" />
+                </Link>
+                <Link
+                  href="/productos"
+                  className="inline-flex h-11 items-center gap-2 rounded-xl border border-[#E2E8F0] bg-white px-5 text-sm font-bold text-[#0F172A] transition hover:border-[#2563EB] hover:text-[#2563EB]"
+                >
+                  Ver equipos en venta
+                </Link>
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-[#E2E8F0] bg-white/80 p-5 shadow-sm backdrop-blur">
+              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#64748B]">
+                Lo que estamos evaluando
+              </p>
+              <ul className="mt-4 space-y-3.5 text-xs">
+                <li className="flex items-start gap-3">
+                  <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-[#EFF6FF] text-[#2563EB]">
+                    <Laptop className="size-4" />
+                  </span>
+                  <div>
+                    <p className="font-bold text-[#0F172A]">Alquiler mensual o por proyecto</p>
+                    <p className="mt-0.5 leading-4 text-[#475569]">
+                      Equipos configurados y listos para tu equipo de trabajo.
+                    </p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-[#EFF6FF] text-[#2563EB]">
+                    <CalendarRange className="size-4" />
+                  </span>
+                  <div>
+                    <p className="font-bold text-[#0F172A]">Equipos para eventos</p>
+                    <p className="mt-0.5 leading-4 text-[#475569]">
+                      Cobertura temporal para ferias, capacitaciones y presentaciones.
+                    </p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-[#EFF6FF] text-[#2563EB]">
+                    <RefreshCw className="size-4" />
+                  </span>
+                  <div>
+                    <p className="font-bold text-[#0F172A]">Reemplazos temporales</p>
+                    <p className="mt-0.5 leading-4 text-[#475569]">
+                      No detengas la operación mientras reparamos tu equipo.
+                    </p>
+                  </div>
+                </li>
+              </ul>
+              <p className="mt-5 rounded-lg bg-[#EFF6FF] px-3 py-2 text-[11px] leading-4 text-[#1E40AF]">
+                Si tu empresa lo necesita, escríbenos: tomaremos tu caso en cuenta para el
+                lanzamiento.
+              </p>
+            </div>
           </div>
         </div>
       </section>

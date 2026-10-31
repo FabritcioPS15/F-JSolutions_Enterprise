@@ -1,10 +1,23 @@
 // ─── Navegación Principal ──────────────────────────────────────────────────────────────────
 
-export const mainNav = [
+export type MainNavItem = {
+  label: string
+  href: string
+  hasMegaMenu?: boolean
+  hasMenu?: boolean
+  activeMatch?: string[]
+}
+
+export const mainNav: MainNavItem[] = [
   { label: 'Inicio', href: '/' },
   { label: 'Tienda', href: '/productos', hasMegaMenu: true },
-  { label: 'Servicios TI', href: '/servicios', hasMenu: true },
-  { label: 'Infraestructura TI', href: '/servicios', hasMenu: true },
+  {
+    label: 'Servicios TI',
+    href: '/servicios',
+    hasMenu: true,
+    activeMatch: ['/servicios', '/soporte-ti', '/cotizador'],
+  },
+  { label: 'Infraestructura TI', href: '/servicios', hasMenu: true, activeMatch: [] },
   { label: 'Desarrollo de software', href: '/sistemas', hasMenu: true },
   { label: 'Empresa', href: '/nosotros', hasMenu: true },
 ]
@@ -170,6 +183,7 @@ export const itServicesMenu: NavMenuItem[] = [
   { label: 'Configuración de impresoras', href: '/soporte-ti', desc: 'Configuración en red y local' },
   { label: 'Soporte remoto y presencial', href: '/soporte-ti', desc: 'Atención flexible según tus necesidades' },
   { label: 'Soluciones de soporte para empresas', href: '/servicios', desc: 'Planes empresariales personalizados' },
+  { label: '¿Alquiler de equipos?', href: '/servicios#alquiler', desc: 'En evaluación: laptops y PCs por proyecto' },
 ]
 
 export const infrastructureMenu: NavMenuItem[] = [
