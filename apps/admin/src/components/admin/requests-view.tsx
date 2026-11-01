@@ -23,11 +23,13 @@ import {
   RequestStatusBadge,
 } from '@/components/admin/commercial-ui'
 import { ConfirmDialog } from '@/components/admin/confirm-dialog'
+import { ExportMenu } from '@/components/admin/export-menu'
 import { Modal } from '@/components/admin/modal'
 import { useToast } from '@/components/admin/toast'
 import {
   EmptyState,
   Field,
+  FilterSelect,
   LoadingState,
   PageHeader,
   Select,
@@ -37,6 +39,7 @@ import {
   inputClass,
   textareaClass,
 } from '@/components/admin/ui'
+import { requestsDataset } from '@/lib/admin/excel-exports'
 import {
   formatDateTime,
   formatNumber,
@@ -242,10 +245,17 @@ export function RequestsView() {
         title="Solicitudes recibidas"
         description="Bandeja de consultas y pedidos de cotización. Regístralas o conviértelas en cotizaciones."
         actions={
-          <button type="button" className={btnPrimary} onClick={openRegister}>
-            <Plus className="size-4" aria-hidden="true" />
-            Registrar solicitud
-          </button>
+          <>
+            <ExportMenu
+              build={() => requestsDataset(filtered)}
+              nouns={['solicitud', 'solicitudes']}
+              disabled={filtered.length === 0}
+            />
+            <button type="button" className={btnPrimary} onClick={openRegister}>
+              <Plus className="size-4" aria-hidden="true" />
+              Registrar solicitud
+            </button>
+          </>
         }
       />
 
@@ -304,32 +314,38 @@ export function RequestsView() {
           </div>
 
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:flex lg:shrink-0 lg:items-center">
-            <Select
+            <FilterSelect
+              label="Estado"
               value={status}
-              onChange={(event) => setStatus(event.target.value as 'all' | RequestStatus)}
-              aria-label="Filtrar por estado"
-              className="sm:w-full lg:w-40"
-            >
-              <option value="all">Todos los estados</option>
-              {statusOrder.map((item) => (
-                <option key={item} value={item}>
-                  {requestStatusLabels[item]}
-                </option>
-              ))}
-            </Select>
-            <Select
+              onChange={(next) => setStatus(next as 'all' | RequestStatus)}
+              ariaLabel="Filtrar por estado"
+              align="right"
+              className="sm:w-full lg:w-48"
+              options={[
+                { value: 'all', label: 'Todos', count: requests.length },
+                ...statusOrder.map((item) => ({
+                  value: item,
+                  label: requestStatusLabels[item],
+                  count: requests.filter((request) => request.status === item).length,
+                })),
+              ]}
+            />
+            <FilterSelect
+              label="Canal"
               value={channel}
-              onChange={(event) => setChannel(event.target.value as 'all' | RequestChannel)}
-              aria-label="Filtrar por canal"
-              className="sm:w-full lg:w-40"
-            >
-              <option value="all">Todos los canales</option>
-              {(Object.keys(requestChannelLabels) as RequestChannel[]).map((item) => (
-                <option key={item} value={item}>
-                  {requestChannelLabels[item]}
-                </option>
-              ))}
-            </Select>
+              onChange={(next) => setChannel(next as 'all' | RequestChannel)}
+              ariaLabel="Filtrar por canal"
+              align="right"
+              className="sm:w-full lg:w-48"
+              options={[
+                { value: 'all', label: 'Todos', count: requests.length },
+                ...(Object.keys(requestChannelLabels) as RequestChannel[]).map((item) => ({
+                  value: item,
+                  label: requestChannelLabels[item],
+                  count: requests.filter((request) => request.channel === item).length,
+                })),
+              ]}
+            />
             {hasFilters && (
               <button
                 type="button"

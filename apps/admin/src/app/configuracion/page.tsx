@@ -3,7 +3,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   DatabaseBackup,
-  Download,
   HardDrive,
   Info,
   RotateCcw,
@@ -18,6 +17,7 @@ import {
   useAdmin,
 } from '@/components/admin/admin-provider'
 import { ConfirmDialog } from '@/components/admin/confirm-dialog'
+import { ExportMenu } from '@/components/admin/export-menu'
 import { useToast } from '@/components/admin/toast'
 import {
   Field,
@@ -30,7 +30,8 @@ import {
   inputClass,
   textareaClass,
 } from '@/components/admin/ui'
-import { downloadFile, formatNumber, storageSizeInKb } from '@/lib/admin/format'
+import { backupDataset } from '@/lib/admin/excel-exports'
+import { formatNumber, storageSizeInKb } from '@/lib/admin/format'
 import type { StoreSettings } from '@/lib/admin/types'
 import { cn } from '@/lib/utils'
 
@@ -63,9 +64,9 @@ export default function ConfiguracionPage() {
     clients,
     quotes,
     requests,
+    activity,
     settings,
     updateSettings,
-    exportData,
     importData,
     resetData,
   } = useAdmin()
@@ -149,15 +150,6 @@ export default function ConfiguracionPage() {
       lowStockThreshold: Math.trunc(Number(draft.lowStockThreshold)),
     })
     toast.success('Configuración guardada', 'Los cambios se aplicaron al panel.')
-  }
-
-  function handleExport() {
-    downloadFile(
-      `fj-systems-respaldo-${new Date().toISOString().slice(0, 10)}.json`,
-      exportData(),
-      'application/json'
-    )
-    toast.success('Respaldo descargado', 'Guarda el archivo en un lugar seguro.')
   }
 
   async function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -420,14 +412,26 @@ export default function ConfiguracionPage() {
 
           <SectionCard
             title="Respaldo y restauración"
-            description="Exporta o recupera el catálogo completo en JSON."
+            description="Exporta el catálogo completo en Excel, CSV o PDF, o descarga un respaldo JSON para restaurarlo después."
             icon={DatabaseBackup}
           >
             <div className="space-y-2.5">
-              <button type="button" className={cn(btnSecondary, 'w-full justify-start')} onClick={handleExport}>
-                <Download className="size-4 text-slate-500" aria-hidden="true" />
-                Descargar respaldo
-              </button>
+              <ExportMenu
+                build={() =>
+                  backupDataset({
+                    products,
+                    categories,
+                    brands,
+                    clients,
+                    quotes,
+                    requests,
+                    activity,
+                    settings,
+                  })
+                }
+                formats={['excel', 'csv', 'pdf', 'json']}
+                className="w-full [&>button]:w-full [&>button]:justify-start"
+              />
               <button
                 type="button"
                 className={cn(btnSecondary, 'w-full justify-start')}

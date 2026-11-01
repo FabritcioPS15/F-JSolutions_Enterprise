@@ -1,3 +1,5 @@
+import { getServicesByCategory } from './services'
+
 // ─── Navegación Principal ──────────────────────────────────────────────────────────────────
 
 export type MainNavItem = {
@@ -5,8 +7,17 @@ export type MainNavItem = {
   href: string
   hasMegaMenu?: boolean
   hasMenu?: boolean
+  activeExact?: string[]
   activeMatch?: string[]
 }
+
+const supportServicePaths = getServicesByCategory('Soporte TI').map(
+  (service) => `/servicios/${service.slug}`,
+)
+
+const infrastructureServicePaths = getServicesByCategory('Infraestructura TI').map(
+  (service) => `/servicios/${service.slug}`,
+)
 
 export const mainNav: MainNavItem[] = [
   { label: 'Inicio', href: '/' },
@@ -15,11 +26,28 @@ export const mainNav: MainNavItem[] = [
     label: 'Servicios TI',
     href: '/servicios',
     hasMenu: true,
-    activeMatch: ['/servicios', '/soporte-ti', '/cotizador'],
+    activeExact: ['/servicios'],
+    activeMatch: [...supportServicePaths, '/soporte-ti', '/cotizador'],
   },
-  { label: 'Infraestructura TI', href: '/servicios', hasMenu: true, activeMatch: [] },
+  {
+    label: 'Infraestructura TI',
+    href: '/servicios',
+    hasMenu: true,
+    activeMatch: infrastructureServicePaths,
+  },
   { label: 'Desarrollo de software', href: '/sistemas', hasMenu: true },
-  { label: 'Empresa', href: '/nosotros', hasMenu: true },
+  {
+    label: 'Empresa',
+    href: '/nosotros',
+    hasMenu: true,
+    activeMatch: [
+      '/nosotros',
+      '/proyectos',
+      '/como-trabajamos',
+      '/preguntas-frecuentes',
+      '/contacto',
+    ],
+  },
 ]
 
 // ─── Mega Menú de Tienda ──────────────────────────────────────────────────────────────────
@@ -177,29 +205,29 @@ export type NavMenuItem = {
 }
 
 export const itServicesMenu: NavMenuItem[] = [
-  { label: 'Soporte técnico', href: '/soporte-ti', desc: 'Asistencia inmediata para problemas técnicos' },
-  { label: 'Mantenimiento de computadoras y laptops', href: '/soporte-ti', desc: 'Servicio preventivo y correctivo' },
-  { label: 'Instalación y configuración de software', href: '/soporte-ti', desc: 'Sistemas operativos y aplicaciones' },
-  { label: 'Configuración de impresoras', href: '/soporte-ti', desc: 'Configuración en red y local' },
-  { label: 'Soporte remoto y presencial', href: '/soporte-ti', desc: 'Atención flexible según tus necesidades' },
-  { label: 'Soluciones de soporte para empresas', href: '/servicios', desc: 'Planes empresariales personalizados' },
+  { label: 'Soporte técnico', href: '/servicios/soporte-tecnico', desc: 'Asistencia inmediata para problemas técnicos' },
+  { label: 'Mantenimiento de computadoras y laptops', href: '/servicios/mantenimiento-de-equipos', desc: 'Servicio preventivo y correctivo' },
+  { label: 'Instalación y configuración de software', href: '/servicios/instalacion-de-software', desc: 'Sistemas operativos y aplicaciones' },
+  { label: 'Configuración de impresoras', href: '/servicios/configuracion-de-impresoras', desc: 'Configuración en red y local' },
+  { label: 'Soporte remoto y presencial', href: '/servicios/soporte-remoto-y-presencial', desc: 'Atención flexible según tus necesidades' },
+  { label: 'Soluciones de soporte para empresas', href: '/servicios/soporte-empresarial', desc: 'Planes empresariales personalizados' },
   { label: '¿Alquiler de equipos?', href: '/servicios#alquiler', desc: 'En evaluación: laptops y PCs por proyecto' },
 ]
 
 export const infrastructureMenu: NavMenuItem[] = [
-  { label: 'Redes y conectividad', href: '/servicios', desc: 'Diseño e implementación de redes' },
-  { label: 'Cableado estructurado', href: '/servicios', desc: 'Instalación profesional de cableado' },
-  { label: 'Configuración de equipos de red', href: '/servicios', desc: 'Routers, switches y access points' },
-  { label: 'Implementación de infraestructura tecnológica', href: '/servicios', desc: 'Infraestructura completa para empresas' },
-  { label: 'Equipamiento tecnológico empresarial', href: '/servicios', desc: 'Servidores y equipamiento profesional' },
+  { label: 'Redes y conectividad', href: '/servicios/redes-y-conectividad', desc: 'Diseño e implementación de redes' },
+  { label: 'Cableado estructurado', href: '/servicios/cableado-estructurado', desc: 'Instalación profesional de cableado' },
+  { label: 'Configuración de equipos de red', href: '/servicios/configuracion-de-equipos-de-red', desc: 'Routers, switches y access points' },
+  { label: 'Implementación de infraestructura tecnológica', href: '/servicios/implementacion-de-infraestructura', desc: 'Infraestructura completa para empresas' },
+  { label: 'Equipamiento tecnológico empresarial', href: '/servicios/equipamiento-tecnologico-empresarial', desc: 'Servidores y equipamiento profesional' },
 ]
 
 export const softwareDevMenu: NavMenuItem[] = [
-  { label: 'Sistemas web a medida', href: '/sistemas', desc: 'Desarrollo de aplicaciones web personalizadas' },
-  { label: 'Sistemas de gestión empresarial', href: '/sistemas', desc: 'ERP y sistemas de gestión' },
-  { label: 'Automatización de procesos', href: '/sistemas', desc: 'Optimización de flujos de trabajo' },
-  { label: 'Integraciones y API', href: '/sistemas', desc: 'Conexión entre sistemas existentes' },
-  { label: 'Consultoría y proyectos personalizados', href: '/sistemas', desc: 'Asesoría tecnológica especializada' },
+  { label: 'Sistemas web a medida', href: '/sistemas/sistemas-web-a-medida', desc: 'Desarrollo de aplicaciones web personalizadas' },
+  { label: 'Sistemas de gestión empresarial', href: '/sistemas/sistemas-de-gestion-empresarial', desc: 'ERP y sistemas de gestión' },
+  { label: 'Automatización de procesos', href: '/sistemas/automatizacion-de-procesos', desc: 'Optimización de flujos de trabajo' },
+  { label: 'Integraciones y API', href: '/sistemas/integraciones-y-api', desc: 'Conexión entre sistemas existentes' },
+  { label: 'Consultoría y proyectos personalizados', href: '/sistemas/consultoria-y-proyectos-personalizados', desc: 'Asesoría tecnológica especializada' },
 ]
 
 // ─── Menú Empresa ─────────────────────────────────────────────────────────────────────

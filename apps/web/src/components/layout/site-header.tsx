@@ -364,7 +364,7 @@ export function SiteHeader({ quoteCount = 0, onQuoteClick }: SiteHeaderProps) {
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/images/logo.png"
+              src="/images/logos/logo.png"
               alt="F&J Systems"
               className="h-10 sm:h-11 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
             />

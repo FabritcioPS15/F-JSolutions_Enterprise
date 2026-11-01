@@ -104,6 +104,13 @@ export function useAccount() {
     setQuotes([])
   }, [])
 
+  const clearProfile = useCallback(() => {
+    if (typeof window !== 'undefined') {
+      window.localStorage.removeItem(PROFILE_STORAGE_KEY)
+    }
+    setProfile(null)
+  }, [])
+
   return {
     profile,
     quotes,
@@ -112,5 +119,6 @@ export function useAccount() {
     addQuote,
     removeQuote,
     clearQuotes,
+    clearProfile,
   }
 }

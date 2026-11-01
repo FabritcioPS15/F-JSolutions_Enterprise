@@ -20,11 +20,13 @@ import {
   ClientStatusBadge,
 } from '@/components/admin/commercial-ui'
 import { ConfirmDialog } from '@/components/admin/confirm-dialog'
+import { ExportMenu } from '@/components/admin/export-menu'
 import { Modal } from '@/components/admin/modal'
 import { useToast } from '@/components/admin/toast'
 import {
   EmptyState,
   Field,
+  FilterSelect,
   LoadingState,
   PageHeader,
   Select,
@@ -35,6 +37,7 @@ import {
   inputClass,
   textareaClass,
 } from '@/components/admin/ui'
+import { clientsDataset } from '@/lib/admin/excel-exports'
 import {
   clientSegmentLabels,
   formatDate,
@@ -221,10 +224,17 @@ export function ClientsView() {
         title="Clientes"
         description="Directorio de empresas y personas que reciben cotizaciones de FJ Systems."
         actions={
-          <button type="button" className={btnPrimary} onClick={() => setEditing('new')}>
-            <Plus className="size-4" aria-hidden="true" />
-            Nuevo cliente
-          </button>
+          <>
+            <ExportMenu
+              build={() => clientsDataset(filtered)}
+              nouns={['cliente', 'clientes']}
+              disabled={filtered.length === 0}
+            />
+            <button type="button" className={btnPrimary} onClick={() => setEditing('new')}>
+              <Plus className="size-4" aria-hidden="true" />
+              Nuevo cliente
+            </button>
+          </>
         }
       />
 
@@ -287,26 +297,40 @@ export function ClientsView() {
           </div>
 
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:flex lg:shrink-0 lg:items-center">
-            <Select
+            <FilterSelect
+              label="Segmento"
               value={segment}
-              onChange={(event) => setSegment(event.target.value as 'all' | ClientSegment)}
-              aria-label="Filtrar por segmento"
-              className="sm:w-full lg:w-40"
-            >
-              <option value="all">Todos los segmentos</option>
-              <option value="empresa">Empresas</option>
-              <option value="persona">Personas</option>
-            </Select>
-            <Select
+              onChange={(next) => setSegment(next as 'all' | ClientSegment)}
+              ariaLabel="Filtrar por segmento"
+              align="right"
+              className="sm:w-full lg:w-48"
+              options={[
+                { value: 'all', label: 'Todos', count: clients.length },
+                { value: 'empresa', label: 'Empresas', count: companyCount },
+                {
+                  value: 'persona',
+                  label: 'Personas',
+                  count: clients.length - companyCount,
+                },
+              ]}
+            />
+            <FilterSelect
+              label="Estado"
               value={status}
-              onChange={(event) => setStatus(event.target.value as 'all' | ClientStatus)}
-              aria-label="Filtrar por estado"
-              className="sm:w-full lg:w-36"
-            >
-              <option value="all">Todos los estados</option>
-              <option value="active">Activos</option>
-              <option value="inactive">Inactivos</option>
-            </Select>
+              onChange={(next) => setStatus(next as 'all' | ClientStatus)}
+              ariaLabel="Filtrar por estado"
+              align="right"
+              className="sm:w-full lg:w-44"
+              options={[
+                { value: 'all', label: 'Todos', count: clients.length },
+                { value: 'active', label: 'Activos', count: activeCount },
+                {
+                  value: 'inactive',
+                  label: 'Inactivos',
+                  count: clients.length - activeCount,
+                },
+              ]}
+            />
             {hasFilters && (
               <button
                 type="button"

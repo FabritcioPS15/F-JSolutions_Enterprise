@@ -2,6 +2,7 @@ import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Inter, Space_Grotesk } from 'next/font/google'
 import { SiteFooter } from '@/components/layout/site-footer'
+import { SITE_URL } from '@/lib/site'
 import './globals.css'
 
 const inter = Inter({
@@ -19,6 +20,7 @@ const spaceGrotesk = Space_Grotesk({
 
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: 'F&J Systems | Soluciones tecnológicas para empresas',
   description: 'Desarrollo de software, infraestructura TI y hardware corporativo para empresas que quieren avanzar.',
   generator: 'v0.app',

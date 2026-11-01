@@ -28,21 +28,23 @@ const FOOTER_COLUMNS: FooterColumn[] = [
   {
     title: 'Servicios tecnológicos',
     links: [
-      { label: 'Soporte técnico', href: '/soporte-ti' },
-      { label: 'Infraestructura TI', href: '/servicios' },
-      { label: 'Redes y conectividad', href: '/servicios' },
-      { label: 'Mantenimiento de equipos', href: '/soporte-ti' },
-      { label: 'Desarrollo de software', href: '/sistemas' },
-      { label: 'Automatización de procesos', href: '/sistemas' },
+      { label: 'Soporte técnico', href: '/servicios/soporte-tecnico' },
+      { label: 'Soporte para empresas', href: '/servicios/soporte-empresarial' },
+      { label: 'Redes y conectividad', href: '/servicios/redes-y-conectividad' },
+      { label: 'Cableado estructurado', href: '/servicios/cableado-estructurado' },
+      { label: 'Mantenimiento de equipos', href: '/servicios/mantenimiento-de-equipos' },
+      { label: 'Implementación de infraestructura', href: '/servicios/implementacion-de-infraestructura' },
+      { label: 'Sistemas web a medida', href: '/sistemas/sistemas-web-a-medida' },
+      { label: 'Automatización de procesos', href: '/sistemas/automatizacion-de-procesos' },
     ],
   },
   {
     title: 'Soluciones empresariales',
     links: [
       { label: 'Soluciones para empresas', href: '/nosotros' },
-      { label: 'Implementación tecnológica', href: '/como-trabajamos' },
+      { label: 'Implementación tecnológica', href: '/servicios/implementacion-de-infraestructura' },
       { label: 'Sistemas y aplicaciones', href: '/sistemas' },
-      { label: 'Consultoría TI', href: '/servicios' },
+      { label: 'Consultoría TI', href: '/sistemas/consultoria-y-proyectos-personalizados' },
       { label: 'Proyectos tecnológicos', href: '/proyectos' },
     ],
   },
@@ -126,7 +128,7 @@ export function SiteFooter() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <div className="bg-white rounded-xl px-2.5 py-1.5 shadow-sm transition-transform duration-200 group-hover:scale-105 motion-reduce:transition-none">
               <img
-                src="/images/logo.png"
+                src="/images/logos/logo.png"
                 alt="F&J Systems"
                 className="h-8 sm:h-9 w-auto object-contain"
               />
@@ -199,7 +201,7 @@ export function SiteFooter() {
             <ul className="flex flex-wrap items-center gap-x-5 gap-y-2">
               <li>
                 <Link
-                  href="/nosotros"
+                  href="/terminos-y-condiciones"
                   className={`transition-colors duration-200 hover:text-[#CBD5E1] motion-reduce:transition-none ${FOCUS_STYLE} rounded-sm`}
                 >
                   Términos y condiciones
@@ -207,7 +209,7 @@ export function SiteFooter() {
               </li>
               <li>
                 <Link
-                  href="/nosotros"
+                  href="/politica-de-privacidad"
                   className={`transition-colors duration-200 hover:text-[#CBD5E1] motion-reduce:transition-none ${FOCUS_STYLE} rounded-sm`}
                 >
                   Política de privacidad
@@ -215,7 +217,7 @@ export function SiteFooter() {
               </li>
               <li>
                 <Link
-                  href="/preguntas-frecuentes"
+                  href="/informacion-legal"
                   className={`transition-colors duration-200 hover:text-[#CBD5E1] motion-reduce:transition-none ${FOCUS_STYLE} rounded-sm`}
                 >
                   Información legal

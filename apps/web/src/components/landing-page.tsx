@@ -1,12 +1,14 @@
 'use client'
 
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   ArrowRight,
   BarChart3,
   Calculator,
   Check,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   Globe,
   Laptop,
   SlidersHorizontal,
@@ -14,12 +16,12 @@ import {
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
 import { CorporateHero } from '@/components/heroes'
 import { ProductCard } from '@/components/cards/product-card'
-import { categories, products, getTaxonomyCategory } from '@/lib/catalog'
+import { categories } from '@/lib/catalog'
+import { getFeaturedProducts } from '@/lib/product-feed'
 import { useQuote } from '@/lib/use-quote'
 
 const businessLinks = ['Ventas corporativas', 'Facturación electrónica', 'Soporte postventa', 'Garantías y devoluciones', 'Despachos y entregas', 'Medios de pago']
 const serviceOptions = ['Desarrollo de sistemas', 'Soporte TI', 'Redes y conectividad', 'Servidores y nube', 'Ciberseguridad', 'Mantenimiento preventivo', 'Instalación y configuración', 'Capacitación tecnológica']
-const featuredProductIds = ['lenovo-ideapad-slim-3', 'asus-rtx-4060-8gb', 'monitor-lg-ultragear-24', 'redragon-kumara']
 
 const quickStats = [
   { value: '10K+', label: 'Clientes satisfechos' },
@@ -32,7 +34,11 @@ export function LandingPage() {
   const quote = useQuote()
   const [category, setCategory] = useState('Todas')
   const [categoryOpen, setCategoryOpen] = useState(false)
+  const [visiblePages, setVisiblePages] = useState(1)
+  const [canScrollLeft, setCanScrollLeft] = useState(false)
+  const [canScrollRight, setCanScrollRight] = useState(false)
   const categoryRef = useRef<HTMLDivElement>(null)
+  const trackRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const listener = (event: MouseEvent) => {
@@ -44,23 +50,46 @@ export function LandingPage() {
     return () => document.removeEventListener('mousedown', listener)
   }, [])
 
-  const featuredProducts = useMemo(
-    () => products.filter((p) => featuredProductIds.includes(p.id)),
-    [],
+  useEffect(() => {
+    setVisiblePages(1)
+    trackRef.current?.scrollTo({ left: 0 })
+  }, [category])
+
+  const syncArrows = useCallback(() => {
+    const track = trackRef.current
+    if (!track) return
+    setCanScrollLeft(track.scrollLeft > 4)
+    setCanScrollRight(track.scrollLeft + track.clientWidth < track.scrollWidth - 4)
+  }, [])
+
+  const featured = useMemo(
+    () => getFeaturedProducts({ category, pages: visiblePages }),
+    [category, visiblePages],
   )
 
-  const filteredProducts = useMemo(() => {
-    if (category === 'Todas') return featuredProducts
+  useEffect(() => {
+    syncArrows()
+    window.addEventListener('resize', syncArrows)
+    return () => window.removeEventListener('resize', syncArrows)
+  }, [featured.items.length, syncArrows])
 
-    return featuredProducts.filter((product) => {
-      const productTax = getTaxonomyCategory(product.category)
-      // Coincidencia por nombre de categoría exacto o por taxonomía
-      return (
-        product.category.toLowerCase() === category.toLowerCase() ||
-        (productTax && productTax.label.toLowerCase() === category.toLowerCase())
-      )
-    })
-  }, [category, featuredProducts])
+  const handleTrackScroll = () => {
+    const track = trackRef.current
+    if (!track) return
+
+    syncArrows()
+
+    // Carga la siguiente tanda al acercarse al final del carrusel.
+    if (featured.hasMore && track.scrollLeft + track.clientWidth >= track.scrollWidth - 160) {
+      setVisiblePages((value) => value + 1)
+    }
+  }
+
+  const scrollCarousel = (direction: 1 | -1) => {
+    const track = trackRef.current
+    if (!track) return
+    track.scrollBy({ left: direction * track.clientWidth, behavior: 'smooth' })
+  }
 
   return (
     <main className="min-h-screen overflow-x-clip bg-[#f8fafc] text-[#172033]">
@@ -124,13 +153,59 @@ export function LandingPage() {
             <a href="/productos" className="inline-flex h-10 items-center gap-2 rounded-lg border border-[#dbe2ea] bg-white px-4 text-sm font-semibold text-[#172033] transition hover:border-[#155eef]/40 hover:text-[#155eef]">
               Ver catálogo completo <ArrowRight className="size-4" />
             </a>
+            <div className="flex items-center gap-1.5">
+              <span className="mr-1 hidden text-xs font-semibold text-[#64748b] sm:inline">
+                {featured.items.length} de {featured.total}
+              </span>
+              <button
+                type="button"
+                onClick={() => scrollCarousel(-1)}
+                disabled={!canScrollLeft}
+                aria-label="Ver productos anteriores"
+                className="grid size-10 place-items-center rounded-lg border border-[#dbe2ea] bg-white text-[#172033] transition hover:border-[#155eef]/40 hover:text-[#155eef] disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                <ChevronLeft className="size-4" />
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollCarousel(1)}
+                disabled={!canScrollRight}
+                aria-label="Ver más productos"
+                className="grid size-10 place-items-center rounded-lg border border-[#dbe2ea] bg-white text-[#172033] transition hover:border-[#155eef]/40 hover:text-[#155eef] disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                <ChevronRight className="size-4" />
+              </button>
+            </div>
           </div>
         </div>
-        <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 lg:gap-4">
-          {filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} onAddToQuote={quote.addItem} />
-          ))}
-        </div>
+        {featured.total === 0 ? (
+          <div className="mt-5 rounded-2xl border border-dashed border-[#dbe2ea] bg-white px-4 py-10 text-center">
+            <p className="text-sm font-bold text-[#172033]">No hay productos en esta categoría</p>
+            <p className="mt-1 text-xs text-[#64748b]">Prueba con otra categoría o revisa el catálogo completo.</p>
+            <button
+              type="button"
+              onClick={() => setCategory('Todas')}
+              className="mt-4 inline-flex h-10 items-center gap-2 rounded-lg bg-[#155eef] px-4 text-sm font-semibold text-white transition hover:bg-[#0f4fd1]"
+            >
+              Ver todos los productos
+            </button>
+          </div>
+        ) : (
+          <div
+            ref={trackRef}
+            onScroll={handleTrackScroll}
+            className="mt-5 flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 lg:gap-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+            {featured.items.map((product) => (
+              <div
+                key={product.id}
+                className="w-[86%] shrink-0 snap-start sm:w-[calc(50%-6px)] lg:w-[calc(33.333%-10.667px)] xl:w-[calc(25%-12px)]"
+              >
+                <ProductCard product={product} onAddToQuote={quote.addItem} />
+              </div>
+            ))}
+          </div>
+        )}
       </section>
 
       <section id="servicios" className="border-y border-[#e5eaf0] bg-white scroll-mt-20 sm:scroll-mt-24 px-4 py-8 sm:py-10 sm:px-6 lg:px-8">

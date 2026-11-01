@@ -9,6 +9,8 @@ import {
   ChevronDown,
   ChevronRight,
   Clock,
+  Code2,
+  Compass,
   Cpu,
   FileText,
   HardDrive,
@@ -16,22 +18,29 @@ import {
   Loader2,
   Mail,
   Menu,
-  MessageSquare,
   Monitor,
   MousePointer2,
   Network,
+  Package,
   Phone,
   Printer,
+  Scale,
   Search,
   Sparkles,
   Tag,
-  Trash2,
-  TrendingUp,
   UserRound,
+  Wrench,
   X,
   Zap,
 } from 'lucide-react'
-import { products as catalogProducts, categories as catalogCategories } from '@/lib/catalog'
+import { FaTeamspeak } from 'react-icons/fa6'
+import { categories as catalogCategories } from '@/lib/catalog'
+import {
+  popularSearches,
+  quickSearchLinks,
+  searchSiteGrouped,
+  type SiteSearchType,
+} from '@/lib/site-search'
 import { mainNav, storeCategories, featuredBrands, itServicesMenu, infrastructureMenu, softwareDevMenu, companyMenu } from '@/lib/navigation'
 
 // ─── Types ───────────────────────────────────────────────────────────────────────────────
@@ -410,7 +419,14 @@ function StoreMegaMenu({ onClose }: { onClose: () => void }) {
 
 function CompactDropdown({ items, onClose }: { items: Array<{ label: string; href: string; desc?: string }>; onClose: () => void }) {
   const ref = useRef<HTMLDivElement>(null)
+  const pathname = usePathname()
   useOnClickOutside(ref, onClose)
+
+  const isItemActive = (href: string) => {
+    const [path, hash] = href.split('#')
+    if (!pathname || hash) return false
+    return pathname === path || pathname.startsWith(`${path}/`)
+  }
 
   return (
     <div
@@ -419,19 +435,49 @@ function CompactDropdown({ items, onClose }: { items: Array<{ label: string; hre
       className="absolute left-0 top-[calc(100%+4px)] z-[60] w-80 rounded-xl border border-[#E2E8F0] bg-white shadow-[0_12px_40px_rgba(15,23,42,0.12)] animate-in fade-in slide-in-from-top-2 duration-200"
     >
       <div className="p-2">
-        {items.map((item, index) => (
-          <Link
-            key={index}
-            href={item.href}
-            onClick={onClose}
-            className="block rounded-lg px-4 py-3 text-sm text-[#0F172A] hover:bg-[#F8FAFC] hover:text-[#2563EB] transition-colors"
-          >
-            <span className="font-semibold">{item.label}</span>
-            {item.desc && <span className="block text-xs text-[#64748B] mt-0.5">{item.desc}</span>}
-          </Link>
-        ))}
+        {items.map((item, index) => {
+          const active = isItemActive(item.href)
+          return (
+            <Link
+              key={index}
+              href={item.href}
+              onClick={onClose}
+              aria-current={active ? 'page' : undefined}
+              className={`flex items-center gap-3 rounded-lg px-4 py-3 text-sm transition-colors ${
+                active
+                  ? 'bg-[#EFF6FF] text-[#2563EB]'
+                  : 'text-[#0F172A] hover:bg-[#F8FAFC] hover:text-[#2563EB]'
+              }`}
+            >
+              <span className="min-w-0 flex-1">
+                <span className="font-semibold">{item.label}</span>
+                {item.desc && (
+                  <span
+                    className={`mt-0.5 block text-xs ${
+                      active ? 'text-[#1D4ED8]' : 'text-[#64748B]'
+                    }`}
+                  >
+                    {item.desc}
+                  </span>
+                )}
+              </span>
+              {active && (
+                <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-[#2563EB]" />
+              )}
+            </Link>
+          )
+        })}
       </div>
     </div>
+  )
+}
+
+function ActiveIndicator() {
+  return (
+    <span
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-x-3 bottom-0.5 h-[2px] rounded-full bg-[#2563EB]"
+    />
   )
 }
 
@@ -439,7 +485,6 @@ function CompactDropdown({ items, onClose }: { items: Array<{ label: string; hre
 
 const RECENT_SEARCHES_KEY = 'fj-recent-searches'
 const MAX_RECENT = 5
-const MAX_SUGGESTIONS = 6
 
 function getRecentSearches(): string[] {
   if (typeof window === 'undefined') return []
@@ -463,23 +508,50 @@ function removeRecentSearch(term: string) {
   localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(recent))
 }
 
-type SearchResult = {
-  type: 'product' | 'category' | 'recent'
+type DropdownType = SiteSearchType | 'recent'
+
+type DropdownItem = {
+  id: string
+  group: string
+  type: DropdownType
   label: string
   sublabel?: string
   href: string
   image?: string
 }
 
+const groupIcons: Record<string, React.ElementType> = {
+  Recientes: Clock,
+  Explorar: Compass,
+  Productos: Package,
+  Categorías: Tag,
+  'Desarrollo de software': Code2,
+  Servicios: Wrench,
+  Secciones: FileText,
+  Legal: Scale,
+}
+
+const typeIcons: Record<DropdownType, React.ElementType> = {
+  product: Package,
+  system: Code2,
+  service: Wrench,
+  category: Tag,
+  page: FileText,
+  legal: Scale,
+  recent: Clock,
+}
+
 function SearchAutocomplete({
   query,
   setQuery,
   onSubmit,
+  onNavigate,
   variant = 'desktop',
 }: {
   query: string
   setQuery: (q: string) => void
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void
+  onNavigate?: () => void
   variant?: 'desktop' | 'mobile'
 }) {
   const router = useRouter()
@@ -496,56 +568,54 @@ function SearchAutocomplete({
   }, [])
 
   // Compute suggestions
-  const suggestions = useMemo((): SearchResult[] => {
-    const trimmed = query.trim().toLowerCase()
+  const suggestions = useMemo((): DropdownItem[] => {
+    const trimmed = query.trim()
 
     if (!trimmed) {
-      // Show recent searches + popular categories when empty
-      const recents: SearchResult[] = recentSearches.map((s) => ({
+      // Recent searches + popular categories + quick access to main sections
+      const recents: DropdownItem[] = recentSearches.map((term) => ({
+        id: `recent-${term}`,
+        group: 'Recientes',
         type: 'recent' as const,
-        label: s,
-        href: `/productos?q=${encodeURIComponent(s)}`,
+        label: term,
+        href: `/buscar?q=${encodeURIComponent(term)}`,
       }))
 
-      const popularCategories: SearchResult[] = catalogCategories.slice(0, 4).map((cat) => ({
+      const popularCategories: DropdownItem[] = catalogCategories.slice(0, 4).map((category) => ({
+        id: `quick-category-${category}`,
+        group: 'Categorías',
         type: 'category' as const,
-        label: cat,
-        sublabel: 'Categoría',
-        href: `/productos?categoria=${encodeURIComponent(cat)}`,
+        label: category,
+        sublabel: 'Categoría del catálogo',
+        href: `/productos?categoria=${encodeURIComponent(category)}`,
       }))
 
-      return [...recents, ...popularCategories]
+      const quickLinks: DropdownItem[] = quickSearchLinks.map((link) => ({
+        id: `quick-${link.href}`,
+        group: 'Explorar',
+        type: 'page' as const,
+        label: link.label,
+        sublabel: link.description,
+        href: link.href,
+      }))
+
+      return [...recents, ...popularCategories, ...quickLinks]
     }
 
-    // Search products
-    const matched = catalogProducts.filter((p) => {
-      const haystack = `${p.name} ${p.brand} ${p.category} ${p.model || ''} ${p.sku || ''}`.toLowerCase()
-      return trimmed.split(/\s+/).every((word) => haystack.includes(word))
-    })
-
-    const productResults: SearchResult[] = matched.slice(0, MAX_SUGGESTIONS).map((p) => ({
-      type: 'product' as const,
-      label: p.name,
-      sublabel: `${p.brand} · ${p.category}`,
-      href: `/productos/${p.slug}`,
-      image: p.image,
-    }))
-
-    // Also match categories
-    const matchedCategories = catalogCategories
-      .filter((cat) => cat.toLowerCase().includes(trimmed))
-      .slice(0, 2)
-      .map((cat) => ({
-        type: 'category' as const,
-        label: cat,
-        sublabel: 'Ver categoría',
-        href: `/productos?categoria=${encodeURIComponent(cat)}`,
-      }))
-
-    return [...matchedCategories, ...productResults].slice(0, MAX_SUGGESTIONS + 2)
+    return searchSiteGrouped(trimmed, { perType: 2, maxGroups: 5 }).flatMap((group) =>
+      group.items.map((item) => ({
+        id: item.id,
+        group: group.label,
+        type: item.type,
+        label: item.title,
+        sublabel: item.description,
+        href: item.href,
+        image: item.image,
+      })),
+    )
   }, [query, recentSearches])
 
-  const showDropdown = focused && suggestions.length > 0
+  const showDropdown = focused && (suggestions.length > 0 || query.trim().length > 0)
 
   // Reset index when suggestions change
   useEffect(() => {
@@ -568,15 +638,16 @@ function SearchAutocomplete({
   }, [])
 
   const navigate = useCallback(
-    (result: SearchResult) => {
+    (result: DropdownItem) => {
       if (query.trim()) {
         saveRecentSearch(query.trim())
         setRecentSearches(getRecentSearches())
       }
       setFocused(false)
+      onNavigate?.()
       router.push(result.href)
     },
-    [query, router],
+    [query, router, onNavigate],
   )
 
   const handleKeyDown = useCallback(
@@ -635,7 +706,7 @@ function SearchAutocomplete({
   return (
     <div ref={containerRef} className={isDesktop ? 'relative hidden w-full max-w-2xl md:block' : 'relative mb-4'}>
       <form onSubmit={handleSubmit}>
-        {isDesktop && <span className="sr-only">Buscar productos</span>}
+        <span className="sr-only">Buscar en todo el sitio</span>
         <Search
           className={`pointer-events-none absolute top-1/2 size-4 -translate-y-1/2 transition-colors ${
             focused ? 'text-[#2563EB]' : 'text-[#94A3B8]'
@@ -647,7 +718,7 @@ function SearchAutocomplete({
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setFocused(true)}
           onKeyDown={handleKeyDown}
-          placeholder="Buscar productos, marcas o soluciones..."
+          placeholder="Buscar productos, servicios o soluciones..."
           autoComplete="off"
           role="combobox"
           aria-expanded={showDropdown}
@@ -681,20 +752,6 @@ function SearchAutocomplete({
           }`}
         >
           {/* Section label */}
-          {!query.trim() && recentSearches.length > 0 && (
-            <div className="flex items-center gap-1.5 border-b border-[#F1F5F9] px-3.5 pb-1.5 pt-3">
-              <Clock className="size-3 text-[#94A3B8]" />
-              <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#94A3B8]">Recientes</span>
-            </div>
-          )}
-
-          {!query.trim() && recentSearches.length === 0 && (
-            <div className="flex items-center gap-1.5 border-b border-[#F1F5F9] px-3.5 pb-1.5 pt-3">
-              <TrendingUp className="size-3 text-[#94A3B8]" />
-              <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#94A3B8]">Categorías populares</span>
-            </div>
-          )}
-
           {query.trim() && (
             <div className="flex items-center gap-1.5 border-b border-[#F1F5F9] px-3.5 pb-1.5 pt-3">
               <Sparkles className="size-3 text-[#2563EB]" />
@@ -705,72 +762,111 @@ function SearchAutocomplete({
             </div>
           )}
 
-          <div className="p-1.5">
-            {suggestions.map((result, index) => (
-              <button
-                key={`${result.type}-${result.label}-${index}`}
-                id={`search-item-${index}`}
-                data-search-item
-                type="button"
-                role="option"
-                aria-selected={activeIndex === index}
-                onMouseEnter={() => setActiveIndex(index)}
-                onClick={() => navigate(result)}
-                className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors ${
-                  activeIndex === index ? 'bg-[#EFF6FF]' : 'hover:bg-[#F8FAFC]'
-                }`}
-              >
-                {/* Icon / image */}
-                {result.type === 'product' && result.image ? (
-                  <div className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-[#E2E8F0] bg-white">
-                    <img
-                      src={result.image}
-                      alt=""
-                      className="size-full object-cover"
-                      loading="lazy"
-                    />
-                  </div>
-                ) : result.type === 'category' ? (
-                  <div className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-[#DBEAFE] bg-[#EFF6FF]">
-                    <Tag className="size-3.5 text-[#2563EB]" />
-                  </div>
-                ) : (
-                  <div className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-[#E2E8F0] bg-[#F8FAFC]">
-                    <Clock className="size-3.5 text-[#94A3B8]" />
-                  </div>
-                )}
-
-                {/* Text */}
-                <div className="min-w-0 flex-1">
-                  <p className={`truncate text-sm font-medium ${
-                    activeIndex === index ? 'text-[#2563EB]' : 'text-[#0F172A]'
-                  }`}>
-                    {result.label}
-                  </p>
-                  {result.sublabel && (
-                    <p className="mt-0.5 truncate text-[11px] text-[#94A3B8]">
-                      {result.sublabel}
-                    </p>
-                  )}
-                </div>
-
-                {/* Actions */}
-                {result.type === 'recent' ? (
+          {query.trim() && suggestions.length === 0 && (
+            <div className="px-3.5 pb-3.5 pt-2.5">
+              <p className="text-sm font-semibold text-[#0F172A]">
+                Sin resultados para &quot;{query.trim()}&quot;
+              </p>
+              <p className="mt-1 text-xs text-[#64748B]">Prueba con alguna de estas búsquedas:</p>
+              <div className="mt-2.5 flex flex-wrap gap-1.5">
+                {popularSearches.map((term) => (
                   <button
+                    key={term}
                     type="button"
-                    onClick={(e) => handleDeleteRecent(result.label, e)}
-                    className="shrink-0 rounded-md p-1 text-[#CBD5E1] transition-colors hover:bg-red-50 hover:text-red-400"
-                    aria-label={`Eliminar "${result.label}" de recientes`}
+                    onClick={() => setQuery(term)}
+                    className="rounded-full border border-[#E2E8F0] bg-[#F8FAFC] px-2.5 py-1 text-[11px] font-semibold text-[#475569] transition hover:border-[#2563EB]/40 hover:text-[#2563EB]"
                   >
-                    <X className="size-3" />
+                    {term}
                   </button>
-                ) : (
-                  <ArrowUpRight className={`size-3.5 shrink-0 ${
-                    activeIndex === index ? 'text-[#2563EB]' : 'text-[#CBD5E1]'
-                  }`} />
-                )}
-              </button>
-            ))}
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="p-1.5">
+            {suggestions.map((result, index) => {
+              const GroupIcon = groupIcons[result.group] ?? Search
+              const TypeIcon = typeIcons[result.type]
+              const showGroupLabel = index === 0 || suggestions[index - 1].group !== result.group
+
+              return (
+                <div key={result.id}>
+                  {showGroupLabel && (
+                    <div className="flex items-center gap-1.5 px-3 pb-1 pt-2.5">
+                      <GroupIcon className="size-3 text-[#94A3B8]" aria-hidden="true" />
+                      <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#94A3B8]">
+                        {result.group}
+                      </span>
+                    </div>
+                  )}
+
+                  <div
+                    id={`search-item-${index}`}
+                    data-search-item
+                    role="option"
+                    tabIndex={-1}
+                    aria-selected={activeIndex === index}
+                    onMouseEnter={() => setActiveIndex(index)}
+                    onClick={() => navigate(result)}
+                    className={`flex w-full cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors ${
+                      activeIndex === index ? 'bg-[#EFF6FF]' : 'hover:bg-[#F8FAFC]'
+                    }`}
+                  >
+                    {/* Icon / image */}
+                    {result.type === 'product' && result.image ? (
+                      <div className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-[#E2E8F0] bg-white">
+                        <img
+                          src={result.image}
+                          alt=""
+                          className="size-full object-cover"
+                          loading="lazy"
+                        />
+                      </div>
+                    ) : (
+                      <div
+                        className={`flex size-9 shrink-0 items-center justify-center rounded-lg border ${
+                          result.type === 'category' || result.type === 'system'
+                            ? 'border-[#DBEAFE] bg-[#EFF6FF] text-[#2563EB]'
+                            : 'border-[#E2E8F0] bg-[#F8FAFC] text-[#64748B]'
+                        }`}
+                      >
+                        <TypeIcon className="size-3.5" aria-hidden="true" />
+                      </div>
+                    )}
+
+                    {/* Text */}
+                    <div className="min-w-0 flex-1">
+                      <p className={`truncate text-sm font-medium ${
+                        activeIndex === index ? 'text-[#2563EB]' : 'text-[#0F172A]'
+                      }`}>
+                        {result.label}
+                      </p>
+                      {result.sublabel && (
+                        <p className="mt-0.5 truncate text-[11px] text-[#94A3B8]">
+                          {result.sublabel}
+                        </p>
+                      )}
+                    </div>
+
+                    {/* Actions */}
+                    {result.type === 'recent' ? (
+                      <button
+                        type="button"
+                        onClick={(e) => handleDeleteRecent(result.label, e)}
+                        className="shrink-0 rounded-md p-1 text-[#CBD5E1] transition-colors hover:bg-red-50 hover:text-red-400"
+                        aria-label={`Eliminar "${result.label}" de recientes`}
+                      >
+                        <X className="size-3" />
+                      </button>
+                    ) : (
+                      <ArrowUpRight className={`size-3.5 shrink-0 ${
+                        activeIndex === index ? 'text-[#2563EB]' : 'text-[#CBD5E1]'
+                      }`} />
+                    )}
+                  </div>
+                </div>
+              )
+            })}
           </div>
 
           {/* Footer */}
@@ -782,7 +878,8 @@ function SearchAutocomplete({
                   saveRecentSearch(query.trim())
                   setRecentSearches(getRecentSearches())
                   setFocused(false)
-                  router.push(`/productos?q=${encodeURIComponent(query.trim())}`)
+                  onNavigate?.()
+                  router.push(`/buscar?q=${encodeURIComponent(query.trim())}`)
                 }}
                 className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-xs font-semibold text-[#2563EB] transition-colors hover:bg-[#EFF6FF]"
               >
@@ -895,7 +992,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
     const term = query.trim()
     setMenuOpen(false)
     setOpenMobileSection(null)
-    router.push(term ? `/productos?q=${encodeURIComponent(term)}` : '/productos')
+    router.push(term ? `/buscar?q=${encodeURIComponent(term)}` : '/productos')
   }
 
   const isPathActive = (href: string) => {
@@ -904,8 +1001,12 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
     return pathname === href || pathname.startsWith(`${href}/`)
   }
 
-  const isActive = (item: { href: string; activeMatch?: string[] }) =>
+  const isActive = (item: { href: string; activeExact?: string[]; activeMatch?: string[] }) =>
+    (item.activeExact ?? []).some((path) => pathname === path) ||
     (item.activeMatch ?? [item.href]).some(isPathActive)
+
+  const isAccountActive = isPathActive('/mi-cuenta')
+  const isQuotePageActive = isPathActive('/cotizacion')
 
   const toggle = (key: string) => setOpenDropdown((prev) => (prev === key ? null : key))
   const toggleMobile = (key: string) => setOpenMobileSection((prev) => (prev === key ? null : key))
@@ -932,7 +1033,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/images/logo.png"
+                src="/images/logos/logo.png"
                 alt="F&J Systems"
                 className="h-12 sm:h-14 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
               />
@@ -944,6 +1045,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                 query={query}
                 setQuery={setQuery}
                 onSubmit={submitSearch}
+                onNavigate={closeAll}
                 variant="desktop"
               />
             </div>
@@ -952,7 +1054,12 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
             <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
               <Link
                 href="/mi-cuenta"
-                className="hidden items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-[#475569] transition hover:bg-[#F8FAFC] hover:text-[#2563EB] lg:flex"
+                aria-current={isAccountActive ? 'page' : undefined}
+                className={`hidden items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold transition lg:flex ${
+                  isAccountActive
+                    ? 'bg-[#EFF6FF] text-[#2563EB]'
+                    : 'text-[#475569] hover:bg-[#F8FAFC] hover:text-[#2563EB]'
+                }`}
               >
                 <UserRound className="size-4" />
                 Mi cuenta
@@ -961,7 +1068,12 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
               <button
                 type="button"
                 onClick={goToQuote}
-                className="relative flex items-center gap-1.5 sm:gap-2 rounded-lg px-2 sm:px-3 py-2 text-sm font-semibold text-[#475569] transition hover:bg-[#F8FAFC] hover:text-[#2563EB]"
+                aria-current={isQuotePageActive ? 'page' : undefined}
+                className={`relative flex items-center gap-1.5 sm:gap-2 rounded-lg px-2 sm:px-3 py-2 text-sm font-semibold transition ${
+                  isQuotePageActive
+                    ? 'bg-[#EFF6FF] text-[#2563EB]'
+                    : 'text-[#475569] hover:bg-[#F8FAFC] hover:text-[#2563EB]'
+                }`}
                 aria-label={`Abrir cotización, ${quoteCount} productos`}
               >
                 <FileText className="size-4 sm:size-5" />
@@ -1018,7 +1130,8 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                         onClick={() => toggle('store')}
                         aria-expanded={openDropdown === 'store'}
                         aria-haspopup="dialog"
-                        className={`flex h-10 items-center gap-1.5 rounded-lg px-3 text-sm font-semibold transition-colors ${active
+                        aria-current={active ? 'page' : undefined}
+                        className={`relative flex h-10 items-center gap-1.5 rounded-lg px-3 text-sm font-semibold transition-colors ${active
                             ? 'text-[#2563EB]'
                             : 'text-[#475569] hover:text-[#2563EB]'
                           }`}
@@ -1027,6 +1140,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                         <ChevronDown
                           className={`size-3.5 transition-transform duration-200 ${openDropdown === 'store' ? 'rotate-180' : ''}`}
                         />
+                        {active && <ActiveIndicator />}
                       </button>
                       {openDropdown === 'store' && <StoreMegaMenu onClose={closeAll} />}
                     </>
@@ -1037,7 +1151,8 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                         onClick={() => toggle(dropdownKey)}
                         aria-expanded={openDropdown === dropdownKey}
                         aria-haspopup="dialog"
-                        className={`flex h-10 items-center gap-1.5 rounded-lg px-3 text-sm font-semibold transition-colors ${active
+                        aria-current={active ? 'page' : undefined}
+                        className={`relative flex h-10 items-center gap-1.5 rounded-lg px-3 text-sm font-semibold transition-colors ${active
                             ? 'text-[#2563EB]'
                             : 'text-[#475569] hover:text-[#2563EB]'
                           }`}
@@ -1046,6 +1161,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                         <ChevronDown
                           className={`size-3.5 transition-transform duration-200 ${openDropdown === dropdownKey ? 'rotate-180' : ''}`}
                         />
+                        {active && <ActiveIndicator />}
                       </button>
                       {openDropdown === dropdownKey && (
                         <CompactDropdown items={itemsMap[dropdownKey] || []} onClose={closeAll} />
@@ -1054,12 +1170,14 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                   ) : (
                     <Link
                       href={link.href}
-                      className={`flex h-10 items-center rounded-lg px-3 text-sm font-semibold transition-colors ${active
+                      aria-current={active ? 'page' : undefined}
+                      className={`relative flex h-10 items-center rounded-lg px-3 text-sm font-semibold transition-colors ${active
                           ? 'text-[#2563EB]'
                           : 'text-[#475569] hover:text-[#2563EB]'
                         }`}
                     >
                       {link.label}
+                      {active && <ActiveIndicator />}
                     </Link>
                   )}
                 </div>
@@ -1072,7 +1190,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                 href="/contacto"
                 className="flex items-center gap-2 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#1D4ED8]"
               >
-                <MessageSquare className="size-4" />
+                <FaTeamspeak aria-hidden="true" className="size-4" />
                 <span className="hidden sm:inline">Solicitar asesoría</span>
               </Link>
             </div>
@@ -1117,7 +1235,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/images/logo.png"
+                src="/images/logos/logo.png"
                 alt="F&J Systems"
                 className="h-11 sm:h-12 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
               />
@@ -1143,6 +1261,10 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
               query={query}
               setQuery={setQuery}
               onSubmit={submitSearch}
+              onNavigate={() => {
+                setMenuOpen(false)
+                setOpenMobileSection(null)
+              }}
               variant="mobile"
             />
 
@@ -1255,7 +1377,12 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                   setMenuOpen(false)
                   setOpenMobileSection(null)
                 }}
-                className="flex items-center gap-3 rounded-xl border border-[#E2E8F0] px-3.5 py-2.5 text-sm font-semibold text-[#334155] transition-colors hover:bg-[#F8FAFC] hover:text-[#2563EB]"
+                aria-current={isAccountActive ? 'page' : undefined}
+                className={`flex items-center gap-3 rounded-xl border px-3.5 py-2.5 text-sm font-semibold transition-colors ${
+                  isAccountActive
+                    ? 'border-[#2563EB]/40 bg-[#EFF6FF] text-[#2563EB]'
+                    : 'border-[#E2E8F0] text-[#334155] hover:bg-[#F8FAFC] hover:text-[#2563EB]'
+                }`}
               >
                 <div className="grid size-8 place-items-center rounded-lg bg-[#F1F5F9] text-[#64748B]">
                   <UserRound className="size-4" />
@@ -1270,7 +1397,12 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                   setOpenMobileSection(null)
                   goToQuote()
                 }}
-                className="flex w-full items-center justify-between rounded-xl border border-[#E2E8F0] px-3.5 py-2.5 text-sm font-semibold text-[#334155] transition-colors hover:bg-[#F8FAFC] hover:text-[#2563EB]"
+                aria-current={isQuotePageActive ? 'page' : undefined}
+                className={`flex w-full items-center justify-between rounded-xl border px-3.5 py-2.5 text-sm font-semibold transition-colors ${
+                  isQuotePageActive
+                    ? 'border-[#2563EB]/40 bg-[#EFF6FF] text-[#2563EB]'
+                    : 'border-[#E2E8F0] text-[#334155] hover:bg-[#F8FAFC] hover:text-[#2563EB]'
+                }`}
               >
                 <div className="flex items-center gap-3">
                   <div className="grid size-8 place-items-center rounded-lg bg-[#EFF6FF] text-[#2563EB]">
@@ -1295,7 +1427,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                 }}
                 className="flex items-center justify-center gap-2 rounded-xl bg-[#2563EB] px-4 py-2.5 text-sm font-semibold text-white shadow-xs transition hover:bg-[#1D4ED8]"
               >
-                <MessageSquare className="size-4" />
+                <FaTeamspeak aria-hidden="true" className="size-4" />
                 <span>Solicitar asesoría</span>
               </Link>
             </div>

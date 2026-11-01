@@ -54,12 +54,19 @@ export function useFavorites() {
 
   const isFavorite = (productId: string) => favorites.has(productId)
 
+  const clearFavorites = () => {
+    const empty = new Set<string>()
+    saveFavoritesToStorage(empty)
+    setFavoritesState(empty)
+  }
+
   const count = favorites.size
 
   return {
     favorites,
     toggleFavorite,
     isFavorite,
+    clearFavorites,
     count,
     isLoaded,
   }

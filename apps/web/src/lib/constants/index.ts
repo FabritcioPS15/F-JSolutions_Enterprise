@@ -6,7 +6,7 @@ export const EMPRESA = {
   telefono: '+51 999 888 777',
   email: 'ventas@fjsolutions.pe',
   emailSoporte: 'soporte@fjsolutions.pe',
-  direccion: 'Lima, Peru',
+  direccion: 'Lima, Perú',
   horario: 'Lun-Sab · 9:00 a 18:00',
   redesSociales: {
     linkedin: 'https://linkedin.com/company/fjtech',

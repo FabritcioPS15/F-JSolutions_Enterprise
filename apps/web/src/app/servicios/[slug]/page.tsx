@@ -1,17 +1,53 @@
 import type { Metadata } from 'next'
-import { EnhancedHeader } from '@/components/layout/enhanced-header'
+import { notFound } from 'next/navigation'
+import { ServiceDetail } from '@/components/service-detail'
+import { getService, getServicesByCategory } from '@/lib/services'
+import { getServiceMetadata, getServiceNotFoundMetadata } from '@/lib/service-metadata'
 
-export const metadata: Metadata = {
-  title: 'Servicio | FJ Tech Solutions',
+export const dynamicParams = false
+
+export function generateStaticParams() {
+  return [
+    ...getServicesByCategory('Soporte TI'),
+    ...getServicesByCategory('Infraestructura TI'),
+  ].map((service) => ({ slug: service.slug }))
 }
 
-export default function ServicioDetallePage({ params }: { params: { slug: string } }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}): Promise<Metadata> {
+  const { slug } = await params
+  const service = getService(slug)
+
+  if (!service || service.category === 'Desarrollo de software') {
+    return getServiceNotFoundMetadata()
+  }
+
+  return getServiceMetadata(service)
+}
+
+export default async function ServicioDetallePage({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}) {
+  const { slug } = await params
+  const service = getService(slug)
+
+  if (!service || service.category === 'Desarrollo de software') {
+    notFound()
+  }
+
   return (
-    <main className="min-h-screen bg-white text-[#0F172A]">
-      <EnhancedHeader />
-      <section className="mx-auto max-w-[1280px] px-4 py-20 sm:px-6 lg:px-8">
-        <h1>Servicio: <span className="font-mono">{params.slug}</span></h1>
-      </section>
-    </main>
+    <ServiceDetail
+      service={service}
+      categoryCrumb={
+        service.category === 'Infraestructura TI'
+          ? { label: 'Infraestructura TI', href: '/servicios' }
+          : { label: 'Servicios TI', href: '/servicios' }
+      }
+    />
   )
 }

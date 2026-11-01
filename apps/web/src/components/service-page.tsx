@@ -16,6 +16,7 @@ import {
 } from 'lucide-react'
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
 import { QuoteHero, ServiceHero, SoftwareHero, SupportVisual } from '@/components/heroes'
+import { getServicesByCategory } from '@/lib/services'
 
 type ServicePageProps = { kind: 'cotizador' | 'soporte' | 'sistemas' }
 
@@ -67,6 +68,7 @@ const content = {
 export function ServicePage({ kind }: ServicePageProps) {
   const item = content[kind]
   const Icon = item.icon
+  const softwareServices = getServicesByCategory('Desarrollo de software')
 
   return (
     <main className="min-h-screen bg-white text-[#0F172A]">
@@ -86,6 +88,43 @@ export function ServicePage({ kind }: ServicePageProps) {
         />
       )}
 
+      {kind === 'sistemas' && (
+        <section className="border-b border-[#E5EAF0] bg-white">
+          <div className="mx-auto max-w-[1180px] px-4 py-12 sm:px-6 lg:px-8 lg:py-14">
+            <div className="max-w-2xl">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#2563EB]">
+                Servicios de desarrollo
+              </p>
+              <h2 className="mt-2 text-3xl font-bold tracking-[-0.04em] sm:text-4xl">
+                ¿Qué sistema necesitas construir?
+              </h2>
+              <p className="mt-3 text-sm leading-6 text-[#475569]">
+                Cada servicio tiene su propio alcance y forma de trabajo. Elige uno para ver qué
+                incluye y cómo lo implementamos.
+              </p>
+            </div>
+            <div className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {softwareServices.map((service) => (
+                <Link
+                  key={service.slug}
+                  href={`/sistemas/${service.slug}`}
+                  className="group flex flex-col rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-5 transition hover:border-[#2563EB]/30 hover:bg-white hover:shadow-lg hover:shadow-black/5"
+                >
+                  <span className="grid size-9 place-items-center rounded-xl bg-white text-[#2563EB] shadow-sm transition group-hover:bg-[#2563EB] group-hover:text-white">
+                    <Code2 className="size-4" />
+                  </span>
+                  <h3 className="mt-3 text-sm font-bold text-[#0F172A]">{service.title}</h3>
+                  <p className="mt-1.5 flex-1 text-xs leading-5 text-[#475569]">{service.summary}</p>
+                  <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-[#2563EB]">
+                    Conocer el servicio <ArrowRight className="size-3.5" />
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {kind === 'soporte' && (
         <ServiceHero
           eyebrow={item.eyebrow}
@@ -99,10 +138,10 @@ export function ServicePage({ kind }: ServicePageProps) {
           secondary={{ label: 'Ver planes y cobertura', href: '/servicios' }}
           proof={['Soporte remoto y en sitio', 'Mantenimiento preventivo', 'Respuesta según SLA']}
           related={[
-            { label: 'Soporte remoto', hint: 'Atención inmediata', href: '#solicitud', icon: <Headset className="size-3.5" /> },
-            { label: 'Mantenimiento', hint: 'Preventivo y correctivo', href: '#solicitud', icon: <Wrench className="size-3.5" /> },
-            { label: 'Redes y Wi-Fi', hint: 'Conectividad estable', href: '/servicios#servicios', icon: <Network className="size-3.5" /> },
-            { label: 'Respaldos', hint: 'Continuidad operativa', href: '/servicios#servicios', icon: <ShieldCheck className="size-3.5" /> },
+            { label: 'Soporte remoto', hint: 'Atención inmediata', href: '/servicios/soporte-remoto-y-presencial', icon: <Headset className="size-3.5" /> },
+            { label: 'Mantenimiento', hint: 'Preventivo y correctivo', href: '/servicios/mantenimiento-de-equipos', icon: <Wrench className="size-3.5" /> },
+            { label: 'Redes y Wi-Fi', hint: 'Conectividad estable', href: '/servicios/redes-y-conectividad', icon: <Network className="size-3.5" /> },
+            { label: 'Respaldos', hint: 'Continuidad operativa', href: '/servicios/implementacion-de-infraestructura', icon: <ShieldCheck className="size-3.5" /> },
           ]}
           visual={<SupportVisual />}
         />

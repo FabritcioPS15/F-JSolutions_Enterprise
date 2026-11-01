@@ -185,56 +185,6 @@ export function downloadFile(filename: string, content: string, type: string) {
   URL.revokeObjectURL(url)
 }
 
-export function productsToCsv(products: AdminProduct[]): string {
-  const headers = [
-    'id',
-    'nombre',
-    'slug',
-    'sku',
-    'codigo_interno',
-    'categoria',
-    'subcategoria',
-    'tipo',
-    'marca',
-    'precio',
-    'costo',
-    'mostrar_precio',
-    'stock',
-    'stock_minimo',
-    'estado',
-    'disponibilidad',
-    'actualizado',
-  ]
-
-  const escape = (value: string | number) => `"${String(value).replace(/"/g, '""')}"`
-
-  const rows = products.map((product) =>
-    [
-      product.id,
-      product.name,
-      product.slug,
-      product.sku,
-      product.internalCode ?? '',
-      product.category,
-      product.subcategory ?? '',
-      product.subSubcategory ?? '',
-      product.brand,
-      product.price,
-      product.cost ?? '',
-      product.showPrice ? 'Sí' : 'No',
-      product.stock,
-      product.minStock,
-      statusLabels[product.status],
-      availabilityLabels[product.availability],
-      product.updatedAt,
-    ]
-      .map(escape)
-      .join(',')
-  )
-
-  return `\uFEFF${headers.join(',')}\n${rows.join('\n')}`
-}
-
 export function storageSizeInKb(value: unknown): number {
   try {
     return Math.round(new Blob([JSON.stringify(value)]).size / 1024)

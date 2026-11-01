@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import {
   ArrowRight,
@@ -9,10 +9,13 @@ import {
   ChevronRight,
   ClipboardList,
   Heart,
+  Link2,
+  Mail,
   Minus,
   Plus,
   Share2,
 } from 'lucide-react'
+import { FaFacebookF, FaLinkedinIn, FaWhatsapp, FaXTwitter } from 'react-icons/fa6'
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
 import { QuotePanel } from '@/components/sections/quote-panel'
 import { findProductBySlug, type Product } from '@/lib/catalog'
@@ -32,6 +35,36 @@ export function ProductDetail({ slug }: ProductDetailProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [added, setAdded] = useState(false)
   const [showQuote, setShowQuote] = useState(false)
+  const [shareOpen, setShareOpen] = useState(false)
+  const [shareUrl, setShareUrl] = useState('')
+  const [copied, setCopied] = useState(false)
+  const [canNativeShare, setCanNativeShare] = useState(false)
+  const shareRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    setCanNativeShare(typeof navigator !== 'undefined' && typeof navigator.share === 'function')
+  }, [])
+
+  useEffect(() => {
+    if (!shareOpen) return
+
+    const handlePointerDown = (event: MouseEvent | TouchEvent) => {
+      if (!shareRef.current?.contains(event.target as Node)) setShareOpen(false)
+    }
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setShareOpen(false)
+    }
+
+    document.addEventListener('mousedown', handlePointerDown)
+    document.addEventListener('touchstart', handlePointerDown)
+    document.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      document.removeEventListener('mousedown', handlePointerDown)
+      document.removeEventListener('touchstart', handlePointerDown)
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [shareOpen])
 
   if (!product) {
     return (
@@ -62,6 +95,81 @@ export function ProductDetail({ slug }: ProductDetailProps) {
       setQuantity(newQuantity)
     }
   }
+
+  const toggleShare = () => {
+    if (!shareOpen) {
+      if (typeof window !== 'undefined') setShareUrl(window.location.href)
+      setCopied(false)
+    }
+    setShareOpen((prev) => !prev)
+  }
+
+  const handleNativeShare = async () => {
+    try {
+      await navigator.share({
+        title: product.name,
+        text: `${product.name} | F&J Systems`,
+        url: shareUrl,
+      })
+      setShareOpen(false)
+    } catch {
+      // El usuario canceló el diálogo nativo: no hay acción pendiente.
+    }
+  }
+
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(shareUrl)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2200)
+    } catch {
+      const textarea = document.createElement('textarea')
+      textarea.value = shareUrl
+      textarea.style.position = 'fixed'
+      textarea.style.opacity = '0'
+      document.body.appendChild(textarea)
+      textarea.select()
+      document.execCommand('copy')
+      document.body.removeChild(textarea)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2200)
+    }
+  }
+
+  const encodedUrl = encodeURIComponent(shareUrl)
+  const encodedText = encodeURIComponent(`${product.name} | F&J Systems`)
+  const shareLinks = [
+    {
+      label: 'WhatsApp',
+      href: `https://wa.me/?text=${encodedText}%20${encodedUrl}`,
+      icon: FaWhatsapp,
+      iconClass: 'text-[#25D366]',
+    },
+    {
+      label: 'Facebook',
+      href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+      icon: FaFacebookF,
+      iconClass: 'text-[#1877F2]',
+    },
+    {
+      label: 'X',
+      href: `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`,
+      icon: FaXTwitter,
+      iconClass: 'text-[#0F172A]',
+    },
+    {
+      label: 'LinkedIn',
+      href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
+      icon: FaLinkedinIn,
+      iconClass: 'text-[#0A66C2]',
+    },
+    {
+      label: 'Correo',
+      href: `mailto:?subject=${encodedText}&body=${encodedUrl}`,
+      icon: Mail,
+      iconClass: 'text-[#64748B]',
+    },
+  ]
 
   const availabilityLabels = {
     available: 'Disponible',
@@ -231,12 +339,84 @@ export function ProductDetail({ slug }: ProductDetailProps) {
                   <Heart className={`size-4 ${isFavorite(product.id) ? 'fill-current text-[#0E7490]' : ''}`} />
                   {isFavorite(product.id) ? 'Guardado' : 'Guardar'}
                 </button>
-                <button
-                  className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-[#E2E8F0] px-4 py-2.5 text-sm font-semibold text-[#475569] transition hover:border-[#2563EB]/40 hover:text-[#2563EB]"
-                >
-                  <Share2 className="size-4" />
-                  Compartir
-                </button>
+                <div ref={shareRef} className="relative flex-1">
+                  <button
+                    type="button"
+                    onClick={toggleShare}
+                    aria-expanded={shareOpen}
+                    aria-haspopup="menu"
+                    className="flex w-full items-center justify-center gap-2 rounded-lg border border-[#E2E8F0] px-4 py-2.5 text-sm font-semibold text-[#475569] transition hover:border-[#2563EB]/40 hover:text-[#2563EB] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/40"
+                  >
+                    <Share2 className="size-4" />
+                    Compartir
+                  </button>
+
+                  {shareOpen && (
+                    <div
+                      role="menu"
+                      aria-label="Opciones para compartir este producto"
+                      className="absolute right-0 top-full z-30 mt-2 w-60 overflow-hidden rounded-xl border border-[#E2E8F0] bg-white shadow-[0_12px_40px_rgba(15,23,42,0.14)]"
+                    >
+                      <p className="border-b border-[#F1F5F9] px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.14em] text-[#94A3B8]">
+                        Compartir producto
+                      </p>
+                      <div className="p-1.5">
+                        {canNativeShare && (
+                          <button
+                            type="button"
+                            role="menuitem"
+                            onClick={handleNativeShare}
+                            className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-[#0F172A] transition hover:bg-[#F8FAFC]"
+                          >
+                            <span className="grid size-8 place-items-center rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] text-[#2563EB]">
+                              <Share2 className="size-4" />
+                            </span>
+                            Compartir...
+                          </button>
+                        )}
+
+                        {shareLinks.map((link) => {
+                          const Icon = link.icon
+                          const isExternal = link.href.startsWith('http')
+                          return (
+                            <a
+                              key={link.label}
+                              role="menuitem"
+                              href={link.href}
+                              target={isExternal ? '_blank' : undefined}
+                              rel={isExternal ? 'noopener noreferrer' : undefined}
+                              onClick={() => setShareOpen(false)}
+                              className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-[#0F172A] transition hover:bg-[#F8FAFC]"
+                            >
+                              <span
+                                className={`grid size-8 place-items-center rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] ${link.iconClass}`}
+                              >
+                                <Icon className="size-4" aria-hidden="true" />
+                              </span>
+                              {link.label}
+                            </a>
+                          )
+                        })}
+
+                        <button
+                          type="button"
+                          role="menuitem"
+                          onClick={handleCopyLink}
+                          className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-[#0F172A] transition hover:bg-[#F8FAFC]"
+                        >
+                          <span
+                            className={`grid size-8 place-items-center rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] ${
+                              copied ? 'text-[#15803D]' : 'text-[#64748B]'
+                            }`}
+                          >
+                            {copied ? <Check className="size-4" /> : <Link2 className="size-4" />}
+                          </span>
+                          {copied ? 'Enlace copiado' : 'Copiar enlace'}
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>

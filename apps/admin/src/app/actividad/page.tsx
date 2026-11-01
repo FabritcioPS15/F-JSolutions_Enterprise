@@ -16,14 +16,16 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 import { useAdmin } from '@/components/admin/admin-provider'
+import { ExportMenu } from '@/components/admin/export-menu'
 import {
   EmptyState,
+  FilterSelect,
   LoadingState,
   PageHeader,
   SectionCard,
-  Select,
   btnSecondary,
 } from '@/components/admin/ui'
+import { activityDataset } from '@/lib/admin/excel-exports'
 import { formatDateTime } from '@/lib/admin/format'
 import type { ActivityType } from '@/lib/admin/types'
 import { cn } from '@/lib/utils'
@@ -74,10 +76,17 @@ export default function ActividadPage() {
         title="Actividad reciente"
         description="Registro de los cambios realizados en el catálogo durante esta sesión y las anteriores."
         actions={
-          <Link href="/productos" className={btnSecondary}>
-            <Package className="size-4" aria-hidden="true" />
-            Ir a productos
-          </Link>
+          <>
+            <ExportMenu
+              build={() => activityDataset(filtered)}
+              nouns={['evento', 'eventos']}
+              disabled={filtered.length === 0}
+            />
+            <Link href="/productos" className={btnSecondary}>
+              <Package className="size-4" aria-hidden="true" />
+              Ir a productos
+            </Link>
+          </>
         }
       />
 
@@ -87,18 +96,22 @@ export default function ActividadPage() {
           {filtered.length === 1 ? 'evento registrado' : 'eventos registrados'}
           {type !== 'all' && ' con el filtro aplicado'}
         </p>
-        <Select
+        <FilterSelect
+          label="Tipo"
           value={type}
-          onChange={(event) => setType(event.target.value as 'all' | ActivityType)}
-          aria-label="Filtrar actividad por tipo"
-          className="w-full sm:w-56"
-        >
-          {filterOptions.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </Select>
+          onChange={(next) => setType(next as 'all' | ActivityType)}
+          ariaLabel="Filtrar actividad por tipo"
+          align="right"
+          className="w-full sm:w-64"
+          options={filterOptions.map((option) => ({
+            value: option.value,
+            label: option.label,
+            count:
+              option.value === 'all'
+                ? activity.length
+                : activity.filter((entry) => entry.type === option.value).length,
+          }))}
+        />
       </div>
 
       {filtered.length === 0 ? (

@@ -16,12 +16,14 @@ import {
 } from 'lucide-react'
 import { useAdmin } from '@/components/admin/admin-provider'
 import { ConfirmDialog } from '@/components/admin/confirm-dialog'
+import { ExportMenu } from '@/components/admin/export-menu'
 import { Modal } from '@/components/admin/modal'
 import { ProductThumb } from '@/components/admin/product-thumb'
 import { useToast } from '@/components/admin/toast'
 import {
   EmptyState,
   Field,
+  FilterSelect,
   PageHeader,
   Select,
   btnPrimary,
@@ -30,6 +32,7 @@ import {
   inputClass,
   textareaClass,
 } from '@/components/admin/ui'
+import { brandsDataset } from '@/lib/admin/excel-exports'
 import { formatNumber, slugify } from '@/lib/admin/format'
 import type { Brand, BrandStatus } from '@/lib/admin/types'
 import { cn } from '@/lib/utils'
@@ -249,10 +252,17 @@ export default function MarcasPage() {
         title="Marcas"
         description="Gestiona las marcas del catálogo, su visibilidad y los datos que se muestran en la tienda."
         actions={
-          <button type="button" onClick={openCreate} className={btnPrimary}>
-            <Plus className="size-4" aria-hidden="true" />
-            Nueva marca
-          </button>
+          <>
+            <ExportMenu
+              build={() => brandsDataset(filtered)}
+              nouns={['marca', 'marcas']}
+              disabled={filtered.length === 0}
+            />
+            <button type="button" onClick={openCreate} className={btnPrimary}>
+              <Plus className="size-4" aria-hidden="true" />
+              Nueva marca
+            </button>
+          </>
         }
       />
 
@@ -307,18 +317,27 @@ export default function MarcasPage() {
           </div>
 
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-            <Select
+            <FilterSelect
+              label="Estado"
               value={statusFilter}
-              onChange={(event) =>
-                setStatusFilter(event.target.value as 'all' | BrandStatus)
-              }
-              aria-label="Filtrar por estado"
-              className="sm:w-44"
-            >
-              <option value="all">Todos los estados</option>
-              <option value="active">Activas</option>
-              <option value="inactive">Inactivas</option>
-            </Select>
+              onChange={(next) => setStatusFilter(next as 'all' | BrandStatus)}
+              ariaLabel="Filtrar por estado"
+              align="right"
+              className="sm:w-48"
+              options={[
+                { value: 'all', label: 'Todos', count: brandStats.rows.length },
+                {
+                  value: 'active',
+                  label: 'Activas',
+                  count: brandStats.rows.filter((row) => row.brand.status === 'active').length,
+                },
+                {
+                  value: 'inactive',
+                  label: 'Inactivas',
+                  count: brandStats.rows.filter((row) => row.brand.status === 'inactive').length,
+                },
+              ]}
+            />
             <p className="text-[11px] text-slate-500">
               <span className="font-bold text-slate-900">{filtered.length}</span>{' '}
               {filtered.length === 1 ? 'marca visible' : 'marcas visibles'}

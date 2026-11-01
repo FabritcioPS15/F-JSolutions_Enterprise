@@ -19,12 +19,14 @@ import {
 import { useAdmin } from '@/components/admin/admin-provider'
 import { CategoryGlyph } from '@/components/admin/category-icon'
 import { ConfirmDialog } from '@/components/admin/confirm-dialog'
+import { ExportMenu } from '@/components/admin/export-menu'
 import { Modal } from '@/components/admin/modal'
 import { ProductThumb } from '@/components/admin/product-thumb'
 import { useToast } from '@/components/admin/toast'
 import {
   EmptyState,
   Field,
+  FilterSelect,
   PageHeader,
   Select,
   StatusBadge,
@@ -34,6 +36,7 @@ import {
   inputClass,
   textareaClass,
 } from '@/components/admin/ui'
+import { categoriesDataset } from '@/lib/admin/excel-exports'
 import { formatNumber, slugify } from '@/lib/admin/format'
 import type { AdminProduct, Category, CategoryStatus } from '@/lib/admin/types'
 import { cn } from '@/lib/utils'
@@ -438,10 +441,17 @@ export default function CategoriasPage() {
         title="Categorías"
         description="Organiza el catálogo en categorías, subcategorías y tipos. Puedes crear, renombrar y eliminar cada nivel."
         actions={
-          <button type="button" onClick={() => openAdd({ kind: 'category' })} className={btnPrimary}>
-            <Plus className="size-4" aria-hidden="true" />
-            Nueva categoría
-          </button>
+          <>
+            <ExportMenu
+              build={() => categoriesDataset(filteredCategories)}
+              nouns={['categoría', 'categorías']}
+              disabled={filteredCategories.length === 0}
+            />
+            <button type="button" onClick={() => openAdd({ kind: 'category' })} className={btnPrimary}>
+              <Plus className="size-4" aria-hidden="true" />
+              Nueva categoría
+            </button>
+          </>
         }
       />
 
@@ -495,18 +505,19 @@ export default function CategoriasPage() {
             )}
           </div>
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-            <Select
+            <FilterSelect
+              label="Estado"
               value={statusFilter}
-              onChange={(event) =>
-                setStatusFilter(event.target.value as 'all' | CategoryStatus)
-              }
-              aria-label="Filtrar categorías por estado"
+              onChange={(next) => setStatusFilter(next as 'all' | CategoryStatus)}
+              ariaLabel="Filtrar categorías por estado"
+              align="right"
               className="sm:w-48"
-            >
-              <option value="all">Todas ({categories.length})</option>
-              <option value="active">Activas ({activeCategories})</option>
-              <option value="inactive">Inactivas ({inactiveCategories})</option>
-            </Select>
+              options={[
+                { value: 'all', label: 'Todas', count: categories.length },
+                { value: 'active', label: 'Activas', count: activeCategories },
+                { value: 'inactive', label: 'Inactivas', count: inactiveCategories },
+              ]}
+            />
             <p className="text-[11px] text-slate-500">
               <span className="font-bold text-slate-900">{filteredCategories.length}</span>{' '}
               {filteredCategories.length === 1 ? 'categoría visible' : 'categorías visibles'}

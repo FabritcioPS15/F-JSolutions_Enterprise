@@ -25,7 +25,7 @@ type ServiceHeroProps = {
   eyebrow?: string
   title: ReactNode
   description: string
-  primary: { label: string; href: string }
+  primary: { label: string; href: string; icon?: ReactNode }
   secondary?: { label: string; href: string }
   proof?: string[]
   related?: ServiceHeroLink[]
@@ -57,7 +57,10 @@ export function ServiceHero({
             <HeroLead>{description}</HeroLead>
 
             <HeroActions>
-              <HeroAction href={primary.href}>{primary.label}</HeroAction>
+              <HeroAction href={primary.href}>
+                {primary.icon}
+                {primary.label}
+              </HeroAction>
               {secondary && (
                 <HeroAction href={secondary.href} variant="secondary">
                   {secondary.label}

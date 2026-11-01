@@ -27,6 +27,7 @@ import {
   Wrench,
   type LucideIcon,
 } from 'lucide-react'
+import { FaTeamspeak } from 'react-icons/fa6'
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
 import { ServiceHero } from '@/components/heroes'
 
@@ -45,7 +46,7 @@ const serviceList: ServiceItem[] = [
     description:
       'Una mesa de ayuda para todo tu equipo, con atención remota y visitas en sitio cuando la situación lo requiere.',
     points: ['Mesa de ayuda y tickets', 'Soporte remoto y en sitio', 'Tiempos de respuesta (SLA)'],
-    href: '/soporte-ti',
+    href: '/servicios/soporte-empresarial',
   },
   {
     icon: Network,
@@ -53,7 +54,7 @@ const serviceList: ServiceItem[] = [
     description:
       'Diseñamos e implementamos redes estables, seguras y listas para soportar el crecimiento de tu operación.',
     points: ['Wi-Fi empresarial', 'Cableado estructurado', 'Switches y routers gestionados'],
-    href: '/servicios#contacto',
+    href: '/servicios/redes-y-conectividad',
   },
   {
     icon: Server,
@@ -61,7 +62,7 @@ const serviceList: ServiceItem[] = [
     description:
       'Infraestructura on-premise o en la nube, dimensionada según la carga real de tus sistemas.',
     points: ['Servidores físicos y virtuales', 'Migración a la nube', 'Monitoreo de disponibilidad'],
-    href: '/servicios#contacto',
+    href: '/servicios/implementacion-de-infraestructura',
   },
   {
     icon: ShieldCheck,
@@ -85,7 +86,7 @@ const serviceList: ServiceItem[] = [
     description:
       'Equipos corporativos con asesoría técnica, configuración inicial y garantía respaldada por marca.',
     points: ['Laptops y desktops', 'Monitores e impresoras', 'Compras por volumen'],
-    href: '/productos',
+    href: '/servicios/equipamiento-tecnologico-empresarial',
   },
   {
     icon: Wrench,
@@ -93,7 +94,7 @@ const serviceList: ServiceItem[] = [
     description:
       'Planes programados para reducir fallas, extender la vida útil de los equipos y evitar paradas.',
     points: ['Limpieza y revisión', 'Actualización de software', 'Reporte de estado'],
-    href: '/servicios#contacto',
+    href: '/servicios/mantenimiento-de-equipos',
   },
   {
     icon: Cloud,
@@ -101,7 +102,7 @@ const serviceList: ServiceItem[] = [
     description:
       'Estrategias de backup y recuperación para que un incidente no detenga tu negocio.',
     points: ['Respaldos automáticos', 'Recuperación ante desastres', 'Pruebas de restauración'],
-    href: '/servicios#contacto',
+    href: '/servicios/implementacion-de-infraestructura',
   },
   {
     icon: GraduationCap,
@@ -240,13 +241,17 @@ export function ServicesPage() {
           </>
         }
         description="Soporte técnico, mantenimiento, redes e infraestructura para mantener tus equipos y sistemas funcionando, con atención cercana y un plan de trabajo claro."
-        primary={{ label: 'Solicitar asesoría', href: '#contacto' }}
+        primary={{
+          label: 'Solicitar asesoría',
+          href: '#contacto',
+          icon: <FaTeamspeak aria-hidden="true" className="size-4" />,
+        }}
         secondary={{ label: 'Ver soporte TI', href: '/soporte-ti' }}
         proof={['Diagnóstico sin costo', 'Atención personalizada', 'Soporte remoto y en sitio']}
         related={[
-          { label: 'Soporte gestionado', hint: 'Mesa de ayuda y SLA', href: '/soporte-ti', icon: <Headset className="size-3.5" /> },
-          { label: 'Redes y conectividad', hint: 'Wi-Fi y cableado', href: '#servicios', icon: <Network className="size-3.5" /> },
-          { label: 'Servidores y nube', hint: 'Infraestructura escalable', href: '#servicios', icon: <Server className="size-3.5" /> },
+          { label: 'Soporte gestionado', hint: 'Mesa de ayuda y SLA', href: '/servicios/soporte-empresarial', icon: <Headset className="size-3.5" /> },
+          { label: 'Redes y conectividad', hint: 'Wi-Fi y cableado', href: '/servicios/redes-y-conectividad', icon: <Network className="size-3.5" /> },
+          { label: 'Servidores y nube', hint: 'Infraestructura escalable', href: '/servicios/implementacion-de-infraestructura', icon: <Server className="size-3.5" /> },
           { label: 'Ciberseguridad', hint: 'Accesos y respaldos', href: '#servicios', icon: <ShieldCheck className="size-3.5" /> },
         ]}
       />

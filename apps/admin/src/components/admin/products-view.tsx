@@ -9,7 +9,6 @@ import {
   ChevronLeft,
   ChevronRight,
   Copy,
-  Download,
   Eye,
   EyeOff,
   LayoutGrid,
@@ -24,10 +23,12 @@ import {
 } from 'lucide-react'
 import { useAdmin } from '@/components/admin/admin-provider'
 import { ConfirmDialog } from '@/components/admin/confirm-dialog'
+import { ExportMenu } from '@/components/admin/export-menu'
 import { ProductThumb } from '@/components/admin/product-thumb'
 import { useToast } from '@/components/admin/toast'
 import {
   EmptyState,
+  FilterSelect,
   PageHeader,
   Select,
   StatusBadge,
@@ -39,13 +40,12 @@ import {
   iconButton,
   inputClass,
 } from '@/components/admin/ui'
+import { productsDataset } from '@/lib/admin/excel-exports'
 import {
-  downloadFile,
   formatCurrency,
   formatDate,
   getMargin,
   getStockState,
-  productsToCsv,
 } from '@/lib/admin/format'
 import type { AdminProduct, ProductStatus } from '@/lib/admin/types'
 import { cn } from '@/lib/utils'
@@ -256,15 +256,6 @@ export function ProductsView({
     setDeleteTarget(null)
   }
 
-  function handleExport() {
-    downloadFile(
-      `productos-fj-systems-${new Date().toISOString().slice(0, 10)}.csv`,
-      productsToCsv(filtered),
-      'text/csv;charset=utf-8;'
-    )
-    toast.success('Catálogo exportado', `${filtered.length} productos incluidos en el CSV.`)
-  }
-
   function runBulk(action: BulkAction) {
     const ids = [...selected]
     if (ids.length === 0) return
@@ -296,15 +287,11 @@ export function ProductsView({
         description="Administra precios, inventario, publicación y contenido de todo el catálogo."
         actions={
           <>
-            <button
-              type="button"
-              onClick={handleExport}
-              className={btnSecondary}
-              aria-label="Exportar catálogo a CSV"
-            >
-              <Download className="size-4" aria-hidden="true" />
-              <span className="hidden sm:inline">Exportar CSV</span>
-            </button>
+            <ExportMenu
+              build={() => productsDataset(filtered, settings.currency)}
+              nouns={['producto', 'productos']}
+              disabled={filtered.length === 0}
+            />
             <Link href="/productos/nuevo" className={btnPrimary}>
               <Plus className="size-4" aria-hidden="true" />
               Nuevo producto
@@ -337,73 +324,100 @@ export function ProductsView({
           </div>
 
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 xl:flex xl:shrink-0 xl:items-center">
-            <Select
+            <FilterSelect
+              label="Categoría"
               value={category}
-              onChange={(event) => setCategory(event.target.value)}
-              aria-label="Filtrar por categoría"
+              onChange={setCategory}
+              ariaLabel="Filtrar por categoría"
+              align="right"
+              searchable
+              searchPlaceholder="Buscar categoría…"
               className="sm:w-full xl:w-48"
-            >
-              <option value="all">Todas las categorías</option>
-              {categories.map((item) => (
-                <option key={item.id} value={item.label}>
-                  {item.label}
-                </option>
-              ))}
-            </Select>
+              options={[
+                { value: 'all', label: 'Todas', count: products.length },
+                ...categories.map((item) => ({
+                  value: item.label,
+                  label: item.label,
+                  count: products.filter((product) => product.category === item.label).length,
+                })),
+              ]}
+            />
 
-            <Select
+            <FilterSelect
+              label="Marca"
               value={brand}
-              onChange={(event) => setBrand(event.target.value)}
-              aria-label="Filtrar por marca"
+              onChange={setBrand}
+              ariaLabel="Filtrar por marca"
+              align="right"
+              searchable
+              searchPlaceholder="Buscar marca…"
               className="sm:w-full xl:w-44"
-            >
-              <option value="all">Todas las marcas</option>
-              {[...brands]
-                .sort((a, b) => a.order - b.order || a.name.localeCompare(b.name))
-                .map((item) => (
-                  <option key={item.id} value={item.name}>
-                    {item.name}
-                    {item.status === 'inactive' ? ' · Inactiva' : ''}
-                  </option>
-                ))}
-            </Select>
+              options={[
+                { value: 'all', label: 'Todas', count: products.length },
+                ...[...brands]
+                  .sort((a, b) => a.order - b.order || a.name.localeCompare(b.name))
+                  .map((item) => ({
+                    value: item.name,
+                    label: item.status === 'inactive' ? `${item.name} · Inactiva` : item.name,
+                    count: products.filter((product) => product.brand === item.name).length,
+                  })),
+              ]}
+            />
 
-            <Select
+            <FilterSelect
+              label="Estado"
               value={status}
-              onChange={(event) => setStatus(event.target.value as StatusFilter)}
-              aria-label="Filtrar por estado"
+              onChange={(next) => setStatus(next as StatusFilter)}
+              ariaLabel="Filtrar por estado"
+              align="right"
               className="sm:w-full xl:w-44"
-            >
-              <option value="all">Todos los estados</option>
-              <option value="active">Publicados</option>
-              <option value="draft">Borradores</option>
-              <option value="archived">Archivados</option>
-            </Select>
+              options={[
+                { value: 'all', label: 'Todos', count: products.length },
+                {
+                  value: 'active',
+                  label: 'Publicados',
+                  count: products.filter((product) => product.status === 'active').length,
+                },
+                {
+                  value: 'draft',
+                  label: 'Borradores',
+                  count: products.filter((product) => product.status === 'draft').length,
+                },
+                {
+                  value: 'archived',
+                  label: 'Archivados',
+                  count: products.filter((product) => product.status === 'archived').length,
+                },
+              ]}
+            />
 
-            <Select
+            <FilterSelect
+              label="Stock"
               value={stock}
-              onChange={(event) => setStock(event.target.value as StockFilter)}
-              aria-label="Filtrar por stock"
-              className="sm:w-full xl:w-36"
-            >
-              <option value="all">Todo el stock</option>
-              <option value="replenish">Requiere reposición</option>
-              <option value="out">Sin stock</option>
-              <option value="ok">Stock saludable</option>
-            </Select>
+              onChange={(next) => setStock(next as StockFilter)}
+              ariaLabel="Filtrar por stock"
+              align="right"
+              className="sm:w-full xl:w-40"
+              options={[
+                { value: 'all', label: 'Todo' },
+                { value: 'replenish', label: 'Requiere reposición' },
+                { value: 'out', label: 'Sin stock' },
+                { value: 'ok', label: 'Stock saludable' },
+              ]}
+            />
 
-            <Select
+            <FilterSelect
+              label="Orden"
               value={sort}
-              onChange={(event) => setSort(event.target.value)}
-              aria-label="Ordenar productos"
+              onChange={setSort}
+              ariaLabel="Ordenar productos"
+              align="right"
               className="sm:w-full xl:w-48"
-            >
-              {sortOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </Select>
+              options={sortOptions.map((option) => ({
+                value: option.value,
+                label: option.label,
+              }))}
+            />
 
             {hasFilters && (
               <button

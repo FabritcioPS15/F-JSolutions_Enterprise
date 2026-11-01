@@ -17,12 +17,14 @@ import {
   QuoteStatusBadge,
 } from '@/components/admin/commercial-ui'
 import { ConfirmDialog } from '@/components/admin/confirm-dialog'
+import { ExportMenu } from '@/components/admin/export-menu'
 import { Modal } from '@/components/admin/modal'
 import { QuoteDocumentPreview } from '@/components/admin/quote-document-preview'
 import { useToast } from '@/components/admin/toast'
 import {
   EmptyState,
   Field,
+  FilterSelect,
   LoadingState,
   PageHeader,
   Select,
@@ -33,6 +35,7 @@ import {
   inputClass,
   textareaClass,
 } from '@/components/admin/ui'
+import { quotesDataset } from '@/lib/admin/excel-exports'
 import {
   formatCurrency,
   formatDate,
@@ -392,14 +395,21 @@ export function QuotesView({ initialQuery = '' }: { initialQuery?: string }) {
         title="Cotizaciones"
         description="Propuestas preparadas para clientes. Las cotizaciones no generan cobros ni facturas."
         actions={
-          <button
-            type="button"
-            className={btnPrimary}
-            onClick={() => setEditor({ mode: 'create' })}
-          >
-            <Plus className="size-4" aria-hidden="true" />
-            Nueva cotización
-          </button>
+          <>
+            <ExportMenu
+              build={() => quotesDataset(filtered, settings.currency, settings.igv)}
+              nouns={['cotización', 'cotizaciones']}
+              disabled={filtered.length === 0}
+            />
+            <button
+              type="button"
+              className={btnPrimary}
+              onClick={() => setEditor({ mode: 'create' })}
+            >
+              <Plus className="size-4" aria-hidden="true" />
+              Nueva cotización
+            </button>
+          </>
         }
       />
 
@@ -456,31 +466,35 @@ export function QuotesView({ initialQuery = '' }: { initialQuery?: string }) {
           </div>
 
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:flex lg:shrink-0 lg:items-center">
-            <Select
+            <FilterSelect
+              label="Estado"
               value={status}
-              onChange={(event) => setStatus(event.target.value as 'all' | QuoteStatus)}
-              aria-label="Filtrar por estado"
-              className="sm:w-full lg:w-40"
-            >
-              <option value="all">Todos los estados</option>
-              {statusOrder.map((item) => (
-                <option key={item} value={item}>
-                  {quoteStatusLabels[item]}
-                </option>
-              ))}
-            </Select>
-            <Select
-              value={sort}
-              onChange={(event) =>
-                setSort(event.target.value as 'recent' | 'amount' | 'client')
-              }
-              aria-label="Ordenar cotizaciones"
+              onChange={(next) => setStatus(next as 'all' | QuoteStatus)}
+              ariaLabel="Filtrar por estado"
+              align="right"
               className="sm:w-full lg:w-48"
-            >
-              <option value="recent">Actualizadas recientemente</option>
-              <option value="amount">Mayor monto</option>
-              <option value="client">Cliente A–Z</option>
-            </Select>
+              options={[
+                { value: 'all', label: 'Todos', count: quotes.length },
+                ...statusOrder.map((item) => ({
+                  value: item,
+                  label: quoteStatusLabels[item],
+                  count: quotes.filter((quote) => quote.status === item).length,
+                })),
+              ]}
+            />
+            <FilterSelect
+              label="Orden"
+              value={sort}
+              onChange={(next) => setSort(next as 'recent' | 'amount' | 'client')}
+              ariaLabel="Ordenar cotizaciones"
+              align="right"
+              className="sm:w-full lg:w-52"
+              options={[
+                { value: 'recent', label: 'Recientes' },
+                { value: 'amount', label: 'Mayor monto' },
+                { value: 'client', label: 'Cliente A–Z' },
+              ]}
+            />
             {hasFilters && (
               <button
                 type="button"
