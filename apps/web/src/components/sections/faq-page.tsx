@@ -4,7 +4,6 @@ import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import {
   ArrowRight,
-  ChevronDown,
   FileQuestion,
   HelpCircle,
   Mail,
@@ -17,6 +16,7 @@ import {
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
 import { EditorialHero } from '@/components/heroes'
 import { HeroAction } from '@/components/heroes/hero-primitives'
+import { FaqAccordion } from '@/components/ui/faq-accordion'
 import { EMPRESA } from '@/lib/constants'
 
 const CONTAINER = 'mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8'
@@ -160,29 +160,6 @@ const categories = [
 export function FaqPage() {
   const [selectedCategory, setSelectedCategory] = useState<FAQCategory>('todas')
   const [searchQuery, setSearchQuery] = useState('')
-  const [openIds, setOpenIds] = useState<Record<string, boolean>>({
-    'gen-1': true,
-    'sop-1': true,
-  })
-
-  const toggleFaq = (id: string) => {
-    setOpenIds((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }))
-  }
-
-  const expandAll = () => {
-    const next: Record<string, boolean> = {}
-    filteredFaqs.forEach((faq) => {
-      next[faq.id] = true
-    })
-    setOpenIds(next)
-  }
-
-  const collapseAll = () => {
-    setOpenIds({})
-  }
 
   const filteredFaqs = useMemo(() => {
     return faqsData.filter((item) => {
@@ -289,27 +266,11 @@ export function FaqPage() {
         <section className="py-12 sm:py-18" aria-label="Listado de preguntas frecuentes">
           <div className="mx-auto w-full max-w-3xl px-4 sm:px-6">
             {/* Control buttons */}
-            <div className="flex items-center justify-between border-b border-[#E2E8F0] pb-4">
+            <div className="flex items-center justify-between gap-4 border-b border-[#E2E8F0] pb-4">
               <span className="text-xs font-semibold text-[#64748B]">
                 {filteredFaqs.length} {filteredFaqs.length === 1 ? 'pregunta encontrada' : 'preguntas disponibles'}
               </span>
-              <div className="flex items-center gap-3">
-                <button
-                  type="button"
-                  onClick={expandAll}
-                  className="text-xs font-semibold text-[#2563EB] hover:underline"
-                >
-                  Expandir todas
-                </button>
-                <span className="text-[#CBD5E1]">·</span>
-                <button
-                  type="button"
-                  onClick={collapseAll}
-                  className="text-xs font-semibold text-[#64748B] hover:text-[#0F172A]"
-                >
-                  Colapsar todas
-                </button>
-              </div>
+              <span className="text-xs font-medium text-[#94A3B8]">Una respuesta a la vez</span>
             </div>
 
             {/* Empty state */}
@@ -330,54 +291,15 @@ export function FaqPage() {
                 </button>
               </div>
             ) : (
-              <div className="mt-6 space-y-3">
-                {filteredFaqs.map((faq) => {
-                  const isOpen = !!openIds[faq.id]
-                  return (
-                    <div
-                      key={faq.id}
-                      className={`overflow-hidden rounded-2xl border transition-all duration-200 ${
-                        isOpen ? 'border-[#2563EB]/40 bg-white shadow-xs' : 'border-[#E2E8F0] bg-white hover:border-[#CBD5E1]'
-                      }`}
-                    >
-                      <button
-                        type="button"
-                        onClick={() => toggleFaq(faq.id)}
-                        aria-expanded={isOpen}
-                        className="flex w-full items-start justify-between gap-4 p-5 text-left transition-colors"
-                      >
-                        <div className="flex-1">
-                          <span className="inline-block rounded-md bg-[#EFF6FF] px-2 py-0.5 text-[10px] font-bold text-[#2563EB] uppercase tracking-wide">
-                            {faq.categoryLabel}
-                          </span>
-                          <h3
-                            className={`mt-2 font-heading text-sm sm:text-base font-bold transition-colors ${
-                              isOpen ? 'text-[#2563EB]' : 'text-[#0F172A]'
-                            }`}
-                          >
-                            {faq.q}
-                          </h3>
-                        </div>
-                        <span
-                          className={`flex size-7 shrink-0 items-center justify-center rounded-lg border transition-transform duration-200 ${
-                            isOpen
-                              ? 'rotate-180 border-[#2563EB]/25 bg-[#EFF6FF] text-[#2563EB]'
-                              : 'border-[#E2E8F0] bg-[#F8FAFC] text-[#64748B]'
-                          }`}
-                        >
-                          <ChevronDown className="size-4" />
-                        </span>
-                      </button>
-
-                      {isOpen && (
-                        <div className="border-t border-[#F1F5F9] bg-[#F8FAFC]/50 px-5 pb-5 pt-3 animate-in fade-in-50 duration-150">
-                          <p className="text-xs sm:text-sm leading-relaxed text-[#475569]">{faq.a}</p>
-                        </div>
-                      )}
-                    </div>
-                  )
-                })}
-              </div>
+              <FaqAccordion
+                variant="search"
+                className="mt-6"
+                items={filteredFaqs.map((faq) => ({
+                  question: faq.q,
+                  answer: faq.a,
+                  badge: faq.categoryLabel,
+                }))}
+              />
             )}
           </div>
         </section>

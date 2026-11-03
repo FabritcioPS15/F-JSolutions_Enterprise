@@ -28,11 +28,12 @@ export const cotizacionSchema = z.object({
 
 export const contactSchema = z.object({
   body: z.object({
-    nombre: z.string().min(2),
-    email: z.string().email(),
-    telefono: z.string().optional(),
-    empresa: z.string().optional(),
-    asunto: z.enum(['ventas', 'soporte', 'cotizacion', 'general']),
-    mensaje: z.string().min(10).max(2000),
+    nombre: z.string().trim().min(2).max(120),
+    email: z.string().trim().email().max(160),
+    telefono: z.string().trim().max(40).optional(),
+    empresa: z.string().trim().max(160).optional(),
+    asunto: z.string().trim().min(2).max(120),
+    mensaje: z.string().trim().min(10).max(4000),
+    channel: z.enum(['WEB', 'EMAIL', 'WHATSAPP', 'PHONE']).optional(),
   }),
 })

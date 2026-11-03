@@ -142,6 +142,13 @@ export type RequestStatus = 'new' | 'review' | 'attended' | 'discarded'
 
 export type RequestChannel = 'web' | 'email' | 'whatsapp' | 'phone'
 
+export type ServiceRequestReply = {
+  subject: string
+  message: string
+  delivered: boolean
+  at: string
+}
+
 export type ServiceRequest = {
   id: string
   code: string
@@ -155,6 +162,9 @@ export type ServiceRequest = {
   status: RequestStatus
   clientId?: string
   quoteId?: string
+  quoteCode?: string
+  repliedAt?: string
+  lastReply?: ServiceRequestReply
   notes: string
   createdAt: string
   updatedAt: string

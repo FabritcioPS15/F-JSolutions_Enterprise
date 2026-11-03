@@ -2,6 +2,16 @@ import { NextRequest, NextResponse } from 'next/server'
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
+const API_URL = (process.env.HELPDESK_API_URL ?? 'http://localhost:4000/api/v1').replace(/\/+$/, '')
+
+const topicLabels: Record<string, string> = {
+  cotizacion: 'Cotización de equipos',
+  soporte: 'Soporte TI',
+  software: 'Proyecto de software',
+  infraestructura: 'Redes e infraestructura',
+  otro: 'Otro tema',
+}
+
 type ContactPayload = {
   name?: unknown
   company?: unknown
@@ -56,20 +66,52 @@ export async function POST(request: NextRequest) {
     )
   }
 
-  // TODO: Reemplazar el log por el envío real (Resend, Nodemailer, CRM, etc.)
-  // y persistir la solicitud cuando exista la integración correspondiente.
-  console.log('Contacto recibido:', {
-    name,
-    company,
-    email,
-    phone,
-    topic: topic || 'sin-tema',
-    message,
-    receivedAt: new Date().toISOString(),
-  })
+  try {
+    const response = await fetch(`${API_URL}/contact`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        nombre: name,
+        email,
+        empresa: company || undefined,
+        telefono: phone || undefined,
+        asunto: topicLabels[topic] ?? topic ?? 'Consulta general',
+        mensaje: message,
+        channel: 'WEB',
+      }),
+      signal: AbortSignal.timeout(10_000),
+      cache: 'no-store',
+    })
 
-  return NextResponse.json({
-    success: true,
-    message: 'Mensaje recibido correctamente.',
-  })
+    const data = (await response.json().catch(() => null)) as
+      | { success?: boolean; message?: string }
+      | null
+
+    if (!response.ok || !data?.success) {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            data?.message ??
+            'No pudimos registrar tu consulta en este momento. Inténtalo nuevamente.',
+        },
+        { status: response.status === 422 ? 400 : 502 },
+      )
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: data.message ?? 'Mensaje recibido correctamente.',
+    })
+  } catch (error) {
+    console.error('No se pudo conectar con la API de mesa de ayuda:', error)
+    return NextResponse.json(
+      {
+        success: false,
+        message:
+          'El servicio de consultas no está disponible. Escríbenos directamente a ventas@fjsolutions.pe.',
+      },
+      { status: 502 },
+    )
+  }
 }

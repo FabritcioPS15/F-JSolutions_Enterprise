@@ -1,5 +1,11 @@
+'use client'
+
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { ChevronDown } from 'lucide-react'
 import { EMPRESA } from '@/lib/constants'
+import { cn } from '@/lib/utils'
 
 // ─── Tipos y Estructura de Navegación (4 Columnas) ───────────────────────────
 
@@ -35,6 +41,7 @@ const FOOTER_COLUMNS: FooterColumn[] = [
       { label: 'Mantenimiento de equipos', href: '/servicios/mantenimiento-de-equipos' },
       { label: 'Implementación de infraestructura', href: '/servicios/implementacion-de-infraestructura' },
       { label: 'Sistemas web a medida', href: '/sistemas/sistemas-web-a-medida' },
+      { label: 'Creación de páginas web', href: '/sistemas/creacion-de-paginas-web' },
       { label: 'Automatización de procesos', href: '/sistemas/automatizacion-de-procesos' },
     ],
   },
@@ -108,36 +115,141 @@ const SOCIAL_NETWORKS = [
 const FOCUS_STYLE =
   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0B132B]'
 
+function isActiveLink(href: string, pathname: string | null): boolean {
+  if (!pathname || href.includes('?')) return false
+  if (href === '/') return pathname === '/'
+  return pathname === href || pathname.startsWith(`${href}/`)
+}
+
+function FooterNavColumn({
+  column,
+  panelId,
+  pathname,
+}: {
+  column: FooterColumn
+  panelId: string
+  pathname: string | null
+}) {
+  const hasActiveLink = column.links.some((link) => isActiveLink(link.href, pathname))
+  const [open, setOpen] = useState(hasActiveLink)
+
+  useEffect(() => {
+    if (hasActiveLink) setOpen(true)
+  }, [hasActiveLink])
+
+  return (
+    <div className="flex flex-col">
+      <h2 className="hidden font-heading text-[13px] font-bold uppercase tracking-[0.12em] text-[#F8FAFC] sm:block">
+        {column.title}
+      </h2>
+
+      {/* En móvil cada columna se despliega para no alargar el footer. */}
+      <button
+        type="button"
+        onClick={() => setOpen((value) => !value)}
+        aria-expanded={open}
+        aria-controls={panelId}
+        className={`flex min-h-12 w-full items-center justify-between gap-3 rounded-sm py-4 text-left sm:hidden ${FOCUS_STYLE}`}
+      >
+        <span className="font-heading text-[13px] font-bold uppercase tracking-[0.12em] text-[#F8FAFC]">
+          {column.title}
+        </span>
+        <span className="flex items-center gap-2">
+          {hasActiveLink && (
+            <span className="size-1.5 rounded-full bg-[#38BDF8]" aria-hidden="true" />
+          )}
+          <ChevronDown
+            className={cn(
+              'size-4 shrink-0 text-[#64748B] transition-transform duration-300 motion-reduce:transition-none',
+              open && 'rotate-180'
+            )}
+            aria-hidden="true"
+          />
+        </span>
+      </button>
+
+      <ul
+        id={panelId}
+        className={cn(
+          'text-sm sm:mt-4 sm:block sm:space-y-2.5',
+          open ? 'block pb-4' : 'hidden'
+        )}
+      >
+        {column.links.map((link) => {
+          const active = isActiveLink(link.href, pathname)
+          return (
+            <li key={link.label}>
+              <Link
+                href={link.href}
+                aria-current={active ? 'page' : undefined}
+                className={cn(
+                  'relative flex min-h-11 items-center rounded-sm transition-colors duration-200 motion-reduce:transition-none sm:inline-block sm:min-h-0',
+                  FOCUS_STYLE,
+                  active
+                    ? 'font-semibold text-white'
+                    : 'text-[#94A3B8] hover:text-[#38BDF8]'
+                )}
+              >
+                {active && (
+                  <span
+                    className="absolute -left-3 top-1/2 size-1.5 -translate-y-1/2 rounded-full bg-[#38BDF8]"
+                    aria-hidden="true"
+                  />
+                )}
+                {link.label}
+              </Link>
+            </li>
+          )
+        })}
+      </ul>
+    </div>
+  )
+}
+
 export function SiteFooter() {
   const currentYear = new Date().getFullYear()
+  const pathname = usePathname()
 
   return (
     <footer
       className="border-t border-[#1E293B]/80 bg-[#0B132B] text-[#94A3B8] selection:bg-[#2563EB]/25 selection:text-white"
       aria-label="Pie de página"
     >
-      <div className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6 sm:py-14 lg:px-8 lg:py-16">
+      <div className="mx-auto max-w-[1280px] px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-16">
         {/* ─── A. Cabecera del Footer: Logotipo oficial & Redes Sociales ─── */}
-        <div className="flex flex-col gap-6 pb-10 sm:flex-row sm:items-center sm:justify-between border-b border-[#1E293B]/80">
-          {/* Logotipo F&J Systems */}
-          <Link
-            href="/"
-            className={`group inline-flex items-center gap-3 ${FOCUS_STYLE} rounded-lg`}
-            aria-label="F&J Systems · Inicio"
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <div className="bg-white rounded-xl px-2.5 py-1.5 shadow-sm transition-transform duration-200 group-hover:scale-105 motion-reduce:transition-none">
+        <div className="flex flex-col gap-5 pb-8 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:pb-10 border-b border-[#1E293B]/80">
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-4">
+            {/* Logotipo F&J Systems */}
+            <Link
+              href="/"
+              className={`group inline-flex items-center gap-3 ${FOCUS_STYLE} rounded-lg`}
+              aria-label="F&J Systems · Inicio"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/images/logos/logo.png"
                 alt="F&J Systems"
-                className="h-8 sm:h-9 w-auto object-contain"
+                className="h-16 w-auto object-contain brightness-0 invert transition-transform duration-200 group-hover:scale-105 motion-reduce:transition-none sm:h-20"
               />
+            </Link>
+
+            {/* RUC de la empresa, junto al logotipo */}
+            <div
+              className="flex items-center gap-2.5 rounded-full border border-[#1E293B] bg-[#0F172A]/60 px-3 py-1.5 sm:rounded-none sm:border-0 sm:border-l sm:bg-transparent sm:px-0 sm:py-0 sm:pl-6"
+              aria-label="RUC de la empresa"
+            >
+              <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#64748B]">
+                RUC
+              </span>
+              <span className="text-sm font-semibold tracking-wide text-[#E2E8F0] tabular-nums">
+                {EMPRESA.ruc}
+              </span>
             </div>
-          </Link>
+          </div>
 
           {/* Redes Sociales: botones circulares discretos */}
           {SOCIAL_NETWORKS.length > 0 && (
-            <div className="flex items-center gap-2.5" aria-label="Redes sociales oficiales">
+            <div className="flex items-center gap-3" aria-label="Redes sociales oficiales">
               {SOCIAL_NETWORKS.map((social) => (
                 <a
                   key={social.id}
@@ -145,11 +257,11 @@ export function SiteFooter() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={social.label}
-                  className={`grid size-9 place-items-center rounded-full border border-[#1E293B] bg-[#0F172A]/70 text-[#94A3B8] transition duration-200 hover:border-[#2563EB]/60 hover:bg-[#1E293B] hover:text-white motion-reduce:transition-none ${FOCUS_STYLE}`}
+                  className={`grid size-11 place-items-center rounded-full border border-[#1E293B] bg-[#0F172A]/70 text-[#94A3B8] transition duration-200 hover:border-[#2563EB]/60 hover:bg-[#1E293B] hover:text-white motion-reduce:transition-none ${FOCUS_STYLE}`}
                 >
                   <svg
                     viewBox="0 0 24 24"
-                    className="size-4"
+                    className="size-5"
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="1.7"
@@ -165,64 +277,53 @@ export function SiteFooter() {
           )}
         </div>
 
-        {/* ─── B. Navegación Principal en Cuatro Columnas ─── */}
+        {/* ─── B. Navegación Principal: desplegable en móvil, columnas en escritorio ─── */}
         <nav
           aria-label="Navegación del pie de página"
-          className="grid grid-cols-1 gap-8 py-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-10"
+          className="divide-y divide-[#1E293B]/70 sm:grid sm:grid-cols-2 sm:gap-8 sm:divide-y-0 sm:py-10 lg:grid-cols-4 lg:gap-10"
         >
-          {FOOTER_COLUMNS.map((column) => (
-            <div key={column.title} className="flex flex-col">
-              <h2 className="font-heading text-[13px] font-bold uppercase tracking-[0.12em] text-[#F8FAFC]">
-                {column.title}
-              </h2>
-              <ul className="mt-4 space-y-2.5 text-sm">
-                {column.links.map((link) => (
-                  <li key={link.label}>
-                    <Link
-                      href={link.href}
-                      className={`inline-block text-[#94A3B8] transition-colors duration-200 hover:text-[#38BDF8] motion-reduce:transition-none ${FOCUS_STYLE} rounded-sm`}
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
+          {FOOTER_COLUMNS.map((column, index) => (
+            <FooterNavColumn
+              key={column.title}
+              column={column}
+              panelId={`footer-nav-${index}`}
+              pathname={pathname}
+            />
           ))}
         </nav>
 
         {/* ─── C & D. Separador y Franja Legal Inferior ─── */}
-        <div className="border-t border-[#1E293B]/80 pt-8">
+        <div className="border-t border-[#1E293B]/80 pt-6 sm:pt-8">
           <div className="flex flex-col gap-4 text-xs text-[#64748B] sm:flex-row sm:items-center sm:justify-between">
             <p className="text-[#94A3B8]">
               &copy; {currentYear} F&J Systems. Todos los derechos reservados.
             </p>
 
-            <ul className="flex flex-wrap items-center gap-x-5 gap-y-2">
-              <li>
-                <Link
-                  href="/terminos-y-condiciones"
-                  className={`transition-colors duration-200 hover:text-[#CBD5E1] motion-reduce:transition-none ${FOCUS_STYLE} rounded-sm`}
-                >
-                  Términos y condiciones
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/politica-de-privacidad"
-                  className={`transition-colors duration-200 hover:text-[#CBD5E1] motion-reduce:transition-none ${FOCUS_STYLE} rounded-sm`}
-                >
-                  Política de privacidad
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/informacion-legal"
-                  className={`transition-colors duration-200 hover:text-[#CBD5E1] motion-reduce:transition-none ${FOCUS_STYLE} rounded-sm`}
-                >
-                  Información legal
-                </Link>
-              </li>
+            <ul className="grid grid-cols-2 gap-x-4 gap-y-1 sm:flex sm:flex-wrap sm:items-center sm:gap-x-5 sm:gap-y-2">
+              {[
+                { label: 'Términos y condiciones', href: '/terminos-y-condiciones' },
+                { label: 'Política de privacidad', href: '/politica-de-privacidad' },
+                { label: 'Información legal', href: '/informacion-legal' },
+              ].map((item) => {
+                const active = isActiveLink(item.href, pathname)
+                return (
+                  <li key={item.href}>
+                    <Link
+                      href={item.href}
+                      aria-current={active ? 'page' : undefined}
+                      className={cn(
+                        'inline-flex min-h-9 items-center rounded-sm py-1 transition-colors duration-200 motion-reduce:transition-none sm:min-h-0 sm:py-0',
+                        FOCUS_STYLE,
+                        active
+                          ? 'font-semibold text-white underline decoration-[#38BDF8] decoration-2 underline-offset-4'
+                          : 'hover:text-[#CBD5E1]'
+                      )}
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
+                )
+              })}
             </ul>
           </div>
         </div>

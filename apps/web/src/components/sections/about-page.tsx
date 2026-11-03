@@ -4,7 +4,6 @@ import {
   ArrowUpRight,
   Briefcase,
   Check,
-  ChevronDown,
   ClipboardList,
   Clock,
   Code2,
@@ -32,6 +31,7 @@ import {
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
 import { EditorialHero } from '@/components/heroes'
 import { HeroAction } from '@/components/heroes/hero-primitives'
+import { FaqAccordion } from '@/components/ui/faq-accordion'
 import { EMPRESA } from '@/lib/constants'
 
 const CONTAINER = 'mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8'
@@ -641,28 +641,10 @@ export function AboutPage() {
               </div>
             </div>
 
-            <div className="space-y-2">
-              {faqs.map((faq, index) => (
-                <details
-                  key={faq.q}
-                  className="group rounded-2xl border border-[#E2E8F0] bg-white px-5 py-4 transition open:border-[#2563EB]/30 open:shadow-[0_18px_40px_-34px_rgba(15,23,42,0.4)]"
-                >
-                  <summary className="flex cursor-pointer list-none items-start justify-between gap-4 text-sm font-bold text-[#0F172A] [&::-webkit-details-marker]:hidden">
-                    <span className="flex items-start gap-3">
-                      <span className="mt-0.5 font-mono text-[10px] text-[#94A3B8]">
-                        {String(index + 1).padStart(2, '0')}
-                      </span>
-                      {faq.q}
-                    </span>
-                    <ChevronDown
-                      aria-hidden="true"
-                      className="mt-0.5 size-4 shrink-0 text-[#64748B] transition group-open:rotate-180"
-                    />
-                  </summary>
-                  <p className="mt-3 pl-8 text-sm leading-6 text-[#475569]">{faq.a}</p>
-                </details>
-              ))}
-            </div>
+            <FaqAccordion
+              variant="numbered"
+              items={faqs.map((faq) => ({ question: faq.q, answer: faq.a }))}
+            />
           </div>
         </div>
       </section>

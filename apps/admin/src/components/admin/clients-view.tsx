@@ -358,7 +358,7 @@ export function ClientsView() {
           title={clients.length === 0 ? 'Sin clientes registrados' : 'Sin resultados'}
           description={
             clients.length === 0
-              ? 'Registra tu primer cliente para asociarlo a solicitudes y cotizaciones.'
+              ? 'Registra tu primer cliente para asociarlo a consultas y cotizaciones.'
               : 'No encontramos clientes con esos criterios. Prueba limpiando los filtros.'
           }
           action={

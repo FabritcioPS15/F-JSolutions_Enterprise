@@ -53,3 +53,6 @@ Thumbs.db
 
 # Uploads
 uploads/
+
+# Helpdesk runtime data
+apps/api/data/*.json

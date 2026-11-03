@@ -41,7 +41,6 @@ type ProjectSector = 'todos' | 'servicios' | 'retail' | 'distribucion' | 'salud'
 interface CaseStudy {
   id: string
   sectorId: ProjectSector
-  sectorLabel: string
   icon: LucideIcon
   title: string
   clientType: string
@@ -62,7 +61,6 @@ const caseStudies: CaseStudy[] = [
   {
     id: 'red-corporativa-sede',
     sectorId: 'servicios',
-    sectorLabel: 'Servicios Profesionales',
     icon: Briefcase,
     title: 'Modernización de red y conectividad corporativa para sede de 65 colaboradores',
     clientType: 'Firma de consultoría legal y contable',
@@ -90,7 +88,6 @@ const caseStudies: CaseStudy[] = [
   {
     id: 'mesa-ayuda-remota',
     sectorId: 'retail',
-    sectorLabel: 'Comercio y Retail',
     icon: ShoppingBag,
     title: 'Mesa de ayuda unificada y mantenimiento preventivo para cadena con 8 puntos de venta',
     clientType: 'Cadena de tiendas de conveniencia y tecnología',
@@ -118,7 +115,6 @@ const caseStudies: CaseStudy[] = [
   {
     id: 'sistema-inventario-distribucion',
     sectorId: 'distribucion',
-    sectorLabel: 'Distribución y Comercio',
     icon: Truck,
     title: 'Plataforma web de gestión de inventarios multisede, ventas y facturación electrónica',
     clientType: 'Distribuidora mayorista de repuestos industriales',
@@ -146,7 +142,6 @@ const caseStudies: CaseStudy[] = [
   {
     id: 'respaldos-seguridad-clinica',
     sectorId: 'salud',
-    sectorLabel: 'Salud y Clínicas',
     icon: Stethoscope,
     title: 'Estrategia de respaldo 3-2-1, seguridad y plan de continuidad para historias clínicas',
     clientType: 'Centro médico de diagnóstico por imágenes',
@@ -174,7 +169,6 @@ const caseStudies: CaseStudy[] = [
   {
     id: 'suministro-despliegue-colegio',
     sectorId: 'educacion',
-    sectorLabel: 'Educación y Academias',
     icon: GraduationCap,
     title: 'Suministro corporativo, configuración de imagen base y despliegue de 80 equipos para campus',
     clientType: 'Institución educativa privada',
@@ -202,7 +196,6 @@ const caseStudies: CaseStudy[] = [
   {
     id: 'automatizacion-reportes-logistica',
     sectorId: 'logistica',
-    sectorLabel: 'Logística y Almacén',
     icon: Workflow,
     title: 'Automatización de indicadores de trazabilidad y panel de control logístico en tiempo real',
     clientType: 'Operador logístico de transporte de carga',
@@ -224,7 +217,7 @@ const caseStudies: CaseStudy[] = [
   },
 ]
 
-const sectors = [
+const sectors: { id: ProjectSector; label: string }[] = [
   { id: 'todos', label: 'Todos los sectores' },
   { id: 'servicios', label: 'Servicios Profesionales' },
   { id: 'retail', label: 'Comercio y Retail' },
@@ -233,6 +226,8 @@ const sectors = [
   { id: 'educacion', label: 'Educación' },
   { id: 'logistica', label: 'Logística' },
 ]
+
+const sectorLabelById = new Map(sectors.map((sector) => [sector.id, sector.label]))
 
 export function ProjectsPage() {
   const [selectedSector, setSelectedSector] = useState<ProjectSector>('todos')
@@ -341,7 +336,8 @@ export function ProjectsPage() {
                   <button
                     key={sector.id}
                     type="button"
-                    onClick={() => setSelectedSector(sector.id as ProjectSector)}
+                    onClick={() => setSelectedSector(sector.id)}
+                    aria-pressed={active}
                     className={`rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-all ${
                       active
                         ? 'bg-[#2563EB] text-white shadow-sm'
@@ -379,6 +375,7 @@ export function ProjectsPage() {
               <div className="grid gap-8 lg:grid-cols-2">
                 {filteredStudies.map((study) => {
                   const Icon = study.icon
+                  const sectorLabel = sectorLabelById.get(study.sectorId) ?? ''
                   return (
                     <article
                       key={study.id}
@@ -392,9 +389,14 @@ export function ProjectsPage() {
                               <Icon className="size-4" />
                             </span>
                             <div>
-                              <span className="text-[11px] font-bold uppercase tracking-wider text-[#2563EB]">
-                                {study.sectorLabel}
-                              </span>
+                              <button
+                                type="button"
+                                onClick={() => setSelectedSector(study.sectorId)}
+                                aria-label={`Ver proyectos del sector ${sectorLabel}`}
+                                className="rounded-sm text-left text-[11px] font-bold uppercase tracking-wider text-[#2563EB] underline-offset-2 transition hover:text-[#1D4ED8] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/40"
+                              >
+                                {sectorLabel}
+                              </button>
                               <p className="text-xs text-[#64748B]">{study.clientType}</p>
                             </div>
                           </div>

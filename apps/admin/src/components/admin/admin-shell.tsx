@@ -62,7 +62,7 @@ function getBreadcrumb(pathname: string) {
   if (pathname === '/marcas') return { section: 'Catálogo', title: 'Marcas' }
   if (pathname === '/cotizaciones') return { section: 'Comercial', title: 'Cotizaciones' }
   if (pathname === '/clientes') return { section: 'Comercial', title: 'Clientes' }
-  if (pathname === '/solicitudes') return { section: 'Comercial', title: 'Solicitudes recibidas' }
+  if (pathname === '/solicitudes') return { section: 'Atención al cliente', title: 'Mesa de ayuda' }
   if (pathname === '/actividad') return { section: 'General', title: 'Actividad reciente' }
   if (pathname === '/configuracion') return { section: 'Sistema', title: 'Configuración' }
   return { section: 'Panel', title: 'Administración' }
@@ -185,13 +185,13 @@ export function AdminShell({ children }: { children: ReactNode }) {
         { href: '/clientes', label: 'Clientes', icon: Users },
         {
           href: '/solicitudes',
-          label: 'Solicitudes recibidas',
+          label: 'Mesa de ayuda',
           icon: Inbox,
           badge: newRequestCount,
           badgeHint:
             newRequestCount === 1
-              ? '1 solicitud nueva'
-              : `${newRequestCount} solicitudes nuevas`,
+              ? '1 mensaje nuevo'
+              : `${newRequestCount} mensajes nuevos`,
         },
       ],
     },

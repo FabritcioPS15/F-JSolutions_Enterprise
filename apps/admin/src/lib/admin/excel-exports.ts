@@ -265,7 +265,7 @@ function requestSheets(requests: ServiceRequest[]): ExcelSheet[] {
     },
   ]
 
-  return [buildSheet('Solicitudes', columns, requests)]
+  return [buildSheet('Mesa de ayuda', columns, requests)]
 }
 
 type SubcategoryRow = {
@@ -420,8 +420,8 @@ export function clientsDataset(clients: Client[]): DatasetExport {
 
 export function requestsDataset(requests: ServiceRequest[]): DatasetExport {
   return {
-    prefix: 'solicitudes',
-    title: 'Solicitudes recibidas',
+    prefix: 'mesa-de-ayuda',
+    title: 'Mensajes de la mesa de ayuda',
     sheets: requestSheets(requests),
   }
 }

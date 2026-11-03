@@ -223,6 +223,7 @@ export const infrastructureMenu: NavMenuItem[] = [
 ]
 
 export const softwareDevMenu: NavMenuItem[] = [
+  { label: 'Creación de páginas web', href: '/sistemas/creacion-de-paginas-web', desc: 'Sitios corporativos, landing pages y tiendas' },
   { label: 'Sistemas web a medida', href: '/sistemas/sistemas-web-a-medida', desc: 'Desarrollo de aplicaciones web personalizadas' },
   { label: 'Sistemas de gestión empresarial', href: '/sistemas/sistemas-de-gestion-empresarial', desc: 'ERP y sistemas de gestión' },
   { label: 'Automatización de procesos', href: '/sistemas/automatizacion-de-procesos', desc: 'Optimización de flujos de trabajo' },

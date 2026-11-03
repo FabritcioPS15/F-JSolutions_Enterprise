@@ -12,6 +12,7 @@ import authRoutes from './routes/auth.routes'
 import orderRoutes from './routes/order.routes'
 import contactRoutes from './routes/contact.routes'
 import cotizacionRoutes from './routes/cotizacion.routes'
+import helpdeskRoutes from './routes/helpdesk.routes'
 
 const app = express()
 
@@ -39,6 +40,7 @@ app.use(`${PREFIX}/auth`, authRoutes)
 app.use(`${PREFIX}/orders`, orderRoutes)
 app.use(`${PREFIX}/contact`, contactRoutes)
 app.use(`${PREFIX}/cotizaciones`, cotizacionRoutes)
+app.use(`${PREFIX}/helpdesk`, helpdeskRoutes)
 
 // ── Error handler (must be last) ──────────────────────────────────────────────
 app.use(errorHandler)

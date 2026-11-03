@@ -146,7 +146,7 @@ const staticPages: StaticPage[] = [
   {
     title: 'Desarrollo de software',
     href: '/sistemas',
-    description: 'Sistemas web a medida, ERP, automatización e integraciones.',
+    description: 'Páginas web, sistemas a medida, ERP, automatización e integraciones.',
     keywords: [
       'web',
       'pagina web',

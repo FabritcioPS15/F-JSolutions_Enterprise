@@ -53,10 +53,11 @@ const content = {
     eyebrow: 'Desarrollo de sistemas',
     title: 'Convertimos tus procesos en soluciones digitales.',
     description:
-      'Diseñamos y desarrollamos sistemas a medida para automatizar tareas, ordenar información y hacer crecer tu negocio sin depender de hojas de cálculo.',
+      'Diseñamos y desarrollamos páginas web y sistemas a medida para automatizar tareas, ordenar información y hacer crecer tu negocio sin depender de hojas de cálculo.',
     icon: Code2,
     cta: 'Cuéntanos tu proyecto',
     options: [
+      'Páginas web, landing pages y tiendas online',
       'Sistemas web y plataformas internas',
       'Automatización de procesos y reportes',
       'Integración de inventario, ventas y facturación',

@@ -8,7 +8,18 @@ import {
   type ReactNode,
 } from 'react'
 import { createSeedData } from '@/lib/admin/seed'
-import { buildQuoteCode, buildRequestCode, slugify, statusLabels } from '@/lib/admin/format'
+import { buildQuoteCode, slugify, statusLabels } from '@/lib/admin/format'
+import {
+  createTicket as createHelpdeskTicket,
+  deleteTicket as deleteHelpdeskTicket,
+  fetchTickets,
+  mapTicket,
+  sendTicketReply,
+  toApiChannel,
+  toApiStatus,
+  updateTicket as updateHelpdeskTicket,
+  type TicketPatch,
+} from '@/lib/admin/helpdesk'
 import type {
   ActivityEntry,
   ActivityType,
@@ -43,7 +54,16 @@ export type BrandPatch = Partial<
 export type RequestPatch = Partial<
   Pick<
     ServiceRequest,
-    'name' | 'company' | 'email' | 'phone' | 'topic' | 'message' | 'channel' | 'status' | 'notes'
+    | 'name'
+    | 'company'
+    | 'email'
+    | 'phone'
+    | 'topic'
+    | 'message'
+    | 'channel'
+    | 'status'
+    | 'notes'
+    | 'quoteCode'
   >
 >
 
@@ -55,6 +75,8 @@ type AdminContextValue = {
   clients: Client[]
   quotes: Quote[]
   requests: ServiceRequest[]
+  helpdeskError: string | null
+  helpdeskSynced: boolean
   settings: StoreSettings
   activity: ActivityEntry[]
   createProduct: (input: ProductInput) => AdminProduct
@@ -91,11 +113,16 @@ type AdminContextValue = {
   updateQuote: (id: string, input: QuoteInput) => void
   removeQuote: (id: string) => void
   setQuoteStatus: (id: string, status: QuoteStatus) => void
-  createRequest: (input: RequestInput) => ServiceRequest
-  updateRequest: (id: string, patch: RequestPatch) => void
-  removeRequest: (id: string) => void
-  setRequestStatus: (id: string, status: RequestStatus) => void
-  convertRequestToQuote: (id: string) => Quote | null
+  createRequest: (input: RequestInput) => Promise<ServiceRequest>
+  updateRequest: (id: string, patch: RequestPatch) => Promise<void>
+  removeRequest: (id: string) => Promise<void>
+  setRequestStatus: (id: string, status: RequestStatus) => Promise<void>
+  convertRequestToQuote: (id: string) => Promise<Quote | null>
+  refreshRequests: () => Promise<void>
+  replyToRequest: (
+    id: string,
+    input: { subject: string; message: string }
+  ) => Promise<{ delivered: boolean; reason?: string }>
   updateSettings: (settings: StoreSettings) => void
   resetData: () => void
   exportData: () => string
@@ -381,6 +408,17 @@ function normalizeRequest(raw: Record<string, unknown>): ServiceRequest {
       : 'new',
     clientId: raw.clientId ? String(raw.clientId) : undefined,
     quoteId: raw.quoteId ? String(raw.quoteId) : undefined,
+    quoteCode: raw.quoteCode ? String(raw.quoteCode) : undefined,
+    repliedAt: raw.repliedAt ? String(raw.repliedAt) : undefined,
+    lastReply:
+      raw.lastReply && typeof raw.lastReply === 'object'
+        ? {
+            subject: String((raw.lastReply as Record<string, unknown>).subject ?? ''),
+            message: String((raw.lastReply as Record<string, unknown>).message ?? ''),
+            delivered: Boolean((raw.lastReply as Record<string, unknown>).delivered),
+            at: String((raw.lastReply as Record<string, unknown>).at ?? new Date().toISOString()),
+          }
+        : undefined,
     notes: String(raw.notes ?? ''),
     createdAt: String(raw.createdAt ?? new Date().toISOString()),
     updatedAt: String(raw.updatedAt ?? new Date().toISOString()),
@@ -433,6 +471,8 @@ function parseData(raw: string): AdminData {
 export function AdminProvider({ children }: { children: ReactNode }) {
   const [data, setData] = useState<AdminData>(() => createSeedData())
   const [hydrated, setHydrated] = useState(false)
+  const [helpdeskError, setHelpdeskError] = useState<string | null>(null)
+  const [helpdeskSynced, setHelpdeskSynced] = useState(false)
 
   useEffect(() => {
     try {
@@ -456,6 +496,11 @@ export function AdminProvider({ children }: { children: ReactNode }) {
       console.warn('No se pudo guardar el catálogo local.', error)
     }
   }, [data, hydrated])
+
+  useEffect(() => {
+    if (!hydrated) return
+    void refreshRequests().catch(() => undefined)
+  }, [hydrated])
 
   function createProduct(input: ProductInput) {
     const now = new Date().toISOString()
@@ -1168,45 +1213,87 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     }))
   }
 
-  function createRequest(input: RequestInput) {
-    const now = new Date().toISOString()
-    const taken = new Set(data.requests.map((request) => request.code))
-    let code = buildRequestCode()
-    while (taken.has(code)) code = buildRequestCode()
-    const request: ServiceRequest = {
-      ...input,
-      id: uid('solicitud'),
-      code,
-      createdAt: now,
-      updatedAt: now,
+  async function refreshRequests() {
+    try {
+      const tickets = await fetchTickets()
+      setData((prev) => ({
+        ...prev,
+        requests: tickets.map((ticket) => mapTicket(ticket, prev.quotes)),
+      }))
+      setHelpdeskError(null)
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : 'No se pudo conectar con la mesa de ayuda.'
+      setHelpdeskError(message)
+      throw error instanceof Error ? error : new Error(message)
+    } finally {
+      setHelpdeskSynced(true)
     }
-    setData((prev) => ({ ...prev, requests: [request, ...prev.requests] }))
+  }
+
+  async function createRequest(input: RequestInput): Promise<ServiceRequest> {
+    const ticket = await createHelpdeskTicket({
+      nombre: input.name,
+      email: input.email,
+      telefono: input.phone || undefined,
+      empresa: input.company || undefined,
+      asunto: input.topic,
+      mensaje: input.message,
+      channel: toApiChannel(input.channel),
+      notes: input.notes || undefined,
+    })
+    const request = mapTicket(ticket, data.quotes)
+    setData((prev) => ({
+      ...prev,
+      requests: [request, ...prev.requests.filter((item) => item.id !== request.id)],
+    }))
     return request
   }
 
-  function updateRequest(id: string, patch: RequestPatch) {
+  async function updateRequest(id: string, patch: RequestPatch): Promise<void> {
+    const apiPatch: TicketPatch = {}
+    if (patch.status) apiPatch.status = toApiStatus(patch.status)
+    if (patch.channel) apiPatch.channel = toApiChannel(patch.channel)
+    if (patch.notes !== undefined) apiPatch.notes = patch.notes
+    if (patch.quoteCode !== undefined) apiPatch.quoteCode = patch.quoteCode
+    if (Object.keys(apiPatch).length === 0) return
+
+    const ticket = await updateHelpdeskTicket(id, apiPatch)
+    const updated = mapTicket(ticket, data.quotes)
     setData((prev) => ({
       ...prev,
-      requests: prev.requests.map((request) =>
-        request.id === id
-          ? { ...request, ...patch, updatedAt: new Date().toISOString() }
-          : request
-      ),
+      requests: prev.requests.map((request) => (request.id === id ? updated : request)),
     }))
   }
 
-  function setRequestStatus(id: string, status: RequestStatus) {
-    updateRequest(id, { status })
+  async function setRequestStatus(id: string, status: RequestStatus) {
+    await updateRequest(id, { status })
   }
 
-  function removeRequest(id: string) {
+  async function removeRequest(id: string) {
+    await deleteHelpdeskTicket(id)
     setData((prev) => ({
       ...prev,
       requests: prev.requests.filter((request) => request.id !== id),
     }))
   }
 
-  function convertRequestToQuote(id: string) {
+  async function replyToRequest(
+    id: string,
+    input: { subject: string; message: string }
+  ): Promise<{ delivered: boolean; reason?: string }> {
+    const result = await sendTicketReply(id, input)
+    const updated = mapTicket(result.ticket, data.quotes)
+    setData((prev) => ({
+      ...prev,
+      requests: prev.requests.map((request) => (request.id === id ? updated : request)),
+    }))
+    return { delivered: result.delivered, reason: result.reason }
+  }
+
+  async function convertRequestToQuote(id: string): Promise<Quote | null> {
     const request = data.requests.find((item) => item.id === id)
     if (!request) return null
 
@@ -1253,6 +1340,11 @@ export function AdminProvider({ children }: { children: ReactNode }) {
       updatedAt: now,
     }
 
+    const ticket = await updateHelpdeskTicket(id, {
+      status: 'REVIEW',
+      quoteCode: quote.code,
+    })
+
     setData((prev) => ({
       ...prev,
       clients: prev.clients.some((item) => item.id === client.id)
@@ -1261,7 +1353,11 @@ export function AdminProvider({ children }: { children: ReactNode }) {
       quotes: [quote, ...prev.quotes],
       requests: prev.requests.map((item) =>
         item.id === id
-          ? { ...item, clientId: client.id, quoteId: quote.id, status: 'review', updatedAt: now }
+          ? {
+              ...mapTicket(ticket, [quote]),
+              clientId: client.id,
+              quoteId: quote.id,
+            }
           : item
       ),
     }))
@@ -1295,6 +1391,8 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         clients: data.clients,
         quotes: data.quotes,
         requests: data.requests,
+        helpdeskError,
+        helpdeskSynced,
         settings: data.settings,
         activity: data.activity,
         createProduct,
@@ -1331,6 +1429,8 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         removeRequest,
         setRequestStatus,
         convertRequestToQuote,
+        refreshRequests,
+        replyToRequest,
         updateSettings,
         resetData,
         exportData,

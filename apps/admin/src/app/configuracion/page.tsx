@@ -382,7 +382,7 @@ export default function ConfiguracionPage() {
                   { label: 'Marcas', value: brands.length },
                   { label: 'Clientes', value: clients.length },
                   { label: 'Cotizaciones', value: quotes.length },
-                  { label: 'Solicitudes', value: requests.length },
+                  { label: 'Mensajes', value: requests.length },
                 ].map((item) => (
                   <div key={item.label} className="rounded-xl bg-slate-50 px-2 py-2.5">
                     <dd className="font-heading text-sm font-bold text-slate-900">
@@ -507,7 +507,7 @@ export default function ConfiguracionPage() {
       <ConfirmDialog
         open={confirmReset}
         title="Restaurar catálogo demo"
-        description="Se eliminarán el catálogo, los clientes, las cotizaciones y las solicitudes actuales, y se cargarán nuevamente los datos de ejemplo. Esta acción no se puede deshacer."
+        description="Se eliminarán el catálogo, los clientes y las cotizaciones actuales, y se cargarán nuevamente los datos de ejemplo. Los mensajes de la mesa de ayuda se conservan. Esta acción no se puede deshacer."
         confirmLabel="Restaurar demo"
         onConfirm={handleReset}
         onClose={() => setConfirmReset(false)}

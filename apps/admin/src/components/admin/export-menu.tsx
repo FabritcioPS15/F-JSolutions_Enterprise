@@ -66,6 +66,7 @@ export function ExportMenu({
 }) {
   const toast = useToast()
   const [open, setOpen] = useState(false)
+  const [align, setAlign] = useState<'left' | 'right'>('right')
   const [pending, setPending] = useState<ExportFormat | null>(null)
   const rootRef = useRef<HTMLDivElement>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
@@ -135,7 +136,16 @@ export function ExportMenu({
         aria-haspopup="menu"
         aria-expanded={open}
         disabled={disabled || pending !== null}
-        onClick={() => setOpen((prev) => !prev)}
+        onClick={() => {
+          if (!open) {
+            const rect = triggerRef.current?.getBoundingClientRect()
+            if (rect) {
+              const fitsRight = rect.left + 264 <= window.innerWidth - 8
+              setAlign(fitsRight ? 'left' : 'right')
+            }
+          }
+          setOpen((prev) => !prev)
+        }}
         className={cn(btnSecondary, open && 'border-slate-300 bg-slate-50')}
       >
         {pending ? (
@@ -158,7 +168,10 @@ export function ExportMenu({
           ref={panelRef}
           role="menu"
           aria-label={label}
-          className="absolute right-0 top-full z-50 mt-2 w-64 overflow-hidden rounded-2xl border border-slate-200 bg-white p-1.5 shadow-xl shadow-slate-900/10 animate-in fade-in-0 zoom-in-95 duration-150"
+          className={cn(
+            'absolute top-full z-50 mt-2 w-64 overflow-hidden rounded-2xl border border-slate-200 bg-white p-1.5 shadow-xl shadow-slate-900/10 animate-in fade-in-0 zoom-in-95 duration-150',
+            align === 'right' ? 'right-0' : 'left-0'
+          )}
         >
           <p className="px-2.5 pb-1 pt-1 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">
             Formato de descarga

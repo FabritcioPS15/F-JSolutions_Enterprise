@@ -444,7 +444,51 @@ export const serviceDefinitions: ServiceDefinition[] = [
           'Sí. El proyecto, su base de datos y la documentación se entregan a tu empresa. Después puedes contratar mantenimiento o evolución con nosotros.',
       },
     ],
-    related: ['sistemas-de-gestion-empresarial', 'integraciones-y-api', 'automatizacion-de-procesos'],
+    related: ['creacion-de-paginas-web', 'sistemas-de-gestion-empresarial', 'integraciones-y-api'],
+  },
+  {
+    slug: 'creacion-de-paginas-web',
+    title: 'Creación de páginas web',
+    category: 'Desarrollo de software',
+    summary:
+      'Diseño y desarrollo de páginas web para empresas: sitios corporativos, landing pages y tiendas online rápidas, con SEO y panel de administración.',
+    intro:
+      'Creamos páginas web pensadas para que tus clientes te encuentren, entiendan lo que ofreces y te contacten. Diseño adaptado a celulares, carga rápida y un panel simple para que actualices el contenido sin depender de un programador.',
+    heroImage: {
+      src: '/images/heroes/Desarrollodesoftware.png',
+      alt: 'Creación de páginas web: laptop con interfaz de sitio web, módulos de código y base de datos',
+    },
+    includes: [
+      { title: 'Sitios web corporativos', copy: 'Presenta tu empresa, servicios y equipo con una estructura clara.' },
+      { title: 'Landing pages', copy: 'Páginas enfocadas en una campaña, producto o conversión específica.' },
+      { title: 'Diseño adaptable', copy: 'Interfaz cuidada en celular, tablet y computadora.' },
+      { title: 'SEO técnico y velocidad', copy: 'Estructura, metadatos y optimización para cargar rápido y aparecer en Google.' },
+      { title: 'Formularios conectados', copy: 'Las consultas llegan a tu correo y al panel de mesa de ayuda.' },
+      { title: 'Panel de contenido', copy: 'Actualiza textos, imágenes y servicios sin tocar el código.' },
+    ],
+    faq: [
+      {
+        question: '¿Cuánto demora crear una página web?',
+        answer:
+          'Una landing page puede estar lista en 1 o 2 semanas. Un sitio corporativo completo suele tomar entre 3 y 5 semanas, según la cantidad de secciones y la entrega de contenidos, imágenes y logotipo.',
+      },
+      {
+        question: '¿Incluye dominio y hosting?',
+        answer:
+          'Te asesoramos para elegir dominio y hosting adecuados a tu tráfico, y realizamos la publicación. El costo anual del dominio y el hosting se cotiza según el proveedor y el plan que elijas.',
+      },
+      {
+        question: '¿Puedo actualizar la página yo mismo?',
+        answer:
+          'Sí. Entregamos la página con un panel de administración y una capacitación básica para que puedas publicar textos, imágenes y servicios sin depender de un programador.',
+      },
+      {
+        question: '¿La página aparecerá en Google?',
+        answer:
+          'Entregamos el sitio con SEO técnico: estructura, metadatos, sitemap y velocidad de carga. El posicionamiento también depende del contenido, la competencia y el tiempo; si lo necesitas, podemos acompañarte con una estrategia continua.',
+      },
+    ],
+    related: ['sistemas-web-a-medida', 'integraciones-y-api', 'consultoria-y-proyectos-personalizados'],
   },
   {
     slug: 'sistemas-de-gestion-empresarial',

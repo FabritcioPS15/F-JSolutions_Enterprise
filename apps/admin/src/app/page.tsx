@@ -278,9 +278,9 @@ export default function DashboardPage() {
         {[
           {
             href: '/solicitudes',
-            label: 'Solicitudes nuevas',
+            label: 'Consultas nuevas',
             value: newRequests,
-            hint: 'Consultas sin revisar en la bandeja',
+            hint: 'Mensajes sin revisar en la mesa de ayuda',
             icon: Inbox,
           },
           {

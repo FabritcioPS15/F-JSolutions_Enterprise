@@ -5,7 +5,6 @@ import {
   Building2,
   CalendarRange,
   Check,
-  ChevronDown,
   ClipboardCheck,
   Cloud,
   Code2,
@@ -30,6 +29,7 @@ import {
 import { FaTeamspeak } from 'react-icons/fa6'
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
 import { ServiceHero } from '@/components/heroes'
+import { FaqAccordion } from '@/components/ui/faq-accordion'
 
 type ServiceItem = {
   icon: LucideIcon
@@ -612,20 +612,7 @@ export function ServicesPage() {
               Hacer otra consulta <ArrowRight className="size-4" />
             </Link>
           </div>
-          <div className="space-y-2">
-            {faqs.map((faq) => (
-              <details
-                key={faq.q}
-                className="group rounded-xl border border-[#E2E8F0] bg-white px-5 py-4 transition open:border-[#2563EB]/30 open:shadow-sm"
-              >
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-sm font-bold text-[#0F172A] [&::-webkit-details-marker]:hidden">
-                  {faq.q}
-                  <ChevronDown className="size-4 shrink-0 text-[#475569] transition group-open:rotate-180" />
-                </summary>
-                <p className="mt-3 text-sm leading-6 text-[#475569]">{faq.a}</p>
-              </details>
-            ))}
-          </div>
+          <FaqAccordion items={faqs.map((faq) => ({ question: faq.q, answer: faq.a }))} />
         </div>
       </section>
 

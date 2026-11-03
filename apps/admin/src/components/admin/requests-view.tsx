@@ -3,17 +3,21 @@
 import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import {
+  AlertTriangle,
   ArrowUpRight,
   Check,
   FileText,
   Globe2,
   Inbox,
   Mail,
+  MailCheck,
   MessageCircle,
   Phone,
   Plus,
+  RefreshCw,
   RotateCcw,
   Search,
+  Send,
   Trash2,
   X,
 } from 'lucide-react'
@@ -92,11 +96,29 @@ function validate(draft: RequestDraft): RequestErrors {
   const errors: RequestErrors = {}
   if (draft.name.trim().length < 2) errors.name = 'Ingresa el nombre del contacto.'
   if (!EMAIL_PATTERN.test(draft.email.trim())) errors.email = 'Escribe un correo válido.'
-  if (!draft.topic.trim()) errors.topic = 'Resume el motivo de la solicitud.'
+  if (!draft.topic.trim()) errors.topic = 'Resume el motivo de la consulta.'
   if (draft.message.trim().length < 10) {
     errors.message = 'Describe la necesidad con al menos 10 caracteres.'
   }
   return errors
+}
+
+function errorMessage(error: unknown) {
+  return error instanceof Error ? error.message : 'Inténtalo de nuevo en unos segundos.'
+}
+
+function replyTemplate(item: ServiceRequest) {
+  const firstName = item.name.trim().split(/\s+/)[0] ?? ''
+  return `Hola ${firstName},
+
+Gracias por contactar a F&J Systems. Hemos recibido tu consulta "${item.topic}".
+
+
+
+Quedamos atentos a cualquier consulta adicional.
+
+Saludos,
+Equipo de F&J Systems`
 }
 
 export function RequestsView() {
@@ -105,11 +127,15 @@ export function RequestsView() {
     requests,
     clients,
     quotes,
+    helpdeskError,
+    helpdeskSynced,
     createRequest,
     updateRequest,
     removeRequest,
     setRequestStatus,
     convertRequestToQuote,
+    refreshRequests,
+    replyToRequest,
   } = useAdmin()
   const toast = useToast()
 
@@ -122,6 +148,10 @@ export function RequestsView() {
   const [draft, setDraft] = useState<RequestDraft>(emptyDraft)
   const [errors, setErrors] = useState<RequestErrors>({})
   const [deleteTarget, setDeleteTarget] = useState<ServiceRequest | null>(null)
+  const [replyOpen, setReplyOpen] = useState(false)
+  const [replySubject, setReplySubject] = useState('')
+  const [replyMessage, setReplyMessage] = useState('')
+  const [working, setWorking] = useState<string | null>(null)
 
   const detail = detailId ? requests.find((item) => item.id === detailId) ?? null : null
   const linkedClient = detail?.clientId
@@ -134,6 +164,13 @@ export function RequestsView() {
   useEffect(() => {
     if (!detailId) setNotesDraft('')
   }, [detailId])
+
+  useEffect(() => {
+    if (!replyOpen) {
+      setReplySubject('')
+      setReplyMessage('')
+    }
+  }, [replyOpen])
 
   const filtered = useMemo(() => {
     const term = query.trim().toLowerCase()
@@ -157,6 +194,7 @@ export function RequestsView() {
   const newCount = requests.filter((item) => item.status === 'new').length
   const reviewCount = requests.filter((item) => item.status === 'review').length
   const attendedCount = requests.filter((item) => item.status === 'attended').length
+  const repliedCount = requests.filter((item) => Boolean(item.repliedAt)).length
   const hasFilters = query !== '' || status !== 'all' || channel !== 'all'
 
   function update<K extends keyof RequestDraft>(key: K, value: RequestDraft[K]) {
@@ -181,83 +219,209 @@ export function RequestsView() {
     setRegistering(true)
   }
 
-  function handleRegister(event: React.FormEvent<HTMLFormElement>) {
+  function openReply(item: ServiceRequest) {
+    setReplySubject(`Re: ${item.topic}`)
+    setReplyMessage(replyTemplate(item))
+    setReplyOpen(true)
+  }
+
+  async function handleRefresh() {
+    setWorking('refresh')
+    try {
+      await refreshRequests()
+      toast.success('Bandeja actualizada', 'Se sincronizaron las consultas de la web.')
+    } catch (error) {
+      toast.error('No se pudo actualizar', errorMessage(error))
+    } finally {
+      setWorking(null)
+    }
+  }
+
+  async function handleRegister(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const nextErrors = validate(draft)
     setErrors(nextErrors)
     if (Object.keys(nextErrors).length > 0) {
-      toast.error('Revisa la solicitud', 'Faltan datos para registrar el contacto.')
+      toast.error('Revisa la consulta', 'Faltan datos para registrar el contacto.')
       return
     }
-    const created = createRequest({
-      name: draft.name.trim(),
-      company: draft.company.trim(),
-      email: draft.email.trim(),
-      phone: draft.phone.trim(),
-      topic: draft.topic.trim(),
-      message: draft.message.trim(),
-      channel: draft.channel,
-      status: 'new',
-      notes: draft.notes.trim(),
-    })
-    toast.success('Solicitud registrada', created.code)
-    setRegistering(false)
+
+    setWorking('register')
+    try {
+      const created = await createRequest({
+        name: draft.name.trim(),
+        company: draft.company.trim(),
+        email: draft.email.trim(),
+        phone: draft.phone.trim(),
+        topic: draft.topic.trim(),
+        message: draft.message.trim(),
+        channel: draft.channel,
+        status: 'new',
+        notes: draft.notes.trim(),
+      })
+      toast.success('Consulta registrada', created.code)
+      setRegistering(false)
+    } catch (error) {
+      toast.error('No se pudo registrar', errorMessage(error))
+    } finally {
+      setWorking(null)
+    }
   }
 
-  function handleStatus(item: ServiceRequest, next: RequestStatus) {
-    if (item.status === next) return
-    setRequestStatus(item.id, next)
-    toast.info(`Solicitud ${requestStatusLabels[next].toLowerCase()}`, item.code)
+  async function handleStatus(item: ServiceRequest, next: RequestStatus) {
+    if (item.status === next || working) return
+    setWorking(`status-${item.id}`)
+    try {
+      await setRequestStatus(item.id, next)
+      toast.info(`Consulta ${requestStatusLabels[next].toLowerCase()}`, item.code)
+    } catch (error) {
+      toast.error('No se pudo actualizar', errorMessage(error))
+    } finally {
+      setWorking(null)
+    }
   }
 
-  function handleSaveNotes() {
+  async function handleSaveNotes() {
     if (!detail) return
-    updateRequest(detail.id, { notes: notesDraft.trim() })
-    toast.success('Nota guardada', detail.code)
+    setWorking('notes')
+    try {
+      await updateRequest(detail.id, { notes: notesDraft.trim() })
+      toast.success('Nota guardada', detail.code)
+    } catch (error) {
+      toast.error('No se pudo guardar la nota', errorMessage(error))
+    } finally {
+      setWorking(null)
+    }
   }
 
-  function handleConvert(item: ServiceRequest) {
-    const quote = convertRequestToQuote(item.id)
-    if (!quote) return
-    toast.success(
-      'Cotización creada',
-      `${quote.code} quedó como borrador. Agrega los productos desde Cotizaciones.`
-    )
-    setDetailId(null)
+  async function handleConvert(item: ServiceRequest) {
+    setWorking('convert')
+    try {
+      const quote = await convertRequestToQuote(item.id)
+      if (!quote) return
+      toast.success(
+        'Cotización creada',
+        `${quote.code} quedó como borrador. Agrega los productos desde Cotizaciones.`
+      )
+      setDetailId(null)
+    } catch (error) {
+      toast.error('No se pudo convertir', errorMessage(error))
+    } finally {
+      setWorking(null)
+    }
   }
 
-  function handleDelete() {
+  async function handleDelete() {
     if (!deleteTarget) return
-    removeRequest(deleteTarget.id)
-    toast.success('Solicitud eliminada', deleteTarget.code)
-    if (detailId === deleteTarget.id) setDetailId(null)
-    setDeleteTarget(null)
+    setWorking('delete')
+    try {
+      await removeRequest(deleteTarget.id)
+      toast.success('Consulta eliminada', deleteTarget.code)
+      if (detailId === deleteTarget.id) setDetailId(null)
+      setDeleteTarget(null)
+    } catch (error) {
+      toast.error('No se pudo eliminar', errorMessage(error))
+    } finally {
+      setWorking(null)
+    }
+  }
+
+  async function handleSendReply(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    if (!detail) return
+    if (replySubject.trim().length < 3) {
+      toast.error('Falta el asunto', 'Escribe un asunto para el correo.')
+      return
+    }
+    if (replyMessage.trim().length < 10) {
+      toast.error('Falta la respuesta', 'Escribe el mensaje que recibirá el cliente.')
+      return
+    }
+
+    const recipient = detail.email
+    setWorking('reply')
+    try {
+      const result = await replyToRequest(detail.id, {
+        subject: replySubject.trim(),
+        message: replyMessage.trim(),
+      })
+      if (result.delivered) {
+        toast.success('Respuesta enviada', `Correo entregado a ${recipient}.`)
+      } else {
+        toast.error(
+          'Respuesta guardada sin envío',
+          result.reason === 'SMTP no configurado'
+            ? 'Configura SMTP en la API para enviar correos reales. La respuesta quedó registrada.'
+            : `${result.reason ?? 'El correo no pudo enviarse.'} La respuesta quedó registrada.`
+        )
+      }
+      setReplyOpen(false)
+    } catch (error) {
+      toast.error('No se pudo responder', errorMessage(error))
+    } finally {
+      setWorking(null)
+    }
   }
 
   if (!hydrated) {
-    return <LoadingState label="Cargando solicitudes…" />
+    return <LoadingState label="Cargando mesa de ayuda…" />
   }
 
   return (
     <div className="space-y-5">
       <PageHeader
-        eyebrow="Comercial"
-        title="Solicitudes recibidas"
-        description="Bandeja de consultas y pedidos de cotización. Regístralas o conviértelas en cotizaciones."
+        eyebrow="Atención al cliente"
+        title="Mesa de ayuda"
+        description="Consultas del formulario web, correos y registros manuales. Responde con plantilla o conviértelas en cotización."
         actions={
           <>
+            <button
+              type="button"
+              className={btnSecondary}
+              onClick={handleRefresh}
+              disabled={working !== null}
+            >
+              <RefreshCw
+                className={cn('size-4', working === 'refresh' && 'animate-spin')}
+                aria-hidden="true"
+              />
+              Actualizar
+            </button>
             <ExportMenu
               build={() => requestsDataset(filtered)}
-              nouns={['solicitud', 'solicitudes']}
+              nouns={['mensaje', 'mensajes']}
               disabled={filtered.length === 0}
             />
             <button type="button" className={btnPrimary} onClick={openRegister}>
               <Plus className="size-4" aria-hidden="true" />
-              Registrar solicitud
+              Registrar consulta
             </button>
           </>
         }
       />
+
+      {helpdeskError && (
+        <div className="flex flex-col gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-start gap-3">
+            <AlertTriangle className="mt-0.5 size-4 shrink-0 text-amber-600" aria-hidden="true" />
+            <div>
+              <p className="text-xs font-bold text-amber-900">Sin conexión con la API de consultas</p>
+              <p className="mt-0.5 text-[11px] leading-relaxed text-amber-800">
+                {helpdeskError} Revisa que la API esté activa en el puerto 4000.
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            className="inline-flex h-9 shrink-0 items-center gap-2 rounded-lg border border-amber-300 bg-white px-3 text-[11px] font-semibold text-amber-900 transition hover:bg-amber-100"
+            onClick={handleRefresh}
+            disabled={working !== null}
+          >
+            <RefreshCw className="size-3.5" aria-hidden="true" />
+            Reintentar
+          </button>
+        </div>
+      )}
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
@@ -273,10 +437,10 @@ export function RequestsView() {
           icon={FileText}
         />
         <StatCard
-          label="Atendidas"
-          value={formatNumber(attendedCount)}
-          helper="Con respuesta o cotización"
-          icon={Check}
+          label="Respondidas"
+          value={formatNumber(repliedCount)}
+          helper="Con correo enviado al cliente"
+          icon={MailCheck}
         />
         <StatCard
           label="Total"
@@ -299,7 +463,7 @@ export function RequestsView() {
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Buscar por código, contacto, empresa o mensaje…"
               className={cn(inputClass, 'pl-9 pr-9')}
-              aria-label="Buscar solicitudes"
+              aria-label="Buscar en la mesa de ayuda"
             />
             {query && (
               <button
@@ -362,8 +526,14 @@ export function RequestsView() {
 
         <p className="mt-3 border-t border-slate-100 pt-3 text-[11px] font-medium text-slate-500">
           <span className="font-bold text-slate-900">{filtered.length}</span>{' '}
-          {filtered.length === 1 ? 'solicitud' : 'solicitudes'}
+          {filtered.length === 1 ? 'mensaje' : 'mensajes'}
           {hasFilters ? ' con los filtros aplicados' : ' en la bandeja'}
+          {!helpdeskSynced && (
+            <span className="ml-2 inline-flex items-center gap-1 text-slate-400">
+              <RefreshCw className="size-3 animate-spin" aria-hidden="true" />
+              Sincronizando…
+            </span>
+          )}
         </p>
       </div>
 
@@ -373,14 +543,14 @@ export function RequestsView() {
           title={requests.length === 0 ? 'Bandeja vacía' : 'Sin resultados'}
           description={
             requests.length === 0
-              ? 'Cuando alguien escriba desde la tienda o registres una consulta, aparecerá aquí.'
-              : 'No hay solicitudes con esos criterios. Prueba limpiando los filtros.'
+              ? 'Las consultas enviadas desde el formulario de contacto de la web aparecerán aquí automáticamente.'
+              : 'No hay mensajes con esos criterios. Prueba limpiando los filtros.'
           }
           action={
             requests.length === 0 ? (
-              <button type="button" className={btnPrimary} onClick={openRegister}>
-                <Plus className="size-4" aria-hidden="true" />
-                Registrar solicitud
+              <button type="button" className={btnSecondary} onClick={handleRefresh}>
+                <RefreshCw className="size-4" aria-hidden="true" />
+                Actualizar bandeja
               </button>
             ) : (
               <button type="button" className={btnSecondary} onClick={resetFilters}>
@@ -442,8 +612,14 @@ export function RequestsView() {
                           <span className="truncate">{item.email}</span>
                         </>
                       )}
-                      {item.quoteId && (
+                      {item.repliedAt && (
                         <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-1.5 py-0.5 font-semibold text-emerald-700">
+                          <MailCheck className="size-2.5" aria-hidden="true" />
+                          Respondida
+                        </span>
+                      )}
+                      {item.quoteId && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-1.5 py-0.5 font-semibold text-blue-700">
                           <FileText className="size-2.5" aria-hidden="true" />
                           Cotización creada
                         </span>
@@ -464,8 +640,8 @@ export function RequestsView() {
                       type="button"
                       onClick={() => setDeleteTarget(item)}
                       className="grid size-10 place-items-center rounded-xl border border-slate-200 bg-white text-slate-400 shadow-xs transition hover:bg-red-50 hover:text-red-600"
-                      title="Eliminar solicitud"
-                      aria-label={`Eliminar solicitud ${item.code}`}
+                      title="Eliminar consulta"
+                      aria-label={`Eliminar consulta ${item.code}`}
                     >
                       <Trash2 className="size-4" />
                     </button>
@@ -480,7 +656,7 @@ export function RequestsView() {
       <Modal
         open={Boolean(detail)}
         onClose={() => setDetailId(null)}
-        title={detail ? `Solicitud ${detail.code}` : 'Solicitud'}
+        title={detail ? `Consulta ${detail.code}` : 'Consulta'}
         description={detail?.topic}
         size="lg"
         footer={
@@ -501,25 +677,37 @@ export function RequestsView() {
             <button type="button" className={btnSecondary} onClick={() => setDetailId(null)}>
               Cerrar
             </button>
-            {detail &&
-              (linkedQuote ? (
-                <Link
-                  href={`/cotizaciones?q=${encodeURIComponent(linkedQuote.code)}`}
-                  className={btnPrimary}
-                >
-                  <FileText className="size-4" aria-hidden="true" />
-                  Ver cotización
-                </Link>
-              ) : (
+            {detail && (
+              <>
                 <button
                   type="button"
-                  className={btnPrimary}
-                  onClick={() => handleConvert(detail)}
+                  className={btnSecondary}
+                  onClick={() => openReply(detail)}
                 >
-                  <FileText className="size-4" aria-hidden="true" />
-                  Convertir en cotización
+                  <Send className="size-4" aria-hidden="true" />
+                  Responder
                 </button>
-              ))}
+                {linkedQuote ? (
+                  <Link
+                    href={`/cotizaciones?q=${encodeURIComponent(linkedQuote.code)}`}
+                    className={btnPrimary}
+                  >
+                    <FileText className="size-4" aria-hidden="true" />
+                    Ver cotización
+                  </Link>
+                ) : (
+                  <button
+                    type="button"
+                    className={btnPrimary}
+                    onClick={() => handleConvert(detail)}
+                    disabled={working !== null}
+                  >
+                    <FileText className="size-4" aria-hidden="true" />
+                    Convertir en cotización
+                  </button>
+                )}
+              </>
+            )}
           </>
         }
       >
@@ -574,6 +762,26 @@ export function RequestsView() {
               </p>
             </div>
 
+            {detail.lastReply && (
+              <div className="rounded-xl border border-emerald-200/70 bg-emerald-50/50 px-4 py-3">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-emerald-700">
+                    Última respuesta
+                  </p>
+                  <span className="text-[10px] font-medium text-emerald-700">
+                    {detail.lastReply.delivered ? 'Enviada' : 'No enviada'} ·{' '}
+                    {formatDateTime(detail.lastReply.at)}
+                  </span>
+                </div>
+                <p className="mt-1 text-xs font-semibold text-emerald-900">
+                  {detail.lastReply.subject}
+                </p>
+                <p className="mt-1 line-clamp-3 whitespace-pre-line text-[11px] leading-relaxed text-emerald-800">
+                  {detail.lastReply.message}
+                </p>
+              </div>
+            )}
+
             {(linkedClient || linkedQuote) && (
               <div className="flex flex-wrap items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2.5">
                 <span className="text-[9.5px] font-bold uppercase tracking-[0.12em] text-slate-400">
@@ -608,8 +816,9 @@ export function RequestsView() {
                     type="button"
                     onClick={() => handleStatus(detail, item)}
                     aria-pressed={detail.status === item}
+                    disabled={working !== null}
                     className={cn(
-                      'h-9 rounded-lg border text-[11px] font-semibold transition',
+                      'h-9 rounded-lg border text-[11px] font-semibold transition disabled:opacity-60',
                       detail.status === item
                         ? 'border-slate-900 bg-slate-900 text-white'
                         : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50'
@@ -640,7 +849,7 @@ export function RequestsView() {
                   type="button"
                   className={btnSecondary}
                   onClick={handleSaveNotes}
-                  disabled={notesDraft.trim() === detail.notes}
+                  disabled={notesDraft.trim() === detail.notes || working !== null}
                 >
                   Guardar nota
                 </button>
@@ -651,9 +860,67 @@ export function RequestsView() {
       </Modal>
 
       <Modal
+        open={replyOpen}
+        onClose={() => setReplyOpen(false)}
+        title="Responder por correo"
+        description={
+          detail
+            ? `La respuesta se enviará a ${detail.email} desde la plantilla de F&J Systems.`
+            : undefined
+        }
+        size="lg"
+        footer={
+          <>
+            <button type="button" className={btnSecondary} onClick={() => setReplyOpen(false)}>
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              form="request-reply-form"
+              className={btnPrimary}
+              disabled={working !== null}
+            >
+              <Send className="size-4" aria-hidden="true" />
+              {working === 'reply' ? 'Enviando…' : 'Enviar respuesta'}
+            </button>
+          </>
+        }
+      >
+        <form id="request-reply-form" onSubmit={handleSendReply} className="space-y-4">
+          <Field label="Asunto" htmlFor="reply-subject" required>
+            <input
+              id="reply-subject"
+              value={replySubject}
+              onChange={(event) => setReplySubject(event.target.value)}
+              className={inputClass}
+              placeholder="Re: consulta"
+            />
+          </Field>
+          <Field
+            label="Mensaje"
+            htmlFor="reply-message"
+            required
+            hint="Edita la plantilla y escribe tu respuesta en el espacio en blanco."
+          >
+            <textarea
+              id="reply-message"
+              value={replyMessage}
+              onChange={(event) => setReplyMessage(event.target.value)}
+              className={cn(textareaClass, 'min-h-56 font-normal')}
+            />
+          </Field>
+          <p className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] leading-relaxed text-slate-500">
+            Si la API no tiene SMTP configurado, la respuesta quedará registrada en la consulta
+            pero no se enviará el correo. La consulta pasa a <strong>Atendida</strong> solo cuando
+            el envío se completa.
+          </p>
+        </form>
+      </Modal>
+
+      <Modal
         open={registering}
         onClose={() => setRegistering(false)}
-        title="Registrar solicitud"
+        title="Registrar consulta"
         description="Úsalo para consultas recibidas por teléfono, WhatsApp o de forma presencial."
         size="lg"
         footer={
@@ -661,8 +928,13 @@ export function RequestsView() {
             <button type="button" className={btnSecondary} onClick={() => setRegistering(false)}>
               Cancelar
             </button>
-            <button type="submit" form="request-form" className={btnPrimary}>
-              Registrar solicitud
+            <button
+              type="submit"
+              form="request-form"
+              className={btnPrimary}
+              disabled={working !== null}
+            >
+              {working === 'register' ? 'Registrando…' : 'Registrar consulta'}
             </button>
           </>
         }
@@ -733,7 +1005,7 @@ export function RequestsView() {
               </Select>
             </Field>
             <Field
-              label="Detalle de la solicitud"
+              label="Detalle de la consulta"
               htmlFor="request-message"
               required
               error={errors.message}
@@ -754,9 +1026,9 @@ export function RequestsView() {
 
       <ConfirmDialog
         open={Boolean(deleteTarget)}
-        title="Eliminar solicitud"
-        description={`Se eliminará la solicitud ${deleteTarget?.code ?? ''} de la bandeja local. Esta acción no se puede deshacer.`}
-        confirmLabel="Eliminar solicitud"
+        title="Eliminar consulta"
+        description={`Se eliminará la consulta ${deleteTarget?.code ?? ''} de la mesa de ayuda. Esta acción no se puede deshacer.`}
+        confirmLabel="Eliminar consulta"
         onConfirm={handleDelete}
         onClose={() => setDeleteTarget(null)}
       />

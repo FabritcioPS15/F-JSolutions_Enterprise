@@ -6,7 +6,6 @@ import type {
   Category,
   Client,
   Quote,
-  ServiceRequest,
   StoreSettings,
 } from './types'
 import { slugify } from './format'
@@ -1219,91 +1218,6 @@ const quotes: Quote[] = [
   },
 ]
 
-const requests: ServiceRequest[] = [
-  {
-    id: 'sol-grupo-gastronomico',
-    code: 'SOL-20261029-8JQ4',
-    name: 'Renzo Cárdenas',
-    company: 'Grupo Gastronómico Lima',
-    email: 'rcardenas@gastrolima.pe',
-    phone: '+51 998 776 554',
-    topic: 'Cotización de equipos para nuevas sedes',
-    message:
-      'Estamos abriendo dos sedes en Miraflores y Barranco. Necesitamos 6 computadoras de punto de venta, 2 impresoras térmicas y conectividad para cada local. ¿Podrían enviarnos una propuesta esta semana?',
-    channel: 'web',
-    status: 'new',
-    notes: '',
-    createdAt: '2026-10-29T09:15:00.000Z',
-    updatedAt: '2026-10-29T09:15:00.000Z',
-  },
-  {
-    id: 'sol-vega-import',
-    code: 'SOL-20261029-3MZ7',
-    name: 'Patricia Vega',
-    company: 'Vega Import S.A.C.',
-    email: 'pvega@vegaimport.pe',
-    phone: '+51 912 345 678',
-    topic: 'Licencias y soporte anual',
-    message:
-      'Queremos renovar 25 licencias de Microsoft 365 Business y evaluar un contrato de soporte para nuestros equipos. ¿Manejan facturación anual?',
-    channel: 'email',
-    status: 'review',
-    notes: 'Se solicitó el listado de usuarios activos para dimensionar la propuesta.',
-    createdAt: '2026-10-29T08:40:00.000Z',
-    updatedAt: '2026-10-29T10:05:00.000Z',
-  },
-  {
-    id: 'sol-transportes-illescas',
-    code: 'SOL-20261028-5RT1',
-    name: 'Hugo Medina',
-    company: 'Transportes Illescas',
-    email: 'hmedina@illescas.pe',
-    phone: '+51 987 112 004',
-    topic: 'Renovación de laptops para supervisores',
-    message:
-      'Tenemos 14 laptops de más de cinco años y queremos renovarlas por equipos corporativos. Necesitamos que incluyan Windows 11 Pro y garantía en sitio.',
-    channel: 'whatsapp',
-    status: 'new',
-    notes: '',
-    createdAt: '2026-10-28T16:25:00.000Z',
-    updatedAt: '2026-10-28T16:25:00.000Z',
-  },
-  {
-    id: 'sol-estudio-norte',
-    code: 'SOL-20261022-7KQ3',
-    name: 'Diego Ramírez',
-    company: 'Estudio Diseño Norte',
-    email: 'diego@disenonorte.pe',
-    phone: '+51 949 332 118',
-    topic: 'Equipos para renderizado arquitectónico',
-    message:
-      'Necesito dos tarjetas gráficas para renderizado y un procesador compatible con mi placa AM4. ¿Pueden armar la cotización con disponibilidad inmediata?',
-    channel: 'web',
-    status: 'attended',
-    clientId: 'estudio-norte',
-    quoteId: 'cot-estudio-norte',
-    notes: 'Se preparó la cotización con dos GPU y un procesador. Cliente confirmó recojo en tienda.',
-    createdAt: '2026-10-22T10:10:00.000Z',
-    updatedAt: '2026-10-29T09:12:00.000Z',
-  },
-  {
-    id: 'sol-chavez-consultores',
-    code: 'SOL-20261020-2DFH',
-    name: 'Luis Chávez',
-    company: 'Chávez Consultores',
-    email: 'lchavez@chavezconsultores.pe',
-    phone: '+51 955 303 221',
-    topic: 'Redes para oficina compartida',
-    message:
-      'Buscamos instalar una red Wi-Fi 6 para una oficina compartida de 120 m². La atención sería en Iquitos.',
-    channel: 'phone',
-    status: 'discarded',
-    notes: 'Fuera de cobertura para instalación física. Se derivó a un partner local.',
-    createdAt: '2026-10-20T12:00:00.000Z',
-    updatedAt: '2026-10-21T15:30:00.000Z',
-  },
-]
-
 function summarize(description: string): string {
   const clean = description.replace(/\s+/g, ' ').trim()
   return clean.length <= 140 ? clean : `${clean.slice(0, 137).trimEnd()}…`
@@ -1350,7 +1264,7 @@ export function createSeedData(): AdminData {
       brands,
       clients,
       quotes,
-      requests,
+      requests: [],
       settings,
       activity: buildSeedActivity(normalized),
     })
