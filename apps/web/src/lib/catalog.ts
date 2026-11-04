@@ -1439,7 +1439,67 @@ const additionalProducts: Product[] = [
   },
 ]
 
-export const products: Product[] = [...baseProducts, ...additionalProducts]
+// Clasificación dentro de la taxonomía de categorías (los productos de
+// impresoras ya la traen definida en su propia ficha).
+const productTaxonomy: Record<string, Pick<Product, 'subcategory' | 'subSubcategory'>> = {
+  'lenovo-ideapad-slim-3': { subcategory: 'Laptops Ultraligeras y Estudio', subSubcategory: 'IdeaPad Slim' },
+  'asus-tuf-f15': { subcategory: 'Laptops Gaming', subSubcategory: 'ASUS TUF' },
+  'hp-pavilion-14': { subcategory: 'Laptops Ultraligeras y Estudio', subSubcategory: 'HP Pavilion' },
+  'dell-latitude-5440': { subcategory: 'Laptops Corporativas', subSubcategory: 'Dell Latitude' },
+  'acer-aspire-5-15': { subcategory: 'Laptops Ultraligeras y Estudio' },
+  'msi-thin-gf63-rtx4050': { subcategory: 'Laptops Gaming' },
+  'hp-elitebook-840-g9': { subcategory: 'Laptops Corporativas' },
+  'lenovo-thinkpad-e14-g5': { subcategory: 'Laptops Corporativas', subSubcategory: 'Lenovo ThinkPad' },
+  'asus-vivobook-16': { subcategory: 'Laptops Ultraligeras y Estudio' },
+
+  'pc-gamer-fj-ryzen-7': { subcategory: 'PCs de Escritorio y Torres', subSubcategory: 'PC Gamer Custom' },
+  'hp-prodesk-400-g9': { subcategory: 'PCs de Escritorio y Torres', subSubcategory: 'Torres Corporativas' },
+  'servidor-dell-poweredge-t150': { subcategory: 'Servidores Tower y Rack', subSubcategory: 'Servidores Tower' },
+  'hpe-proliant-ml30-g11': { subcategory: 'Servidores Tower y Rack', subSubcategory: 'Servidores Tower' },
+  'lenovo-thinkcentre-m70q': { subcategory: 'Mini PCs y All in One', subSubcategory: 'Mini PCs Compactos' },
+
+  'amd-ryzen-7-5700x': { subcategory: 'Procesadores (CPU)', subSubcategory: 'AMD Ryzen' },
+  'amd-ryzen-5-7600': { subcategory: 'Procesadores (CPU)', subSubcategory: 'AMD Ryzen' },
+  'intel-core-i5-13400f': { subcategory: 'Procesadores (CPU)', subSubcategory: 'Intel Core' },
+  'intel-core-i7-14700f': { subcategory: 'Procesadores (CPU)', subSubcategory: 'Intel Core' },
+  'asus-rtx-4060-8gb': { subcategory: 'Tarjetas Gráficas (GPU)', subSubcategory: 'NVIDIA RTX' },
+  'msi-rtx-4070-super': { subcategory: 'Tarjetas Gráficas (GPU)', subSubcategory: 'NVIDIA RTX' },
+  'asus-tuf-b650m-plus': { subcategory: 'Placas Madre (Motherboards)' },
+
+  'kingston-nv2-1tb': { subcategory: 'Discos Sólidos (SSD)', subSubcategory: 'M.2 NVMe PCIe' },
+  'samsung-990-evo-1tb': { subcategory: 'Discos Sólidos (SSD)', subSubcategory: 'M.2 NVMe PCIe' },
+  'crucial-p3-plus-2tb': { subcategory: 'Discos Sólidos (SSD)', subSubcategory: 'M.2 NVMe PCIe' },
+  'wd-blue-2tb': { subcategory: 'Discos Duros (HDD)', subSubcategory: 'HDD Interno 3.5"' },
+  'seagate-barracuda-4tb': { subcategory: 'Discos Duros (HDD)', subSubcategory: 'HDD Interno 3.5"' },
+  'synology-ds223j': { subcategory: 'Servidores de Almacenamiento NAS' },
+
+  'tp-link-archer-ax23': { subcategory: 'Routers y Sistemas Mesh' },
+  'tp-link-deco-x50-2pack': { subcategory: 'Routers y Sistemas Mesh' },
+  'tp-link-switch-8p': { subcategory: 'Switches Gestionables y PoE' },
+  'tp-link-tl-sg1016': { subcategory: 'Switches Gestionables y PoE' },
+  'ubiquiti-u6-plus': { subcategory: 'Access Points Wi-Fi 6' },
+
+  'monitor-lg-ultragear-24': { subcategory: 'Monitores Gaming (144Hz+)' },
+  'monitor-samsung-odyssey-g5': { subcategory: 'Monitores Gaming (144Hz+)' },
+  'monitor-dell-p2422h': { subcategory: 'Monitores Profesionales IPS' },
+  'samsung-viewfinity-s6-27': { subcategory: 'Monitores Profesionales IPS' },
+  'lg-27up550-4k': { subcategory: 'Monitores Profesionales IPS' },
+  'dell-ultrasharp-u2422h': { subcategory: 'Monitores Profesionales IPS' },
+  'asus-proart-pa248qv': { subcategory: 'Monitores Profesionales IPS' },
+
+  'redragon-kumara': { subcategory: 'Teclados Mecánicos y Oficina' },
+  'logitech-mx-keys-s': { subcategory: 'Teclados Mecánicos y Oficina' },
+  'razer-blackwidow-v4-x': { subcategory: 'Teclados Mecánicos y Oficina' },
+  'logitech-g502-hero': { subcategory: 'Mouse Ergonómico y Gamer' },
+  'logitech-mx-master-3s': { subcategory: 'Mouse Ergonómico y Gamer' },
+
+  'forza-ups-1000va': { subcategory: 'Sistemas UPS y Baterías' },
+}
+
+export const products: Product[] = [...baseProducts, ...additionalProducts].map((product) => ({
+  ...product,
+  ...productTaxonomy[product.id],
+}))
 
 export function findProduct(id: string) {
   return products.find((product) => product.id === id)

@@ -144,7 +144,7 @@ export function ProductDetail({ id }: { id: string }) {
       <nav aria-label="Migas de pan" className="flex items-center gap-1.5 text-xs text-slate-400">
         <Link
           href="/productos"
-          className="inline-flex items-center gap-1.5 font-semibold text-slate-500 transition hover:text-blue-600"
+          className="inline-flex items-center gap-1.5 font-semibold text-slate-500 transition hover:text-[#5B21B6]"
         >
           <ArrowLeft className="size-3.5" aria-hidden="true" />
           Productos
@@ -213,7 +213,7 @@ export function ProductDetail({ id }: { id: string }) {
                     className={cn(
                       'size-16 shrink-0 overflow-hidden rounded-lg border bg-slate-50 p-1 transition',
                       activeImage === index
-                        ? 'border-blue-500 ring-2 ring-blue-500/20'
+                        ? 'border-[#5B21B6] ring-2 ring-[#5B21B6]/20'
                         : 'border-slate-200 hover:border-slate-300'
                     )}
                   >
@@ -271,7 +271,7 @@ export function ProductDetail({ id }: { id: string }) {
               <p className="truncate text-[11px] text-emerald-700">
                 fjsystems.pe › productos › {product.slug}
               </p>
-              <p className="mt-1 line-clamp-2 text-[15px] font-medium leading-snug text-blue-700">
+              <p className="mt-1 line-clamp-2 text-[15px] font-medium leading-snug text-[#5B21B6]">
                 {product.seoTitle || product.name}
               </p>
               <p className="mt-1 line-clamp-2 text-[11px] leading-relaxed text-slate-500">

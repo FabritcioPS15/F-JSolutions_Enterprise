@@ -8,6 +8,7 @@ const staticRoutes: { path: string; priority: number; changeFrequency: MetadataR
   { path: '/productos', priority: 0.9, changeFrequency: 'daily' },
   { path: '/servicios', priority: 0.9, changeFrequency: 'weekly' },
   { path: '/soporte-ti', priority: 0.8, changeFrequency: 'monthly' },
+  { path: '/infraestructura-ti', priority: 0.8, changeFrequency: 'monthly' },
   { path: '/sistemas', priority: 0.8, changeFrequency: 'monthly' },
   { path: '/cotizador', priority: 0.8, changeFrequency: 'monthly' },
   { path: '/cotizacion', priority: 0.6, changeFrequency: 'monthly' },

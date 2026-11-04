@@ -121,7 +121,7 @@ export function SearchPage() {
       </div>
 
       {/* Buscador */}
-      <section className="bg-gradient-to-br from-[#0B1220] via-[#0B1220] to-[#1D4ED8]">
+      <section className="bg-gradient-to-br from-[#0B1220] via-[#0B1220] to-[#4C1D95]">
         <div className="mx-auto max-w-[1100px] px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
           <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#7DD3FC]">
             Buscador

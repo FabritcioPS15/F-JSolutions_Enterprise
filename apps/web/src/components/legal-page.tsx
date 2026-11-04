@@ -88,7 +88,7 @@ export function LegalPage({
         </ol>
       </nav>
 
-      <section className="relative overflow-hidden border-b border-[#E2E8F0] bg-gradient-to-br from-[#F8FAFC] via-white to-[#EFF6FF]">
+      <section className="relative overflow-hidden border-b border-[#E2E8F0] bg-gradient-to-br from-[#F8FAFC] via-white to-[#EDE9FE]">
         <div className="pointer-events-none absolute -right-32 -top-24 size-96 rounded-full bg-[#2563EB]/10 blur-3xl" />
         <div className="relative mx-auto max-w-[1280px] px-4 py-12 sm:px-6 lg:px-8 lg:py-14">
           <span className="inline-flex items-center gap-2 rounded-full border border-[#2563EB]/25 bg-white px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-[#1D4ED8]">

@@ -419,19 +419,19 @@ export function AccountPage() {
 
       <div className="mx-auto max-w-[1280px] px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
         {/* Cabecera de cuenta */}
-        <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#0B1220] via-[#0F172A] to-[#1E3A8A] p-6 text-white sm:p-8">
+        <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#0B1220] via-[#0F172A] to-[#4C1D95] p-6 text-white sm:p-8">
           <div
             aria-hidden="true"
             className="pointer-events-none absolute -right-16 -top-24 size-64 rounded-full bg-[#3B82F6]/20 blur-3xl"
           />
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute -bottom-24 left-1/3 size-64 rounded-full bg-[#22D3EE]/10 blur-3xl"
+            className="pointer-events-none absolute -bottom-24 left-1/3 size-64 rounded-full bg-[#7C3AED]/15 blur-3xl"
           />
 
           <div className="relative flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex items-center gap-4">
-              <span className="grid size-16 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-[#3B82F6] to-[#1D4ED8] font-heading text-xl font-bold ring-1 ring-white/20">
+              <span className="grid size-16 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-[#3B82F6] to-[#7C3AED] font-heading text-xl font-bold ring-1 ring-white/20">
                 {getInitials(form.name || account.profile?.name || '')}
               </span>
               <div className="min-w-0">
@@ -534,7 +534,7 @@ export function AccountPage() {
               aria-label="Perfil completo"
             >
               <div
-                className="h-full rounded-full bg-gradient-to-r from-[#22D3EE] to-[#3B82F6] transition-[width] duration-500"
+                className="h-full rounded-full bg-gradient-to-r from-[#7C3AED] to-[#3B82F6] transition-[width] duration-500"
                 style={{ width: `${completion.percent}%` }}
               />
             </div>
@@ -1054,7 +1054,7 @@ export function AccountPage() {
                                 />
                               </Link>
                               <div className="flex flex-1 flex-col p-4">
-                                <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#2563EB]">
+                                <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#5B21B6]">
                                   {product.brand} / {product.category}
                                 </p>
                                 <Link
@@ -1396,7 +1396,7 @@ export function AccountPage() {
 
                                     <div className="space-y-3 text-xs">
                                       <div className="rounded-xl border border-[#E2E8F0] bg-white p-4">
-                                        <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#2563EB]">
+                                        <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#5B21B6]">
                                           Contacto
                                         </p>
                                         <p className="mt-2 font-semibold">{savedQuote.contactName}</p>
@@ -1422,7 +1422,7 @@ export function AccountPage() {
 
                                       {savedQuote.generalNotes && (
                                         <div className="rounded-xl border border-[#E2E8F0] bg-white p-4">
-                                          <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#2563EB]">
+                                          <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#5B21B6]">
                                             Comentarios
                                           </p>
                                           <p className="mt-2 leading-5 text-[#475569]">

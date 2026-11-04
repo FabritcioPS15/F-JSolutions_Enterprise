@@ -163,7 +163,7 @@ export default function ActividadPage() {
                     {product ? (
                       <Link
                         href={`/productos/${product.id}`}
-                        className="line-clamp-1 text-xs font-semibold text-slate-900 transition hover:text-blue-600"
+                        className="line-clamp-1 text-xs font-semibold text-slate-900 transition hover:text-[#5B21B6]"
                       >
                         {entry.productName}
                       </Link>

@@ -31,8 +31,9 @@ export const mainNav: MainNavItem[] = [
   },
   {
     label: 'Infraestructura TI',
-    href: '/servicios',
+    href: '/infraestructura-ti',
     hasMenu: true,
+    activeExact: ['/infraestructura-ti'],
     activeMatch: infrastructureServicePaths,
   },
   { label: 'Desarrollo de software', href: '/sistemas', hasMenu: true },
@@ -202,41 +203,44 @@ export type NavMenuItem = {
   label: string
   href: string
   desc?: string
+  icon?: string
+  variant?: 'general'
 }
 
 export const itServicesMenu: NavMenuItem[] = [
-  { label: 'Soporte técnico', href: '/servicios/soporte-tecnico', desc: 'Asistencia inmediata para problemas técnicos' },
-  { label: 'Mantenimiento de computadoras y laptops', href: '/servicios/mantenimiento-de-equipos', desc: 'Servicio preventivo y correctivo' },
-  { label: 'Instalación y configuración de software', href: '/servicios/instalacion-de-software', desc: 'Sistemas operativos y aplicaciones' },
-  { label: 'Configuración de impresoras', href: '/servicios/configuracion-de-impresoras', desc: 'Configuración en red y local' },
-  { label: 'Soporte remoto y presencial', href: '/servicios/soporte-remoto-y-presencial', desc: 'Atención flexible según tus necesidades' },
-  { label: 'Soluciones de soporte para empresas', href: '/servicios/soporte-empresarial', desc: 'Planes empresariales personalizados' },
-  { label: '¿Alquiler de equipos?', href: '/servicios#alquiler', desc: 'En evaluación: laptops y PCs por proyecto' },
+  { label: 'Soporte técnico', href: '/servicios/soporte-tecnico', desc: 'Atención remota y visitas en sitio', icon: 'Headset' },
+  { label: 'Mantenimiento de computadoras y laptops', href: '/servicios/mantenimiento-de-equipos', desc: 'Servicio preventivo y correctivo', icon: 'Wrench' },
+  { label: 'Instalación y configuración de software', href: '/servicios/instalacion-de-software', desc: 'Sistemas operativos y aplicaciones', icon: 'Laptop' },
+  { label: 'Configuración de impresoras', href: '/servicios/configuracion-de-impresoras', desc: 'Configuración en red y local', icon: 'Printer' },
+  { label: 'Soluciones de soporte para empresas', href: '/servicios/soporte-empresarial', desc: 'Planes empresariales personalizados', icon: 'ShieldCheck' },
+  { label: '¿Alquiler de equipos?', href: '/servicios#alquiler', desc: 'En evaluación: laptops y PCs por proyecto', icon: 'Boxes' },
+  { label: 'Ver servicios TI', href: '/servicios', variant: 'general' },
 ]
 
 export const infrastructureMenu: NavMenuItem[] = [
-  { label: 'Redes y conectividad', href: '/servicios/redes-y-conectividad', desc: 'Diseño e implementación de redes' },
-  { label: 'Cableado estructurado', href: '/servicios/cableado-estructurado', desc: 'Instalación profesional de cableado' },
-  { label: 'Configuración de equipos de red', href: '/servicios/configuracion-de-equipos-de-red', desc: 'Routers, switches y access points' },
-  { label: 'Implementación de infraestructura tecnológica', href: '/servicios/implementacion-de-infraestructura', desc: 'Infraestructura completa para empresas' },
-  { label: 'Equipamiento tecnológico empresarial', href: '/servicios/equipamiento-tecnologico-empresarial', desc: 'Servidores y equipamiento profesional' },
+  { label: 'Redes y conectividad', href: '/servicios/redes-y-conectividad', desc: 'Diseño e implementación de redes', icon: 'Network' },
+  { label: 'Cableado estructurado', href: '/servicios/cableado-estructurado', desc: 'Instalación profesional de cableado', icon: 'Cable' },
+  { label: 'Implementación de infraestructura tecnológica', href: '/servicios/implementacion-de-infraestructura', desc: 'Infraestructura completa para empresas', icon: 'Server' },
+  { label: 'Equipamiento tecnológico empresarial', href: '/servicios/equipamiento-tecnologico-empresarial', desc: 'Servidores y equipamiento profesional', icon: 'Package' },
+  { label: 'Ver infraestructura TI', href: '/infraestructura-ti', variant: 'general' },
 ]
 
 export const softwareDevMenu: NavMenuItem[] = [
-  { label: 'Creación de páginas web', href: '/sistemas/creacion-de-paginas-web', desc: 'Sitios corporativos, landing pages y tiendas' },
-  { label: 'Sistemas web a medida', href: '/sistemas/sistemas-web-a-medida', desc: 'Desarrollo de aplicaciones web personalizadas' },
-  { label: 'Sistemas de gestión empresarial', href: '/sistemas/sistemas-de-gestion-empresarial', desc: 'ERP y sistemas de gestión' },
-  { label: 'Automatización de procesos', href: '/sistemas/automatizacion-de-procesos', desc: 'Optimización de flujos de trabajo' },
-  { label: 'Integraciones y API', href: '/sistemas/integraciones-y-api', desc: 'Conexión entre sistemas existentes' },
-  { label: 'Consultoría y proyectos personalizados', href: '/sistemas/consultoria-y-proyectos-personalizados', desc: 'Asesoría tecnológica especializada' },
+  { label: 'Creación de páginas web', href: '/sistemas/creacion-de-paginas-web', desc: 'Sitios corporativos, landing pages y tiendas', icon: 'Globe' },
+  { label: 'Sistemas web a medida', href: '/sistemas/sistemas-web-a-medida', desc: 'Desarrollo de aplicaciones web personalizadas', icon: 'LayoutTemplate' },
+  { label: 'Sistemas de gestión empresarial', href: '/sistemas/sistemas-de-gestion-empresarial', desc: 'ERP y sistemas de gestión', icon: 'Building2' },
+  { label: 'Automatización de procesos', href: '/sistemas/automatizacion-de-procesos', desc: 'Optimización de flujos de trabajo', icon: 'Workflow' },
+  { label: 'Integraciones y API', href: '/sistemas/integraciones-y-api', desc: 'Conexión entre sistemas existentes', icon: 'Plug' },
+  { label: 'Consultoría y proyectos personalizados', href: '/sistemas/consultoria-y-proyectos-personalizados', desc: 'Asesoría tecnológica especializada', icon: 'Lightbulb' },
+  { label: 'Ver desarrollo de software', href: '/sistemas', variant: 'general' },
 ]
 
 // ─── Menú Empresa ─────────────────────────────────────────────────────────────────────
 
 export const companyMenu: NavMenuItem[] = [
-  { label: 'Sobre nosotros', href: '/nosotros', desc: 'Trayectoria, valores y equipo técnico' },
-  { label: 'Proyectos y experiencia', href: '/proyectos', desc: 'Casos de éxito y sectores atendidos' },
-  { label: 'Cómo trabajamos', href: '/como-trabajamos', desc: 'Metodología, etapas y garantías' },
-  { label: 'Preguntas frecuentes', href: '/preguntas-frecuentes', desc: 'Respuestas a consultas habituales' },
-  { label: 'Contacto', href: '/contacto', desc: 'Canales directos de atención y cotización' },
+  { label: 'Sobre nosotros', href: '/nosotros', desc: 'Trayectoria, valores y equipo técnico', icon: 'Compass' },
+  { label: 'Proyectos y experiencia', href: '/proyectos', desc: 'Casos de éxito y sectores atendidos', icon: 'FolderKanban' },
+  { label: 'Cómo trabajamos', href: '/como-trabajamos', desc: 'Metodología, etapas y garantías', icon: 'Route' },
+  { label: 'Preguntas frecuentes', href: '/preguntas-frecuentes', desc: 'Respuestas a consultas habituales', icon: 'CircleHelp' },
+  { label: 'Contacto', href: '/contacto', desc: 'Canales directos de atención y cotización', icon: 'Mail' },
 ]

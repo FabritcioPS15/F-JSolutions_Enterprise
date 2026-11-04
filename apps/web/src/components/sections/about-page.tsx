@@ -32,6 +32,7 @@ import { EnhancedHeader } from '@/components/layout/enhanced-header'
 import { EditorialHero } from '@/components/heroes'
 import { HeroAction } from '@/components/heroes/hero-primitives'
 import { FaqAccordion } from '@/components/ui/faq-accordion'
+import { ProcessSequence } from '@/components/ui/process-sequence'
 import { EMPRESA } from '@/lib/constants'
 
 const CONTAINER = 'mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8'
@@ -305,7 +306,7 @@ export function AboutPage() {
         <div className={`${CONTAINER} py-14 sm:py-16 lg:py-20`}>
           <div className="grid gap-10 lg:grid-cols-[minmax(0,1.12fr)_minmax(0,0.88fr)] lg:items-start lg:gap-16">
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#2563EB]">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5B21B6]">
                 Quiénes somos
               </p>
               <h2 className="mt-3 max-w-[22ch] font-heading text-[clamp(1.8rem,1.1rem+2.2vw,2.85rem)] font-bold leading-[1.08] tracking-[-0.045em] text-[#0F172A]">
@@ -336,7 +337,7 @@ export function AboutPage() {
                     key={item}
                     className="inline-flex items-center gap-1.5 rounded-full border border-[#E2E8F0] bg-white px-3 py-1.5 text-[11px] font-semibold text-[#475569]"
                   >
-                    <span aria-hidden="true" className="size-1.5 rounded-full bg-[#22D3EE]" />
+                    <span aria-hidden="true" className="size-1.5 rounded-full bg-[#7C3AED]" />
                     {item}
                   </span>
                 ))}
@@ -378,7 +379,7 @@ export function AboutPage() {
         <div className={`${CONTAINER} py-14 sm:py-16 lg:py-20`}>
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#2563EB]">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5B21B6]">
                 Proyectos y experiencia
               </p>
               <h2 className="mt-3 font-heading text-[clamp(1.8rem,1.1rem+2.2vw,2.85rem)] font-bold leading-[1.08] tracking-[-0.045em] text-[#0F172A]">
@@ -465,7 +466,7 @@ export function AboutPage() {
         <div className={`${CONTAINER} py-14 sm:py-16 lg:py-20`}>
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#2563EB]">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5B21B6]">
                 Cómo trabajamos
               </p>
               <h2 className="mt-3 font-heading text-[clamp(1.8rem,1.1rem+2.2vw,2.85rem)] font-bold leading-[1.08] tracking-[-0.045em] text-[#0F172A]">
@@ -488,14 +489,14 @@ export function AboutPage() {
             </Link>
           </div>
 
-          <div className="mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <ProcessSequence className="mt-9 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {process.map((item, index) => (
               <div
                 key={item.step}
                 className="group relative flex flex-col rounded-2xl border border-[#E2E8F0] bg-white p-5 transition duration-300 hover:border-[#2563EB]/30 hover:shadow-[0_22px_46px_-36px_rgba(15,23,42,0.45)]"
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-mono text-[11px] font-bold tracking-[0.08em] text-[#94A3B8]">
+                  <span className="process-number font-mono text-[11px] font-bold tracking-[0.08em] text-[#94A3B8]">
                     {item.step}
                   </span>
                   <span className="grid size-9 place-items-center rounded-xl bg-[#EFF6FF] text-[#2563EB] transition duration-300 group-hover:bg-[#2563EB] group-hover:text-white">
@@ -516,14 +517,14 @@ export function AboutPage() {
                 {index < process.length - 1 && (
                   <span
                     aria-hidden="true"
-                    className="absolute -right-3 top-1/2 z-10 hidden size-6 -translate-y-1/2 place-items-center rounded-full border border-[#E2E8F0] bg-white text-[#2563EB] shadow-sm lg:grid"
+                    className="process-arrow absolute -right-3 top-1/2 z-10 hidden size-6 -translate-y-1/2 place-items-center rounded-full border border-[#E2E8F0] bg-white text-[#2563EB] shadow-sm lg:grid"
                   >
                     <ArrowRight className="size-3" />
                   </span>
                 )}
               </div>
             ))}
-          </div>
+          </ProcessSequence>
 
           <div className="mt-6 grid gap-3 rounded-2xl border border-[#DBEAFE] bg-[#F8FBFF] p-4 sm:grid-cols-3 sm:p-5">
             {commitments.map((item) => (
@@ -546,7 +547,7 @@ export function AboutPage() {
         <div className={`${CONTAINER} py-14 sm:py-16 lg:py-20`}>
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#2563EB]">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5B21B6]">
                 Equipo y capacidades
               </p>
               <h2 className="mt-3 font-heading text-[clamp(1.8rem,1.1rem+2.2vw,2.85rem)] font-bold leading-[1.08] tracking-[-0.045em] text-[#0F172A]">
@@ -602,7 +603,7 @@ export function AboutPage() {
         <div className={`${CONTAINER} py-14 sm:py-16 lg:py-20`}>
           <div className="grid gap-9 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-14">
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#2563EB]">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5B21B6]">
                 Preguntas frecuentes
               </p>
               <h2 className="mt-3 max-w-[18ch] font-heading text-[clamp(1.8rem,1.1rem+2.2vw,2.85rem)] font-bold leading-[1.08] tracking-[-0.045em] text-[#0F172A]">
@@ -659,12 +660,12 @@ export function AboutPage() {
             />
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute -bottom-32 left-1/3 size-80 rounded-full bg-[#22D3EE]/15 blur-3xl"
+              className="pointer-events-none absolute -bottom-32 left-1/3 size-80 rounded-full bg-[#7C3AED]/15 blur-3xl"
             />
 
             <div className="relative grid gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-center lg:gap-12">
               <div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#2563EB]">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5B21B6]">
                   Hablemos
                 </p>
                 <h2 className="mt-3 max-w-[20ch] font-heading text-[clamp(1.9rem,1.15rem+2.4vw,3rem)] font-bold leading-[1.06] tracking-[-0.045em] text-[#0F172A]">
@@ -754,7 +755,7 @@ function CompanyCard() {
         />
         <div className="relative">
           <div className="flex items-center gap-3">
-            <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-[#3B82F6] to-[#1D4ED8] font-heading text-sm font-bold tracking-tight text-white shadow-[0_12px_24px_-12px_rgba(37,99,235,0.7)]">
+            <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-[#3B82F6] to-[#7C3AED] font-heading text-sm font-bold tracking-tight text-white shadow-[0_12px_24px_-12px_rgba(124,58,237,0.6)]">
               FJ
             </span>
             <div className="min-w-0">

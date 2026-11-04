@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { ArrowRight, Minus, Plus, ShoppingCart, Trash2, X } from 'lucide-react'
 import type { QuoteItem } from '@/lib/quote'
+import { QuantityInput } from '@/components/ui/quantity-input'
 
 type QuotePanelProps = {
   items: QuoteItem[]
@@ -93,7 +94,12 @@ export function QuotePanel({
                         >
                           <Minus className="size-3" />
                         </button>
-                        <span className="w-5 text-center text-xs font-medium">{item.quantity}</span>
+                        <QuantityInput
+                          value={item.quantity}
+                          onChange={(qty) => onSetQty(item.productId, qty)}
+                          ariaLabel={`Cantidad de ${item.productName}`}
+                          className="h-7 w-9 rounded-md text-xs font-semibold text-[#0F172A] focus:bg-[#EFF6FF]"
+                        />
                         <button
                           onClick={() => onAdd(item.productId)}
                           aria-label={`Agregar una unidad de ${item.productName}`}
@@ -105,7 +111,7 @@ export function QuotePanel({
                       <button
                         onClick={() => onRemove(item.productId)}
                         aria-label={`Eliminar ${item.productName}`}
-                        className="text-[#475569] transition hover:text-[#0E7490]"
+                        className="text-[#475569] transition hover:text-[#6D28D9]"
                       >
                         <Trash2 className="size-4" />
                       </button>

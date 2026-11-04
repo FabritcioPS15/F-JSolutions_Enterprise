@@ -223,7 +223,7 @@ export function QuoteSummaryVisual() {
             </span>
           </div>
 
-          <div className="mt-3 rounded-xl border border-[#DBEAFE] bg-[#F8FBFF] p-3">
+          <div className="mt-3 rounded-xl border border-[#DDD6FE] bg-[#F5F3FF] p-3">
             <div className="flex items-start gap-2.5">
               <span className="grid size-7 shrink-0 place-items-center rounded-lg bg-white text-[#2563EB] shadow-sm">
                 <Headset aria-hidden="true" className="size-3.5" />
@@ -339,7 +339,7 @@ export function InfrastructureVisual() {
             </svg>
 
             <div className="absolute left-1/2 top-1/2 w-[46%] max-w-[190px] -translate-x-1/2 -translate-y-1/2 rounded-xl border border-[#2563EB]/25 bg-white px-3 py-2.5 text-center shadow-[0_16px_40px_-20px_rgba(37,99,235,0.55)] sm:px-4 sm:py-3">
-              <span className="mx-auto grid size-8 place-items-center rounded-lg bg-gradient-to-br from-[#3B82F6] to-[#1D4ED8] text-white shadow-sm sm:size-9">
+              <span className="mx-auto grid size-8 place-items-center rounded-lg bg-gradient-to-br from-[#3B82F6] to-[#7C3AED] text-white shadow-sm sm:size-9">
                 <Server aria-hidden="true" className="size-4" />
               </span>
               <p className="mt-1.5 text-[10px] font-bold leading-3 text-[#0F172A] sm:text-[11px]">Núcleo TI</p>
@@ -417,7 +417,7 @@ export function SupportVisual() {
               <p className="truncate text-[9.5px] text-[#64748B]">Atención remota y en sitio</p>
             </div>
           </div>
-          <span className="shrink-0 rounded-full border border-[#DBEAFE] bg-[#EFF6FF] px-2 py-1 text-[8px] font-bold uppercase tracking-wider text-[#1D4ED8]">
+          <span className="shrink-0 rounded-full border border-[#DDD6FE] bg-[#F5F3FF] px-2 py-1 text-[8px] font-bold uppercase tracking-wider text-[#5B21B6]">
             SLA según plan
           </span>
         </div>
@@ -451,9 +451,9 @@ export function SupportVisual() {
             ))}
           </div>
 
-          <div className="mt-3 rounded-xl border border-[#DBEAFE] bg-[#F8FBFF] p-3">
+          <div className="mt-3 rounded-xl border border-[#DDD6FE] bg-[#F5F3FF] p-3">
             <div className="flex items-center gap-2.5">
-              <span className="grid size-9 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[#3B82F6] to-[#1D4ED8] font-heading text-[9px] font-bold text-white">
+              <span className="grid size-9 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[#3B82F6] to-[#7C3AED] font-heading text-[9px] font-bold text-white">
                 FJ
               </span>
               <div className="min-w-0 flex-1">
@@ -640,7 +640,7 @@ export function DetailVisual({ icon, title, items, note }: DetailVisualProps) {
     <div className="relative pt-4">
       <HeroPanel className="hero-float-soft p-5 sm:p-6">
         <div className="flex items-center gap-3">
-          <span className="grid size-11 place-items-center rounded-2xl bg-gradient-to-br from-[#3B82F6] to-[#1D4ED8] text-white shadow-[0_12px_24px_-12px_rgba(37,99,235,0.7)]">
+          <span className="grid size-11 place-items-center rounded-2xl bg-gradient-to-br from-[#3B82F6] to-[#7C3AED] text-white shadow-[0_12px_24px_-12px_rgba(37,99,235,0.7)]">
             {icon}
           </span>
           <div>

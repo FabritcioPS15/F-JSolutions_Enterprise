@@ -1,10 +1,22 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import {
+  Children,
+  Fragment,
+  isValidElement,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
+import { createPortal } from 'react-dom'
 import type {
+  ChangeEvent,
   KeyboardEvent as ReactKeyboardEvent,
   ReactNode,
+  RefObject,
   SelectHTMLAttributes,
 } from 'react'
 import {
@@ -19,13 +31,13 @@ import { getStockState, statusLabels, stockLabels } from '@/lib/admin/format'
 import type { ProductStatus, StockState } from '@/lib/admin/types'
 
 export const inputClass =
-  'h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900 shadow-xs outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400'
+  'h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900 shadow-xs outline-none transition placeholder:text-slate-400 focus:border-[#5B21B6] focus:ring-4 focus:ring-[#5B21B6]/10 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400'
 
 export const textareaClass =
-  'min-h-28 w-full resize-y rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm leading-relaxed text-slate-900 shadow-xs outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10'
+  'min-h-28 w-full resize-y rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm leading-relaxed text-slate-900 shadow-xs outline-none transition placeholder:text-slate-400 focus:border-[#5B21B6] focus:ring-4 focus:ring-[#5B21B6]/10'
 
 export const btnPrimary =
-  'inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 text-sm font-semibold text-white shadow-sm shadow-blue-600/20 transition hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-500/25 disabled:pointer-events-none disabled:opacity-50'
+  'inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-[#5B21B6] px-4 text-sm font-semibold text-white shadow-sm shadow-[#5B21B6]/20 transition hover:bg-[#4C1D95] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#5B21B6]/25 disabled:pointer-events-none disabled:opacity-50'
 
 export const btnSecondary =
   'inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 shadow-xs transition hover:border-slate-300 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-slate-300/30 disabled:pointer-events-none disabled:opacity-50'
@@ -37,7 +49,14 @@ export const btnDanger =
   'inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-red-600 px-4 text-sm font-semibold text-white shadow-sm shadow-red-600/20 transition hover:bg-red-700 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-red-500/25 disabled:pointer-events-none disabled:opacity-50'
 
 export const iconButton =
-  'inline-flex size-8 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/30'
+  'inline-flex size-8 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5B21B6]/30'
+
+// Medida común de los listados: todas las tablas del panel comparten ancho,
+// tipografía base y encabezado para que se vean del mismo tamaño.
+export const tableClass = 'w-full min-w-[1200px] text-left text-[12.5px]'
+
+export const tableHeadRowClass =
+  'border-b border-slate-100 bg-slate-50/70 text-[10.5px] font-bold uppercase tracking-[0.12em] text-slate-500'
 
 export function PageHeader({
   eyebrow,
@@ -105,7 +124,7 @@ export function StatCard({
     return (
       <Link
         href={href}
-        className={cn(className, 'hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md')}
+        className={cn(className, 'hover:-translate-y-0.5 hover:border-[#DDD6FE] hover:shadow-md')}
       >
         {content}
       </Link>
@@ -201,29 +220,341 @@ export function Field({
   )
 }
 
+type SelectOption = {
+  value: string
+  label: ReactNode
+  disabled: boolean
+}
+
+function nodeToText(node: ReactNode): string {
+  if (node === null || node === undefined || typeof node === 'boolean') return ''
+  if (typeof node === 'string' || typeof node === 'number') return String(node)
+  if (Array.isArray(node)) return node.map(nodeToText).join('')
+  if (isValidElement(node)) {
+    return nodeToText((node.props as { children?: ReactNode }).children)
+  }
+  return ''
+}
+
+function collectOptions(children: ReactNode): SelectOption[] {
+  const options: SelectOption[] = []
+
+  function visit(nodes: ReactNode) {
+    Children.forEach(nodes, (child) => {
+      if (!isValidElement(child)) return
+      if (child.type === Fragment) {
+        visit((child.props as { children?: ReactNode }).children)
+        return
+      }
+      if (child.type !== 'option') return
+      const props = child.props as {
+        value?: string | number
+        disabled?: boolean
+        children?: ReactNode
+      }
+      const text = nodeToText(props.children)
+      options.push({
+        value: String(props.value ?? text),
+        label: props.children,
+        disabled: Boolean(props.disabled),
+      })
+    })
+  }
+
+  visit(children)
+  return options
+}
+
+type DropdownPanelPosition = {
+  top: number
+  left: number
+  width: number
+  maxHeight: number
+  placement: 'top' | 'bottom'
+}
+
+function useDropdownPanel(
+  open: boolean,
+  align: 'left' | 'right',
+  triggerRef: RefObject<HTMLElement | null>
+) {
+  const [position, setPosition] = useState<DropdownPanelPosition | null>(null)
+
+  const update = useCallback(() => {
+    const trigger = triggerRef.current
+    if (!trigger) return
+    const rect = trigger.getBoundingClientRect()
+    const gutter = 12
+    const viewportWidth = window.innerWidth
+    const viewportHeight = window.innerHeight
+    const width = Math.min(
+      Math.max(rect.width, 240),
+      320,
+      Math.max(160, viewportWidth - gutter * 2)
+    )
+    const left = Math.min(
+      Math.max(gutter, align === 'right' ? rect.right - width : rect.left),
+      Math.max(gutter, viewportWidth - width - gutter)
+    )
+    const spaceBelow = viewportHeight - rect.bottom - gutter
+    const spaceAbove = rect.top - gutter
+    const placement: 'top' | 'bottom' =
+      spaceBelow < 288 && spaceAbove > spaceBelow ? 'top' : 'bottom'
+    const maxHeight = Math.max(
+      160,
+      Math.min(360, (placement === 'top' ? spaceAbove : spaceBelow) - 8)
+    )
+
+    setPosition({
+      top: placement === 'top' ? Math.max(gutter, rect.top - 8) : rect.bottom + 8,
+      left,
+      width,
+      maxHeight,
+      placement,
+    })
+  }, [align, triggerRef])
+
+  useEffect(() => {
+    if (!open) {
+      setPosition(null)
+      return
+    }
+    update()
+    window.addEventListener('resize', update)
+    window.addEventListener('scroll', update, true)
+    return () => {
+      window.removeEventListener('resize', update)
+      window.removeEventListener('scroll', update, true)
+    }
+  }, [open, update])
+
+  return position
+}
+
 export function Select({
   icon: Icon,
   className,
   children,
-  ...props
+  value,
+  defaultValue,
+  onChange,
+  disabled,
+  id,
+  title,
+  'aria-label': ariaLabel,
 }: SelectHTMLAttributes<HTMLSelectElement> & { icon?: LucideIcon }) {
+  const options = useMemo(() => collectOptions(children), [children])
+  const controlled = value !== undefined
+  const [internalValue, setInternalValue] = useState(() =>
+    defaultValue !== undefined ? String(defaultValue) : options[0]?.value ?? ''
+  )
+  const currentValue = controlled ? String(value ?? '') : internalValue
+  const selected = options.find((option) => option.value === currentValue)
+
+  const [open, setOpen] = useState(false)
+  const [highlight, setHighlight] = useState(0)
+  const rootRef = useRef<HTMLDivElement>(null)
+  const triggerRef = useRef<HTMLButtonElement>(null)
+  const panelRef = useRef<HTMLDivElement>(null)
+  const panelPosition = useDropdownPanel(open, 'left', triggerRef)
+
+  useEffect(() => {
+    if (!open) return
+    function handlePointerDown(event: PointerEvent) {
+      const target = event.target as Node
+      if (rootRef.current?.contains(target) || panelRef.current?.contains(target)) return
+      setOpen(false)
+    }
+    document.addEventListener('pointerdown', handlePointerDown)
+    return () => document.removeEventListener('pointerdown', handlePointerDown)
+  }, [open])
+
+  useEffect(() => {
+    if (!open) return
+    const index = options.findIndex((option) => option.value === currentValue)
+    setHighlight(index >= 0 ? index : 0)
+    const timer = window.setTimeout(() => panelRef.current?.focus(), 20)
+    return () => window.clearTimeout(timer)
+  }, [open])
+
+  function close(focusTrigger = false) {
+    setOpen(false)
+    if (focusTrigger) {
+      window.setTimeout(() => triggerRef.current?.focus(), 0)
+    }
+  }
+
+  function choose(option: SelectOption) {
+    if (option.disabled) return
+    if (!controlled) setInternalValue(option.value)
+    onChange?.({
+      target: { value: option.value },
+      currentTarget: { value: option.value },
+    } as ChangeEvent<HTMLSelectElement>)
+    close(true)
+  }
+
+  function scrollOptionIntoView(index: number) {
+    window.setTimeout(() => {
+      panelRef.current
+        ?.querySelector<HTMLElement>(`[data-option-index="${index}"]`)
+        ?.scrollIntoView({ block: 'nearest' })
+    }, 0)
+  }
+
+  function moveHighlight(delta: number) {
+    if (options.length === 0) return
+    let next = highlight
+    for (let step = 0; step < options.length; step += 1) {
+      next = Math.max(0, Math.min(options.length - 1, next + delta))
+      if (!options[next]?.disabled) break
+      if ((delta > 0 && next === options.length - 1) || (delta < 0 && next === 0)) break
+    }
+    setHighlight(next)
+    scrollOptionIntoView(next)
+  }
+
+  function handleKeyDown(event: ReactKeyboardEvent<HTMLDivElement>) {
+    if (event.key === 'Escape' && open) {
+      event.preventDefault()
+      event.stopPropagation()
+      close(true)
+      return
+    }
+    if (!open) {
+      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        event.preventDefault()
+        setOpen(true)
+      }
+      return
+    }
+    if (event.key === 'ArrowDown') {
+      event.preventDefault()
+      moveHighlight(1)
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault()
+      moveHighlight(-1)
+    } else if (event.key === 'Home') {
+      event.preventDefault()
+      setHighlight(0)
+      scrollOptionIntoView(0)
+    } else if (event.key === 'End') {
+      event.preventDefault()
+      const last = options.length - 1
+      if (last >= 0) {
+        setHighlight(last)
+        scrollOptionIntoView(last)
+      }
+    } else if (event.key === 'Enter' || event.key === ' ') {
+      const option = options[highlight]
+      if (option) {
+        event.preventDefault()
+        choose(option)
+      }
+    } else if (event.key === 'Tab') {
+      setOpen(false)
+    }
+  }
+
   return (
-    <div className="relative">
-      {Icon && (
-        <Icon className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
-      )}
-      <select
+    <div ref={rootRef} onKeyDown={handleKeyDown} className="relative">
+      <button
+        ref={triggerRef}
+        type="button"
+        id={id}
+        title={title}
+        disabled={disabled}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-label={ariaLabel}
+        onClick={() => setOpen((prev) => !prev)}
         className={cn(
           inputClass,
-          'cursor-pointer appearance-none pr-9',
+          'relative flex cursor-pointer items-center justify-between gap-2 pr-9 text-left',
           Icon && 'pl-9',
+          open && 'border-[#5B21B6] ring-4 ring-[#5B21B6]/10',
           className
         )}
-        {...props}
       >
-        {children}
-      </select>
-      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+        {Icon && (
+          <Icon
+            className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400"
+            aria-hidden="true"
+          />
+        )}
+        <span className="min-w-0 truncate">{selected?.label ?? '—'}</span>
+        <ChevronDown
+          className={cn(
+            'pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-slate-400 transition-transform duration-200',
+            open && 'rotate-180'
+          )}
+          aria-hidden="true"
+        />
+      </button>
+
+      {open &&
+        panelPosition &&
+        createPortal(
+          <div
+            ref={panelRef}
+            role="listbox"
+            tabIndex={-1}
+            aria-label={ariaLabel ?? title}
+            style={{
+              top: panelPosition.top,
+              left: panelPosition.left,
+              width: panelPosition.width,
+            }}
+            className={cn(
+              'fixed z-[95] outline-none',
+              panelPosition.placement === 'top' && '-translate-y-full'
+            )}
+          >
+            <div
+              className="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white p-1.5 shadow-xl shadow-slate-900/10 animate-in fade-in-0 zoom-in-95 duration-150"
+              style={{ maxHeight: panelPosition.maxHeight }}
+            >
+              <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain py-0.5 scrollbar-light">
+                {options.length === 0 ? (
+                  <p className="px-3 py-6 text-center text-xs text-slate-400">Sin opciones</p>
+                ) : (
+                  options.map((option, index) => {
+                    const isSelected = option.value === currentValue
+                    return (
+                      <button
+                        key={`${option.value}-${index}`}
+                        type="button"
+                        role="option"
+                        aria-selected={isSelected}
+                        disabled={option.disabled}
+                        data-option-index={index}
+                        onMouseEnter={() => {
+                          if (!option.disabled) setHighlight(index)
+                        }}
+                        onClick={() => choose(option)}
+                        className={cn(
+                          'flex w-full items-center justify-between gap-2 rounded-lg px-2.5 py-2 text-left text-[13px] transition-colors',
+                          option.disabled && 'cursor-not-allowed opacity-50',
+                          isSelected
+                            ? 'bg-[#F5F3FF] font-semibold text-[#5B21B6]'
+                            : index === highlight
+                              ? 'bg-slate-100 text-slate-900'
+                              : 'text-slate-700'
+                        )}
+                      >
+                        <span className="min-w-0 flex-1 truncate">{option.label}</span>
+                        {isSelected && (
+                          <Check className="size-4 shrink-0 text-[#5B21B6]" aria-hidden="true" />
+                        )}
+                      </button>
+                    )
+                  })
+                )}
+              </div>
+            </div>
+          </div>,
+          document.body
+        )}
     </div>
   )
 }
@@ -267,6 +598,7 @@ export function FilterSelect({
   const triggerRef = useRef<HTMLButtonElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
   const searchRef = useRef<HTMLInputElement>(null)
+  const panelPosition = useDropdownPanel(open, align, triggerRef)
 
   const filtered = useMemo(() => {
     const needle = term.trim().toLowerCase()
@@ -280,9 +612,9 @@ export function FilterSelect({
   useEffect(() => {
     if (!open) return
     function handlePointerDown(event: PointerEvent) {
-      if (rootRef.current && !rootRef.current.contains(event.target as Node)) {
-        setOpen(false)
-      }
+      const target = event.target as Node
+      if (rootRef.current?.contains(target) || panelRef.current?.contains(target)) return
+      setOpen(false)
     }
     document.addEventListener('pointerdown', handlePointerDown)
     return () => document.removeEventListener('pointerdown', handlePointerDown)
@@ -341,6 +673,7 @@ export function FilterSelect({
 
     if (event.key === 'Escape') {
       event.preventDefault()
+      event.stopPropagation()
       close(true)
     } else if (event.key === 'ArrowDown') {
       event.preventDefault()
@@ -380,11 +713,11 @@ export function FilterSelect({
         aria-expanded={open}
         aria-label={ariaLabel ?? label}
         className={cn(
-          'flex h-10 w-full items-center justify-between gap-2 rounded-xl border px-3 text-left text-sm shadow-xs transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-500/15',
+          'flex h-10 w-full items-center justify-between gap-2 rounded-xl border px-3 text-left text-sm shadow-xs transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#5B21B6]/15',
           isActive
-            ? 'border-blue-300 bg-blue-50/70 text-blue-700'
+            ? 'border-[#C4B5FD] bg-[#F5F3FF]/70 text-[#5B21B6]'
             : 'border-slate-200 bg-white text-slate-800 hover:border-slate-300 hover:bg-slate-50',
-          open && 'border-blue-500 ring-4 ring-blue-500/10'
+          open && 'border-[#5B21B6] ring-4 ring-[#5B21B6]/10'
         )}
       >
         <span className="flex min-w-0 items-center gap-1.5">
@@ -392,7 +725,7 @@ export function FilterSelect({
             <Icon
               className={cn(
                 'size-4 shrink-0',
-                isActive || open ? 'text-blue-600' : 'text-slate-400'
+                isActive || open ? 'text-[#5B21B6]' : 'text-slate-400'
               )}
               aria-hidden="true"
             />
@@ -400,7 +733,7 @@ export function FilterSelect({
           <span
             className={cn(
               'shrink-0 text-xs font-medium',
-              isActive || open ? 'text-blue-600/80' : 'text-slate-500'
+              isActive || open ? 'text-[#5B21B6]/80' : 'text-slate-500'
             )}
           >
             {label}:
@@ -410,104 +743,119 @@ export function FilterSelect({
         <ChevronDown
           className={cn(
             'size-4 shrink-0 transition-transform duration-200',
-            isActive || open ? 'text-blue-600' : 'text-slate-400',
+            isActive || open ? 'text-[#5B21B6]' : 'text-slate-400',
             open && 'rotate-180'
           )}
           aria-hidden="true"
         />
       </button>
 
-      {open && (
-        <div
-          ref={panelRef}
-          role="listbox"
-          tabIndex={-1}
-          aria-label={ariaLabel ?? label}
-          className={cn(
-            'absolute top-full z-50 mt-2 min-w-[15rem] max-w-[19rem] overflow-hidden rounded-2xl border border-slate-200 bg-white p-1.5 shadow-xl shadow-slate-900/10 outline-none animate-in fade-in-0 zoom-in-95 duration-150',
-            align === 'right' ? 'right-0' : 'left-0'
-          )}
-        >
-          {searchable && (
-            <div className="border-b border-slate-100 p-1 pb-2">
-              <div className="relative">
-                <Search
-                  className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-slate-400"
-                  aria-hidden="true"
-                />
-                <input
-                  ref={searchRef}
-                  value={term}
-                  onChange={(event) => {
-                    setTerm(event.target.value)
-                    setHighlight(0)
-                  }}
-                  placeholder={searchPlaceholder}
-                  className="h-9 w-full rounded-lg border border-slate-200 bg-slate-50 pl-8 pr-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:bg-white focus:ring-2 focus:ring-blue-500/10"
-                />
+      {open &&
+        panelPosition &&
+        createPortal(
+          <div
+            ref={panelRef}
+            role="listbox"
+            tabIndex={-1}
+            aria-label={ariaLabel ?? label}
+            style={{
+              top: panelPosition.top,
+              left: panelPosition.left,
+              width: panelPosition.width,
+            }}
+            className={cn(
+              'fixed z-[95] outline-none',
+              panelPosition.placement === 'top' && '-translate-y-full'
+            )}
+          >
+            <div
+              className="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white p-1.5 shadow-xl shadow-slate-900/10 animate-in fade-in-0 zoom-in-95 duration-150"
+              style={{ maxHeight: panelPosition.maxHeight }}
+            >
+              {searchable && (
+                <div className="border-b border-slate-100 p-1 pb-2">
+                  <div className="relative">
+                    <Search
+                      className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-slate-400"
+                      aria-hidden="true"
+                    />
+                    <input
+                      ref={searchRef}
+                      value={term}
+                      onChange={(event) => {
+                        setTerm(event.target.value)
+                        setHighlight(0)
+                      }}
+                      placeholder={searchPlaceholder}
+                      className="h-9 w-full rounded-lg border border-slate-200 bg-slate-50 pl-8 pr-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-[#5B21B6] focus:bg-white focus:ring-2 focus:ring-[#5B21B6]/10"
+                    />
+                  </div>
+                </div>
+              )}
+
+              <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain py-0.5 scrollbar-light">
+                {filtered.length === 0 ? (
+                  <p className="px-3 py-6 text-center text-xs text-slate-400">{emptyLabel}</p>
+                ) : (
+                  filtered.map((option, index) => {
+                    const isSelected = option.value === value
+                    const OptionIcon = option.icon
+                    return (
+                      <button
+                        key={option.value}
+                        type="button"
+                        role="option"
+                        aria-selected={isSelected}
+                        data-option-index={index}
+                        onMouseEnter={() => setHighlight(index)}
+                        onClick={() => choose(option)}
+                        className={cn(
+                          'flex w-full items-center justify-between gap-2 rounded-lg px-2.5 py-2 text-left text-[13px] transition-colors',
+                          isSelected
+                            ? 'bg-[#F5F3FF] font-semibold text-[#5B21B6]'
+                            : index === highlight
+                              ? 'bg-slate-100 text-slate-900'
+                              : 'text-slate-700'
+                        )}
+                      >
+                        <span className="flex min-w-0 items-center gap-2">
+                          {OptionIcon && (
+                            <OptionIcon
+                              className={cn(
+                                'size-4 shrink-0',
+                                isSelected ? 'text-[#5B21B6]' : 'text-slate-400'
+                              )}
+                              aria-hidden="true"
+                            />
+                          )}
+                          <span className="truncate">{option.label}</span>
+                        </span>
+                        <span className="flex shrink-0 items-center gap-1.5">
+                          {typeof option.count === 'number' && (
+                            <span
+                              className={cn(
+                                'rounded-md px-1.5 py-0.5 text-[10px] font-semibold',
+                                isSelected
+                                  ? 'bg-[#EDE9FE] text-[#5B21B6]'
+                                  : 'bg-slate-100 text-slate-500'
+                              )}
+                            >
+                              {option.count}
+                            </span>
+                          )}
+                          {isSelected && (
+                            <Check className="size-4 text-[#5B21B6]" aria-hidden="true" />
+                          )}
+                        </span>
+                      </button>
+                    )
+                  })
+                )}
               </div>
             </div>
-          )}
-
-          <div className="max-h-64 overflow-y-auto overscroll-contain py-0.5 scrollbar-light">
-            {filtered.length === 0 ? (
-              <p className="px-3 py-6 text-center text-xs text-slate-400">{emptyLabel}</p>
-            ) : (
-              filtered.map((option, index) => {
-                const isSelected = option.value === value
-                const OptionIcon = option.icon
-                return (
-                  <button
-                    key={option.value}
-                    type="button"
-                    role="option"
-                    aria-selected={isSelected}
-                    data-option-index={index}
-                    onMouseEnter={() => setHighlight(index)}
-                    onClick={() => choose(option)}
-                    className={cn(
-                      'flex w-full items-center justify-between gap-2 rounded-lg px-2.5 py-2 text-left text-[13px] transition-colors',
-                      isSelected
-                        ? 'bg-blue-50 font-semibold text-blue-700'
-                        : index === highlight
-                          ? 'bg-slate-100 text-slate-900'
-                          : 'text-slate-700'
-                    )}
-                  >
-                    <span className="flex min-w-0 items-center gap-2">
-                      {OptionIcon && (
-                        <OptionIcon
-                          className={cn(
-                            'size-4 shrink-0',
-                            isSelected ? 'text-blue-600' : 'text-slate-400'
-                          )}
-                          aria-hidden="true"
-                        />
-                      )}
-                      <span className="truncate">{option.label}</span>
-                    </span>
-                    <span className="flex shrink-0 items-center gap-1.5">
-                      {typeof option.count === 'number' && (
-                        <span
-                          className={cn(
-                            'rounded-md px-1.5 py-0.5 text-[10px] font-semibold',
-                            isSelected
-                              ? 'bg-blue-100 text-blue-700'
-                              : 'bg-slate-100 text-slate-500'
-                          )}
-                        >
-                          {option.count}
-                        </span>
-                      )}
-                      {isSelected && <Check className="size-4 text-blue-600" aria-hidden="true" />}
-                    </span>
-                  </button>
-                )
-              })
-            )}
-          </div>
-        </div>
-      )}
+          </div>,
+          document.body
+        )}
     </div>
   )
 }
@@ -595,7 +943,7 @@ export function StatusToggle({
       aria-label={label}
       onClick={onToggle}
       className={cn(
-        'relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-blue-500/20',
+        'relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#5B21B6]/20',
         active ? 'bg-emerald-500' : 'bg-slate-300'
       )}
     >

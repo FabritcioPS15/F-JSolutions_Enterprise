@@ -168,7 +168,7 @@ export function QuoteDocumentPreview({
             ) : (
               <>
                 <LoaderCircle
-                  className="size-6 animate-spin text-blue-600"
+                  className="size-6 animate-spin text-[#5B21B6]"
                   aria-hidden="true"
                 />
                 <p className="text-xs font-medium text-slate-500">Generando documento A4…</p>

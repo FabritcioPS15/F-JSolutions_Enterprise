@@ -156,7 +156,7 @@ function CategoryPanel({ onClose }: { onClose: () => void }) {
         <Link
           href="/productos?oferta=1"
           onClick={onClose}
-          className="flex items-center gap-2 text-[13px] font-semibold text-[#0891B2] transition hover:text-[#0E7490]"
+          className="flex items-center gap-2 text-[13px] font-semibold text-[#6D28D9] transition hover:text-[#5B21B6]"
         >
           <Zap className="size-4 fill-current" />
           Ver ofertas del día
@@ -512,7 +512,7 @@ export function SiteHeader({ quoteCount = 0, onQuoteClick }: SiteHeaderProps) {
 
             <Link
               href="/productos?oferta=1"
-              className="ml-1 flex items-center gap-1.5 py-4 text-[14px] font-bold text-[#0891B2] transition hover:text-[#0E7490]"
+              className="ml-1 flex items-center gap-1.5 py-4 text-[14px] font-bold text-[#6D28D9] transition hover:text-[#5B21B6]"
             >
               <Zap className="size-4 fill-current" /> Ofertas del día
             </Link>

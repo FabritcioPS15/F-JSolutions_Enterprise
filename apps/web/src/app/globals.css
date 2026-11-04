@@ -191,6 +191,170 @@ html {
   }
 }
 
+/* ─── Procesos: secuencia progresiva ──────────────────────────────────────────
+   La sección se revela al entrar en pantalla y cada paso aparece en orden,
+   con su conector y su número encendiéndose como una secuencia.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+@keyframes process-card-in {
+  from {
+    opacity: 0.35;
+    transform: translate3d(0, 12px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes process-arrow-flow {
+
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: translateX(0);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateX(3px);
+  }
+}
+
+.process-sequence[data-layout='grid'] > *::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 1.5rem;
+  left: 1.5rem;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #2563eb 0%, #7c3aed 100%);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.process-sequence[data-layout='stack'] > *::before {
+  content: '';
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  background: linear-gradient(180deg, #2563eb 0%, #7c3aed 100%);
+  transform: scaleY(0);
+  transform-origin: center top;
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.process-sequence[data-layout='grid'][data-revealed='true'] > *::after {
+  transform: scaleX(1);
+}
+
+.process-sequence[data-layout='stack'][data-revealed='true'] > *::before {
+  transform: scaleY(1);
+}
+
+.process-sequence[data-revealed='true'] > * {
+  animation: process-card-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.process-sequence .process-number {
+  transition:
+    color 0.45s ease,
+    text-shadow 0.45s ease;
+}
+
+.process-sequence[data-revealed='true'] .process-number {
+  color: #2563eb;
+  text-shadow: 0 0 18px rgba(37, 99, 235, 0.25);
+}
+
+.process-sequence .process-arrow {
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.process-sequence[data-revealed='true'] .process-arrow {
+  opacity: 1;
+}
+
+.process-sequence[data-revealed='true'] .process-arrow svg {
+  animation: process-arrow-flow 2.4s ease-in-out infinite;
+}
+
+.process-sequence[data-revealed='true'] > *:nth-child(1) {
+  animation-delay: 60ms;
+}
+
+.process-sequence[data-revealed='true'] > *:nth-child(2) {
+  animation-delay: 230ms;
+}
+
+.process-sequence[data-revealed='true'] > *:nth-child(3) {
+  animation-delay: 400ms;
+}
+
+.process-sequence[data-revealed='true'] > *:nth-child(4) {
+  animation-delay: 570ms;
+}
+
+.process-sequence[data-revealed='true'] > *:nth-child(5) {
+  animation-delay: 740ms;
+}
+
+.process-sequence[data-revealed='true'] > *:nth-child(6) {
+  animation-delay: 910ms;
+}
+
+.process-sequence[data-revealed='true'] > *:nth-child(1)::after,
+.process-sequence[data-revealed='true'] > *:nth-child(1)::before,
+.process-sequence[data-revealed='true'] > *:nth-child(1) .process-number {
+  transition-delay: 120ms;
+}
+
+.process-sequence[data-revealed='true'] > *:nth-child(2)::after,
+.process-sequence[data-revealed='true'] > *:nth-child(2)::before,
+.process-sequence[data-revealed='true'] > *:nth-child(2) .process-number {
+  transition-delay: 290ms;
+}
+
+.process-sequence[data-revealed='true'] > *:nth-child(3)::after,
+.process-sequence[data-revealed='true'] > *:nth-child(3)::before,
+.process-sequence[data-revealed='true'] > *:nth-child(3) .process-number {
+  transition-delay: 460ms;
+}
+
+.process-sequence[data-revealed='true'] > *:nth-child(4)::after,
+.process-sequence[data-revealed='true'] > *:nth-child(4)::before,
+.process-sequence[data-revealed='true'] > *:nth-child(4) .process-number {
+  transition-delay: 630ms;
+}
+
+.process-sequence[data-revealed='true'] > *:nth-child(1) .process-arrow {
+  transition-delay: 380ms;
+}
+
+.process-sequence[data-revealed='true'] > *:nth-child(2) .process-arrow {
+  transition-delay: 550ms;
+}
+
+.process-sequence[data-revealed='true'] > *:nth-child(3) .process-arrow {
+  transition-delay: 720ms;
+}
+
+.process-sequence[data-revealed='true'] > *:nth-child(1) .process-arrow svg {
+  animation-delay: 480ms;
+}
+
+.process-sequence[data-revealed='true'] > *:nth-child(2) .process-arrow svg {
+  animation-delay: 650ms;
+}
+
+.process-sequence[data-revealed='true'] > *:nth-child(3) .process-arrow svg {
+  animation-delay: 820ms;
+}
+
 @media (prefers-reduced-motion: reduce) {
 
   .hero-reveal,
@@ -209,6 +373,31 @@ html {
     transform: none;
     transition: none;
   }
+
+  .process-sequence[data-layout='grid'] > *::after {
+    transform: scaleX(1);
+    transition: none;
+  }
+
+  .process-sequence[data-layout='stack'] > *::before {
+    transform: scaleY(1);
+    transition: none;
+  }
+
+  .process-sequence .process-arrow {
+    opacity: 1;
+    transition: none;
+  }
+
+  .process-sequence .process-arrow svg,
+  .process-sequence[data-revealed='true'] > * {
+    animation: none !important;
+  }
+
+  .process-sequence .process-number {
+    transition: none;
+    text-shadow: none;
+  }
 }
 
 @theme inline {
@@ -223,6 +412,10 @@ html {
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar: var(--sidebar);
+  --color-deep-purple: var(--deep-purple);
+  --color-violet-accent: var(--violet-accent);
+  --color-violet-strong: var(--violet-strong);
+  --color-violet-soft: var(--violet-soft);
   --color-chart-5: var(--chart-5);
   --color-chart-4: var(--chart-4);
   --color-chart-3: var(--chart-3);
@@ -265,6 +458,10 @@ html {
   --tech-blue: #2563EB;
   --electric-cyan: #22D3EE;
   --teal-green: #14B8A6;
+  --deep-purple: #4C1D95;
+  --violet-accent: #6D28D9;
+  --violet-strong: #7C3AED;
+  --violet-soft: #EDE9FE;
   --cloud-white: #F8FAFC;
   --pure-white: #FFFFFF;
   --slate-gray: #64748B;

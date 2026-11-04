@@ -22,6 +22,7 @@ import {
 } from 'lucide-react'
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
 import { QuotePanel } from '@/components/sections/quote-panel'
+import { QuantityInput } from '@/components/ui/quantity-input'
 import {
   buildQuoteCode,
   documentLabel,
@@ -74,26 +75,22 @@ export function QuotePage() {
   const [successQuote, setSuccessQuote] = useState<SavedQuote | null>(null)
   const [formData, setFormData] = useState<QuoteFormData>(initialForm)
   const [errors, setErrors] = useState<Partial<Record<keyof QuoteFormData, string>>>({})
-  const [prefilled, setPrefilled] = useState(false)
 
   useEffect(() => {
-    if (prefilled || !account.isLoaded) return
+    if (!account.isLoaded || !account.profile) return
 
     const profile = account.profile
-    if (profile) {
-      setFormData((prev) => ({
-        ...prev,
-        contactName: prev.contactName || profile.name,
-        contactEmail: prev.contactEmail || profile.email,
-        contactPhone: prev.contactPhone || profile.phone,
-        companyName: prev.companyName || profile.company,
-        documentType: profile.documentType || prev.documentType,
-        documentNumber: prev.documentNumber || profile.documentNumber,
-        contactPreference: profile.contactPreference || prev.contactPreference,
-      }))
-    }
-    setPrefilled(true)
-  }, [account.isLoaded, account.profile, prefilled])
+    setFormData((prev) => ({
+      ...prev,
+      contactName: prev.contactName || profile.name,
+      contactEmail: prev.contactEmail || profile.email,
+      contactPhone: prev.contactPhone || profile.phone,
+      companyName: prev.companyName || profile.company,
+      documentType: profile.documentType || prev.documentType,
+      documentNumber: prev.documentNumber || profile.documentNumber,
+      contactPreference: profile.contactPreference || prev.contactPreference,
+    }))
+  }, [account.isLoaded, account.profile])
 
   const activeStep = successQuote || isSubmitting ? 3 : quote.count > 0 ? 2 : 1
 
@@ -218,7 +215,7 @@ export function QuotePage() {
             <span className="mx-auto grid size-20 place-items-center rounded-full bg-[#F0FDF4] text-[#15803D]">
               <Check className="size-10" />
             </span>
-            <p className="mt-6 text-xs font-bold uppercase tracking-[0.16em] text-[#2563EB]">
+            <p className="mt-6 text-xs font-bold uppercase tracking-[0.16em] text-[#5B21B6]">
               Solicitud registrada
             </p>
             <h1 className="mt-2 text-3xl font-bold tracking-tight">¡Gracias por tu solicitud!</h1>
@@ -588,29 +585,6 @@ export function QuotePage() {
               </section>
             </fieldset>
 
-            <div className="flex flex-wrap items-center gap-3">
-              <button
-                type="submit"
-                disabled={isSubmitting || quote.count === 0}
-                className="inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-xl bg-[#2563EB] px-6 text-sm font-bold text-white transition hover:bg-[#1D4ED8] disabled:cursor-not-allowed disabled:bg-[#94A3B8] sm:flex-none sm:min-w-[260px]"
-              >
-                {isSubmitting ? (
-                  <>
-                    <Loader2 className="size-4 animate-spin" /> Enviando solicitud...
-                  </>
-                ) : (
-                  <>
-                    <Send className="size-4" /> Enviar solicitud de cotización
-                  </>
-                )}
-              </button>
-              {quote.count === 0 && (
-                <Link href="/productos" className="text-xs font-bold text-[#2563EB] hover:underline">
-                  Agrega productos para continuar
-                </Link>
-              )}
-            </div>
-
             <p className="text-[10px] leading-5 text-[#64748B]">
               * Campos obligatorios. Al enviar esta solicitud aceptas que te contactemos para
               proporcionar más información sobre los productos cotizados.
@@ -688,7 +662,13 @@ export function QuotePage() {
                             >
                               <Minus className="size-3" />
                             </button>
-                            <span className="w-6 text-center text-xs font-bold">{item.quantity}</span>
+                            <QuantityInput
+                              value={item.quantity}
+                              onChange={(qty) => quote.updateItemQuantity(item.productId, qty)}
+                              ariaLabel={`Cantidad de ${item.productName}`}
+                              disabled={isSubmitting}
+                              className="h-7 w-10 rounded-md text-xs font-bold text-[#0F172A] focus:bg-[#EFF6FF]"
+                            />
                             <button
                               type="button"
                               onClick={() => quote.updateItemQuantity(item.productId, item.quantity + 1)}
@@ -737,7 +717,7 @@ export function QuotePage() {
                     className="mt-4 inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#2563EB] text-sm font-bold text-white transition hover:bg-[#1D4ED8] disabled:cursor-not-allowed disabled:bg-[#94A3B8]"
                   >
                     {isSubmitting ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}
-                    {isSubmitting ? 'Enviando...' : 'Enviar cotización'}
+                    {isSubmitting ? 'Enviando solicitud...' : 'Enviar solicitud de cotización'}
                   </button>
 
                   <div className="mt-2 flex items-center justify-between gap-2">

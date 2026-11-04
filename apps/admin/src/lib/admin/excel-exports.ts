@@ -2,7 +2,10 @@ import {
   availabilityLabels,
   clientSegmentLabels,
   clientStatusLabels,
+  deploymentEnvironmentLabels,
   getStockState,
+  inventoryMovementLabels,
+  movementDelta,
   quoteItemCount,
   quoteStatusLabels,
   quoteTotals,
@@ -10,6 +13,8 @@ import {
   requestStatusLabels,
   statusLabels,
   stockLabels,
+  webProjectStatusLabels,
+  webProjectTypeLabels,
 } from './format'
 import type { DatasetExport } from './dataset-export'
 import {
@@ -27,10 +32,13 @@ import type {
   Category,
   Client,
   Currency,
+  InventoryMovement,
   Quote,
   QuoteLine,
   ServiceRequest,
   StoreSettings,
+  WebProject,
+  WebProjectDeployment,
 } from './types'
 
 const money = '#,##0.00'
@@ -97,6 +105,214 @@ function productSheets(products: AdminProduct[], currency: Currency): ExcelSheet
   ]
 
   return [buildSheet('Productos', columns, products)]
+}
+
+type InventoryRow = { product: AdminProduct; lastMovement?: InventoryMovement }
+
+function inventorySheets(
+  products: AdminProduct[],
+  movements: InventoryMovement[],
+  currency: Currency
+): ExcelSheet[] {
+  const lastByProduct = new Map<string, InventoryMovement>()
+  movements.forEach((movement) => {
+    const current = lastByProduct.get(movement.productId)
+    if (
+      !current ||
+      new Date(movement.createdAt).getTime() > new Date(current.createdAt).getTime()
+    ) {
+      lastByProduct.set(movement.productId, movement)
+    }
+  })
+
+  const rows: InventoryRow[] = products.map((product) => ({
+    product,
+    lastMovement: lastByProduct.get(product.id),
+  }))
+
+  const stockColumns: ExcelColumn<InventoryRow>[] = [
+    { header: 'Producto', width: 34, getValue: (row) => row.product.name, wrap: true },
+    { header: 'SKU', width: 16, getValue: (row) => row.product.sku },
+    { header: 'Categoría', width: 24, getValue: (row) => row.product.category },
+    { header: 'Marca', width: 18, getValue: (row) => row.product.brand },
+    {
+      header: 'Stock',
+      width: 10,
+      getValue: (row) => row.product.stock,
+      format: integer,
+    },
+    {
+      header: 'Stock mínimo',
+      width: 12,
+      getValue: (row) => row.product.minStock,
+      format: integer,
+    },
+    {
+      header: 'Estado de stock',
+      width: 16,
+      getValue: (row) => stockLabels[getStockState(row.product)],
+    },
+    {
+      header: `Costo unitario (${currency})`,
+      width: 18,
+      getValue: (row) => row.product.cost ?? 0,
+      format: money,
+    },
+    {
+      header: `Valor en stock (${currency})`,
+      width: 18,
+      getValue: (row) => row.product.stock * (row.product.cost ?? 0),
+      format: money,
+    },
+    {
+      header: 'Último movimiento',
+      width: 18,
+      getValue: (row) => (row.lastMovement ? excelDate(row.lastMovement.createdAt) : null),
+      format: dateTime,
+    },
+  ]
+
+  const movementColumns: ExcelColumn<InventoryMovement>[] = [
+    {
+      header: 'Fecha',
+      width: 18,
+      getValue: (movement) => excelDate(movement.createdAt),
+      format: dateTime,
+    },
+    { header: 'Producto', width: 34, getValue: (movement) => movement.productName, wrap: true },
+    { header: 'SKU', width: 16, getValue: (movement) => movement.sku },
+    { header: 'Tipo', width: 12, getValue: (movement) => inventoryMovementLabels[movement.type] },
+    {
+      header: 'Cantidad',
+      width: 11,
+      getValue: (movement) => movement.quantity,
+      format: integer,
+    },
+    {
+      header: 'Stock anterior',
+      width: 14,
+      getValue: (movement) => movement.previousStock,
+      format: integer,
+    },
+    {
+      header: 'Stock resultante',
+      width: 15,
+      getValue: (movement) => movement.resultingStock,
+      format: integer,
+    },
+    {
+      header: 'Variación',
+      width: 11,
+      getValue: (movement) => movementDelta(movement),
+      format: '#,##0',
+    },
+    { header: 'Motivo', width: 24, getValue: (movement) => movement.reason },
+    { header: 'Nota', width: 40, getValue: (movement) => movement.note, wrap: true },
+  ]
+
+  return [
+    buildSheet('Inventario', stockColumns, rows),
+    buildSheet('Movimientos', movementColumns, movements),
+  ]
+}
+
+type ProjectRow = { project: WebProject; lastDeployment?: WebProjectDeployment }
+type ProjectDeploymentRow = { project: WebProject; deployment: WebProjectDeployment }
+
+function latestDeployment(project: WebProject): WebProjectDeployment | undefined {
+  return [...project.deployments].sort(
+    (a, b) => new Date(b.deployedAt).getTime() - new Date(a.deployedAt).getTime()
+  )[0]
+}
+
+function projectSheets(projects: WebProject[]): ExcelSheet[] {
+  const rows: ProjectRow[] = projects.map((project) => ({
+    project,
+    lastDeployment: latestDeployment(project),
+  }))
+
+  const deploymentRows: ProjectDeploymentRow[] = projects
+    .flatMap((project) =>
+      project.deployments.map((deployment) => ({ project, deployment }))
+    )
+    .sort(
+      (a, b) =>
+        new Date(b.deployment.deployedAt).getTime() -
+        new Date(a.deployment.deployedAt).getTime()
+    )
+
+  const projectColumns: ExcelColumn<ProjectRow>[] = [
+    { header: 'Proyecto', width: 30, getValue: (row) => row.project.name, wrap: true },
+    { header: 'Cliente', width: 28, getValue: (row) => row.project.clientName },
+    { header: 'Tipo', width: 16, getValue: (row) => webProjectTypeLabels[row.project.type] },
+    {
+      header: 'Estado',
+      width: 15,
+      getValue: (row) => webProjectStatusLabels[row.project.status],
+    },
+    { header: 'URL producción', width: 34, getValue: (row) => row.project.productionUrl },
+    { header: 'URL staging', width: 34, getValue: (row) => row.project.stagingUrl },
+    { header: 'Repositorio', width: 34, getValue: (row) => row.project.repoUrl },
+    { header: 'Hosting', width: 26, getValue: (row) => row.project.hosting },
+    { header: 'Dominio', width: 26, getValue: (row) => row.project.domain },
+    { header: 'Responsable', width: 20, getValue: (row) => row.project.responsible },
+    {
+      header: 'Credenciales',
+      width: 30,
+      getValue: (row) => row.project.credentialLocation,
+      wrap: true,
+    },
+    {
+      header: 'Lanzamiento',
+      width: 14,
+      getValue: (row) => excelDate(row.project.launchedAt),
+      format: dateOnly,
+    },
+    {
+      header: 'Renovación',
+      width: 14,
+      getValue: (row) => excelDate(row.project.renewalAt),
+      format: dateOnly,
+    },
+    {
+      header: 'Último despliegue',
+      width: 18,
+      getValue: (row) =>
+        row.lastDeployment ? excelDate(row.lastDeployment.deployedAt) : null,
+      format: dateTime,
+    },
+    {
+      header: 'Despliegues',
+      width: 12,
+      getValue: (row) => row.project.deployments.length,
+      format: integer,
+    },
+    { header: 'Notas', width: 42, getValue: (row) => row.project.notes, wrap: true },
+  ]
+
+  const deploymentColumns: ExcelColumn<ProjectDeploymentRow>[] = [
+    {
+      header: 'Fecha',
+      width: 18,
+      getValue: (row) => excelDate(row.deployment.deployedAt),
+      format: dateTime,
+    },
+    { header: 'Proyecto', width: 30, getValue: (row) => row.project.name, wrap: true },
+    { header: 'Cliente', width: 28, getValue: (row) => row.project.clientName },
+    {
+      header: 'Entorno',
+      width: 14,
+      getValue: (row) => deploymentEnvironmentLabels[row.deployment.environment],
+    },
+    { header: 'URL', width: 36, getValue: (row) => row.deployment.url },
+    { header: 'Versión', width: 14, getValue: (row) => row.deployment.version },
+    { header: 'Nota', width: 44, getValue: (row) => row.deployment.note, wrap: true },
+  ]
+
+  return [
+    buildSheet('Proyectos web', projectColumns, rows),
+    buildSheet('Despliegues', deploymentColumns, deploymentRows),
+  ]
 }
 
 type QuoteRow = { quote: Quote; totals: ReturnType<typeof quoteTotals> }
@@ -402,6 +618,26 @@ export function productsDataset(products: AdminProduct[], currency: Currency): D
   }
 }
 
+export function inventoryDataset(
+  products: AdminProduct[],
+  movements: InventoryMovement[],
+  currency: Currency
+): DatasetExport {
+  return {
+    prefix: 'inventario',
+    title: 'Inventario',
+    sheets: inventorySheets(products, movements, currency),
+  }
+}
+
+export function projectsDataset(projects: WebProject[]): DatasetExport {
+  return {
+    prefix: 'proyectos-web',
+    title: 'Proyectos web',
+    sheets: projectSheets(projects),
+  }
+}
+
 export function quotesDataset(quotes: Quote[], currency: Currency, igv: number): DatasetExport {
   return {
     prefix: 'cotizaciones',
@@ -466,6 +702,8 @@ export function backupDataset(data: AdminData): DatasetExport {
     json: data,
     sheets: [
       ...productSheets(data.products, data.settings.currency),
+      ...inventorySheets(data.products, data.inventoryMovements, data.settings.currency),
+      ...projectSheets(data.webProjects),
       ...categorySheets(data.categories),
       ...brandSheets(brandRows),
       ...quoteSheets(data.quotes, data.settings.currency, data.settings.igv),

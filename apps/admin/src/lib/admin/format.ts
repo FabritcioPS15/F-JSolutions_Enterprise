@@ -3,6 +3,9 @@ import type {
   ClientSegment,
   ClientStatus,
   Currency,
+  DeploymentEnvironment,
+  InventoryMovement,
+  InventoryMovementType,
   ProductAvailability,
   ProductStatus,
   QuoteLine,
@@ -10,6 +13,8 @@ import type {
   RequestChannel,
   RequestStatus,
   StockState,
+  WebProjectStatus,
+  WebProjectType,
 } from './types'
 
 export function slugify(value: string): string {
@@ -34,28 +39,27 @@ export function formatNumber(value: number): string {
   return new Intl.NumberFormat('es-PE').format(value)
 }
 
+// Formato manual (UTC) para que servidor y navegador produzcan exactamente el
+// mismo texto: Intl usa espacios especiales en "a. m." que difieren entre ICU.
+const MONTHS_SHORT = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'set', 'oct', 'nov', 'dic']
+
+function pad(value: number): string {
+  return String(value).padStart(2, '0')
+}
+
 export function formatDate(value: string): string {
   const date = new Date(value)
   if (Number.isNaN(date.getTime())) return '—'
-  return new Intl.DateTimeFormat('es-PE', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-    timeZone: 'UTC',
-  }).format(date)
+  return `${pad(date.getUTCDate())} ${MONTHS_SHORT[date.getUTCMonth()]}. ${date.getUTCFullYear()}`
 }
 
 export function formatDateTime(value: string): string {
   const date = new Date(value)
   if (Number.isNaN(date.getTime())) return '—'
-  return new Intl.DateTimeFormat('es-PE', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    timeZone: 'UTC',
-  }).format(date)
+  const hours = date.getUTCHours()
+  const meridiem = hours < 12 ? 'a. m.' : 'p. m.'
+  const hour12 = hours % 12 === 0 ? 12 : hours % 12
+  return `${formatDate(value)}, ${pad(hour12)}:${pad(date.getUTCMinutes())} ${meridiem}`
 }
 
 export function getStockState(product: Pick<AdminProduct, 'stock' | 'minStock'>): StockState {
@@ -68,6 +72,74 @@ export const stockLabels: Record<StockState, string> = {
   ok: 'Disponible',
   low: 'Stock bajo',
   out: 'Sin stock',
+}
+
+export const inventoryMovementLabels: Record<InventoryMovementType, string> = {
+  in: 'Entrada',
+  out: 'Salida',
+  adjustment: 'Ajuste',
+}
+
+export const inventoryMovementDescriptions: Record<InventoryMovementType, string> = {
+  in: 'Suma unidades al stock disponible.',
+  out: 'Descuenta unidades del stock disponible.',
+  adjustment: 'Fija el stock real tras un conteo o corrección.',
+}
+
+export const inventoryReasons: Record<InventoryMovementType, string[]> = {
+  in: [
+    'Compra a proveedor',
+    'Devolución de cliente',
+    'Reposición de stock',
+    'Transferencia entre almacenes',
+    'Otro',
+  ],
+  out: [
+    'Venta',
+    'Uso interno',
+    'Garantía o RMA',
+    'Merma o daño',
+    'Transferencia entre almacenes',
+    'Otro',
+  ],
+  adjustment: ['Conteo físico', 'Corrección de error', 'Carga inicial', 'Otro'],
+}
+
+export function movementDelta(
+  movement: Pick<InventoryMovement, 'previousStock' | 'resultingStock'>
+): number {
+  return movement.resultingStock - movement.previousStock
+}
+
+export const webProjectTypeLabels: Record<WebProjectType, string> = {
+  landing: 'Landing page',
+  website: 'Página web',
+  webapp: 'Sistema web',
+  ecommerce: 'E-commerce',
+  maintenance: 'Mantenimiento',
+}
+
+export const webProjectStatusLabels: Record<WebProjectStatus, string> = {
+  planning: 'Planificación',
+  development: 'En desarrollo',
+  staging: 'En staging',
+  live: 'En producción',
+  paused: 'Pausado',
+  archived: 'Archivado',
+}
+
+export const deploymentEnvironmentLabels: Record<DeploymentEnvironment, string> = {
+  production: 'Producción',
+  staging: 'Staging',
+  preview: 'Preview',
+}
+
+export function daysBetweenDates(today: string, target: string): number | null {
+  if (!today || !target) return null
+  const start = new Date(`${today.slice(0, 10)}T00:00:00Z`)
+  const end = new Date(`${target.slice(0, 10)}T00:00:00Z`)
+  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return null
+  return Math.round((end.getTime() - start.getTime()) / 86_400_000)
 }
 
 export const availabilityLabels: Record<ProductAvailability, string> = {

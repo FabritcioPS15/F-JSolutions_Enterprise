@@ -194,6 +194,86 @@ export type ActivityEntry = {
   at: string
 }
 
+export type InventoryMovementType = 'in' | 'out' | 'adjustment'
+
+export type InventoryMovement = {
+  id: string
+  productId: string
+  productName: string
+  sku: string
+  type: InventoryMovementType
+  quantity: number
+  previousStock: number
+  resultingStock: number
+  reason: string
+  note?: string
+  createdAt: string
+}
+
+export type InventoryMovementInput = {
+  productId: string
+  type: InventoryMovementType
+  quantity: number
+  reason: string
+  note?: string
+}
+
+export type WebProjectType = 'landing' | 'website' | 'webapp' | 'ecommerce' | 'maintenance'
+
+export type WebProjectStatus =
+  | 'planning'
+  | 'development'
+  | 'staging'
+  | 'live'
+  | 'paused'
+  | 'archived'
+
+export type DeploymentEnvironment = 'production' | 'staging' | 'preview'
+
+export type WebProjectDeployment = {
+  id: string
+  environment: DeploymentEnvironment
+  url: string
+  version?: string
+  note?: string
+  deployedAt: string
+}
+
+export type WebProject = {
+  id: string
+  name: string
+  clientId?: string
+  clientName: string
+  type: WebProjectType
+  status: WebProjectStatus
+  productionUrl: string
+  stagingUrl: string
+  repoUrl: string
+  hosting: string
+  domain: string
+  responsible: string
+  credentialLocation: string
+  launchedAt?: string
+  renewalAt?: string
+  notes: string
+  deployments: WebProjectDeployment[]
+  createdAt: string
+  updatedAt: string
+}
+
+export type WebProjectInput = Omit<
+  WebProject,
+  'id' | 'createdAt' | 'updatedAt' | 'deployments'
+>
+
+export type DeploymentInput = {
+  environment: DeploymentEnvironment
+  url: string
+  version?: string
+  note?: string
+  deployedAt?: string
+}
+
 export type AdminData = {
   products: AdminProduct[]
   categories: Category[]
@@ -203,6 +283,8 @@ export type AdminData = {
   requests: ServiceRequest[]
   settings: StoreSettings
   activity: ActivityEntry[]
+  inventoryMovements: InventoryMovement[]
+  webProjects: WebProject[]
 }
 
 export type StockState = 'ok' | 'low' | 'out'

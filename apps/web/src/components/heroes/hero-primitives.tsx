@@ -36,7 +36,7 @@ export function HeroSection({ id, children, className, overlay = true }: HeroSec
           <div className="absolute inset-0 bg-[linear-gradient(180deg,#FFFFFF_0%,#FCFDFE_52%,#F8FAFC_100%)]" />
           <div className="hero-grid absolute inset-x-0 top-0 h-[420px] opacity-60" />
           <div className="absolute -right-44 -top-52 size-[560px] rounded-full bg-[#2563EB]/[0.07] blur-[110px]" />
-          <div className="absolute -left-36 top-24 size-[380px] rounded-full bg-[#22D3EE]/[0.10] blur-[100px]" />
+          <div className="absolute -left-36 top-24 size-[380px] rounded-full bg-[#7C3AED]/[0.13] blur-[100px]" />
         </div>
       )}
       {children}
@@ -54,14 +54,14 @@ export function HeroEyebrow({ children, icon, className }: HeroEyebrowProps) {
   return (
     <span
       className={cn(
-        'hero-reveal inline-flex items-center gap-2 rounded-full border border-[#DBEAFE] bg-white/85 px-3 py-1.5 text-[10.5px] font-semibold uppercase tracking-[0.16em] text-[#1D4ED8] shadow-[0_1px_2px_rgba(15,23,42,0.04)] backdrop-blur',
+        'hero-reveal inline-flex items-center gap-2 rounded-full border border-[#DDD6FE] bg-white/85 px-3 py-1.5 text-[10.5px] font-semibold uppercase tracking-[0.16em] text-[#5B21B6] shadow-[0_1px_2px_rgba(15,23,42,0.04)] backdrop-blur',
         className,
       )}
     >
       {icon ?? (
         <span
           aria-hidden="true"
-          className="size-1.5 rounded-full bg-[#22D3EE] shadow-[0_0_0_3px_rgba(34,211,238,0.18)]"
+          className="size-1.5 rounded-full bg-[#7C3AED] shadow-[0_0_0_3px_rgba(124,58,237,0.18)]"
         />
       )}
       {children}
@@ -208,7 +208,7 @@ export function HeroVisual({ children, className }: { children: ReactNode; class
     >
       <div
         aria-hidden="true"
-        className="absolute inset-x-8 inset-y-10 -z-10 rounded-[40px] bg-[#2563EB]/10 blur-3xl"
+        className="absolute inset-x-8 inset-y-10 -z-10 rounded-[40px] bg-gradient-to-br from-[#2563EB]/10 to-[#7C3AED]/10 blur-3xl"
       />
       {children}
     </div>

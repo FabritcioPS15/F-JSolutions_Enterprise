@@ -204,7 +204,7 @@ export function CatalogHero({
           <div className="hero-reveal hero-delay-2 relative mx-auto w-full max-w-[560px] lg:max-w-none">
             <div
               aria-hidden="true"
-              className="absolute inset-x-8 inset-y-10 -z-10 rounded-[40px] bg-[#2563EB]/10 blur-3xl"
+              className="absolute inset-x-8 inset-y-10 -z-10 rounded-[40px] bg-gradient-to-br from-[#2563EB]/10 to-[#7C3AED]/10 blur-3xl"
             />
             <div className="hero-float-soft relative rounded-[24px] border border-[#E2E8F0] bg-white p-3 shadow-[0_42px_100px_-52px_rgba(15,23,42,0.5)] sm:p-3.5">
               <div className="flex items-center justify-between gap-3 px-1.5 pb-2.5 pt-0.5">

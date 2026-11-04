@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import {
   AppWindow,
   ArrowDownAZ,
@@ -90,7 +90,6 @@ function CustomFilterDropdown({
   searchable = false,
   searchPlaceholder = 'Buscar...',
   className = '',
-  showCountInstead = false,
 }: {
   label: string
   value: string
@@ -100,7 +99,6 @@ function CustomFilterDropdown({
   searchable?: boolean
   searchPlaceholder?: string
   className?: string
-  showCountInstead?: boolean
 }) {
   const [isOpen, setIsOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
@@ -130,8 +128,7 @@ function CustomFilterDropdown({
   const selectedOption = options.find((opt) => opt.value === value)
   const isCustomSelected = value !== 'Todas' && value !== 'relevancia'
 
-  // Si showCountInstead es true y hay un filtro activo, mostrar solo el número
-  const displayValue = showCountInstead && isCustomSelected ? '1' : (selectedOption?.label || value)
+  const displayValue = selectedOption?.label || value
 
   return (
     <div className={`relative ${className}`} ref={dropdownRef}>
@@ -338,6 +335,7 @@ export function CatalogPage({
   initialCategory = 'Todas',
 }: CatalogPageProps) {
   const quote = useQuote()
+  const router = useRouter()
   const searchParams = useSearchParams()
 
   const [showQuote, setShowQuote] = useState(false)
@@ -352,7 +350,7 @@ export function CatalogPage({
     searchParams?.get('tipo') || searchParams?.get('subSubcategoria') || 'Todas'
   )
   const [brand, setBrand] = useState(searchParams?.get('marca') || searchParams?.get('brand') || 'Todas')
-  const [sort, setSort] = useState('relevancia')
+  const [sort, setSort] = useState(searchParams?.get('orden') || 'relevancia')
 
   // Sincronizar parámetros de URL
   useEffect(() => {
@@ -362,19 +360,12 @@ export function CatalogPage({
     const subSub = searchParams?.get('tipo') || searchParams?.get('subSubcategoria') || ''
     const b = searchParams?.get('marca') || searchParams?.get('brand') || ''
 
-    if (q) setQuery(q)
-    if (cat) setCategory(cat)
-    if (sub) setSubcategory(sub)
-    if (subSub) setSubSubcategory(subSub)
-    if (b) setBrand(b)
-
-    if (!q && !cat && !sub && !subSub && !b) {
-      setQuery('')
-      setCategory('Todas')
-      setSubcategory('Todas')
-      setSubSubcategory('Todas')
-      setBrand('Todas')
-    }
+    setQuery(q)
+    setCategory(cat || 'Todas')
+    setSubcategory(sub || 'Todas')
+    setSubSubcategory(subSub || 'Todas')
+    setBrand(b || 'Todas')
+    setSort(searchParams?.get('orden') || 'relevancia')
   }, [searchParams])
 
   // Obtener la taxonomía de la categoría activa
@@ -382,12 +373,6 @@ export function CatalogPage({
     if (category === 'Todas') return null
     return getTaxonomyCategory(category)
   }, [category])
-
-  // Subcategorías de la categoría activa
-  const availableSubcategories = useMemo(() => {
-    if (!activeTaxonomy) return []
-    return activeTaxonomy.subcategories
-  }, [activeTaxonomy])
 
   // Sub-subcategorías (tipos) de la subcategoría activa
   const availableSubSubcategories = useMemo(() => {
@@ -538,6 +523,19 @@ export function CatalogPage({
     return counts
   }, [activeTaxonomy])
 
+  // Contadores de tipos (sub-subcategorías)
+  const subSubcategoryCounts = useMemo(() => {
+    if (!activeTaxonomy) return {}
+    const counts: Record<string, number> = {}
+    products.forEach((p) => {
+      const pTax = getTaxonomyCategory(p.category)
+      if (pTax && pTax.id === activeTaxonomy.id && p.subSubcategory) {
+        counts[p.subSubcategory] = (counts[p.subSubcategory] || 0) + 1
+      }
+    })
+    return counts
+  }, [activeTaxonomy])
+
   // Contadores de marcas
   const brandCounts = useMemo(() => {
     const counts: Record<string, number> = {}
@@ -548,20 +546,85 @@ export function CatalogPage({
   }, [filtered])
 
   // Handlers de selección
+  // Cada cambio de filtro actualiza la URL (para que Atrás/Adelante funcionen)
+  // y devuelve la vista al inicio del catálogo.
+  const applyFilterUrl = (overrides: {
+    category?: string
+    subcategory?: string
+    subSubcategory?: string
+    brand?: string
+    sort?: string
+    query?: string
+  } = {}) => {
+    const next = {
+      category: overrides.category ?? category,
+      subcategory: overrides.subcategory ?? subcategory,
+      subSubcategory: overrides.subSubcategory ?? subSubcategory,
+      brand: overrides.brand ?? brand,
+      sort: overrides.sort ?? sort,
+      query: overrides.query ?? query,
+    }
+
+    const params = new URLSearchParams()
+    const term = next.query.trim()
+    if (term) params.set('q', term)
+    if (next.category !== 'Todas') params.set('categoria', next.category)
+    if (next.subcategory !== 'Todas') params.set('subcategoria', next.subcategory)
+    if (next.subSubcategory !== 'Todas') params.set('tipo', next.subSubcategory)
+    if (next.brand !== 'Todas') params.set('marca', next.brand)
+    if (next.sort !== 'relevancia') params.set('orden', next.sort)
+
+    const qs = params.toString()
+    const href = qs ? `/productos?${qs}` : '/productos'
+
+    if (`${window.location.pathname}${window.location.search}` !== href) {
+      router.push(href, { scroll: false })
+    }
+    window.scrollTo({ top: 0, behavior: 'auto' })
+  }
+
   const handleSelectCategory = (catLabel: string) => {
+    if (catLabel === category) return
     setCategory(catLabel)
     setSubcategory('Todas')
     setSubSubcategory('Todas')
     setBrand('Todas')
+    applyFilterUrl({
+      category: catLabel,
+      subcategory: 'Todas',
+      subSubcategory: 'Todas',
+      brand: 'Todas',
+    })
   }
 
   const handleSelectSubcategory = (subLabel: string) => {
+    if (subLabel === subcategory) return
     setSubcategory(subLabel)
     setSubSubcategory('Todas')
+    applyFilterUrl({ subcategory: subLabel, subSubcategory: 'Todas' })
   }
 
   const handleSelectSubSubcategory = (typeLabel: string) => {
+    if (typeLabel === subSubcategory) return
     setSubSubcategory(typeLabel)
+    applyFilterUrl({ subSubcategory: typeLabel })
+  }
+
+  const handleSelectBrand = (brandLabel: string) => {
+    if (brandLabel === brand) return
+    setBrand(brandLabel)
+    applyFilterUrl({ brand: brandLabel })
+  }
+
+  const handleSelectSort = (value: string) => {
+    if (value === sort) return
+    setSort(value)
+    applyFilterUrl({ sort: value })
+  }
+
+  const handleClearQuery = () => {
+    setQuery('')
+    applyFilterUrl({ query: '' })
   }
 
   const resetFilters = () => {
@@ -571,6 +634,14 @@ export function CatalogPage({
     setSubSubcategory('Todas')
     setBrand('Todas')
     setSort('relevancia')
+    applyFilterUrl({
+      query: '',
+      category: 'Todas',
+      subcategory: 'Todas',
+      subSubcategory: 'Todas',
+      brand: 'Todas',
+      sort: 'relevancia',
+    })
   }
 
   const hasFilters =
@@ -611,11 +682,13 @@ export function CatalogPage({
       label: 'Todas',
       count: categoryCounts[activeTaxonomy.label] || 0,
     }
-    const subOpts: DropdownOption[] = activeTaxonomy.subcategories.map((sub) => ({
-      value: sub.label,
-      label: sub.label,
-      count: subcategoryCounts[sub.label] || 0,
-    }))
+    const subOpts: DropdownOption[] = activeTaxonomy.subcategories
+      .map((sub) => ({
+        value: sub.label,
+        label: sub.label,
+        count: subcategoryCounts[sub.label] || 0,
+      }))
+      .filter((option) => option.count > 0)
     return [allOpt, ...subOpts]
   }, [activeTaxonomy, categoryCounts, subcategoryCounts])
 
@@ -626,12 +699,15 @@ export function CatalogPage({
       value: 'Todas',
       label: 'Todos',
     }
-    const typeOpts: DropdownOption[] = availableSubSubcategories.map((t) => ({
-      value: t.label,
-      label: t.label,
-    }))
+    const typeOpts: DropdownOption[] = availableSubSubcategories
+      .map((t) => ({
+        value: t.label,
+        label: t.label,
+        count: subSubcategoryCounts[t.label] || 0,
+      }))
+      .filter((option) => option.count > 0)
     return [allOpt, ...typeOpts]
-  }, [availableSubSubcategories])
+  }, [availableSubSubcategories, subSubcategoryCounts])
 
   // Opciones para el dropdown de Marcas
   const brandDropdownOptions = useMemo<DropdownOption[]>(() => {
@@ -667,6 +743,12 @@ export function CatalogPage({
               setSubcategory('Todas')
               setSubSubcategory('Todas')
               setBrand('Todas')
+              applyFilterUrl({
+                category: 'Todas',
+                subcategory: 'Todas',
+                subSubcategory: 'Todas',
+                brand: 'Todas',
+              })
             }}
             className={`font-semibold transition hover:text-[#2563EB] ${
               category === 'Todas' ? 'text-[#2563EB]' : 'text-[#475569]'
@@ -684,6 +766,7 @@ export function CatalogPage({
                 onClick={() => {
                   setSubcategory('Todas')
                   setSubSubcategory('Todas')
+                  applyFilterUrl({ subcategory: 'Todas', subSubcategory: 'Todas' })
                 }}
                 className={`font-semibold transition hover:text-[#2563EB] ${
                   subcategory === 'Todas' ? 'text-[#2563EB]' : 'text-[#475569]'
@@ -700,7 +783,10 @@ export function CatalogPage({
               <ChevronRight className="size-3.5 text-[#94A3B8]" />
               <button
                 type="button"
-                onClick={() => setSubSubcategory('Todas')}
+                onClick={() => {
+                  setSubSubcategory('Todas')
+                  applyFilterUrl({ subSubcategory: 'Todas' })
+                }}
                 className={`font-semibold transition hover:text-[#2563EB] ${
                   subSubcategory === 'Todas' ? 'text-[#2563EB]' : 'text-[#475569]'
                 }`}
@@ -748,7 +834,7 @@ export function CatalogPage({
                 {query && (
                   <button
                     type="button"
-                    onClick={() => setQuery('')}
+                    onClick={handleClearQuery}
                     className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#94A3B8] hover:text-[#0F172A]"
                     aria-label="Limpiar búsqueda"
                   >
@@ -771,26 +857,24 @@ export function CatalogPage({
               )}
 
               {/* 1. Dropdown Personalizado de Subcategorías (disponible en la fila) */}
-              {availableSubcategories.length > 0 && (
+              {subcategoryDropdownOptions.length > 1 && (
                 <CustomFilterDropdown
                   label="Subcategoría"
                   icon={Layers}
                   value={subcategory}
                   options={subcategoryDropdownOptions}
                   onChange={handleSelectSubcategory}
-                  showCountInstead
                 />
               )}
 
               {/* 2. Dropdown Personalizado de Tipos (Sub-subcategorías) */}
-              {availableSubSubcategories.length > 0 && (
+              {subSubcategoryDropdownOptions.length > 1 && (
                 <CustomFilterDropdown
                   label="Tipo"
                   icon={Tag}
                   value={subSubcategory}
                   options={subSubcategoryDropdownOptions}
                   onChange={handleSelectSubSubcategory}
-                  showCountInstead
                 />
               )}
 
@@ -801,7 +885,7 @@ export function CatalogPage({
                   icon={Filter}
                   value={brand}
                   options={brandDropdownOptions}
-                  onChange={(val) => setBrand(val)}
+                  onChange={handleSelectBrand}
                   searchable={availableBrands.length > 5}
                   searchPlaceholder="Buscar marca..."
                 />
@@ -814,7 +898,7 @@ export function CatalogPage({
                   icon={ArrowDownAZ}
                   value={sort}
                   options={sortOptions}
-                  onChange={(val) => setSort(val)}
+                  onChange={handleSelectSort}
                 />
               )}
 
@@ -844,12 +928,7 @@ export function CatalogPage({
                   Categoría: {activeTaxonomy?.label || category}
                   <button
                     type="button"
-                    onClick={() => {
-                      setCategory('Todas')
-                      setSubcategory('Todas')
-                      setSubSubcategory('Todas')
-                      setBrand('Todas')
-                    }}
+                    onClick={() => handleSelectCategory('Todas')}
                     className="hover:text-[#1D4ED8]"
                     aria-label="Quitar filtro de categoría"
                   >
@@ -863,10 +942,7 @@ export function CatalogPage({
                   Subcategoría: {subcategory}
                   <button
                     type="button"
-                    onClick={() => {
-                      setSubcategory('Todas')
-                      setSubSubcategory('Todas')
-                    }}
+                    onClick={() => handleSelectSubcategory('Todas')}
                     className="hover:text-[#1D4ED8]"
                     aria-label="Quitar filtro de subcategoría"
                   >
@@ -880,7 +956,7 @@ export function CatalogPage({
                   Tipo: {subSubcategory}
                   <button
                     type="button"
-                    onClick={() => setSubSubcategory('Todas')}
+                    onClick={() => handleSelectSubSubcategory('Todas')}
                     className="hover:text-[#1D4ED8]"
                     aria-label="Quitar filtro de tipo"
                   >
@@ -894,7 +970,7 @@ export function CatalogPage({
                   Marca: {brand}
                   <button
                     type="button"
-                    onClick={() => setBrand('Todas')}
+                    onClick={() => handleSelectBrand('Todas')}
                     className="hover:text-[#1D4ED8]"
                     aria-label="Quitar filtro de marca"
                   >
@@ -908,7 +984,7 @@ export function CatalogPage({
                   Búsqueda: &quot;{query}&quot;
                   <button
                     type="button"
-                    onClick={() => setQuery('')}
+                    onClick={handleClearQuery}
                     className="hover:text-[#1D4ED8]"
                     aria-label="Quitar filtro de búsqueda"
                   >
@@ -979,7 +1055,7 @@ export function CatalogPage({
         </div>
 
         {/* ── Banner Corporativo de Asesoría Técnica y Cotización ───────────────── */}
-        <div className="mt-14 rounded-3xl border border-[#DBEAFE] bg-gradient-to-r from-[#EFF6FF] via-white to-[#F8FAFC] p-6 shadow-xs sm:p-8">
+        <div className="mt-14 rounded-3xl border border-[#DDD6FE] bg-gradient-to-r from-[#EFF6FF] via-white to-[#EDE9FE] p-6 shadow-xs sm:p-8">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-start gap-4">
               <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-[#2563EB] text-white shadow-sm">

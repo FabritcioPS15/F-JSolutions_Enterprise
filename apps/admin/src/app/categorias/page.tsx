@@ -109,7 +109,7 @@ const levelBadgeLabels: Record<NodeKind, string> = {
 
 const levelStyles: Record<NodeKind, string> = {
   category: 'bg-slate-100 text-slate-600 ring-slate-500/15',
-  subcategory: 'bg-blue-50 text-blue-700 ring-blue-600/15',
+  subcategory: 'bg-[#F5F3FF] text-[#5B21B6] ring-[#5B21B6]/15',
   type: 'bg-teal-50 text-teal-700 ring-teal-600/15',
 }
 
@@ -705,7 +705,7 @@ export default function CategoriasPage() {
                   <div className="border-t border-slate-100 bg-slate-50/60 p-3 sm:p-4">
                     <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
                       <div className="flex items-center gap-2">
-                        <span className="inline-flex items-center gap-1 rounded-md bg-blue-50 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-blue-700 ring-1 ring-inset ring-blue-600/15">
+                        <span className="inline-flex items-center gap-1 rounded-md bg-[#F5F3FF] px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-[#5B21B6] ring-1 ring-inset ring-[#5B21B6]/15">
                           <Layers className="size-2.5" aria-hidden="true" />
                           Subcategorías
                         </span>
@@ -782,16 +782,16 @@ export default function CategoriasPage() {
                             return (
                               <div
                                 key={sub.id}
-                                className="relative overflow-hidden rounded-xl border border-blue-100 bg-white p-3 pl-4 shadow-xs"
+                                className="relative overflow-hidden rounded-xl border border-[#DDD6FE] bg-white p-3 pl-4 shadow-xs"
                               >
                                 <span
-                                  className="absolute inset-y-3 left-0 w-[3px] rounded-full bg-blue-500"
+                                  className="absolute inset-y-3 left-0 w-[3px] rounded-full bg-[#6D28D9]"
                                   aria-hidden="true"
                                 />
                                 <div className="flex flex-wrap items-start gap-2">
                                   <div className="min-w-0 flex-1">
                                     <div className="flex flex-wrap items-center gap-2">
-                                      <span className="inline-flex items-center gap-1 rounded-md bg-blue-50 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-blue-700 ring-1 ring-inset ring-blue-600/15">
+                                      <span className="inline-flex items-center gap-1 rounded-md bg-[#F5F3FF] px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-[#5B21B6] ring-1 ring-inset ring-[#5B21B6]/15">
                                         <Layers className="size-2.5" aria-hidden="true" />
                                         Subcategoría
                                       </span>
@@ -811,7 +811,7 @@ export default function CategoriasPage() {
                                             subcategory: sub.label,
                                           })
                                         }
-                                        className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-2 py-0.5 text-[10px] font-semibold text-blue-700 transition hover:bg-blue-100 hover:text-blue-800"
+                                        className="inline-flex items-center gap-1 rounded-full bg-[#F5F3FF] px-2 py-0.5 text-[10px] font-semibold text-[#5B21B6] transition hover:bg-[#EDE9FE] hover:text-[#4C1D95]"
                                         title={`Ver productos vinculados a ${sub.label}`}
                                       >
                                         <Package className="size-3" aria-hidden="true" />

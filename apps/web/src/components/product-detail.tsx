@@ -336,7 +336,7 @@ export function ProductDetail({ slug }: ProductDetailProps) {
                   onClick={() => toggleFavorite(product.id)}
                   className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-[#E2E8F0] px-4 py-2.5 text-sm font-semibold text-[#475569] transition hover:border-[#2563EB]/40 hover:text-[#2563EB]"
                 >
-                  <Heart className={`size-4 ${isFavorite(product.id) ? 'fill-current text-[#0E7490]' : ''}`} />
+                  <Heart className={`size-4 ${isFavorite(product.id) ? 'fill-current text-[#6D28D9]' : ''}`} />
                   {isFavorite(product.id) ? 'Guardado' : 'Guardar'}
                 </button>
                 <div ref={shareRef} className="relative flex-1">

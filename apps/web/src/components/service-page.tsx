@@ -15,10 +15,16 @@ import {
   Wrench,
 } from 'lucide-react'
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
-import { QuoteHero, ServiceHero, SoftwareHero, SupportVisual } from '@/components/heroes'
+import {
+  InfrastructureVisual,
+  QuoteHero,
+  ServiceHero,
+  SoftwareHero,
+  SupportVisual,
+} from '@/components/heroes'
 import { getServicesByCategory } from '@/lib/services'
 
-type ServicePageProps = { kind: 'cotizador' | 'soporte' | 'sistemas' }
+type ServicePageProps = { kind: 'cotizador' | 'soporte' | 'sistemas' | 'infraestructura' }
 
 const content = {
   cotizador: {
@@ -64,12 +70,28 @@ const content = {
       'Mantenimiento y evolución de software',
     ],
   },
+  infraestructura: {
+    eyebrow: 'Infraestructura TI',
+    title: 'La base tecnológica de tu empresa, bien construida.',
+    description:
+      'Diseñamos e implementamos redes, cableado estructurado, servidores y equipamiento para que tu operación tenga conectividad estable, orden y capacidad de crecer.',
+    icon: Network,
+    cta: 'Diseñar mi infraestructura',
+    options: [
+      'Redes y Wi-Fi para oficinas',
+      'Cableado estructurado certificado',
+      'Servidores, NAS y almacenamiento',
+      'Equipamiento tecnológico empresarial',
+      'Diagnóstico y rediseño de infraestructura',
+    ],
+  },
 } as const
 
 export function ServicePage({ kind }: ServicePageProps) {
   const item = content[kind]
   const Icon = item.icon
   const softwareServices = getServicesByCategory('Desarrollo de software')
+  const infrastructureServices = getServicesByCategory('Infraestructura TI')
 
   return (
     <main className="min-h-screen bg-white text-[#0F172A]">
@@ -93,7 +115,7 @@ export function ServicePage({ kind }: ServicePageProps) {
         <section className="border-b border-[#E5EAF0] bg-white">
           <div className="mx-auto max-w-[1180px] px-4 py-12 sm:px-6 lg:px-8 lg:py-14">
             <div className="max-w-2xl">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#2563EB]">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#5B21B6]">
                 Servicios de desarrollo
               </p>
               <h2 className="mt-2 text-3xl font-bold tracking-[-0.04em] sm:text-4xl">
@@ -139,13 +161,66 @@ export function ServicePage({ kind }: ServicePageProps) {
           secondary={{ label: 'Ver planes y cobertura', href: '/servicios' }}
           proof={['Soporte remoto y en sitio', 'Mantenimiento preventivo', 'Respuesta según SLA']}
           related={[
-            { label: 'Soporte remoto', hint: 'Atención inmediata', href: '/servicios/soporte-remoto-y-presencial', icon: <Headset className="size-3.5" /> },
+            { label: 'Soporte técnico', hint: 'Remoto y en sitio', href: '/servicios/soporte-tecnico', icon: <Headset className="size-3.5" /> },
             { label: 'Mantenimiento', hint: 'Preventivo y correctivo', href: '/servicios/mantenimiento-de-equipos', icon: <Wrench className="size-3.5" /> },
             { label: 'Redes y Wi-Fi', hint: 'Conectividad estable', href: '/servicios/redes-y-conectividad', icon: <Network className="size-3.5" /> },
             { label: 'Respaldos', hint: 'Continuidad operativa', href: '/servicios/implementacion-de-infraestructura', icon: <ShieldCheck className="size-3.5" /> },
           ]}
           visual={<SupportVisual />}
         />
+      )}
+
+      {kind === 'infraestructura' && (
+        <>
+          <ServiceHero
+            eyebrow={item.eyebrow}
+            title={
+              <>
+                Infraestructura TI que <span className="text-[#2563EB]">sostiene tu operación</span>.
+              </>
+            }
+            description={item.description}
+            primary={{ label: 'Diseñar mi infraestructura', href: '#solicitud' }}
+            secondary={{ label: 'Ver soporte TI', href: '/soporte-ti' }}
+            proof={['Redes y cableado estructurado', 'Servidores y almacenamiento', 'Instalación en sitio']}
+            visual={<InfrastructureVisual />}
+          />
+
+          <section className="border-b border-[#E5EAF0] bg-white">
+            <div className="mx-auto max-w-[1180px] px-4 py-12 sm:px-6 lg:px-8 lg:py-14">
+              <div className="max-w-2xl">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#5B21B6]">
+                  Servicios de infraestructura
+                </p>
+                <h2 className="mt-2 text-3xl font-bold tracking-[-0.04em] sm:text-4xl">
+                  ¿Qué infraestructura necesitas implementar?
+                </h2>
+                <p className="mt-3 text-sm leading-6 text-[#475569]">
+                  Cada servicio tiene su propio alcance y forma de trabajo. Elige uno para ver qué
+                  incluye y cómo lo implementamos.
+                </p>
+              </div>
+              <div className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {infrastructureServices.map((service) => (
+                  <Link
+                    key={service.slug}
+                    href={`/servicios/${service.slug}`}
+                    className="group flex flex-col rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-5 transition hover:border-[#2563EB]/30 hover:bg-white hover:shadow-lg hover:shadow-black/5"
+                  >
+                    <span className="grid size-9 place-items-center rounded-xl bg-white text-[#2563EB] shadow-sm transition group-hover:bg-[#2563EB] group-hover:text-white">
+                      <Network className="size-4" />
+                    </span>
+                    <h3 className="mt-3 text-sm font-bold text-[#0F172A]">{service.title}</h3>
+                    <p className="mt-1.5 flex-1 text-xs leading-5 text-[#475569]">{service.summary}</p>
+                    <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-[#2563EB]">
+                      Conocer el servicio <ArrowRight className="size-3.5" />
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </section>
+        </>
       )}
 
       {kind === 'cotizador' && (
@@ -170,7 +245,7 @@ export function ServicePage({ kind }: ServicePageProps) {
       >
         <div className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-start lg:gap-12">
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#2563EB]">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#5B21B6]">
               Cuéntanos tu necesidad
             </p>
             <h2 className="mt-2 max-w-lg text-3xl font-bold leading-tight tracking-[-0.04em] sm:text-4xl">

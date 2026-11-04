@@ -38,7 +38,7 @@ const variantStyles: Record<
     question: 'text-sm leading-6',
     panel: 'px-5 pb-4',
     answer: 'mt-3 text-sm leading-6 text-[#475569]',
-    openCard: 'border-[#2563EB]/30 shadow-sm',
+    openCard: 'border-[#7C3AED]/35 shadow-sm',
   },
   numbered: {
     list: 'space-y-2',
@@ -47,7 +47,7 @@ const variantStyles: Record<
     question: 'text-sm leading-6',
     panel: 'px-5 pb-4',
     answer: 'mt-3 pl-8 text-sm leading-6 text-[#475569]',
-    openCard: 'border-[#2563EB]/30 shadow-sm',
+    openCard: 'border-[#7C3AED]/35 shadow-sm',
   },
   search: {
     list: 'space-y-3',
@@ -56,8 +56,8 @@ const variantStyles: Record<
     question: 'mt-2 font-heading text-sm font-bold sm:text-base',
     panel: 'border-t border-[#F1F5F9] bg-[#F8FAFC]/50 px-5 pb-5 pt-3',
     answer: 'text-xs leading-relaxed text-[#475569] sm:text-sm',
-    openCard: 'border-[#2563EB]/40 shadow-sm',
-    openQuestion: 'text-[#2563EB]',
+    openCard: 'border-[#7C3AED]/45 shadow-sm',
+    openQuestion: 'text-[#5B21B6]',
   },
 }
 
@@ -93,7 +93,7 @@ export function FaqAccordion({ items, variant = 'default', className }: FaqAccor
                 setOpenQuestion((current) => (current === item.question ? null : item.question))
               }
               className={cn(
-                'flex w-full items-start justify-between gap-4 text-left transition-colors focus-visible:ring-2 focus-visible:ring-[#2563EB]/40 focus-visible:ring-inset focus-visible:outline-none',
+                'flex w-full items-start justify-between gap-4 text-left transition-colors focus-visible:ring-2 focus-visible:ring-[#7C3AED]/40 focus-visible:ring-inset focus-visible:outline-none',
                 styles.trigger,
               )}
             >
@@ -105,7 +105,7 @@ export function FaqAccordion({ items, variant = 'default', className }: FaqAccor
                 )}
                 <div className="flex-1">
                   {isSearch && item.badge && (
-                    <span className="inline-block rounded-md bg-[#EFF6FF] px-2 py-0.5 text-[10px] font-bold tracking-wide text-[#2563EB] uppercase">
+                    <span className="inline-block rounded-md bg-[#EDE9FE] px-2 py-0.5 text-[10px] font-bold tracking-wide text-[#5B21B6] uppercase">
                       {item.badge}
                     </span>
                   )}
@@ -126,7 +126,7 @@ export function FaqAccordion({ items, variant = 'default', className }: FaqAccor
                   className={cn(
                     'flex size-7 shrink-0 items-center justify-center rounded-lg border transition-[rotate,background-color,border-color,color] duration-300 motion-reduce:transition-none',
                     isOpen
-                      ? 'rotate-180 border-[#2563EB]/25 bg-[#EFF6FF] text-[#2563EB]'
+                      ? 'rotate-180 border-[#7C3AED]/25 bg-[#EDE9FE] text-[#5B21B6]'
                       : 'border-[#E2E8F0] bg-[#F8FAFC] text-[#64748B]',
                   )}
                 >
@@ -138,7 +138,7 @@ export function FaqAccordion({ items, variant = 'default', className }: FaqAccor
                   className={cn(
                     'size-4 shrink-0 text-[#64748B] transition-transform duration-300 motion-reduce:transition-none',
                     isNumbered && 'mt-0.5',
-                    isOpen && 'rotate-180 text-[#2563EB]',
+                    isOpen && 'rotate-180 text-[#5B21B6]',
                   )}
                 />
               )}

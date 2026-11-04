@@ -29,6 +29,11 @@ import type {
   Category,
   Client,
   ClientInput,
+  DeploymentEnvironment,
+  DeploymentInput,
+  InventoryMovement,
+  InventoryMovementInput,
+  InventoryMovementType,
   ProductInput,
   ProductStatus,
   Quote,
@@ -39,6 +44,11 @@ import type {
   RequestStatus,
   ServiceRequest,
   StoreSettings,
+  WebProject,
+  WebProjectDeployment,
+  WebProjectInput,
+  WebProjectStatus,
+  WebProjectType,
 } from '@/lib/admin/types'
 
 export const ADMIN_STORAGE_KEY = 'fj-systems-admin-v1'
@@ -79,6 +89,8 @@ type AdminContextValue = {
   helpdeskSynced: boolean
   settings: StoreSettings
   activity: ActivityEntry[]
+  inventoryMovements: InventoryMovement[]
+  webProjects: WebProject[]
   createProduct: (input: ProductInput) => AdminProduct
   updateProduct: (id: string, input: ProductInput) => void
   unlinkProductTaxonomy: (id: string, level: 'category' | 'subcategory' | 'type') => boolean
@@ -88,6 +100,14 @@ type AdminContextValue = {
   setProductStatus: (id: string, status: ProductStatus) => void
   bulkSetStatus: (ids: string[], status: ProductStatus) => void
   bulkDeleteProducts: (ids: string[]) => void
+  registerMovement: (input: InventoryMovementInput) => { ok: boolean; error?: string }
+  createProject: (input: WebProjectInput) => WebProject
+  updateProject: (id: string, input: WebProjectInput) => void
+  deleteProject: (id: string) => void
+  registerDeployment: (
+    projectId: string,
+    input: DeploymentInput
+  ) => WebProjectDeployment | null
   addCategory: (label: string) => boolean
   updateCategory: (id: string, patch: CategoryPatch) => boolean
   renameCategory: (id: string, label: string) => boolean
@@ -250,6 +270,139 @@ function normalizeActivity(raw: Record<string, unknown>): ActivityEntry {
     detail: raw.detail ? String(raw.detail) : undefined,
     at: String(raw.at ?? new Date().toISOString()),
   }
+}
+
+const movementTypes: InventoryMovementType[] = ['in', 'out', 'adjustment']
+
+function normalizeInventoryMovement(raw: Record<string, unknown>): InventoryMovement {
+  return {
+    id: String(raw.id ?? uid('movimiento')),
+    productId: String(raw.productId ?? ''),
+    productName: String(raw.productName ?? 'Producto'),
+    sku: String(raw.sku ?? ''),
+    type: movementTypes.includes(raw.type as InventoryMovementType)
+      ? (raw.type as InventoryMovementType)
+      : 'adjustment',
+    quantity: Math.max(0, Math.trunc(Number(raw.quantity) || 0)),
+    previousStock: Math.max(0, Math.trunc(Number(raw.previousStock) || 0)),
+    resultingStock: Math.max(0, Math.trunc(Number(raw.resultingStock) || 0)),
+    reason: String(raw.reason ?? 'Ajuste manual'),
+    note: raw.note ? String(raw.note) : undefined,
+    createdAt: String(raw.createdAt ?? new Date().toISOString()),
+  }
+}
+
+const projectTypes: WebProjectType[] = [
+  'landing',
+  'website',
+  'webapp',
+  'ecommerce',
+  'maintenance',
+]
+
+const projectStatuses: WebProjectStatus[] = [
+  'planning',
+  'development',
+  'staging',
+  'live',
+  'paused',
+  'archived',
+]
+
+const deploymentEnvironments: DeploymentEnvironment[] = ['production', 'staging', 'preview']
+
+function normalizeDeployment(raw: Record<string, unknown>): WebProjectDeployment {
+  return {
+    id: String(raw.id ?? uid('despliegue')),
+    environment: deploymentEnvironments.includes(raw.environment as DeploymentEnvironment)
+      ? (raw.environment as DeploymentEnvironment)
+      : 'production',
+    url: String(raw.url ?? ''),
+    version: raw.version ? String(raw.version) : undefined,
+    note: raw.note ? String(raw.note) : undefined,
+    deployedAt: String(raw.deployedAt ?? new Date().toISOString()),
+  }
+}
+
+function normalizeWebProject(raw: Record<string, unknown>): WebProject {
+  const name = String(raw.name ?? 'Proyecto web')
+  return {
+    id: String(raw.id ?? uid('proyecto-web')),
+    name,
+    clientId: raw.clientId ? String(raw.clientId) : undefined,
+    clientName: String(raw.clientName ?? ''),
+    type: projectTypes.includes(raw.type as WebProjectType)
+      ? (raw.type as WebProjectType)
+      : 'website',
+    status: projectStatuses.includes(raw.status as WebProjectStatus)
+      ? (raw.status as WebProjectStatus)
+      : 'planning',
+    productionUrl: String(raw.productionUrl ?? ''),
+    stagingUrl: String(raw.stagingUrl ?? ''),
+    repoUrl: String(raw.repoUrl ?? ''),
+    hosting: String(raw.hosting ?? ''),
+    domain: String(raw.domain ?? ''),
+    responsible: String(raw.responsible ?? ''),
+    credentialLocation: String(raw.credentialLocation ?? ''),
+    launchedAt: raw.launchedAt ? String(raw.launchedAt) : undefined,
+    renewalAt: raw.renewalAt ? String(raw.renewalAt) : undefined,
+    notes: String(raw.notes ?? ''),
+    deployments: Array.isArray(raw.deployments)
+      ? (raw.deployments as Record<string, unknown>[]).map(normalizeDeployment)
+      : [],
+    createdAt: String(raw.createdAt ?? new Date().toISOString()),
+    updatedAt: String(raw.updatedAt ?? new Date().toISOString()),
+  }
+}
+
+type MovementSeed = {
+  product: Pick<AdminProduct, 'id' | 'name' | 'sku'>
+  type: InventoryMovementType
+  quantity: number
+  previousStock: number
+  resultingStock: number
+  reason: string
+  note?: string
+  at?: string
+}
+
+function buildMovement(seed: MovementSeed): InventoryMovement {
+  return {
+    id: uid('movimiento'),
+    productId: seed.product.id,
+    productName: seed.product.name,
+    sku: seed.product.sku,
+    type: seed.type,
+    quantity: seed.quantity,
+    previousStock: seed.previousStock,
+    resultingStock: seed.resultingStock,
+    reason: seed.reason,
+    note: seed.note,
+    createdAt: seed.at ?? new Date().toISOString(),
+  }
+}
+
+function prependMovements(prev: AdminData, movements: InventoryMovement[]): InventoryMovement[] {
+  return [...movements, ...prev.inventoryMovements].slice(0, 1000)
+}
+
+function baselineMovements(products: AdminProduct[]): InventoryMovement[] {
+  return products
+    .filter((product) => product.stock > 0)
+    .map((product) => ({
+      id: uid('movimiento'),
+      productId: product.id,
+      productName: product.name,
+      sku: product.sku,
+      type: 'adjustment' as const,
+      quantity: product.stock,
+      previousStock: 0,
+      resultingStock: product.stock,
+      reason: 'Carga inicial',
+      note: 'Stock detectado al activar el historial de inventario.',
+      createdAt: product.updatedAt,
+    }))
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
 }
 
 function createActivity(
@@ -436,9 +589,16 @@ function parseData(raw: string): AdminData {
 
   const seed = createSeedData()
   const settings = (payload.settings ?? {}) as Partial<StoreSettings>
+  const products = (payload.products as Record<string, unknown>[]).map(normalizeProduct)
+  const storedMovements = Array.isArray(payload.inventoryMovements)
+    ? (payload.inventoryMovements as Record<string, unknown>[]).map(normalizeInventoryMovement)
+    : []
+  const storedProjects = Array.isArray(payload.webProjects)
+    ? (payload.webProjects as Record<string, unknown>[]).map(normalizeWebProject)
+    : []
 
   return {
-    products: (payload.products as Record<string, unknown>[]).map(normalizeProduct),
+    products,
     categories: Array.isArray(payload.categories)
       ? (payload.categories as Record<string, unknown>[]).map((category, index) =>
           normalizeCategory(category, index)
@@ -465,6 +625,9 @@ function parseData(raw: string): AdminData {
     activity: Array.isArray(payload.activity)
       ? (payload.activity as Record<string, unknown>[]).map(normalizeActivity)
       : [],
+    inventoryMovements:
+      storedMovements.length > 0 ? storedMovements : baselineMovements(products),
+    webProjects: storedProjects,
   }
 }
 
@@ -490,7 +653,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     try {
       window.localStorage.setItem(
         ADMIN_STORAGE_KEY,
-        JSON.stringify({ version: 3, data })
+        JSON.stringify({ version: 5, data })
       )
     } catch (error) {
       console.warn('No se pudo guardar el catálogo local.', error)
@@ -511,9 +674,28 @@ export function AdminProvider({ children }: { children: ReactNode }) {
       createdAt: now,
       updatedAt: now,
     }
+    const initialMovement =
+      product.stock > 0
+        ? buildMovement({
+            product,
+            type: 'adjustment',
+            quantity: product.stock,
+            previousStock: 0,
+            resultingStock: product.stock,
+            reason: 'Carga inicial',
+            note: 'Stock registrado al crear el producto.',
+            at: now,
+          })
+        : null
     setData((prev) =>
       appendActivity(
-        { ...prev, products: [product, ...prev.products] },
+        {
+          ...prev,
+          products: [product, ...prev.products],
+          inventoryMovements: initialMovement
+            ? prependMovements(prev, [initialMovement])
+            : prev.inventoryMovements,
+        },
         [
           createActivity('created', product.name, {
             productId: product.id,
@@ -529,15 +711,30 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     const current = data.products.find((product) => product.id === id)
     if (!current) return
     const slug = uniqueSlug(input.slug || slugify(input.name), data.products, id)
+    const now = new Date().toISOString()
+    const stockMovement =
+      input.stock !== current.stock
+        ? buildMovement({
+            product: { id, name: input.name, sku: input.sku },
+            type: 'adjustment',
+            quantity: input.stock,
+            previousStock: current.stock,
+            resultingStock: input.stock,
+            reason: 'Edición de ficha',
+            note: 'Stock actualizado desde la ficha del producto.',
+            at: now,
+          })
+        : null
     setData((prev) =>
       appendActivity(
         {
           ...prev,
           products: prev.products.map((product) =>
-            product.id === id
-              ? { ...product, ...input, slug, updatedAt: new Date().toISOString() }
-              : product
+            product.id === id ? { ...product, ...input, slug, updatedAt: now } : product
           ),
+          inventoryMovements: stockMovement
+            ? prependMovements(prev, [stockMovement])
+            : prev.inventoryMovements,
         },
         [
           createActivity('updated', input.name, {
@@ -617,9 +814,28 @@ export function AdminProvider({ children }: { children: ReactNode }) {
       createdAt: now,
       updatedAt: now,
     }
+    const initialMovement =
+      copy.stock > 0
+        ? buildMovement({
+            product: copy,
+            type: 'adjustment',
+            quantity: copy.stock,
+            previousStock: 0,
+            resultingStock: copy.stock,
+            reason: 'Carga inicial',
+            note: `Stock inicial de la copia de ${source.name}.`,
+            at: now,
+          })
+        : null
     setData((prev) =>
       appendActivity(
-        { ...prev, products: [copy, ...prev.products] },
+        {
+          ...prev,
+          products: [copy, ...prev.products],
+          inventoryMovements: initialMovement
+            ? prependMovements(prev, [initialMovement])
+            : prev.inventoryMovements,
+        },
         [
           createActivity('duplicated', copy.name, {
             productId: copy.id,
@@ -720,6 +936,129 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         ]
       )
     )
+  }
+
+  function registerMovement(input: InventoryMovementInput): { ok: boolean; error?: string } {
+    const product = data.products.find((item) => item.id === input.productId)
+    if (!product) return { ok: false, error: 'Selecciona un producto válido.' }
+
+    const quantity = Math.trunc(Number(input.quantity))
+    if (!Number.isFinite(quantity)) {
+      return { ok: false, error: 'Ingresa una cantidad válida.' }
+    }
+    if (input.type === 'adjustment' && quantity < 0) {
+      return { ok: false, error: 'El stock ajustado no puede ser negativo.' }
+    }
+    if (input.type !== 'adjustment' && quantity <= 0) {
+      return { ok: false, error: 'La cantidad debe ser mayor que cero.' }
+    }
+    if (input.type === 'out' && quantity > product.stock) {
+      return { ok: false, error: `Solo hay ${product.stock} unidades disponibles.` }
+    }
+
+    const resultingStock =
+      input.type === 'in'
+        ? product.stock + quantity
+        : input.type === 'out'
+          ? product.stock - quantity
+          : quantity
+
+    if (resultingStock === product.stock) {
+      return { ok: false, error: 'El stock resultante es igual al actual.' }
+    }
+
+    const now = new Date().toISOString()
+    const movement = buildMovement({
+      product,
+      type: input.type,
+      quantity,
+      previousStock: product.stock,
+      resultingStock,
+      reason: input.reason.trim() || 'Movimiento manual',
+      note: input.note?.trim() || undefined,
+      at: now,
+    })
+
+    setData((prev) => ({
+      ...prev,
+      products: prev.products.map((item) =>
+        item.id === product.id ? { ...item, stock: resultingStock, updatedAt: now } : item
+      ),
+      inventoryMovements: prependMovements(prev, [movement]),
+    }))
+
+    return { ok: true }
+  }
+
+  function createProject(input: WebProjectInput): WebProject {
+    const now = new Date().toISOString()
+    const project: WebProject = {
+      ...input,
+      id: uid('proyecto-web'),
+      deployments: [],
+      createdAt: now,
+      updatedAt: now,
+    }
+    setData((prev) => ({ ...prev, webProjects: [project, ...prev.webProjects] }))
+    return project
+  }
+
+  function updateProject(id: string, input: WebProjectInput) {
+    setData((prev) => ({
+      ...prev,
+      webProjects: prev.webProjects.map((project) =>
+        project.id === id
+          ? { ...project, ...input, updatedAt: new Date().toISOString() }
+          : project
+      ),
+    }))
+  }
+
+  function deleteProject(id: string) {
+    setData((prev) => ({
+      ...prev,
+      webProjects: prev.webProjects.filter((project) => project.id !== id),
+    }))
+  }
+
+  function registerDeployment(
+    projectId: string,
+    input: DeploymentInput
+  ): WebProjectDeployment | null {
+    const project = data.webProjects.find((item) => item.id === projectId)
+    if (!project) return null
+
+    const now = new Date().toISOString()
+    const deployment: WebProjectDeployment = {
+      id: uid('despliegue'),
+      environment: input.environment,
+      url: input.url.trim(),
+      version: input.version?.trim() || undefined,
+      note: input.note?.trim() || undefined,
+      deployedAt: input.deployedAt || now,
+    }
+
+    setData((prev) => ({
+      ...prev,
+      webProjects: prev.webProjects.map((item) => {
+        if (item.id !== projectId) return item
+        return {
+          ...item,
+          productionUrl:
+            deployment.environment === 'production' && deployment.url
+              ? deployment.url
+              : item.productionUrl,
+          stagingUrl:
+            deployment.environment === 'staging' && deployment.url
+              ? deployment.url
+              : item.stagingUrl,
+          deployments: [deployment, ...item.deployments].slice(0, 50),
+          updatedAt: now,
+        }
+      }),
+    }))
+
+    return deployment
   }
 
   function addCategory(label: string) {
@@ -1149,6 +1488,11 @@ export function AdminProvider({ children }: { children: ReactNode }) {
             }
           : quote
       ),
+      webProjects: prev.webProjects.map((project) =>
+        project.clientId === id
+          ? { ...project, clientName: input.company || input.name }
+          : project
+      ),
     }))
   }
 
@@ -1161,6 +1505,9 @@ export function AdminProvider({ children }: { children: ReactNode }) {
       ),
       requests: prev.requests.map((request) =>
         request.clientId === id ? { ...request, clientId: undefined } : request
+      ),
+      webProjects: prev.webProjects.map((project) =>
+        project.clientId === id ? { ...project, clientId: undefined } : project
       ),
     }))
   }
@@ -1374,7 +1721,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
   }
 
   function exportData() {
-    return JSON.stringify({ version: 3, data }, null, 2)
+    return JSON.stringify({ version: 5, data }, null, 2)
   }
 
   function importData(raw: string) {
@@ -1395,6 +1742,8 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         helpdeskSynced,
         settings: data.settings,
         activity: data.activity,
+        inventoryMovements: data.inventoryMovements,
+        webProjects: data.webProjects,
         createProduct,
         updateProduct,
         unlinkProductTaxonomy,
@@ -1404,6 +1753,11 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         setProductStatus,
         bulkSetStatus,
         bulkDeleteProducts,
+        registerMovement,
+        createProject,
+        updateProject,
+        deleteProject,
+        registerDeployment,
         addCategory,
         updateCategory,
         renameCategory,

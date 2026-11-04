@@ -6,15 +6,24 @@ import { usePathname, useRouter } from 'next/navigation'
 import {
   ArrowRight,
   ArrowUpRight,
+  Boxes,
+  Building2,
+  Cable,
   ChevronDown,
   ChevronRight,
+  CircleHelp,
   Clock,
   Code2,
   Compass,
   Cpu,
   FileText,
+  FolderKanban,
+  Globe,
   HardDrive,
+  Headset,
   Laptop,
+  LayoutTemplate,
+  Lightbulb,
   Loader2,
   Mail,
   Menu,
@@ -23,12 +32,18 @@ import {
   Network,
   Package,
   Phone,
+  Plug,
   Printer,
+  Route,
   Scale,
   Search,
+  Server,
+  ShieldCheck,
   Sparkles,
+  Store,
   Tag,
   UserRound,
+  Workflow,
   Wrench,
   X,
   Zap,
@@ -70,18 +85,45 @@ function useOnClickOutside(ref: React.RefObject<HTMLElement | null>, handler: ()
 // ─── Componente: Icono mapeador ───────────────────────────────────────────────────────────
 
 const iconMap: Record<string, React.ElementType> = {
+  Building2,
+  Boxes,
+  Cable,
+  CircleHelp,
+  Compass,
   Cpu,
+  FolderKanban,
+  Globe,
+  HardDrive,
+  Headset,
   Laptop,
+  LayoutTemplate,
+  Lightbulb,
+  Mail,
   Monitor,
   MousePointer2,
-  HardDrive,
   Network,
+  Package,
+  Plug,
   Printer,
+  Route,
+  Server,
+  ShieldCheck,
+  Store,
+  Workflow,
+  Wrench,
   Zap,
 }
 
 function getIcon(iconName: string) {
   return iconMap[iconName] || MousePointer2
+}
+
+const sectionIcons: Record<string, React.ElementType> = {
+  store: Store,
+  'servicios-ti': Headset,
+  'infraestructura-ti': Network,
+  'desarrollo-de-software': Code2,
+  empresa: Compass,
 }
 
 // ─── Componente: Mobile Accordion ─────────────────────────────────────────────────────────────
@@ -93,6 +135,8 @@ function MobileAccordion({
   children,
   badge,
   active,
+  icon: Icon,
+  count,
 }: {
   label: string
   isOpen: boolean
@@ -100,14 +144,16 @@ function MobileAccordion({
   children: React.ReactNode
   badge?: string
   active?: boolean
+  icon?: React.ElementType
+  count?: number
 }) {
   return (
     <div
-      className={`overflow-hidden rounded-xl border transition-colors duration-200 ${
+      className={`relative overflow-hidden rounded-2xl border transition-all duration-300 ${
         isOpen
-          ? 'border-[#2563EB]/40 bg-white shadow-sm'
+          ? 'border-[#2563EB]/45 bg-white shadow-[0_18px_40px_-32px_rgba(37,99,235,0.65)]'
           : active
-          ? 'border-[#2563EB]/30 bg-[#EFF6FF]/20'
+          ? 'border-[#2563EB]/30 bg-[#EFF6FF]/25'
           : 'border-[#E2E8F0] bg-white'
       }`}
     >
@@ -115,32 +161,64 @@ function MobileAccordion({
         type="button"
         onClick={onToggle}
         aria-expanded={isOpen}
-        className="flex w-full items-center justify-between px-3.5 py-3 text-left text-sm font-semibold transition-colors"
+        className="flex w-full items-center gap-3 px-3.5 py-3 text-left"
       >
-        <span className="flex items-center gap-2">
-          <span className={isOpen || active ? 'text-[#2563EB]' : 'text-[#0F172A]'}>
-            {label}
+        {Icon && (
+          <span
+            className={`grid size-9 shrink-0 place-items-center rounded-xl border transition-colors duration-300 ${
+              isOpen
+                ? 'border-[#2563EB] bg-[#2563EB] text-white'
+                : active
+                ? 'border-[#2563EB]/25 bg-[#EFF6FF] text-[#2563EB]'
+                : 'border-[#E2E8F0] bg-[#F8FAFC] text-[#64748B]'
+            }`}
+          >
+            <Icon className="size-4" />
           </span>
-          {active && !isOpen && (
-            <span className="size-1.5 rounded-full bg-[#2563EB]" />
-          )}
-          {badge && (
-            <span className="rounded-full bg-[#EFF6FF] px-2 py-0.5 text-[10px] font-bold text-[#2563EB]">
-              {badge}
+        )}
+
+        <span className="min-w-0 flex-1">
+          <span className="flex items-center gap-2">
+            <span
+              className={`truncate text-sm font-semibold transition-colors duration-200 ${
+                isOpen || active ? 'text-[#2563EB]' : 'text-[#0F172A]'
+              }`}
+            >
+              {label}
             </span>
-          )}
+            {active && !isOpen && <span className="size-1.5 shrink-0 rounded-full bg-[#2563EB]" />}
+            {badge && (
+              <span className="shrink-0 rounded-full bg-[#EFF6FF] px-2 py-0.5 text-[10px] font-bold text-[#2563EB]">
+                {badge}
+              </span>
+            )}
+          </span>
+          <span className="mt-0.5 block truncate text-[11px] text-[#94A3B8]">
+            {isOpen ? 'Toca para cerrar' : `${count ?? 0} opciones`}
+          </span>
         </span>
-        <ChevronDown
-          className={`size-4 shrink-0 transition-transform duration-200 ${
-            isOpen ? 'rotate-180 text-[#2563EB]' : 'text-[#64748B]'
+
+        <span
+          className={`grid size-7 shrink-0 place-items-center rounded-full border transition-all duration-300 ${
+            isOpen
+              ? 'rotate-180 border-[#2563EB] bg-[#2563EB] text-white'
+              : 'border-[#E2E8F0] bg-white text-[#64748B]'
           }`}
-        />
+        >
+          <ChevronDown className="size-3.5" />
+        </span>
       </button>
-      {isOpen && (
-        <div className="border-t border-[#F1F5F9] bg-[#F8FAFC]/70 p-2.5 animate-in fade-in-50 duration-150">
-          {children}
+
+      <div
+        className={`grid transition-all duration-300 ease-out ${
+          isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+        }`}
+        inert={!isOpen}
+      >
+        <div className="overflow-hidden">
+          <div className="border-t border-[#F1F5F9] bg-[#F8FAFC]/70 p-2.5">{children}</div>
         </div>
-      )}
+      </div>
     </div>
   )
 }
@@ -163,7 +241,7 @@ function MobileStoreMenu({ onClose }: { onClose: () => void }) {
         return (
           <div
             key={category.id}
-            className={`rounded-lg transition-colors ${
+            className={`rounded-xl transition-colors ${
               isOpen ? 'border border-[#E2E8F0] bg-white shadow-xs' : 'hover:bg-white/80'
             }`}
           >
@@ -171,10 +249,10 @@ function MobileStoreMenu({ onClose }: { onClose: () => void }) {
               type="button"
               onClick={() => toggleCategory(category.id)}
               aria-expanded={isOpen}
-              className="flex w-full items-center gap-2.5 px-2.5 py-2 text-left text-sm font-semibold text-[#0F172A]"
+              className="flex w-full items-center gap-2.5 px-2.5 py-2.5 text-left text-sm font-semibold text-[#0F172A]"
             >
               <span
-                className={`flex size-7 shrink-0 items-center justify-center rounded-md border transition-colors ${
+                className={`flex size-8 shrink-0 items-center justify-center rounded-lg border transition-colors ${
                   isOpen
                     ? 'border-[#2563EB]/25 bg-[#EFF6FF] text-[#2563EB]'
                     : 'border-[#E2E8F0] bg-white text-[#64748B]'
@@ -185,54 +263,65 @@ function MobileStoreMenu({ onClose }: { onClose: () => void }) {
               <span className={`flex-1 truncate ${isOpen ? 'text-[#2563EB]' : ''}`}>
                 {category.label}
               </span>
-              <ChevronDown
-                className={`size-3.5 shrink-0 text-[#94A3B8] transition-transform duration-200 ${
-                  isOpen ? 'rotate-180 text-[#2563EB]' : ''
+              <span
+                className={`grid size-6 shrink-0 place-items-center rounded-full border transition-all duration-300 ${
+                  isOpen
+                    ? 'rotate-180 border-[#2563EB] bg-[#2563EB] text-white'
+                    : 'border-[#E2E8F0] bg-white text-[#64748B]'
                 }`}
-              />
+              >
+                <ChevronDown className="size-3" />
+              </span>
             </button>
 
-            {isOpen && (
-              <div className="border-t border-[#F1F5F9] px-3 pb-3 pt-2">
-                <Link
-                  href={category.items[0]?.href || '/productos'}
-                  onClick={onClose}
-                  className="mb-2 flex items-center justify-between rounded-md bg-[#EFF6FF] px-2.5 py-1.5 text-xs font-bold text-[#2563EB] transition-colors hover:bg-[#DBEAFE]"
-                >
-                  <span>Ver todo en {category.label}</span>
-                  <ArrowRight className="size-3" />
-                </Link>
+            <div
+              className={`grid transition-all duration-300 ease-out ${
+                isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+              }`}
+              inert={!isOpen}
+            >
+              <div className="overflow-hidden">
+                <div className="border-t border-[#F1F5F9] px-3 pb-3 pt-2">
+                  <Link
+                    href={category.items[0]?.href || '/productos'}
+                    onClick={onClose}
+                    className="mb-2 flex items-center justify-between rounded-md bg-[#EFF6FF] px-2.5 py-1.5 text-xs font-bold text-[#2563EB] transition-colors hover:bg-[#DBEAFE]"
+                  >
+                    <span>Ver todo en {category.label}</span>
+                    <ArrowRight className="size-3" />
+                  </Link>
 
-                <div className="space-y-2">
-                  {category.items.map((item) => (
-                    <div key={item.label} className="space-y-1">
-                      <Link
-                        href={item.href}
-                        onClick={onClose}
-                        className="block rounded-md px-1.5 py-1 text-xs font-medium text-[#334155] transition-colors hover:text-[#2563EB]"
-                      >
-                        {item.label}
-                      </Link>
+                  <div className="space-y-2">
+                    {category.items.map((item) => (
+                      <div key={item.label} className="space-y-1">
+                        <Link
+                          href={item.href}
+                          onClick={onClose}
+                          className="block rounded-md px-1.5 py-1 text-xs font-medium text-[#334155] transition-colors hover:text-[#2563EB]"
+                        >
+                          {item.label}
+                        </Link>
 
-                      {item.subItems && item.subItems.length > 0 && (
-                        <div className="flex flex-wrap gap-1 pl-1">
-                          {item.subItems.map((subItem) => (
-                            <Link
-                              key={subItem.label}
-                              href={subItem.href}
-                              onClick={onClose}
-                              className="rounded-full border border-[#E2E8F0] bg-white px-2 py-0.5 text-[10px] font-medium text-[#64748B] transition-colors hover:border-[#2563EB]/40 hover:text-[#2563EB]"
-                            >
-                              {subItem.label}
-                            </Link>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  ))}
+                        {item.subItems && item.subItems.length > 0 && (
+                          <div className="flex flex-wrap gap-1 pl-1">
+                            {item.subItems.map((subItem) => (
+                              <Link
+                                key={subItem.label}
+                                href={subItem.href}
+                                onClick={onClose}
+                                className="rounded-full border border-[#E2E8F0] bg-white px-2 py-0.5 text-[10px] font-medium text-[#64748B] transition-colors hover:border-[#2563EB]/40 hover:text-[#2563EB]"
+                              >
+                                {subItem.label}
+                              </Link>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
-            )}
+            </div>
           </div>
         )
       })}
@@ -417,7 +506,7 @@ function StoreMegaMenu({ onClose }: { onClose: () => void }) {
 
 // ─── Componente: Menú Desplegable Compacto ───────────────────────────────────────────────
 
-function CompactDropdown({ items, onClose }: { items: Array<{ label: string; href: string; desc?: string }>; onClose: () => void }) {
+function CompactDropdown({ items, onClose }: { items: Array<{ label: string; href: string; desc?: string; variant?: 'general' }>; onClose: () => void }) {
   const ref = useRef<HTMLDivElement>(null)
   const pathname = usePathname()
   useOnClickOutside(ref, onClose)
@@ -437,34 +526,44 @@ function CompactDropdown({ items, onClose }: { items: Array<{ label: string; hre
       <div className="p-2">
         {items.map((item, index) => {
           const active = isItemActive(item.href)
+          const isGeneral = item.variant === 'general'
           return (
-            <Link
-              key={index}
-              href={item.href}
-              onClick={onClose}
-              aria-current={active ? 'page' : undefined}
-              className={`flex items-center gap-3 rounded-lg px-4 py-3 text-sm transition-colors ${
-                active
-                  ? 'bg-[#EFF6FF] text-[#2563EB]'
-                  : 'text-[#0F172A] hover:bg-[#F8FAFC] hover:text-[#2563EB]'
-              }`}
-            >
-              <span className="min-w-0 flex-1">
-                <span className="font-semibold">{item.label}</span>
-                {item.desc && (
-                  <span
-                    className={`mt-0.5 block text-xs ${
-                      active ? 'text-[#1D4ED8]' : 'text-[#64748B]'
-                    }`}
-                  >
-                    {item.desc}
-                  </span>
+            <div key={index} className={isGeneral ? 'mt-2 border-t border-[#F1F5F9] pt-2' : undefined}>
+              <Link
+                href={item.href}
+                onClick={onClose}
+                aria-current={active ? 'page' : undefined}
+                className={`flex items-center gap-3 rounded-lg px-4 py-3 text-sm transition-colors ${
+                  isGeneral
+                    ? active
+                      ? 'bg-[#4C1D95] text-white ring-2 ring-[#5B21B6]/25'
+                      : 'bg-[#5B21B6] text-white shadow-[0_8px_20px_-12px_rgba(91,33,182,0.8)] hover:bg-[#4C1D95]'
+                    : active
+                      ? 'bg-[#EFF6FF] text-[#2563EB]'
+                      : 'text-[#0F172A] hover:bg-[#F8FAFC] hover:text-[#2563EB]'
+                }`}
+              >
+                <span className="min-w-0 flex-1">
+                  <span className={isGeneral ? 'font-bold' : 'font-semibold'}>{item.label}</span>
+                  {item.desc && !isGeneral && (
+                    <span
+                      className={`mt-0.5 block text-xs ${
+                        active ? 'text-[#1D4ED8]' : 'text-[#64748B]'
+                      }`}
+                    >
+                      {item.desc}
+                    </span>
+                  )}
+                </span>
+                {isGeneral ? (
+                  <ArrowRight aria-hidden="true" className="size-4 shrink-0" />
+                ) : (
+                  active && (
+                    <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-[#2563EB]" />
+                  )
                 )}
-              </span>
-              {active && (
-                <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-[#2563EB]" />
-              )}
-            </Link>
+              </Link>
+            </div>
           )
         })}
       </div>
@@ -476,7 +575,7 @@ function ActiveIndicator() {
   return (
     <span
       aria-hidden="true"
-      className="pointer-events-none absolute inset-x-3 bottom-0.5 h-[2px] rounded-full bg-[#2563EB]"
+      className="pointer-events-none absolute inset-x-3 bottom-0.5 h-[2px] rounded-full bg-gradient-to-r from-[#2563EB] via-[#4F46E5] to-[#7C3AED]"
     />
   )
 }
@@ -702,6 +801,8 @@ function SearchAutocomplete({
   }
 
   const isDesktop = variant === 'desktop'
+  const listboxId = `search-suggestions-${variant}`
+  const optionId = (index: number) => `search-item-${variant}-${index}`
 
   return (
     <div ref={containerRef} className={isDesktop ? 'relative hidden w-full max-w-2xl md:block' : 'relative mb-4'}>
@@ -720,21 +821,39 @@ function SearchAutocomplete({
           onKeyDown={handleKeyDown}
           placeholder="Buscar productos, servicios o soluciones..."
           autoComplete="off"
+          enterKeyHint="search"
           role="combobox"
           aria-expanded={showDropdown}
           aria-autocomplete="list"
-          aria-controls="search-suggestions"
-          aria-activedescendant={activeIndex >= 0 ? `search-item-${activeIndex}` : undefined}
+          aria-controls={listboxId}
+          aria-activedescendant={activeIndex >= 0 ? optionId(activeIndex) : undefined}
           className={`w-full rounded-lg border bg-[#F8FAFC] text-sm text-[#0F172A] outline-none transition placeholder:text-[#94A3B8] focus:border-[#2563EB] focus:bg-white focus:ring-2 focus:ring-[#2563EB]/15 ${
-            isDesktop ? 'h-11 pl-10 pr-24 border-[#E2E8F0]' : 'h-10 pl-9 pr-20 border-[#E2E8F0]'
+            isDesktop
+              ? 'h-11 border-[#E2E8F0] pl-10 pr-28'
+              : 'h-11 rounded-xl border-[#E2E8F0] pl-9 pr-[5.75rem] shadow-xs'
           }`}
         />
+        {query && (
+          <button
+            type="button"
+            onClick={() => {
+              setQuery('')
+              inputRef.current?.focus()
+            }}
+            aria-label="Limpiar búsqueda"
+            className={`absolute top-1/2 grid size-5 -translate-y-1/2 place-items-center rounded-full text-[#94A3B8] transition-colors hover:bg-[#E2E8F0] hover:text-[#475569] ${
+              isDesktop ? 'right-20' : 'right-[4.4rem]'
+            }`}
+          >
+            <X className="size-3.5" />
+          </button>
+        )}
         <button
           type="submit"
           className={`absolute font-bold text-white transition hover:bg-[#1D4ED8] ${
             isDesktop
               ? 'right-1.5 top-1.5 h-8 rounded-lg bg-[#2563EB] px-4 text-xs'
-              : 'right-1 top-1 h-8 rounded-md bg-[#2563EB] px-2.5 text-xs'
+              : 'right-1.5 top-1 h-9 rounded-lg bg-[#2563EB] px-3 text-xs'
           }`}
         >
           Buscar
@@ -744,11 +863,13 @@ function SearchAutocomplete({
       {/* Autocomplete dropdown */}
       {showDropdown && (
         <div
-          id="search-suggestions"
+          id={listboxId}
           role="listbox"
           ref={listRef}
-          className={`absolute left-0 right-0 z-[80] mt-1.5 max-h-[420px] overflow-y-auto overscroll-contain rounded-xl border border-[#E2E8F0] bg-white shadow-[0_12px_40px_rgba(15,23,42,0.12)] animate-in fade-in slide-in-from-top-2 duration-150 ${
-            isDesktop ? 'top-full' : 'top-full'
+          className={`overflow-y-auto overscroll-contain rounded-xl border border-[#E2E8F0] bg-white shadow-[0_12px_40px_rgba(15,23,42,0.12)] animate-in fade-in slide-in-from-top-2 duration-150 ${
+            isDesktop
+              ? 'absolute left-0 right-0 top-full z-[80] mt-1.5 max-h-[420px]'
+              : 'relative z-10 mt-2 max-h-[min(52vh,420px)] shadow-[0_18px_36px_-28px_rgba(15,23,42,0.35)]'
           }`}
         >
           {/* Section label */}
@@ -801,7 +922,7 @@ function SearchAutocomplete({
                   )}
 
                   <div
-                    id={`search-item-${index}`}
+                    id={optionId(index)}
                     data-search-item
                     role="option"
                     tabIndex={-1}
@@ -927,6 +1048,9 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
   const infrastructureRef = useRef<HTMLDivElement>(null)
   const softwareRef = useRef<HTMLDivElement>(null)
   const companyRef = useRef<HTMLDivElement>(null)
+  const mobileNavIntent = useRef(false)
+  const mobileMenuPushed = useRef(false)
+  const mobileMenuOpenedHref = useRef('')
 
   const closeAll = () => setOpenDropdown(null)
 
@@ -982,16 +1106,60 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
     setOpenMobileSection(null)
   }, [pathname])
 
+  // El botón "Atrás" del navegador cierra el menú móvil antes de abandonar la página.
+  useEffect(() => {
+    if (!menuOpen || typeof window === 'undefined') return
+
+    mobileMenuOpenedHref.current = window.location.href
+    window.history.pushState({ ...(window.history.state ?? {}), __fjMobileMenu: true }, '')
+    mobileMenuPushed.current = true
+
+    const handlePopState = () => {
+      mobileMenuPushed.current = false
+      setMenuOpen(false)
+      setOpenMobileSection(null)
+    }
+
+    window.addEventListener('popstate', handlePopState)
+
+    return () => {
+      window.removeEventListener('popstate', handlePopState)
+      const shouldRestore =
+        mobileMenuPushed.current &&
+        !mobileNavIntent.current &&
+        window.history.state?.__fjMobileMenu === true &&
+        window.location.href === mobileMenuOpenedHref.current
+      mobileMenuPushed.current = false
+      if (shouldRestore) window.history.back()
+    }
+  }, [menuOpen])
+
   const goToQuote = () => {
     if (onQuoteClick) { onQuoteClick(); return }
     router.push('/cotizacion')
   }
 
+  const closeMobileMenu = () => {
+    setMenuOpen(false)
+    setOpenMobileSection(null)
+  }
+
+  const markMobileNavigation = () => {
+    mobileNavIntent.current = true
+    setMenuOpen(false)
+    setOpenMobileSection(null)
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'auto' })
+      window.setTimeout(() => {
+        mobileNavIntent.current = false
+      }, 700)
+    }
+  }
+
   const submitSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     const term = query.trim()
-    setMenuOpen(false)
-    setOpenMobileSection(null)
+    if (menuOpen) markMobileNavigation()
     router.push(term ? `/buscar?q=${encodeURIComponent(term)}` : '/productos')
   }
 
@@ -1087,7 +1255,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
 
               <button
                 type="button"
-                onClick={() => setMenuOpen((v) => !v)}
+                onClick={() => (menuOpen ? closeMobileMenu() : setMenuOpen(true))}
                 aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
                 aria-expanded={menuOpen}
                 className="grid size-9 sm:size-10 place-items-center rounded-lg border border-[#E2E8F0] text-[#475569] transition hover:border-[#2563EB]/30 hover:bg-[#F8FAFC] hover:text-[#2563EB] lg:hidden"
@@ -1188,7 +1356,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
             <div className="ml-auto">
               <Link
                 href="/contacto"
-                className="flex items-center gap-2 rounded-lg bg-[#2563EB] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#1D4ED8]"
+                className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#2563EB] to-[#6D28D9] px-4 py-2 text-sm font-semibold text-white transition hover:from-[#1D4ED8] hover:to-[#5B21B6]"
               >
                 <FaTeamspeak aria-hidden="true" className="size-4" />
                 <span className="hidden sm:inline">Solicitar asesoría</span>
@@ -1207,10 +1375,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
         {/* Backdrop oscuro con blur y fade suave */}
         <div
           className="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-xs transition-opacity animate-in fade-in duration-200 lg:hidden"
-          onClick={() => {
-            setMenuOpen(false)
-            setOpenMobileSection(null)
-          }}
+          onClick={closeMobileMenu}
           aria-hidden="true"
         />
 
@@ -1228,9 +1393,8 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
               className="inline-flex items-center gap-2.5 group"
               aria-label="F&J Systems · Inicio"
               onClick={() => {
-                setMenuOpen(false)
+                markMobileNavigation()
                 closeAll()
-                setOpenMobileSection(null)
               }}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -1243,10 +1407,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
 
             <button
               type="button"
-              onClick={() => {
-                setMenuOpen(false)
-                setOpenMobileSection(null)
-              }}
+              onClick={closeMobileMenu}
               className="grid size-9 shrink-0 place-items-center rounded-lg border border-[#E2E8F0] text-[#475569] transition-colors hover:bg-[#F8FAFC] hover:text-[#2563EB]"
               aria-label="Cerrar menú"
             >
@@ -1261,10 +1422,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
               query={query}
               setQuery={setQuery}
               onSubmit={submitSearch}
-              onNavigate={() => {
-                setMenuOpen(false)
-                setOpenMobileSection(null)
-              }}
+              onNavigate={markMobileNavigation}
               variant="mobile"
             />
 
@@ -1299,13 +1457,10 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                         onToggle={() => toggleMobile('store')}
                         active={active}
                         badge="Catálogo"
+                        icon={Store}
+                        count={storeCategories.length}
                       >
-                        <MobileStoreMenu
-                          onClose={() => {
-                            setOpenMobileSection(null)
-                            setMenuOpen(false)
-                          }}
-                        />
+                        <MobileStoreMenu onClose={markMobileNavigation} />
                       </MobileAccordion>
                     ) : link.hasMenu ? (
                       <MobileAccordion
@@ -1313,36 +1468,73 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                         isOpen={isSectionOpen}
                         onToggle={() => toggleMobile(dropdownKey)}
                         active={active}
+                        icon={sectionIcons[dropdownKey]}
+                        count={getSubmenu().filter((item) => item.variant !== 'general').length}
                       >
-                        <div className="space-y-1">
+                        <div className="space-y-0.5">
                           {getSubmenu().map((item, itemIdx) => {
                             const isItemActive = isPathActive(item.href)
+                            const isGeneral = item.variant === 'general'
+                            const ItemIcon = item.icon ? getIcon(item.icon) : null
                             return (
-                              <Link
+                              <div
                                 key={`${item.href}-${itemIdx}`}
-                                href={item.href}
-                                onClick={() => {
-                                  setOpenMobileSection(null)
-                                  setMenuOpen(false)
-                                }}
-                                className={`group flex items-start justify-between rounded-lg p-2.5 transition-colors ${
-                                  isItemActive
-                                    ? 'bg-white text-[#2563EB] shadow-xs'
-                                    : 'text-[#334155] hover:bg-white hover:text-[#2563EB]'
-                                }`}
+                                className={isGeneral ? 'mt-2 border-t border-[#E2E8F0] pt-2' : undefined}
                               >
-                                <div className="min-w-0 flex-1">
-                                  <span className="block text-xs font-bold tracking-tight">
-                                    {item.label}
-                                  </span>
-                                  {item.desc && (
-                                    <span className="mt-0.5 block text-[11px] leading-tight text-[#64748B] group-hover:text-[#475569]">
-                                      {item.desc}
+                                <Link
+                                  href={item.href}
+                                  onClick={markMobileNavigation}
+                                  aria-current={isItemActive ? 'page' : undefined}
+                                  className={`group flex items-center gap-2.5 rounded-xl px-2.5 py-2.5 transition-colors ${
+                                    isGeneral
+                                      ? 'bg-[#5B21B6] text-white shadow-[0_8px_20px_-14px_rgba(91,33,182,0.9)] hover:bg-[#4C1D95]'
+                                      : isItemActive
+                                        ? 'bg-white text-[#2563EB] shadow-xs ring-1 ring-[#2563EB]/15'
+                                        : 'text-[#334155] hover:bg-white hover:text-[#2563EB]'
+                                  }`}
+                                >
+                                  {isGeneral ? (
+                                    <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-white/15 text-white">
+                                      <ArrowRight className="size-3.5" />
                                     </span>
+                                  ) : ItemIcon ? (
+                                    <span
+                                      className={`grid size-8 shrink-0 place-items-center rounded-lg border transition-colors ${
+                                        isItemActive
+                                          ? 'border-[#2563EB]/25 bg-[#EFF6FF] text-[#2563EB]'
+                                          : 'border-[#E2E8F0] bg-white text-[#64748B] group-hover:border-[#2563EB]/25 group-hover:text-[#2563EB]'
+                                      }`}
+                                    >
+                                      <ItemIcon className="size-3.5" />
+                                    </span>
+                                  ) : null}
+                                  <div className="min-w-0 flex-1">
+                                    <span
+                                      className={`block text-xs font-bold leading-snug tracking-tight ${
+                                        isGeneral
+                                          ? ''
+                                          : isItemActive
+                                            ? 'text-[#2563EB]'
+                                            : 'text-[#334155] group-hover:text-[#2563EB]'
+                                      }`}
+                                    >
+                                      {item.label}
+                                    </span>
+                                    {item.desc && !isGeneral && (
+                                      <span className="mt-0.5 block text-[11px] leading-snug text-[#64748B] group-hover:text-[#475569]">
+                                        {item.desc}
+                                      </span>
+                                    )}
+                                  </div>
+                                  {isGeneral ? (
+                                    <ArrowRight className="size-3.5 shrink-0" />
+                                  ) : isItemActive ? (
+                                    <span className="size-1.5 shrink-0 rounded-full bg-[#2563EB]" />
+                                  ) : (
+                                    <ChevronRight className="size-3.5 shrink-0 text-[#94A3B8] group-hover:text-[#2563EB]" />
                                   )}
-                                </div>
-                                <ChevronRight className="mt-0.5 size-3.5 shrink-0 text-[#94A3B8] group-hover:text-[#2563EB]" />
-                              </Link>
+                                </Link>
+                              </div>
                             )
                           })}
                         </div>
@@ -1350,10 +1542,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                     ) : (
                       <Link
                         href={link.href}
-                        onClick={() => {
-                          setOpenMobileSection(null)
-                          setMenuOpen(false)
-                        }}
+                        onClick={markMobileNavigation}
                         className={`flex items-center justify-between rounded-xl border px-3.5 py-3 text-sm font-semibold transition-colors ${
                           active
                             ? 'border-[#2563EB]/40 bg-[#EFF6FF] text-[#2563EB]'
@@ -1373,10 +1562,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
             <div className="mt-5 space-y-2 border-t border-[#F1F5F9] pt-4">
               <Link
                 href="/mi-cuenta"
-                onClick={() => {
-                  setMenuOpen(false)
-                  setOpenMobileSection(null)
-                }}
+                onClick={markMobileNavigation}
                 aria-current={isAccountActive ? 'page' : undefined}
                 className={`flex items-center gap-3 rounded-xl border px-3.5 py-2.5 text-sm font-semibold transition-colors ${
                   isAccountActive
@@ -1393,8 +1579,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
               <button
                 type="button"
                 onClick={() => {
-                  setMenuOpen(false)
-                  setOpenMobileSection(null)
+                  markMobileNavigation()
                   goToQuote()
                 }}
                 aria-current={isQuotePageActive ? 'page' : undefined}
@@ -1421,11 +1606,8 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
 
               <Link
                 href="/contacto"
-                onClick={() => {
-                  setMenuOpen(false)
-                  setOpenMobileSection(null)
-                }}
-                className="flex items-center justify-center gap-2 rounded-xl bg-[#2563EB] px-4 py-2.5 text-sm font-semibold text-white shadow-xs transition hover:bg-[#1D4ED8]"
+                onClick={markMobileNavigation}
+                className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#2563EB] to-[#6D28D9] px-4 py-2.5 text-sm font-semibold text-white shadow-xs transition hover:from-[#1D4ED8] hover:to-[#5B21B6]"
               >
                 <FaTeamspeak aria-hidden="true" className="size-4" />
                 <span>Solicitar asesoría</span>

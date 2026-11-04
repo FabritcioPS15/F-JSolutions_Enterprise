@@ -87,7 +87,7 @@ export function ProductCard({ product, onAddToQuote }: ProductCardProps) {
   return (
     <Link
       href={`/productos/${product.slug}`}
-      className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-[#E2E8F0] bg-white shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-[#2563EB]/40 hover:shadow-lg"
+      className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-[#E2E8F0] bg-white shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-[#7C3AED]/40 hover:shadow-lg"
     >
       {/* Contenedor de Imagen ampliado */}
       <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#F8FAFC] p-4 sm:p-5">
@@ -121,7 +121,7 @@ export function ProductCard({ product, onAddToQuote }: ProductCardProps) {
           onClick={handleToggleFavorite}
           aria-label={`${isFavorite(product.id) ? 'Quitar de' : 'Agregar a'} favoritos: ${product.name}`}
           aria-pressed={isFavorite(product.id)}
-          className={`absolute right-3 top-3 grid size-9 place-items-center rounded-xl border border-[#E2E8F0] bg-white/95 shadow-xs backdrop-blur transition hover:scale-105 hover:border-[#2563EB]/40 ${
+          className={`absolute right-3 top-3 grid size-9 place-items-center rounded-xl border border-[#E2E8F0] bg-white/95 shadow-xs backdrop-blur transition hover:scale-105 hover:border-[#7C3AED]/40 ${
             isFavorite(product.id) ? 'text-[#EF4444]' : 'text-[#64748B] hover:text-[#0F172A]'
           }`}
         >
@@ -141,7 +141,7 @@ export function ProductCard({ product, onAddToQuote }: ProductCardProps) {
       <div className="flex flex-1 flex-col p-5">
         {/* Jerarquía: Marca + Subcategoría + Sub-subcategoría */}
         <div className="flex items-center gap-1.5 flex-wrap">
-          <span className="rounded-md bg-[#EFF6FF] px-2 py-0.5 text-[10px] font-bold text-[#2563EB] uppercase tracking-wider">
+          <span className="rounded-md bg-[#EDE9FE] px-2 py-0.5 text-[10px] font-bold text-[#5B21B6] uppercase tracking-wider">
             {product.brand}
           </span>
           <span className="text-xs text-[#64748B] font-medium">
@@ -158,7 +158,7 @@ export function ProductCard({ product, onAddToQuote }: ProductCardProps) {
         </div>
 
         {/* Título del producto con tamaño mejorado */}
-        <h3 className="mt-2.5 font-heading text-base font-bold leading-snug text-[#0F172A] transition-colors group-hover:text-[#2563EB] line-clamp-2 min-h-[46px]">
+        <h3 className="mt-2.5 font-heading text-base font-bold leading-snug text-[#0F172A] transition-colors group-hover:text-[#5B21B6] line-clamp-2 min-h-[46px]">
           {product.name}
         </h3>
 
@@ -183,7 +183,7 @@ export function ProductCard({ product, onAddToQuote }: ProductCardProps) {
         <ul className="mt-3 space-y-1.5 text-xs text-[#475569]">
           {product.specs.slice(0, 3).map((spec) => (
             <li key={spec} className="flex items-start gap-2">
-              <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-[#2563EB]" />
+              <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-[#7C3AED]" />
               <span className="line-clamp-1">{spec}</span>
             </li>
           ))}

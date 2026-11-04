@@ -39,6 +39,8 @@ import {
   btnSecondary,
   iconButton,
   inputClass,
+  tableClass,
+  tableHeadRowClass,
 } from '@/components/admin/ui'
 import { productsDataset } from '@/lib/admin/excel-exports'
 import {
@@ -102,7 +104,7 @@ function SelectionCheckbox({
       checked={checked}
       onChange={onChange}
       aria-label={label}
-      className="size-4 shrink-0 cursor-pointer rounded border-slate-300 accent-blue-600"
+      className="size-4 shrink-0 cursor-pointer rounded border-slate-300 accent-[#5B21B6]"
     />
   )
 }
@@ -474,11 +476,11 @@ export function ProductsView({
       </div>
 
       {selected.length > 0 && (
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-blue-200 bg-blue-50/70 px-4 py-3">
-          <p className="text-xs font-semibold text-blue-900">
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#DDD6FE] bg-[#F5F3FF]/70 px-4 py-3">
+          <p className="text-xs font-semibold text-[#3B0764]">
             {selected.length} {selected.length === 1 ? 'producto seleccionado' : 'productos seleccionados'}
             {selectedVisibleCount !== selected.length && (
-              <span className="ml-1 font-medium text-blue-700/70">
+              <span className="ml-1 font-medium text-[#5B21B6]/70">
                 ({selectedVisibleCount} en esta página)
               </span>
             )}
@@ -510,7 +512,7 @@ export function ProductsView({
             </button>
             <button
               type="button"
-              className="ml-1 grid size-8 place-items-center rounded-lg text-blue-700 transition hover:bg-blue-100"
+              className="ml-1 grid size-8 place-items-center rounded-lg text-[#5B21B6] transition hover:bg-[#EDE9FE]"
               onClick={() => setSelected([])}
               aria-label="Cancelar selección"
             >
@@ -552,10 +554,10 @@ export function ProductsView({
             )}
           >
             <div className="overflow-x-auto scrollbar-light">
-              <table className="w-full min-w-[1010px] text-left text-sm">
+              <table className={tableClass}>
                 <thead>
-                  <tr className="border-b border-slate-100 bg-slate-50/70 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">
-                    <th scope="col" className="w-10 px-3 py-3">
+                  <tr className={tableHeadRowClass}>
+                    <th scope="col" className="w-10 px-4 py-3">
                       <SelectionCheckbox
                         checked={allVisibleSelected}
                         indeterminate={someVisibleSelected && !allVisibleSelected}
@@ -563,15 +565,15 @@ export function ProductsView({
                         label="Seleccionar productos de esta página"
                       />
                     </th>
-                    <th scope="col" className="min-w-[210px] px-2.5 py-3">Producto</th>
-                    <th scope="col" className="px-2.5 py-3">SKU</th>
-                    <th scope="col" className="px-2.5 py-3">Marca</th>
-                    <th scope="col" className="px-2.5 py-3">Categoría</th>
-                    <th scope="col" className="px-2.5 py-3 text-right">Precio</th>
-                    <th scope="col" className="px-2.5 py-3">Stock</th>
-                    <th scope="col" className="px-2.5 py-3">Estado</th>
-                    <th scope="col" className="hidden px-2.5 py-3 2xl:table-cell">Actualizado</th>
-                    <th scope="col" className="whitespace-nowrap px-3 py-3 text-right">Acciones</th>
+                    <th scope="col" className="min-w-[210px] px-4 py-3">Producto</th>
+                    <th scope="col" className="px-4 py-3">SKU</th>
+                    <th scope="col" className="px-4 py-3">Marca</th>
+                    <th scope="col" className="px-4 py-3">Categoría</th>
+                    <th scope="col" className="px-4 py-3 text-right">Precio</th>
+                    <th scope="col" className="px-4 py-3">Stock</th>
+                    <th scope="col" className="px-4 py-3">Estado</th>
+                    <th scope="col" className="hidden px-4 py-3 2xl:table-cell">Actualizado</th>
+                    <th scope="col" className="whitespace-nowrap px-5 py-3 text-right">Acciones</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100">
@@ -583,17 +585,17 @@ export function ProductsView({
                         key={product.id}
                         className={cn(
                           'group transition-colors hover:bg-slate-50/70',
-                          isSelected && 'bg-blue-50/40'
+                          isSelected && 'bg-[#F5F3FF]/40'
                         )}
                       >
-                        <td className="px-3 py-3">
+                        <td className="px-4 py-3">
                           <SelectionCheckbox
                             checked={isSelected}
                             onChange={() => toggleSelected(product.id)}
                             label={`Seleccionar ${product.name}`}
                           />
                         </td>
-                        <td className="min-w-[210px] px-2.5 py-3">
+                        <td className="min-w-[210px] px-4 py-3">
                           <div className="flex items-center gap-3">
                             <Link href={`/productos/${product.id}`} className="shrink-0">
                               <ProductThumb
@@ -605,44 +607,44 @@ export function ProductsView({
                             <div className="min-w-0">
                               <Link
                                 href={`/productos/${product.id}`}
-                                className="line-clamp-1 text-[12.5px] font-semibold text-slate-900 transition hover:text-blue-600"
+                                className="line-clamp-1 text-[12.5px] font-semibold text-slate-900 transition hover:text-[#5B21B6]"
                                 title={product.name}
                               >
                                 {product.name}
                               </Link>
-                              <p className="mt-0.5 truncate text-[10px] text-slate-400">
+                              <p className="mt-0.5 truncate text-[11px] text-slate-400">
                                 {product.model ?? product.internalCode ?? 'Sin código de modelo'}
                               </p>
                             </div>
                           </div>
                         </td>
-                        <td className="px-2.5 py-3">
+                        <td className="px-4 py-3">
                           <p className="font-mono text-[10.5px] text-slate-600">{product.sku}</p>
                           {product.internalCode && (
-                            <p className="mt-0.5 font-mono text-[9.5px] text-slate-400">
+                            <p className="mt-0.5 font-mono text-[10px] text-slate-400">
                               {product.internalCode}
                             </p>
                           )}
                         </td>
-                        <td className="px-2.5 py-3">
-                          <p className="text-[11.5px] font-semibold text-slate-700">{product.brand}</p>
+                        <td className="px-4 py-3">
+                          <p className="text-[12.5px] font-semibold text-slate-700">{product.brand}</p>
                         </td>
-                        <td className="px-2.5 py-3">
-                          <p className="max-w-[150px] truncate text-[11.5px] font-semibold text-slate-700">
+                        <td className="px-4 py-3">
+                          <p className="max-w-[150px] truncate text-[12.5px] font-semibold text-slate-700">
                             {product.category || 'Sin categoría'}
                           </p>
-                          <p className="mt-0.5 max-w-[150px] truncate text-[10px] text-slate-400">
+                          <p className="mt-0.5 max-w-[150px] truncate text-[11px] text-slate-400">
                             {product.subcategory ?? 'Sin subcategoría'}
                           </p>
                         </td>
-                        <td className="px-2.5 py-3 text-right">
+                        <td className="px-4 py-3 text-right">
                           <p className="whitespace-nowrap text-[12.5px] font-bold tabular-nums text-slate-900">
                             {product.price > 0
                               ? formatCurrency(product.price, settings.currency)
                               : 'A cotizar'}
                           </p>
                           {product.price > 0 && !product.showPrice ? (
-                            <p className="mt-0.5 text-[9.5px] font-medium text-amber-600">
+                            <p className="mt-0.5 text-[10px] font-medium text-amber-600">
                               Oculto en tienda
                             </p>
                           ) : margin !== null ? (
@@ -656,10 +658,10 @@ export function ProductsView({
                             </p>
                           ) : null}
                         </td>
-                        <td className="px-2.5 py-3">
+                        <td className="px-4 py-3">
                           <StockBadge stock={product.stock} minStock={product.minStock} compact />
                         </td>
-                        <td className="px-2.5 py-3">
+                        <td className="px-4 py-3">
                           <div className="flex items-center gap-2">
                             {product.status !== 'archived' && (
                               <StatusToggle
@@ -671,10 +673,10 @@ export function ProductsView({
                             <StatusBadge status={product.status} />
                           </div>
                         </td>
-                        <td className="hidden whitespace-nowrap px-2.5 py-3 text-[11px] text-slate-500 2xl:table-cell">
+                        <td className="hidden whitespace-nowrap px-4 py-3 text-[11px] text-slate-500 2xl:table-cell">
                           {formatDate(product.updatedAt)}
                         </td>
-                        <td className="whitespace-nowrap px-3 py-3">
+                        <td className="whitespace-nowrap px-5 py-3">
                           <div className="flex items-center justify-end gap-0.5">
                             <Link
                               href={`/productos/${product.id}`}
@@ -754,8 +756,8 @@ export function ProductsView({
                 <article
                   key={product.id}
                   className={cn(
-                    'group flex flex-col overflow-hidden rounded-2xl border bg-white shadow-xs transition hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md',
-                    isSelected ? 'border-blue-300 ring-2 ring-blue-500/10' : 'border-slate-200/80'
+                    'group flex flex-col overflow-hidden rounded-2xl border bg-white shadow-xs transition hover:-translate-y-0.5 hover:border-[#DDD6FE] hover:shadow-md',
+                    isSelected ? 'border-[#C4B5FD] ring-2 ring-[#5B21B6]/10' : 'border-slate-200/80'
                   )}
                 >
                   <div className="relative">
@@ -787,7 +789,7 @@ export function ProductsView({
                     </p>
                     <Link
                       href={`/productos/${product.id}`}
-                      className="mt-1 line-clamp-2 min-h-[38px] font-heading text-[13.5px] font-bold leading-snug text-slate-900 transition hover:text-blue-600"
+                      className="mt-1 line-clamp-2 min-h-[38px] font-heading text-[13.5px] font-bold leading-snug text-slate-900 transition hover:text-[#5B21B6]"
                     >
                       {product.name}
                     </Link>

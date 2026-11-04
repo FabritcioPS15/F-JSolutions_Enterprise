@@ -38,7 +38,7 @@ const icons = {
 const styles = {
   success: 'border-emerald-200 bg-white text-emerald-600',
   error: 'border-red-200 bg-white text-red-600',
-  info: 'border-blue-200 bg-white text-blue-600',
+  info: 'border-[#DDD6FE] bg-white text-[#5B21B6]',
 }
 
 export function ToastProvider({ children }: { children: ReactNode }) {

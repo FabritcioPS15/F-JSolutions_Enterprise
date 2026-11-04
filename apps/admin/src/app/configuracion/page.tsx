@@ -65,6 +65,8 @@ export default function ConfiguracionPage() {
     quotes,
     requests,
     activity,
+    inventoryMovements,
+    webProjects,
     settings,
     updateSettings,
     importData,
@@ -369,7 +371,7 @@ export default function ConfiguracionPage() {
                 </div>
                 <div className="mt-2.5 h-1.5 overflow-hidden rounded-full bg-slate-100">
                   <div
-                    className="h-full rounded-full bg-blue-600"
+                    className="h-full rounded-full bg-[#5B21B6]"
                     style={{ width: `${usagePercent}%` }}
                   />
                 </div>
@@ -426,6 +428,8 @@ export default function ConfiguracionPage() {
                     quotes,
                     requests,
                     activity,
+                    inventoryMovements,
+                    webProjects,
                     settings,
                   })
                 }

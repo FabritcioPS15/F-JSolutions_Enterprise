@@ -17,6 +17,7 @@ import {
   QuoteStatusBadge,
 } from '@/components/admin/commercial-ui'
 import { ConfirmDialog } from '@/components/admin/confirm-dialog'
+import { DatePicker } from '@/components/admin/date-picker'
 import { ExportMenu } from '@/components/admin/export-menu'
 import { Modal } from '@/components/admin/modal'
 import { QuoteDocumentPreview } from '@/components/admin/quote-document-preview'
@@ -33,6 +34,8 @@ import {
   btnSecondary,
   iconButton,
   inputClass,
+  tableClass,
+  tableHeadRowClass,
   textareaClass,
 } from '@/components/admin/ui'
 import { quotesDataset } from '@/lib/admin/excel-exports'
@@ -547,15 +550,15 @@ export function QuotesView({ initialQuery = '' }: { initialQuery?: string }) {
         <>
           <div className="hidden overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xs lg:block">
             <div className="overflow-x-auto scrollbar-light">
-              <table className="w-full min-w-[980px] text-left text-sm">
+              <table className={tableClass}>
                 <thead>
-                  <tr className="border-b border-slate-100 bg-slate-50/70 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">
+                  <tr className={tableHeadRowClass}>
                     <th scope="col" className="min-w-[150px] px-5 py-3">Código</th>
-                    <th scope="col" className="min-w-[220px] px-3 py-3">Cliente</th>
-                    <th scope="col" className="px-3 py-3">Productos</th>
-                    <th scope="col" className="px-3 py-3 text-right">Total</th>
-                    <th scope="col" className="px-3 py-3">Estado</th>
-                    <th scope="col" className="whitespace-nowrap px-3 py-3">Válida hasta</th>
+                    <th scope="col" className="min-w-[220px] px-4 py-3">Cliente</th>
+                    <th scope="col" className="px-4 py-3">Productos</th>
+                    <th scope="col" className="px-4 py-3 text-right">Total</th>
+                    <th scope="col" className="px-4 py-3">Estado</th>
+                    <th scope="col" className="whitespace-nowrap px-4 py-3">Válida hasta</th>
                     <th scope="col" className="whitespace-nowrap px-5 py-3 text-right">Acciones</th>
                   </tr>
                 </thead>
@@ -568,11 +571,11 @@ export function QuotesView({ initialQuery = '' }: { initialQuery?: string }) {
                           <p className="font-mono text-[11px] font-semibold text-slate-800">
                             {quote.code}
                           </p>
-                          <p className="mt-0.5 text-[10px] text-slate-400">
+                          <p className="mt-0.5 text-[11px] text-slate-400">
                             {formatDate(quote.createdAt)}
                           </p>
                         </td>
-                        <td className="px-3 py-3">
+                        <td className="px-4 py-3">
                           <div className="flex items-center gap-2.5">
                             <ClientAvatar
                               name={quote.clientName}
@@ -580,34 +583,34 @@ export function QuotesView({ initialQuery = '' }: { initialQuery?: string }) {
                               className="size-9"
                             />
                             <div className="min-w-0">
-                              <p className="truncate text-[12px] font-semibold text-slate-900">
+                              <p className="truncate text-[12.5px] font-semibold text-slate-900">
                                 {quote.clientCompany || quote.clientName}
                               </p>
-                              <p className="mt-0.5 truncate text-[10px] text-slate-400">
+                              <p className="mt-0.5 truncate text-[11px] text-slate-400">
                                 {quote.clientCompany ? quote.clientName : quote.clientEmail}
                               </p>
                             </div>
                           </div>
                         </td>
-                        <td className="px-3 py-3">
-                          <p className="text-[11.5px] font-semibold text-slate-700">
+                        <td className="px-4 py-3">
+                          <p className="text-[12.5px] font-semibold text-slate-700">
                             {quote.items.length}{' '}
                             {quote.items.length === 1 ? 'línea' : 'líneas'}
                           </p>
-                          <p className="mt-0.5 text-[10px] text-slate-400">
+                          <p className="mt-0.5 text-[11px] text-slate-400">
                             {formatNumber(quoteItemCount(quote.items))} unidades
                           </p>
                         </td>
-                        <td className="px-3 py-3 text-right">
+                        <td className="px-4 py-3 text-right">
                           <p className="whitespace-nowrap text-[12.5px] font-bold tabular-nums text-slate-900">
                             {formatCurrency(totals.total, settings.currency)}
                           </p>
-                          <p className="mt-0.5 text-[9.5px] text-slate-400">IGV incluido</p>
+                          <p className="mt-0.5 text-[10px] text-slate-400">IGV incluido</p>
                         </td>
-                        <td className="px-3 py-3">
+                        <td className="px-4 py-3">
                           <QuoteStatusBadge status={quote.status} />
                         </td>
-                        <td className="whitespace-nowrap px-3 py-3 text-[11px] text-slate-500">
+                        <td className="whitespace-nowrap px-4 py-3 text-[12.5px] text-slate-500">
                           {quote.validUntil ? formatDate(quote.validUntil) : 'Sin fecha'}
                         </td>
                         <td className="whitespace-nowrap px-5 py-3">
@@ -831,7 +834,7 @@ export function QuotesView({ initialQuery = '' }: { initialQuery?: string }) {
                 <p className="text-[9.5px] font-bold uppercase tracking-[0.12em] text-slate-400">
                   Contacto
                 </p>
-                <p className="mt-1 truncate text-xs font-semibold text-blue-600">
+                <p className="mt-1 truncate text-xs font-semibold text-[#5B21B6]">
                   {viewer.clientEmail}
                 </p>
                 <p className="mt-0.5 text-[11px] text-slate-500">
@@ -1033,12 +1036,10 @@ export function QuotesView({ initialQuery = '' }: { initialQuery?: string }) {
               </Select>
             </Field>
             <Field label="Válida hasta" htmlFor="quote-valid-until">
-              <input
+              <DatePicker
                 id="quote-valid-until"
-                type="date"
                 value={draft.validUntil}
-                onChange={(event) => updateDraft('validUntil', event.target.value)}
-                className={inputClass}
+                onChange={(value) => updateDraft('validUntil', value)}
               />
             </Field>
             <Field

@@ -5,8 +5,10 @@ import type {
   Brand,
   Category,
   Client,
+  InventoryMovement,
   Quote,
   StoreSettings,
+  WebProject,
 } from './types'
 import { slugify } from './format'
 
@@ -1218,6 +1220,122 @@ const quotes: Quote[] = [
   },
 ]
 
+const webProjects: WebProject[] = [
+  {
+    id: 'portal-proveedores-banco-andino',
+    name: 'Portal de proveedores',
+    clientId: 'banco-andino',
+    clientName: 'Banco Andino del Perú',
+    type: 'webapp',
+    status: 'live',
+    productionUrl: 'https://proveedores.bancoandino.pe',
+    stagingUrl: 'https://staging-proveedores.bancoandino.pe',
+    repoUrl: 'https://github.com/fjsystems/portal-andino',
+    hosting: 'Vercel + PostgreSQL administrado',
+    domain: 'proveedores.bancoandino.pe',
+    responsible: 'Fabritcio Peña',
+    credentialLocation: 'Bitwarden · Clientes/Banco Andino',
+    launchedAt: '2026-09-15',
+    renewalAt: '2027-03-15',
+    notes: 'Registro y seguimiento de órdenes de compra. Incluye soporte y mantenimiento mensual.',
+    deployments: [
+      {
+        id: 'despliegue-andino-3',
+        environment: 'staging',
+        url: 'https://staging-proveedores.bancoandino.pe',
+        version: 'v1.5.0-rc',
+        note: 'Validación del nuevo módulo de reportes.',
+        deployedAt: '2026-10-30T18:10:00.000Z',
+      },
+      {
+        id: 'despliegue-andino-2',
+        environment: 'production',
+        url: 'https://proveedores.bancoandino.pe',
+        version: 'v1.4.0',
+        note: 'Ajustes de facturación y exportación.',
+        deployedAt: '2026-10-24T16:30:00.000Z',
+      },
+      {
+        id: 'despliegue-andino-1',
+        environment: 'production',
+        url: 'https://proveedores.bancoandino.pe',
+        version: 'v1.0.0',
+        note: 'Salida a producción.',
+        deployedAt: '2026-09-15T15:00:00.000Z',
+      },
+    ],
+    createdAt: '2026-07-10T14:00:00.000Z',
+    updatedAt: '2026-10-30T18:10:00.000Z',
+  },
+  {
+    id: 'web-colegio-san-agustin',
+    name: 'Sitio web institucional',
+    clientId: 'colegio-san-agustin',
+    clientName: 'Colegio San Agustín',
+    type: 'website',
+    status: 'live',
+    productionUrl: 'https://www.sanagustin.edu.pe',
+    stagingUrl: 'https://staging.sanagustin.edu.pe',
+    repoUrl: 'https://github.com/fjsystems/web-san-agustin',
+    hosting: 'Vercel + Cloudflare',
+    domain: 'sanagustin.edu.pe',
+    responsible: 'Fabritcio Peña',
+    credentialLocation: 'Bitwarden · Clientes/Colegio San Agustín',
+    launchedAt: '2026-08-20',
+    renewalAt: '2027-01-20',
+    notes: 'Sitio institucional con admisiones, calendario escolar y portal de noticias.',
+    deployments: [
+      {
+        id: 'despliegue-san-agustin-2',
+        environment: 'staging',
+        url: 'https://staging.sanagustin.edu.pe',
+        version: 'v2.2.0-rc',
+        note: 'Revisión de la sección de admisiones 2027.',
+        deployedAt: '2026-10-27T17:20:00.000Z',
+      },
+      {
+        id: 'despliegue-san-agustin-1',
+        environment: 'production',
+        url: 'https://www.sanagustin.edu.pe',
+        version: 'v2.1.0',
+        note: 'Actualización de contenido y formulario de contacto.',
+        deployedAt: '2026-10-18T15:45:00.000Z',
+      },
+    ],
+    createdAt: '2026-06-25T10:30:00.000Z',
+    updatedAt: '2026-10-27T17:20:00.000Z',
+  },
+  {
+    id: 'intranet-constructora-vertice',
+    name: 'Intranet de obra',
+    clientId: 'constructora-vertice',
+    clientName: 'Constructora Vértice',
+    type: 'webapp',
+    status: 'development',
+    productionUrl: '',
+    stagingUrl: 'https://staging-intranet.vertice.pe',
+    repoUrl: 'https://github.com/fjsystems/intranet-vertice',
+    hosting: 'Railway + PostgreSQL',
+    domain: 'intranet.vertice.pe',
+    responsible: 'Fabritcio Peña',
+    credentialLocation: '1Password · Clientes/Constructora Vértice',
+    renewalAt: '2027-02-01',
+    notes: 'Avance de obra, incidencias y documentación técnica por proyecto.',
+    deployments: [
+      {
+        id: 'despliegue-vertice-1',
+        environment: 'staging',
+        url: 'https://staging-intranet.vertice.pe',
+        version: 'v0.6.0',
+        note: 'Primera entrega funcional para revisión del cliente.',
+        deployedAt: '2026-10-26T20:00:00.000Z',
+      },
+    ],
+    createdAt: '2026-09-02T13:15:00.000Z',
+    updatedAt: '2026-10-26T20:00:00.000Z',
+  },
+]
+
 function summarize(description: string): string {
   const clean = description.replace(/\s+/g, ' ').trim()
   return clean.length <= 140 ? clean : `${clean.slice(0, 137).trimEnd()}…`
@@ -1235,6 +1353,25 @@ function buildSeedActivity(items: AdminProduct[]): ActivityEntry[] {
       detail: product.status === 'archived' ? 'Producto archivado' : 'Ficha actualizada',
       at: product.updatedAt,
     }))
+}
+
+function buildSeedMovements(items: AdminProduct[]): InventoryMovement[] {
+  return items
+    .filter((product) => product.stock > 0)
+    .map((product, index): InventoryMovement => ({
+      id: `demo-mov-${index + 1}`,
+      productId: product.id,
+      productName: product.name,
+      sku: product.sku,
+      type: 'adjustment',
+      quantity: product.stock,
+      previousStock: 0,
+      resultingStock: product.stock,
+      reason: 'Carga inicial',
+      note: 'Stock inicial del catálogo de demostración.',
+      createdAt: product.createdAt,
+    }))
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
 }
 
 export function createSeedData(): AdminData {
@@ -1267,6 +1404,8 @@ export function createSeedData(): AdminData {
       requests: [],
       settings,
       activity: buildSeedActivity(normalized),
+      inventoryMovements: buildSeedMovements(normalized),
+      webProjects,
     })
   ) as AdminData
 }

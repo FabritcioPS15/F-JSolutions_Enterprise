@@ -32,15 +32,16 @@ export const serviceDefinitions: ServiceDefinition[] = [
   // ─── Soporte TI ─────────────────────────────────────────────────────────────
   {
     slug: 'soporte-tecnico',
-    title: 'Soporte técnico',
+    title: 'Soporte técnico remoto y presencial',
     category: 'Soporte TI',
     summary:
-      'Soporte técnico remoto y en sitio para empresas: diagnóstico, resolución de incidencias y seguimiento de cada caso.',
+      'Soporte técnico remoto y en sitio para empresas: diagnóstico, resolución de incidencias y visitas programadas cuando el caso lo exige.',
     intro:
-      'Atendemos incidencias de hardware, software y conectividad con un equipo que conoce tu operación. Cada caso queda registrado para que el mismo problema no se repita y tu equipo no pierda horas productivas.',
+      'Combinamos la rapidez del soporte remoto con la precisión de una visita en sitio. Atendemos hardware, software y conectividad con un equipo que conoce tu operación, y cada caso queda registrado para que el mismo problema no se repita.',
     includes: [
       { title: 'Diagnóstico de incidencias', copy: 'Identificamos la causa raíz antes de aplicar una solución definitiva.' },
-      { title: 'Soporte remoto y en sitio', copy: 'Resolvemos la mayoría de casos a distancia y coordinamos visitas cuando hace falta.' },
+      { title: 'Conexión remota segura', copy: 'Acceso autorizado, con registro y control de cada sesión.' },
+      { title: 'Visitas programadas en sitio', copy: 'Intervención presencial con agenda coordinada contigo.' },
       { title: 'Hardware y software', copy: 'Equipos, sistemas operativos, aplicaciones y periféricos de tu operación.' },
       { title: 'Mesa de ayuda con tickets', copy: 'Cada solicitud queda registrada con responsable, estado e historial.' },
       { title: 'Reporte de atenciones', copy: 'Visibilidad de lo atendido y recomendaciones para reducir futuras fallas.' },
@@ -52,17 +53,22 @@ export const serviceDefinitions: ServiceDefinition[] = [
           'Sí. Coordinamos cobertura extendida según el plan contratado y la criticidad del caso. Las urgencias se priorizan por impacto en la operación y se atienden por el canal acordado.',
       },
       {
-        question: '¿Pueden dar soporte a equipos comprados en otro proveedor?',
+        question: '¿El acceso remoto es seguro?',
         answer:
-          'Sí. Gestionamos los equipos que ya tienes, incluso si fueron adquiridos en otro proveedor. En el diagnóstico identificamos el estado y las limitaciones de garantía.',
+          'Sí. Usamos herramientas con autorización expresa y registro de sesión. Tú controlas cuándo se inicia y cuándo finaliza cada conexión.',
       },
       {
-        question: '¿El soporte incluye visitas presenciales?',
+        question: '¿Cubren visitas fuera de Lima?',
         answer:
-          'Sí. La mayoría de incidencias se resuelven de forma remota, pero cuando el problema requiere intervención física coordinamos una visita en sitio según el acuerdo de servicio.',
+          'El soporte remoto cubre todo el Perú. Las visitas en sitio se coordinan según ubicación, criticidad y alcance del plan contratado.',
+      },
+      {
+        question: '¿Qué pasa si el problema no se puede resolver de forma remota?',
+        answer:
+          'Se escala a una visita presencial con el diagnóstico previo, para que el técnico llegue con la información y los repuestos necesarios.',
       },
     ],
-    related: ['mantenimiento-de-equipos', 'soporte-remoto-y-presencial', 'soporte-empresarial'],
+    related: ['mantenimiento-de-equipos', 'soporte-empresarial', 'redes-y-conectividad'],
   },
   {
     slug: 'mantenimiento-de-equipos',
@@ -167,40 +173,6 @@ export const serviceDefinitions: ServiceDefinition[] = [
     related: ['soporte-tecnico', 'redes-y-conectividad', 'equipamiento-tecnologico-empresarial'],
   },
   {
-    slug: 'soporte-remoto-y-presencial',
-    title: 'Soporte remoto y presencial',
-    category: 'Soporte TI',
-    summary:
-      'Atención técnica remota inmediata y visitas programadas en sitio, según la urgencia de cada caso.',
-    intro:
-      'Combinamos la rapidez del soporte remoto con la precisión de una visita en sitio cuando el caso lo exige. Así tu equipo resuelve lo simple en minutos y lo complejo con un técnico presente.',
-    includes: [
-      { title: 'Conexión remota segura', copy: 'Acceso autorizado, con registro y control de cada sesión.' },
-      { title: 'Atención por teléfono y chat', copy: 'Guía directa para incidencias que se resuelven en el momento.' },
-      { title: 'Visitas programadas', copy: 'Intervención en sitio con agenda coordinada contigo.' },
-      { title: 'Escalamiento inmediato', copy: 'Si el caso requiere presencia física, se deriva sin vueltas.' },
-      { title: 'Registro de cada atención', copy: 'Historial de lo resuelto, pendientes y recomendaciones.' },
-    ],
-    faq: [
-      {
-        question: '¿El acceso remoto es seguro?',
-        answer:
-          'Sí. Usamos herramientas con autorización expresa y registro de sesión. Tú controlas cuándo se inicia y cuándo finaliza cada conexión.',
-      },
-      {
-        question: '¿Cubren visitas fuera de Lima?',
-        answer:
-          'El soporte remoto cubre todo el Perú. Las visitas en sitio se coordinan según ubicación, criticidad y alcance del plan contratado.',
-      },
-      {
-        question: '¿Qué pasa si el problema no se puede resolver de forma remota?',
-        answer:
-          'Se escala a una visita presencial con el diagnóstico previo, para que el técnico llegue con la información y los repuestos necesarios.',
-      },
-    ],
-    related: ['soporte-tecnico', 'soporte-empresarial', 'mantenimiento-de-equipos'],
-  },
-  {
     slug: 'soporte-empresarial',
     title: 'Soluciones de soporte para empresas',
     category: 'Soporte TI',
@@ -232,7 +204,7 @@ export const serviceDefinitions: ServiceDefinition[] = [
           'Los planes se contratan por periodos mensuales con condiciones claras de alcance y permanencia. Las condiciones se detallan en la propuesta.',
       },
     ],
-    related: ['soporte-tecnico', 'soporte-remoto-y-presencial', 'implementacion-de-infraestructura'],
+    related: ['soporte-tecnico', 'mantenimiento-de-equipos', 'implementacion-de-infraestructura'],
   },
 
   // ─── Infraestructura TI ─────────────────────────────────────────────────────
@@ -247,8 +219,9 @@ export const serviceDefinitions: ServiceDefinition[] = [
     includes: [
       { title: 'Diseño de red', copy: 'Levantamiento de sedes, usuarios y necesidades de ancho de banda.' },
       { title: 'Wi-Fi empresarial', copy: 'Access points con cobertura uniforme y roaming entre áreas.' },
-      { title: 'Switches y routers gestionados', copy: 'Equipos configurados, segmentados y actualizados.' },
+      { title: 'Routers, switches y access points', copy: 'Equipos configurados, segmentados y actualizados según el uso.' },
       { title: 'Segmentación y VLANs', copy: 'Separación de tráfico por área o tipo de dispositivo.' },
+      { title: 'Políticas de seguridad y respaldos', copy: 'Accesos controlados y copias de configuración para restaurar la red.' },
       { title: 'Monitoreo de red', copy: 'Visibilidad de disponibilidad y detección temprana de fallas.' },
     ],
     faq: [
@@ -263,12 +236,17 @@ export const serviceDefinitions: ServiceDefinition[] = [
           'Cuando el equipamiento es compatible y está en buen estado, lo reutilizamos. Si limita el rendimiento o la seguridad, lo indicamos en la propuesta con alternativas.',
       },
       {
+        question: '¿Trabajan con equipos TP-Link, Ubiquiti y marcas similares?',
+        answer:
+          'Sí. Configuramos equipos de las marcas más usadas en oficinas y empresas. Si el modelo no admite alguna función requerida, lo informamos antes de intervenir.',
+      },
+      {
         question: '¿Cuánto demora implementar una red de oficina?',
         answer:
           'Una oficina pequeña puede implementarse entre 2 y 5 días. Proyectos multisitio se planifican por etapas con fechas y alcance definidos.',
       },
     ],
-    related: ['cableado-estructurado', 'configuracion-de-equipos-de-red', 'implementacion-de-infraestructura'],
+    related: ['cableado-estructurado', 'implementacion-de-infraestructura', 'equipamiento-tecnologico-empresarial'],
   },
   {
     slug: 'cableado-estructurado',
@@ -302,41 +280,7 @@ export const serviceDefinitions: ServiceDefinition[] = [
           'Sí. Entregamos el registro de puntos instalados, numeración, pruebas realizadas y recomendaciones de mantenimiento.',
       },
     ],
-    related: ['redes-y-conectividad', 'configuracion-de-equipos-de-red', 'implementacion-de-infraestructura'],
-  },
-  {
-    slug: 'configuracion-de-equipos-de-red',
-    title: 'Configuración de equipos de red',
-    category: 'Infraestructura TI',
-    summary:
-      'Configuración de routers, switches y access points con seguridad, respaldo de configuraciones y red ordenada.',
-    intro:
-      'Configuramos los equipos de red con criterios de seguridad y orden, de modo que la red sea estable y fácil de administrar. Incluye respaldo de configuraciones para recuperar el servicio rápido ante cualquier eventualidad.',
-    includes: [
-      { title: 'Routers', copy: 'Configuración de WAN, LAN, DHCP y reglas de acceso.' },
-      { title: 'Switches', copy: 'Puertos, VLANs y priorización de tráfico según el uso.' },
-      { title: 'Access points', copy: 'Redes Wi-Fi separadas para colaboradores e invitados.' },
-      { title: 'Políticas de seguridad', copy: 'Contraseñas robustas, actualizaciones y accesos controlados.' },
-      { title: 'Respaldo de configuraciones', copy: 'Copias de seguridad para restaurar la red en minutos.' },
-    ],
-    faq: [
-      {
-        question: '¿Trabajan con equipos TP-Link, Ubiquiti y marcas similares?',
-        answer:
-          'Sí. Configuramos equipos de las marcas más usadas en oficinas y empresas. Si el modelo no admite alguna función requerida, lo informamos antes de intervenir.',
-      },
-      {
-        question: '¿Qué pasa con la configuración que ya tenemos?',
-        answer:
-          'La revisamos y respaldamos antes de cualquier cambio. Los ajustes se hacen de forma controlada para no interrumpir el servicio.',
-      },
-      {
-        question: '¿Pueden ajustar la red de forma remota?',
-        answer:
-          'Sí, siempre que exista conectividad y accesos autorizados. Los cambios críticos se coordinan para evitar cortes en horario de trabajo.',
-      },
-    ],
-    related: ['redes-y-conectividad', 'cableado-estructurado', 'soporte-remoto-y-presencial'],
+    related: ['redes-y-conectividad', 'implementacion-de-infraestructura', 'soporte-empresarial'],
   },
   {
     slug: 'implementacion-de-infraestructura',

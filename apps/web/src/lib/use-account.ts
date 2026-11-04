@@ -72,6 +72,24 @@ export function useAccount() {
     setIsLoaded(true)
   }, [])
 
+  // Mantiene sincronizadas las pestañas: si el perfil se guarda en otra,
+  // la cotización abierta recibe los datos sin recargar.
+  useEffect(() => {
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key === PROFILE_STORAGE_KEY) {
+        setProfile(normalizeProfile(readStored<LegacyProfile | null>(PROFILE_STORAGE_KEY, null)))
+      } else if (event.key === QUOTES_STORAGE_KEY) {
+        setQuotes(readStored<LegacyQuote[]>(QUOTES_STORAGE_KEY, []).map(normalizeQuote))
+      } else if (event.key === null) {
+        setProfile(null)
+        setQuotes([])
+      }
+    }
+
+    window.addEventListener('storage', handleStorage)
+    return () => window.removeEventListener('storage', handleStorage)
+  }, [])
+
   const saveProfile = useCallback((next: AccountProfile) => {
     const value: AccountProfile = {
       ...next,

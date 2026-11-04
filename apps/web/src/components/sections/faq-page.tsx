@@ -307,7 +307,7 @@ export function FaqPage() {
         {/* Tarjeta de ayuda directa */}
         <section className="border-t border-[#E2E8F0] bg-[#F8FAFC] py-16" aria-label="Ayuda personalizada">
           <div className="mx-auto w-full max-w-4xl px-4 sm:px-6">
-            <div className="rounded-3xl border border-[#DBEAFE] bg-gradient-to-br from-white to-[#EFF6FF] p-8 shadow-sm sm:p-10">
+            <div className="rounded-3xl border border-[#DDD6FE] bg-gradient-to-br from-white to-[#EDE9FE] p-8 shadow-sm sm:p-10">
               <div className="grid gap-6 md:grid-cols-[1fr_auto] md:items-center">
                 <div>
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-[#2563EB]/10 px-3 py-1 text-xs font-bold text-[#2563EB]">

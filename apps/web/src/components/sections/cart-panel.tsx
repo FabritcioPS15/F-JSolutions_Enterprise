@@ -112,7 +112,7 @@ export function CartPanel({
                         <button
                           onClick={() => onRemove(product.id)}
                           aria-label={`Eliminar ${product.name}`}
-                          className="text-[#475569] transition hover:text-[#0E7490]"
+                          className="text-[#475569] transition hover:text-[#6D28D9]"
                         >
                           <Trash2 className="size-4" />
                         </button>
@@ -130,7 +130,7 @@ export function CartPanel({
               </div>
               <div className="mt-1 flex items-center justify-between text-sm text-[#475569]">
                 <span>Envío</span>
-                <span className="font-semibold text-[#0E7490]">Calculado al cotizar</span>
+                <span className="font-semibold text-[#5B21B6]">Calculado al cotizar</span>
               </div>
               <div className="mt-3 flex items-center justify-between border-t border-[#E2E8F0] pt-3">
                 <span className="text-sm font-bold text-[#0F172A]">Total</span>

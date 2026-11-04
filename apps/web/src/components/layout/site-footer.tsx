@@ -36,6 +36,7 @@ const FOOTER_COLUMNS: FooterColumn[] = [
     links: [
       { label: 'Soporte técnico', href: '/servicios/soporte-tecnico' },
       { label: 'Soporte para empresas', href: '/servicios/soporte-empresarial' },
+      { label: 'Infraestructura TI', href: '/infraestructura-ti' },
       { label: 'Redes y conectividad', href: '/servicios/redes-y-conectividad' },
       { label: 'Cableado estructurado', href: '/servicios/cableado-estructurado' },
       { label: 'Mantenimiento de equipos', href: '/servicios/mantenimiento-de-equipos' },
@@ -156,7 +157,7 @@ function FooterNavColumn({
         </span>
         <span className="flex items-center gap-2">
           {hasActiveLink && (
-            <span className="size-1.5 rounded-full bg-[#38BDF8]" aria-hidden="true" />
+            <span className="size-1.5 rounded-full bg-[#A78BFA]" aria-hidden="true" />
           )}
           <ChevronDown
             className={cn(
@@ -187,12 +188,12 @@ function FooterNavColumn({
                   FOCUS_STYLE,
                   active
                     ? 'font-semibold text-white'
-                    : 'text-[#94A3B8] hover:text-[#38BDF8]'
+                    : 'text-[#94A3B8] hover:text-[#C4B5FD]'
                 )}
               >
                 {active && (
                   <span
-                    className="absolute -left-3 top-1/2 size-1.5 -translate-y-1/2 rounded-full bg-[#38BDF8]"
+                    className="absolute -left-3 top-1/2 size-1.5 -translate-y-1/2 rounded-full bg-[#A78BFA]"
                     aria-hidden="true"
                   />
                 )}
@@ -212,7 +213,7 @@ export function SiteFooter() {
 
   return (
     <footer
-      className="border-t border-[#1E293B]/80 bg-[#0B132B] text-[#94A3B8] selection:bg-[#2563EB]/25 selection:text-white"
+      className="border-t border-[#1E293B]/80 bg-gradient-to-b from-[#0B132B] via-[#0B1220] to-[#2E1065] text-[#94A3B8] selection:bg-[#7C3AED]/30 selection:text-white"
       aria-label="Pie de página"
     >
       <div className="mx-auto max-w-[1280px] px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-16">
@@ -257,7 +258,7 @@ export function SiteFooter() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={social.label}
-                  className={`grid size-11 place-items-center rounded-full border border-[#1E293B] bg-[#0F172A]/70 text-[#94A3B8] transition duration-200 hover:border-[#2563EB]/60 hover:bg-[#1E293B] hover:text-white motion-reduce:transition-none ${FOCUS_STYLE}`}
+                  className={`grid size-11 place-items-center rounded-full border border-[#1E293B] bg-[#0F172A]/70 text-[#94A3B8] transition duration-200 hover:border-[#7C3AED]/60 hover:bg-[#1E1B4B] hover:text-white motion-reduce:transition-none ${FOCUS_STYLE}`}
                 >
                   <svg
                     viewBox="0 0 24 24"

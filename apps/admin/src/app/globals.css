@@ -60,6 +60,11 @@ html {
   /* F&J Systems Color Palette */
   --midnight-navy: #0B1220;
   --tech-blue: #2563EB;
+  --brand-purple: #5B21B6;
+  --brand-purple-dark: #4C1D95;
+  --brand-purple-deep: #2E1065;
+  --brand-purple-soft: #F5F3FF;
+  --brand-purple-border: #DDD6FE;
   --electric-cyan: #22D3EE;
   --teal-green: #14B8A6;
   --cloud-white: #F8FAFC;
@@ -73,7 +78,7 @@ html {
   --card-foreground: var(--midnight-navy);
   --popover: var(--pure-white);
   --popover-foreground: var(--midnight-navy);
-  --primary: var(--tech-blue);
+  --primary: var(--brand-purple);
   --primary-foreground: var(--pure-white);
   --secondary: var(--cloud-white);
   --secondary-foreground: var(--midnight-navy);
@@ -85,8 +90,8 @@ html {
   --destructive-foreground: var(--pure-white);
   --border: var(--border-gray);
   --input: var(--border-gray);
-  --ring: var(--tech-blue);
-  --chart-1: var(--tech-blue);
+  --ring: var(--brand-purple);
+  --chart-1: var(--brand-purple);
   --chart-2: var(--teal-green);
   --chart-3: var(--electric-cyan);
   --chart-4: var(--slate-gray);
@@ -94,12 +99,12 @@ html {
   --radius: 0.625rem;
   --sidebar: var(--cloud-white);
   --sidebar-foreground: var(--midnight-navy);
-  --sidebar-primary: var(--tech-blue);
+  --sidebar-primary: var(--brand-purple);
   --sidebar-primary-foreground: var(--pure-white);
   --sidebar-accent: var(--cloud-white);
   --sidebar-accent-foreground: var(--midnight-navy);
   --sidebar-border: var(--border-gray);
-  --sidebar-ring: var(--tech-blue);
+  --sidebar-ring: var(--brand-purple);
 }
 
 .dark {
@@ -155,8 +160,8 @@ html {
   }
 
   ::selection {
-    background: rgb(37 99 235 / 0.14);
-    color: #1e3a8a;
+    background: rgb(91 33 182 / 0.16);
+    color: #3b0764;
   }
 
   html,
@@ -208,4 +213,109 @@ html {
     scrollbar-width: thin;
     scrollbar-color: #cbd5e1 transparent;
   }
+}
+
+/* react-calendar · adaptado a la paleta del panel */
+.fj-calendar .react-calendar {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: #0f172a;
+  font-family: var(--font-body);
+  line-height: 1.2;
+}
+
+.fj-calendar .react-calendar__navigation {
+  display: flex;
+  align-items: center;
+  height: 34px;
+  margin-bottom: 4px;
+}
+
+.fj-calendar .react-calendar__navigation button {
+  min-width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: transparent;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.fj-calendar .react-calendar__navigation button:disabled {
+  background: transparent;
+  opacity: 0.4;
+}
+
+.fj-calendar .react-calendar__navigation button:enabled:hover,
+.fj-calendar .react-calendar__navigation button:enabled:focus {
+  background: #f1f5f9;
+}
+
+.fj-calendar .react-calendar__navigation__label {
+  flex-grow: 1;
+}
+
+.fj-calendar .react-calendar__navigation__label__labelText {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.fj-calendar .react-calendar__month-view__weekdays {
+  margin-bottom: 2px;
+  color: #94a3b8;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.fj-calendar .react-calendar__month-view__weekdays__weekday {
+  padding: 4px 0;
+}
+
+.fj-calendar .react-calendar__month-view__weekdays abbr {
+  text-decoration: none;
+  cursor: default;
+}
+
+.fj-calendar .react-calendar__tile {
+  height: 34px;
+  padding: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #334155;
+  font-size: 12.5px;
+  line-height: 34px;
+}
+
+.fj-calendar .react-calendar__tile:enabled:hover,
+.fj-calendar .react-calendar__tile:enabled:focus {
+  background: #f5f3ff;
+  color: #4c1d95;
+}
+
+.fj-calendar .react-calendar__tile--now {
+  background: #ede9fe;
+  color: #5b21b6;
+  font-weight: 700;
+}
+
+.fj-calendar .react-calendar__tile--now:enabled:hover,
+.fj-calendar .react-calendar__tile--now:enabled:focus {
+  background: #ddd6fe;
+}
+
+.fj-calendar .react-calendar__tile--active,
+.fj-calendar .react-calendar__tile--active:enabled:hover,
+.fj-calendar .react-calendar__tile--active:enabled:focus {
+  background: #5b21b6;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.fj-calendar .react-calendar__tile:disabled {
+  background: transparent;
+  color: #cbd5e1;
 }

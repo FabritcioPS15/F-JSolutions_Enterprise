@@ -569,7 +569,7 @@ export function RequestsView() {
                 key={item.id}
                 className={cn(
                   'group rounded-2xl border bg-white p-4 shadow-xs transition hover:border-slate-300 hover:shadow-sm sm:p-5',
-                  item.status === 'new' ? 'border-blue-200/80' : 'border-slate-200/80'
+                  item.status === 'new' ? 'border-[#DDD6FE]/80' : 'border-slate-200/80'
                 )}
               >
                 <div className="flex flex-wrap items-start gap-3">
@@ -577,7 +577,7 @@ export function RequestsView() {
                     className={cn(
                       'grid size-10 shrink-0 place-items-center rounded-xl ring-1 ring-inset',
                       item.status === 'new'
-                        ? 'bg-blue-50 text-blue-600 ring-blue-100'
+                        ? 'bg-[#F5F3FF] text-[#5B21B6] ring-[#DDD6FE]'
                         : 'bg-slate-50 text-slate-500 ring-slate-200/70'
                     )}
                     aria-hidden="true"
@@ -619,7 +619,7 @@ export function RequestsView() {
                         </span>
                       )}
                       {item.quoteId && (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 px-1.5 py-0.5 font-semibold text-blue-700">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-[#F5F3FF] px-1.5 py-0.5 font-semibold text-[#5B21B6]">
                           <FileText className="size-2.5" aria-hidden="true" />
                           Cotización creada
                         </span>
@@ -738,7 +738,7 @@ export function RequestsView() {
                 </p>
                 <a
                   href={`mailto:${detail.email}`}
-                  className="mt-1 block truncate text-xs font-semibold text-blue-600 hover:text-blue-700"
+                  className="mt-1 block truncate text-xs font-semibold text-[#5B21B6] hover:text-[#5B21B6]"
                 >
                   {detail.email}
                 </a>
@@ -796,7 +796,7 @@ export function RequestsView() {
                 {linkedQuote && (
                   <Link
                     href={`/cotizaciones?q=${encodeURIComponent(linkedQuote.code)}`}
-                    className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-2 py-0.5 font-mono text-[10.5px] font-semibold text-blue-700 transition hover:bg-blue-100"
+                    className="inline-flex items-center gap-1.5 rounded-full bg-[#F5F3FF] px-2 py-0.5 font-mono text-[10.5px] font-semibold text-[#5B21B6] transition hover:bg-[#EDE9FE]"
                   >
                     <FileText className="size-3" aria-hidden="true" />
                     {linkedQuote.code}

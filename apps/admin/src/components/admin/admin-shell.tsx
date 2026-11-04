@@ -10,6 +10,7 @@ import {
   ExternalLink,
   FileText,
   FolderTree,
+  Globe2,
   History,
   Inbox,
   LayoutDashboard,
@@ -64,6 +65,8 @@ function getBreadcrumb(pathname: string) {
   if (pathname === '/clientes') return { section: 'Comercial', title: 'Clientes' }
   if (pathname === '/solicitudes') return { section: 'Atención al cliente', title: 'Mesa de ayuda' }
   if (pathname === '/actividad') return { section: 'General', title: 'Actividad reciente' }
+  if (pathname === '/inventario') return { section: 'Operaciones', title: 'Inventario' }
+  if (pathname === '/proyectos') return { section: 'Operaciones', title: 'Proyectos web' }
   if (pathname === '/configuracion') return { section: 'Sistema', title: 'Configuración' }
   return { section: 'Panel', title: 'Administración' }
 }
@@ -198,7 +201,8 @@ export function AdminShell({ children }: { children: ReactNode }) {
     {
       label: 'Operaciones',
       items: [
-        { href: '/inventario', label: 'Inventario', icon: Boxes, planned: true },
+        { href: '/inventario', label: 'Inventario', icon: Boxes },
+        { href: '/proyectos', label: 'Proyectos web', icon: Globe2 },
         { href: '/proveedores', label: 'Proveedores', icon: Truck, planned: true },
       ],
     },
@@ -225,7 +229,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
 
       <aside
         className={cn(
-          'fixed inset-y-0 left-0 z-50 flex w-[272px] flex-col border-r border-white/5 bg-[#0B1220] text-slate-300 transition-[transform,width] duration-300 ease-out lg:translate-x-0',
+          'fixed inset-y-0 left-0 z-50 flex w-[272px] flex-col border-r border-white/5 bg-gradient-to-b from-[#2E1065] via-[#1E1B4B] to-[#0B1220] text-slate-300 transition-[transform,width] duration-300 ease-out lg:translate-x-0',
           open ? 'translate-x-0' : '-translate-x-full',
           collapsed && 'lg:w-[76px]'
         )}
@@ -237,19 +241,20 @@ export function AdminShell({ children }: { children: ReactNode }) {
             collapsed && 'lg:justify-center lg:px-3'
           )}
         >
-          <Link href="/" className="flex min-w-0 items-center gap-3" aria-label="FJ Systems, inicio">
-            <span className="relative grid size-10 shrink-0 place-items-center overflow-hidden rounded-xl bg-white/[0.08] font-heading text-sm font-bold tracking-tight text-white ring-1 ring-inset ring-white/15">
-              FJ
-              <span className="absolute inset-0 rounded-xl ring-1 ring-inset ring-white/20" />
-            </span>
-            <span className={cn('min-w-0', collapsed && 'lg:hidden')}>
-              <span className="block truncate font-heading text-[15px] font-bold tracking-tight text-white">
-                {settings.storeName}
-              </span>
-              <span className="block text-[9.5px] font-semibold uppercase tracking-[0.24em] text-slate-500">
-                Panel de administración
-              </span>
-            </span>
+          <Link
+            href="/"
+            className="group flex min-w-0 items-center gap-3"
+            aria-label="FJ Systems, inicio"
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logo.png"
+              alt="F&J Systems"
+              className={cn(
+                'h-14 w-auto shrink-0 object-contain brightness-0 invert transition-transform duration-200 group-hover:scale-105',
+                collapsed && 'lg:h-6'
+              )}
+            />
           </Link>
 
           <button
@@ -343,14 +348,14 @@ export function AdminShell({ children }: { children: ReactNode }) {
                           'group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-[13px] font-medium transition-all',
                           collapsed && 'lg:justify-center lg:px-0',
                           active
-                            ? 'bg-white/[0.07] text-white shadow-inner ring-1 ring-white/[0.06]'
-                            : 'text-slate-400 hover:bg-white/[0.04] hover:text-white'
+                            ? 'bg-[#5B21B6]/35 text-white shadow-inner ring-1 ring-[#A78BFA]/25'
+                            : 'text-slate-400 hover:bg-[#5B21B6]/15 hover:text-white'
                         )}
                       >
                         {active && (
                           <span
                             className={cn(
-                              'absolute -left-3 top-1/2 h-5 w-1 -translate-y-1/2 rounded-r-full bg-white/70',
+                              'absolute -left-3 top-1/2 h-5 w-1 -translate-y-1/2 rounded-r-full bg-[#A78BFA]',
                               collapsed && 'lg:hidden'
                             )}
                           />
@@ -368,7 +373,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
                             className={cn(
                               'ml-auto rounded-full px-1.5 py-0.5 text-[10px] font-bold tabular-nums ring-1 ring-inset',
                               item.badgeTone === 'blue'
-                                ? 'bg-blue-400/15 text-blue-300 ring-blue-400/20'
+                                ? 'bg-[#A78BFA]/15 text-[#C4B5FD] ring-[#A78BFA]/20'
                                 : 'bg-amber-400/15 text-amber-300 ring-amber-400/20',
                               collapsed && 'lg:hidden'
                             )}
@@ -412,7 +417,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
               collapsed && 'lg:justify-center lg:px-0'
             )}
           >
-            <span className="grid size-9 shrink-0 place-items-center rounded-full bg-gradient-to-br from-slate-700 to-slate-800 text-[11px] font-bold text-white ring-1 ring-white/10">
+            <span className="grid size-9 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[#5B21B6] to-[#3B0764] text-[11px] font-bold text-white ring-1 ring-white/10">
               AD
             </span>
             <div className={cn('min-w-0', collapsed && 'lg:hidden')}>
@@ -462,7 +467,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
                   onChange={(event) => setSearch(event.target.value)}
                   placeholder="Buscar productos o SKU…"
                   aria-label="Buscador global de productos"
-                  className="h-9 w-full rounded-xl border border-slate-200 bg-slate-50/70 pl-9 pr-3 text-xs text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10"
+                  className="h-9 w-full rounded-xl border border-slate-200 bg-slate-50/70 pl-9 pr-3 text-xs text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-[#5B21B6] focus:bg-white focus:ring-4 focus:ring-[#5B21B6]/10"
                 />
               </div>
             </form>

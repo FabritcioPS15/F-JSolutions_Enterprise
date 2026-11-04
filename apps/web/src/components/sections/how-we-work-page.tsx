@@ -27,6 +27,7 @@ import {
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
 import { EditorialHero } from '@/components/heroes'
 import { HeroAction } from '@/components/heroes/hero-primitives'
+import { ProcessSequence } from '@/components/ui/process-sequence'
 import { EMPRESA } from '@/lib/constants'
 
 const CONTAINER = 'mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8'
@@ -212,7 +213,7 @@ export function HowWeWorkPage() {
         <section className="border-y border-[#E2E8F0] bg-[#F8FAFC] py-14 sm:py-20" aria-label="Nuestros pilares">
           <div className={CONTAINER}>
             <div className="max-w-2xl">
-              <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#2563EB]">Garantía de calidad</p>
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#5B21B6]">Garantía de calidad</p>
               <h2 className="mt-1 font-heading text-2xl font-bold tracking-tight text-[#0F172A] sm:text-3xl">
                 Principios que guían cada proyecto
               </h2>
@@ -245,7 +246,7 @@ export function HowWeWorkPage() {
         <section className="py-16 sm:py-24" aria-label="Etapas del proceso">
           <div className={CONTAINER}>
             <div className="text-center max-w-2xl mx-auto">
-              <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#2563EB]">Paso a paso</p>
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#5B21B6]">Paso a paso</p>
               <h2 className="mt-1 font-heading text-2xl font-bold tracking-tight text-[#0F172A] sm:text-3xl">
                 De la necesidad a la solución implementada
               </h2>
@@ -254,7 +255,7 @@ export function HowWeWorkPage() {
               </p>
             </div>
 
-            <div className="mt-14 space-y-6">
+            <ProcessSequence layout="stack" className="mt-14 space-y-6">
               {steps.map((s, idx) => {
                 const Icon = s.icon
                 return (
@@ -265,7 +266,7 @@ export function HowWeWorkPage() {
                     <div className="grid gap-6 lg:grid-cols-[100px_1fr_320px] lg:items-center">
                       {/* Step number and badge */}
                       <div className="flex items-center gap-3 lg:flex-col lg:items-start lg:gap-1">
-                        <span className="font-heading text-4xl font-extrabold text-[#2563EB] sm:text-5xl">
+                        <span className="process-number font-heading text-4xl font-extrabold text-[#2563EB] sm:text-5xl">
                           {s.step}
                         </span>
                         <span className="rounded-full bg-[#EFF6FF] px-2.5 py-0.5 text-[11px] font-bold text-[#2563EB]">
@@ -304,7 +305,7 @@ export function HowWeWorkPage() {
                   </div>
                 )
               })}
-            </div>
+            </ProcessSequence>
           </div>
         </section>
 
@@ -312,7 +313,7 @@ export function HowWeWorkPage() {
         <section className="border-t border-[#E2E8F0] bg-[#F8FAFC] py-16 sm:py-24" aria-label="Modelos de servicio">
           <div className={CONTAINER}>
             <div className="text-center max-w-2xl mx-auto">
-              <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#2563EB]">Modalidades flexibles</p>
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#5B21B6]">Modalidades flexibles</p>
               <h2 className="mt-1 font-heading text-2xl font-bold tracking-tight text-[#0F172A] sm:text-3xl">
                 ¿Cómo podemos colaborar juntos?
               </h2>

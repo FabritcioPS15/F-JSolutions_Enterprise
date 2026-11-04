@@ -35,6 +35,8 @@ import {
   btnSecondary,
   iconButton,
   inputClass,
+  tableClass,
+  tableHeadRowClass,
   textareaClass,
 } from '@/components/admin/ui'
 import { clientsDataset } from '@/lib/admin/excel-exports'
@@ -379,15 +381,15 @@ export function ClientsView() {
         <>
           <div className="hidden overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xs lg:block">
             <div className="overflow-x-auto scrollbar-light">
-              <table className="w-full min-w-[940px] text-left text-sm">
+              <table className={tableClass}>
                 <thead>
-                  <tr className="border-b border-slate-100 bg-slate-50/70 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">
+                  <tr className={tableHeadRowClass}>
                     <th scope="col" className="min-w-[240px] px-5 py-3">Cliente</th>
-                    <th scope="col" className="px-3 py-3">Documento</th>
-                    <th scope="col" className="px-3 py-3">Contacto</th>
-                    <th scope="col" className="px-3 py-3">Segmento</th>
-                    <th scope="col" className="px-3 py-3">Cotizaciones</th>
-                    <th scope="col" className="px-3 py-3">Estado</th>
+                    <th scope="col" className="px-4 py-3">Documento</th>
+                    <th scope="col" className="px-4 py-3">Contacto</th>
+                    <th scope="col" className="px-4 py-3">Segmento</th>
+                    <th scope="col" className="px-4 py-3">Cotizaciones</th>
+                    <th scope="col" className="px-4 py-3">Estado</th>
                     <th scope="col" className="whitespace-nowrap px-5 py-3 text-right">Acciones</th>
                   </tr>
                 </thead>
@@ -407,14 +409,14 @@ export function ClientsView() {
                               <p className="truncate text-[12.5px] font-semibold text-slate-900">
                                 {client.company || client.name}
                               </p>
-                              <p className="mt-0.5 truncate text-[10.5px] text-slate-400">
+                              <p className="mt-0.5 truncate text-[11px] text-slate-400">
                                 {client.company ? client.name : 'Persona natural'}
                                 {client.city ? ` · ${client.city}` : ''}
                               </p>
                             </div>
                           </div>
                         </td>
-                        <td className="px-3 py-3">
+                        <td className="px-4 py-3">
                           {client.documentNumber ? (
                             <>
                               <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400">
@@ -428,26 +430,26 @@ export function ClientsView() {
                             <span className="text-[11px] text-slate-400">Sin documento</span>
                           )}
                         </td>
-                        <td className="px-3 py-3">
-                          <p className="max-w-[190px] truncate text-[11.5px] font-medium text-slate-700">
+                        <td className="px-4 py-3">
+                          <p className="max-w-[190px] truncate text-[12.5px] font-medium text-slate-700">
                             {client.email}
                           </p>
-                          <p className="mt-0.5 text-[10.5px] text-slate-400">
+                          <p className="mt-0.5 text-[11px] text-slate-400">
                             {client.phone || 'Sin teléfono'}
                           </p>
                         </td>
-                        <td className="px-3 py-3">
+                        <td className="px-4 py-3">
                           <span className="inline-flex rounded-full bg-slate-100 px-2 py-0.5 text-[10.5px] font-semibold text-slate-600">
                             {clientSegmentLabels[client.segment]}
                           </span>
                         </td>
-                        <td className="px-3 py-3">
+                        <td className="px-4 py-3">
                           {clientQuotes.length > 0 ? (
                             <>
-                              <p className="text-[12px] font-bold tabular-nums text-slate-900">
+                              <p className="text-[12.5px] font-bold tabular-nums text-slate-900">
                                 {clientQuotes.length}
                               </p>
-                              <p className="mt-0.5 text-[10px] text-slate-400">
+                              <p className="mt-0.5 text-[11px] text-slate-400">
                                 Última {formatDate(clientQuotes[0].createdAt)}
                               </p>
                             </>
@@ -455,7 +457,7 @@ export function ClientsView() {
                             <span className="text-[11px] text-slate-400">Sin cotizaciones</span>
                           )}
                         </td>
-                        <td className="px-3 py-3">
+                        <td className="px-4 py-3">
                           <ClientStatusBadge status={client.status} />
                         </td>
                         <td className="whitespace-nowrap px-5 py-3">

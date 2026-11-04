@@ -98,7 +98,7 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <section className="relative overflow-hidden rounded-3xl bg-[#0B1220] px-6 py-7 text-white shadow-xl shadow-slate-900/10 sm:px-8 sm:py-9">
+      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#2E1065] via-[#1E1B4B] to-[#0B1220] px-6 py-7 text-white shadow-xl shadow-slate-900/10 sm:px-8 sm:py-9">
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.12]"
           style={{
@@ -303,7 +303,7 @@ export default function DashboardPage() {
             <Link
               key={item.href}
               href={item.href}
-              className="group flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs transition hover:-translate-y-0.5 hover:border-blue-200 hover:shadow-md"
+              className="group flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs transition hover:-translate-y-0.5 hover:border-[#DDD6FE] hover:shadow-md"
             >
               <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-slate-50 text-slate-500 ring-1 ring-slate-200/70">
                 <Icon className="size-[18px]" aria-hidden="true" />
@@ -337,7 +337,7 @@ export default function DashboardPage() {
           action={
             <Link
               href="/categorias"
-              className="inline-flex items-center gap-1 text-[11px] font-semibold text-blue-600 transition hover:text-blue-700"
+              className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#5B21B6] transition hover:text-[#5B21B6]"
             >
               Gestionar
               <ArrowUpRight className="size-3.5" aria-hidden="true" />
@@ -350,7 +350,7 @@ export default function DashboardPage() {
               title="Aún no hay productos"
               description="Crea tu primer producto para ver la distribución por categoría."
               action={
-                <Link href="/productos/nuevo" className="text-xs font-semibold text-blue-600">
+                <Link href="/productos/nuevo" className="text-xs font-semibold text-[#5B21B6]">
                   Crear producto
                 </Link>
               }
@@ -377,7 +377,7 @@ export default function DashboardPage() {
                   </div>
                   <div className="h-1.5 overflow-hidden rounded-full bg-slate-100">
                     <div
-                      className="h-full rounded-full bg-blue-600 transition-all duration-500"
+                      className="h-full rounded-full bg-[#5B21B6] transition-all duration-500"
                       style={{ width: `${Math.max(4, (category.count / maxCategoryCount) * 100)}%` }}
                     />
                   </div>
@@ -437,7 +437,7 @@ export default function DashboardPage() {
             </p>
             <Link
               href="/productos?stock=low"
-              className="text-[10.5px] font-semibold text-blue-600 transition hover:text-blue-700"
+              className="text-[10.5px] font-semibold text-[#5B21B6] transition hover:text-[#5B21B6]"
             >
               Revisar
             </Link>
@@ -454,7 +454,7 @@ export default function DashboardPage() {
           action={
             <Link
               href="/productos?stock=low"
-              className="inline-flex items-center gap-1 text-[11px] font-semibold text-blue-600 transition hover:text-blue-700"
+              className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#5B21B6] transition hover:text-[#5B21B6]"
             >
               Ver todos
               <ArrowUpRight className="size-3.5" aria-hidden="true" />
@@ -501,7 +501,7 @@ export default function DashboardPage() {
           action={
             <Link
               href="/actividad"
-              className="inline-flex items-center gap-1 text-[11px] font-semibold text-blue-600 transition hover:text-blue-700"
+              className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#5B21B6] transition hover:text-[#5B21B6]"
             >
               Ver todo
               <ArrowUpRight className="size-3.5" aria-hidden="true" />
@@ -548,7 +548,7 @@ export default function DashboardPage() {
                     {product ? (
                       <Link
                         href={`/productos/${product.id}`}
-                        className="flex items-center gap-3 rounded-lg transition hover:text-blue-600"
+                        className="flex items-center gap-3 rounded-lg transition hover:text-[#5B21B6]"
                       >
                         {content}
                       </Link>

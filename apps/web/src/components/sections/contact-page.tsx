@@ -97,7 +97,7 @@ export function ContactPage() {
         <div className={`${CONTAINER} py-12 sm:py-14 lg:py-16`}>
           <div className="grid gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-start lg:gap-14">
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#2563EB]">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5B21B6]">
                 Formulario de contacto
               </p>
               <h2 className="mt-3 max-w-[18ch] font-heading text-[clamp(1.8rem,1.1rem+2.2vw,2.85rem)] font-bold leading-[1.08] tracking-[-0.045em] text-[#0F172A]">
@@ -192,7 +192,7 @@ export function ContactPage() {
       <section className="border-y border-[#E2E8F0] bg-[#F7F9FC]">
         <div className={`${CONTAINER} py-12 sm:py-14 lg:py-16`}>
           <div className="max-w-2xl">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#2563EB]">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5B21B6]">
               Elige el canal correcto
             </p>
             <h2 className="mt-3 font-heading text-[clamp(1.7rem,1.1rem+2vw,2.5rem)] font-bold leading-[1.08] tracking-[-0.045em] text-[#0F172A]">
@@ -272,7 +272,7 @@ function ContactCard() {
       />
       <div className="relative">
         <div className="flex items-center gap-3">
-          <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-[#3B82F6] to-[#1D4ED8] text-white shadow-[0_12px_24px_-12px_rgba(37,99,235,0.7)]">
+          <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-[#3B82F6] to-[#7C3AED] text-white shadow-[0_12px_24px_-12px_rgba(124,58,237,0.6)]">
             <MessageCircle aria-hidden="true" className="size-5" />
           </span>
           <div>

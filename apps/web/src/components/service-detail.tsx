@@ -17,6 +17,7 @@ import {
 } from 'lucide-react'
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
 import { FaqAccordion } from '@/components/ui/faq-accordion'
+import { ProcessSequence } from '@/components/ui/process-sequence'
 import { EMPRESA } from '@/lib/constants'
 import {
   getService,
@@ -257,7 +258,7 @@ export function ServiceDetail({ service, categoryCrumb }: ServiceDetailProps) {
           </div>
         </section>
       ) : (
-        <section className="relative overflow-hidden border-b border-[#E2E8F0] bg-gradient-to-br from-[#F8FAFC] via-white to-[#EFF6FF]">
+        <section className="relative overflow-hidden border-b border-[#E2E8F0] bg-gradient-to-br from-[#F8FAFC] via-white to-[#EDE9FE]">
         <div className="pointer-events-none absolute -right-32 -top-24 size-96 rounded-full bg-[#2563EB]/10 blur-3xl" />
         <div className="relative mx-auto grid max-w-[1280px] gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:px-8 lg:py-16">
           <div>
@@ -319,7 +320,7 @@ export function ServiceDetail({ service, categoryCrumb }: ServiceDetailProps) {
       <section className="border-b border-[#E2E8F0] bg-white">
         <div className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
           <div className="max-w-2xl">
-            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#0E7490]">
+            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#5B21B6]">
               Qué incluye
             </p>
             <h2 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-[#0F172A] sm:text-4xl">
@@ -353,7 +354,7 @@ export function ServiceDetail({ service, categoryCrumb }: ServiceDetailProps) {
         <div className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#0E7490]">
+              <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#5B21B6]">
                 Cómo trabajamos
               </p>
               <h2 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-[#0F172A] sm:text-4xl">
@@ -366,26 +367,26 @@ export function ServiceDetail({ service, categoryCrumb }: ServiceDetailProps) {
             </p>
           </div>
 
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <ProcessSequence className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {process.map((item, index) => (
               <div
                 key={item.step}
                 className="relative rounded-2xl border border-[#E2E8F0] bg-white p-6"
               >
-                <span className="text-4xl font-extrabold text-[#CBD5E1]">{item.step}</span>
+                <span className="process-number text-4xl font-extrabold text-[#CBD5E1]">{item.step}</span>
                 <span className="absolute right-5 top-5 grid size-9 place-items-center rounded-lg bg-[#EFF6FF] text-[#2563EB]">
                   <item.icon className="size-4" />
                 </span>
                 <h3 className="mt-2 text-sm font-bold text-[#0F172A]">{item.title}</h3>
                 <p className="mt-2 text-xs leading-5 text-[#475569]">{item.copy}</p>
                 {index < process.length - 1 && (
-                  <span className="absolute -right-3 top-1/2 hidden -translate-y-1/2 text-[#94A3B8] lg:block">
+                  <span className="process-arrow absolute -right-3 top-1/2 hidden -translate-y-1/2 text-[#94A3B8] lg:block">
                     <ArrowRight className="size-5" />
                   </span>
                 )}
               </div>
             ))}
-          </div>
+          </ProcessSequence>
         </div>
       </section>
 
@@ -393,7 +394,7 @@ export function ServiceDetail({ service, categoryCrumb }: ServiceDetailProps) {
       <section id="faq" className="scroll-mt-24 border-b border-[#E2E8F0] bg-white">
         <div className="mx-auto grid max-w-[1280px] gap-8 px-4 py-12 sm:px-6 lg:grid-cols-[0.85fr_1.15fr] lg:px-8 lg:py-16">
           <div>
-            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#0E7490]">
+            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#5B21B6]">
               Preguntas frecuentes
             </p>
             <h2 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-[#0F172A] sm:text-4xl">
@@ -422,7 +423,7 @@ export function ServiceDetail({ service, categoryCrumb }: ServiceDetailProps) {
           <div className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#0E7490]">
+                <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#5B21B6]">
                   Servicios relacionados
                 </p>
                 <h2 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-[#0F172A] sm:text-4xl">
@@ -464,9 +465,9 @@ export function ServiceDetail({ service, categoryCrumb }: ServiceDetailProps) {
 
       {/* ─── CTA final ─── */}
       <section className="px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
-        <div className="relative mx-auto max-w-[1280px] overflow-hidden rounded-3xl border border-[#2563EB]/20 bg-gradient-to-br from-[#EFF6FF] via-white to-[#F8FAFC] px-6 py-10 shadow-sm sm:px-10 lg:px-14 lg:py-14">
+        <div className="relative mx-auto max-w-[1280px] overflow-hidden rounded-3xl border border-[#7C3AED]/25 bg-gradient-to-br from-[#EFF6FF] via-white to-[#EDE9FE] px-6 py-10 shadow-sm sm:px-10 lg:px-14 lg:py-14">
           <div className="pointer-events-none absolute -right-24 -top-24 size-80 rounded-full bg-[#2563EB]/10 blur-2xl" />
-          <div className="pointer-events-none absolute -bottom-32 left-1/3 size-80 rounded-full bg-[#22D3EE]/20 blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-32 left-1/3 size-80 rounded-full bg-[#7C3AED]/20 blur-3xl" />
           <div className="relative grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
             <div>
               <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#334155]">

@@ -144,6 +144,22 @@ const staticPages: StaticPage[] = [
     ],
   },
   {
+    title: 'Infraestructura TI',
+    href: '/infraestructura-ti',
+    description: 'Redes, cableado estructurado, servidores y equipamiento para empresas.',
+    keywords: [
+      'infraestructura',
+      'redes',
+      'red',
+      'cableado',
+      'estructurado',
+      'servidores',
+      'wifi',
+      'equipamiento',
+      'empresas',
+    ],
+  },
+  {
     title: 'Desarrollo de software',
     href: '/sistemas',
     description: 'Páginas web, sistemas a medida, ERP, automatización e integraciones.',

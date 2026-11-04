@@ -382,7 +382,7 @@ export default function MarcasPage() {
             return (
               <article
                 key={brand.id}
-                className="group flex items-start gap-3 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs transition hover:border-blue-200 hover:shadow-sm"
+                className="group flex items-start gap-3 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs transition hover:border-[#DDD6FE] hover:shadow-sm"
               >
                 <ProductThumb src={brand.logo} alt={`Logo de ${brand.name}`} className="size-11" />
                 <div className="min-w-0 flex-1">
@@ -542,7 +542,7 @@ export default function MarcasPage() {
                 className={cn(
                   'grid size-16 shrink-0 place-items-center overflow-hidden rounded-xl border-2 border-dashed transition',
                   logoDragging
-                    ? 'border-blue-400 bg-blue-50/60'
+                    ? 'border-[#A78BFA] bg-[#F5F3FF]/60'
                     : draft.logo
                       ? 'border-transparent bg-white ring-1 ring-inset ring-slate-200'
                       : 'border-slate-200 bg-slate-50/60'

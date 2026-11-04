@@ -786,7 +786,7 @@ export function ProductForm({
   return (
     <div className="space-y-5">
       <nav aria-label="Migas de pan" className="flex items-center gap-1.5 text-xs text-slate-400">
-        <Link href="/productos" className="inline-flex items-center gap-1.5 font-semibold text-slate-500 transition hover:text-blue-600">
+        <Link href="/productos" className="inline-flex items-center gap-1.5 font-semibold text-slate-500 transition hover:text-[#5B21B6]">
           <ArrowLeft className="size-3.5" aria-hidden="true" />
           Productos
         </Link>
@@ -840,7 +840,7 @@ export function ProductForm({
                     className={cn(
                       'inline-flex h-9 items-center gap-2 rounded-lg px-2.5 text-[11px] font-semibold transition',
                       active
-                        ? 'bg-blue-50 text-blue-700 ring-1 ring-inset ring-blue-600/15'
+                        ? 'bg-[#F5F3FF] text-[#5B21B6] ring-1 ring-inset ring-[#5B21B6]/15'
                         : done
                           ? 'text-slate-600 hover:bg-slate-100'
                           : 'text-slate-400'
@@ -850,7 +850,7 @@ export function ProductForm({
                       className={cn(
                         'grid size-5 shrink-0 place-items-center rounded-full text-[10px] font-bold ring-1',
                         active
-                          ? 'bg-blue-600 text-white ring-blue-600'
+                          ? 'bg-[#5B21B6] text-white ring-[#5B21B6]'
                           : done
                             ? 'bg-slate-900 text-white ring-slate-900'
                             : 'bg-slate-50 text-slate-400 ring-slate-200'
@@ -1253,7 +1253,7 @@ export function ProductForm({
                   type="checkbox"
                   checked={draft.showPrice}
                   onChange={(event) => setField('showPrice', event.target.checked)}
-                  className="mt-0.5 size-4 rounded border-slate-300 accent-blue-600"
+                  className="mt-0.5 size-4 rounded border-slate-300 accent-[#5B21B6]"
                 />
                 <span>
                   <span className="block text-xs font-bold text-slate-900">
@@ -1462,10 +1462,10 @@ export function ProductForm({
                   className={cn(
                     'group relative aspect-[4/3] overflow-hidden rounded-2xl border-2 border-dashed transition',
                     draggingImage
-                      ? 'border-blue-400 bg-blue-50/60'
+                      ? 'border-[#A78BFA] bg-[#F5F3FF]/60'
                       : draft.image
                         ? 'border-transparent bg-slate-50 ring-1 ring-inset ring-slate-200'
-                        : 'border-slate-200 bg-slate-50/60 hover:border-blue-300 hover:bg-blue-50/30'
+                        : 'border-slate-200 bg-slate-50/60 hover:border-[#C4B5FD] hover:bg-[#F5F3FF]/30'
                   )}
                 >
                   {draft.image ? (
@@ -1520,8 +1520,8 @@ export function ProductForm({
                   )}
 
                   {draggingImage && (
-                    <div className="pointer-events-none absolute inset-0 grid place-items-center bg-blue-600/10 ring-2 ring-inset ring-blue-500">
-                      <span className="rounded-xl bg-white px-3 py-2 text-xs font-semibold text-blue-700 shadow-lg">
+                    <div className="pointer-events-none absolute inset-0 grid place-items-center bg-[#5B21B6]/10 ring-2 ring-inset ring-[#5B21B6]">
+                      <span className="rounded-xl bg-white px-3 py-2 text-xs font-semibold text-[#5B21B6] shadow-lg">
                         Suelta para {draft.image ? 'reemplazar la portada' : 'subir la imagen'}
                       </span>
                     </div>
@@ -1660,7 +1660,7 @@ export function ProductForm({
                     <button
                       type="button"
                       onClick={() => requestCrop(image, { kind: 'gallery', index })}
-                      className="absolute left-1.5 top-1.5 grid size-6 place-items-center rounded-md bg-white/90 text-slate-500 shadow-sm transition hover:text-blue-600"
+                      className="absolute left-1.5 top-1.5 grid size-6 place-items-center rounded-md bg-white/90 text-slate-500 shadow-sm transition hover:text-[#5B21B6]"
                       aria-label={`Ajustar encuadre de la imagen ${index + 1}`}
                     >
                       <Crop className="size-3" />
@@ -1707,7 +1707,7 @@ export function ProductForm({
                   </div>
                 ))}
 
-                <label className="flex aspect-square cursor-pointer flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-slate-200 bg-slate-50/60 text-slate-400 transition hover:border-blue-300 hover:bg-blue-50/40 hover:text-blue-500">
+                <label className="flex aspect-square cursor-pointer flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-slate-200 bg-slate-50/60 text-slate-400 transition hover:border-[#C4B5FD] hover:bg-[#F5F3FF]/40 hover:text-[#6D28D9]">
                   <ImagePlus className="size-5" aria-hidden="true" />
                   <span className="text-[10px] font-semibold">Añadir</span>
                   <input
@@ -1807,7 +1807,7 @@ export function ProductForm({
                 <p className="mt-2.5 truncate text-[11px] text-emerald-700">
                   fjsystems.pe › productos › {draft.slug || 'slug-del-producto'}
                 </p>
-                <p className="mt-1 line-clamp-2 text-[15px] font-medium leading-snug text-blue-700">
+                <p className="mt-1 line-clamp-2 text-[15px] font-medium leading-snug text-[#5B21B6]">
                   {draft.seoTitle || draft.name || 'Título SEO del producto'}
                 </p>
                 <p className="mt-1 line-clamp-2 text-[11px] leading-relaxed text-slate-500">
@@ -1871,7 +1871,7 @@ export function ProductForm({
                       selected
                         ? archived
                           ? 'border-amber-500 bg-amber-50/60 ring-2 ring-amber-500/15'
-                          : 'border-blue-500 bg-blue-50/60 ring-2 ring-blue-500/15'
+                          : 'border-[#5B21B6] bg-[#F5F3FF]/60 ring-2 ring-[#5B21B6]/15'
                         : 'border-slate-200 bg-white hover:border-slate-300'
                     )}
                   >
@@ -1881,7 +1881,7 @@ export function ProductForm({
                         selected
                           ? archived
                             ? 'bg-amber-500 text-white ring-amber-500'
-                            : 'bg-blue-600 text-white ring-blue-600'
+                            : 'bg-[#5B21B6] text-white ring-[#5B21B6]'
                           : 'bg-slate-50 text-slate-500 ring-slate-200'
                       )}
                     >
@@ -1894,7 +1894,7 @@ export function ProductForm({
                           <Check
                             className={cn(
                               'size-3.5',
-                              archived ? 'text-amber-600' : 'text-blue-600'
+                              archived ? 'text-amber-600' : 'text-[#5B21B6]'
                             )}
                             aria-hidden="true"
                           />
@@ -1914,7 +1914,7 @@ export function ProductForm({
                 type="checkbox"
                 checked={draft.featured}
                 onChange={(event) => setField('featured', event.target.checked)}
-                className="mt-0.5 size-4 rounded border-slate-300 accent-blue-600"
+                className="mt-0.5 size-4 rounded border-slate-300 accent-[#5B21B6]"
               />
               <span>
                 <span className="flex items-center gap-1.5 text-xs font-bold text-slate-900">

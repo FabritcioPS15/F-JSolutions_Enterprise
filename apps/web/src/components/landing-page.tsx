@@ -133,7 +133,7 @@ export function LandingPage() {
       <section id="productos" className="mx-auto max-w-[1280px] scroll-mt-20 sm:scroll-mt-24 px-4 py-8 sm:py-10 sm:px-6 lg:px-8">
         <Reveal className="relative z-20 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#155eef] sm:text-sm">Selección FJ Tech</p>
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#5B21B6] sm:text-sm">Selección FJ Tech</p>
             <h2 className="mt-2 text-2xl font-bold tracking-[-0.05em] sm:text-3xl lg:text-4xl">Productos destacados</h2>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -224,7 +224,7 @@ export function LandingPage() {
       <section id="servicios" className="border-y border-[#e5eaf0] bg-white scroll-mt-20 sm:scroll-mt-24 px-4 py-8 sm:py-10 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-[1280px]">
           <Reveal>
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#155eef] sm:text-sm">Servicios para empresas</p>
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#5B21B6] sm:text-sm">Servicios para empresas</p>
             <h2 className="mt-2 text-2xl font-bold tracking-[-0.05em] sm:text-3xl">Soporte TI en cada etapa</h2>
             <p className="mt-3 max-w-2xl text-sm leading-6 text-[#64748b]">Además de vender tecnología, ayudamos a implementar, mantener y proteger tu operación.</p>
           </Reveal>
@@ -291,7 +291,7 @@ function Feature({ icon, title, copy, onClick }: { icon: React.ReactNode; title:
       onClick={onClick}
       className="group flex h-full w-full items-center gap-3 sm:gap-4 rounded-2xl border border-[#e5eaf0] bg-white p-4 sm:p-5 text-left transition-all duration-300 hover:border-[#3B82F6] hover:shadow-lg hover:shadow-[#3B82F6]/15 hover:-translate-y-1"
     >
-      <span className="flex size-10 sm:size-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#e8f0ff] to-[#dbeafe] text-[#155eef] transition-all duration-300 group-hover:scale-110 group-hover:bg-gradient-to-br group-hover:from-[#3B82F6] group-hover:to-[#2563EB] group-hover:text-white">
+      <span className="flex size-10 sm:size-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#e8f0ff] to-[#dbeafe] text-[#155eef] transition-all duration-300 group-hover:scale-110 group-hover:bg-gradient-to-br group-hover:from-[#3B82F6] group-hover:to-[#7C3AED] group-hover:text-white">
         {icon}
       </span>
       <span className="flex-1">
@@ -309,7 +309,7 @@ function Info({ href, icon, title, copy }: { href: string; icon: string; title: 
       href={href}
       className="group flex h-full w-full items-center gap-3 sm:gap-4 rounded-xl bg-[#f8fafc] p-3 sm:p-4 transition-all duration-300 hover:bg-gradient-to-br hover:from-[#eef5ff] hover:to-[#dbeafe] hover:shadow-md hover:shadow-[#3B82F6]/10 hover:-translate-y-0.5"
     >
-      <span className="flex size-9 sm:size-10 items-center justify-center rounded-full bg-gradient-to-br from-[#dbeafe] to-[#bfdbfe] font-bold text-[#155eef] transition-all duration-300 group-hover:scale-110 group-hover:from-[#3B82F6] group-hover:to-[#2563EB] group-hover:text-white">
+      <span className="flex size-9 sm:size-10 items-center justify-center rounded-full bg-gradient-to-br from-[#dbeafe] to-[#bfdbfe] font-bold text-[#155eef] transition-all duration-300 group-hover:scale-110 group-hover:from-[#3B82F6] group-hover:to-[#7C3AED] group-hover:text-white">
         {icon}
       </span>
       <span className="flex-1">

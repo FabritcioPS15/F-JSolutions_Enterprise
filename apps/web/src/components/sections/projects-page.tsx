@@ -309,7 +309,7 @@ export function ProjectsPage() {
           <div className={CONTAINER}>
             <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#2563EB]">Portafolio de soluciones</p>
+                <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#5B21B6]">Portafolio de soluciones</p>
                 <h2 className="mt-1 font-heading text-2xl font-bold tracking-tight text-[#0F172A] sm:text-3xl">
                   Casos de estudio por sector
                 </h2>

@@ -30,6 +30,7 @@ import { FaTeamspeak } from 'react-icons/fa6'
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
 import { ServiceHero } from '@/components/heroes'
 import { FaqAccordion } from '@/components/ui/faq-accordion'
+import { ProcessSequence } from '@/components/ui/process-sequence'
 
 type ServiceItem = {
   icon: LucideIcon
@@ -259,7 +260,7 @@ export function ServicesPage() {
       <section id="servicios" className="scroll-mt-20 sm:scroll-mt-24 lg:scroll-mt-28 border-y border-[#E2E8F0] bg-[#F7F9FC]">
         <div className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
           <div className="max-w-2xl">
-            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#0E7490]">
+            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#5B21B6]">
               Nuestros servicios
             </p>
             <h2 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-[#0F172A] sm:text-4xl">
@@ -285,7 +286,7 @@ export function ServicesPage() {
                 <ul className="mt-4 flex-1 space-y-2">
                   {service.points.map((point) => (
                     <li key={point} className="flex items-start gap-2 text-xs text-[#475569]">
-                      <Check className="mt-0.5 size-3.5 shrink-0 text-[#0E7490]" />
+                      <Check className="mt-0.5 size-3.5 shrink-0 text-[#5B21B6]" />
                       {point}
                     </li>
                   ))}
@@ -306,7 +307,7 @@ export function ServicesPage() {
         id="alquiler"
         className="scroll-mt-20 sm:scroll-mt-24 lg:scroll-mt-28 px-4 py-10 sm:px-6 lg:px-8 lg:py-14"
       >
-        <div className="relative mx-auto max-w-[1280px] overflow-hidden rounded-3xl border border-dashed border-[#CBD5E1] bg-gradient-to-br from-white via-[#F8FAFC] to-[#EFF6FF] p-6 sm:p-10 lg:p-12">
+        <div className="relative mx-auto max-w-[1280px] overflow-hidden rounded-3xl border border-dashed border-[#CBD5E1] bg-gradient-to-br from-white via-[#F8FAFC] to-[#EDE9FE] p-6 sm:p-10 lg:p-12">
           <span
             aria-hidden="true"
             className="pointer-events-none absolute -right-6 -top-16 select-none text-[220px] font-extrabold leading-none text-[#2563EB]/10"
@@ -407,7 +408,7 @@ export function ServicesPage() {
         <div className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#0E7490]">
+              <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#5B21B6]">
                 Cómo trabajamos
               </p>
               <h2 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-[#0F172A] sm:text-4xl">
@@ -420,33 +421,33 @@ export function ServicesPage() {
             </p>
           </div>
 
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <ProcessSequence className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {process.map((item, index) => (
               <div
                 key={item.step}
                 className="relative rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-6"
               >
-                <span className="text-4xl font-extrabold text-[#334155]">{item.step}</span>
+                <span className="process-number text-4xl font-extrabold text-[#334155]">{item.step}</span>
                 <span className="absolute right-5 top-5 grid size-9 place-items-center rounded-lg bg-white text-[#2563EB] shadow-sm">
                   <item.icon className="size-4" />
                 </span>
                 <h3 className="mt-2 text-sm font-bold text-[#0F172A]">{item.title}</h3>
                 <p className="mt-2 text-xs leading-5 text-[#475569]">{item.copy}</p>
                 {index < process.length - 1 && (
-                  <span className="absolute -right-3 top-1/2 hidden -translate-y-1/2 text-[#475569] lg:block">
+                  <span className="process-arrow absolute -right-3 top-1/2 hidden -translate-y-1/2 text-[#475569] lg:block">
                     <ArrowRight className="size-5" />
                   </span>
                 )}
               </div>
             ))}
-          </div>
+          </ProcessSequence>
         </div>
       </section>
 
       <section className="border-y border-[#E2E8F0] bg-[#F7F9FC]">
         <div className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
           <div className="text-center">
-            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#0E7490]">
+            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#5B21B6]">
               Planes de soporte
             </p>
             <h2 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-[#0F172A] sm:text-4xl">
@@ -475,7 +476,7 @@ export function ServicesPage() {
                 )}
                 <p
                   className={`font-heading text-sm font-bold uppercase tracking-wide ${
-                    plan.highlighted ? 'text-[#0E7490]' : 'text-[#2563EB]'
+                    plan.highlighted ? 'text-[#5B21B6]' : 'text-[#2563EB]'
                   }`}
                 >
                   {plan.name}
@@ -506,7 +507,7 @@ export function ServicesPage() {
                         className={`mt-0.5 grid size-4 shrink-0 place-items-center rounded-full ${
                           plan.highlighted
                             ? 'bg-[#2563EB] text-white'
-                            : 'bg-[#22D3EE]/10 text-[#0E7490]'
+                            : 'bg-[#EDE9FE] text-[#5B21B6]'
                         }`}
                       >
                         <Check className="size-2.5" />
@@ -552,7 +553,7 @@ export function ServicesPage() {
       <section className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
         <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
           <div>
-            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#0E7490]">
+            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#5B21B6]">
               Industrias
             </p>
             <h2 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-[#0F172A] sm:text-4xl">
@@ -596,7 +597,7 @@ export function ServicesPage() {
       <section id="faq" className="scroll-mt-20 sm:scroll-mt-24 lg:scroll-mt-28 border-y border-[#E2E8F0] bg-white">
         <div className="mx-auto grid max-w-[1280px] gap-8 px-4 py-12 sm:px-6 lg:grid-cols-[0.85fr_1.15fr] lg:px-8 lg:py-16">
           <div>
-            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#0E7490]">
+            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#5B21B6]">
               Preguntas frecuentes
             </p>
             <h2 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-[#0F172A] sm:text-4xl">
@@ -617,9 +618,9 @@ export function ServicesPage() {
       </section>
 
       <section id="contacto" className="scroll-mt-20 sm:scroll-mt-24 lg:scroll-mt-28 px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
-        <div className="relative mx-auto max-w-[1280px] overflow-hidden rounded-3xl border border-[#2563EB]/20 bg-gradient-to-br from-[#EFF6FF] via-white to-[#F8FAFC] px-6 py-10 shadow-sm sm:px-10 lg:px-14 lg:py-14">
+        <div className="relative mx-auto max-w-[1280px] overflow-hidden rounded-3xl border border-[#7C3AED]/25 bg-gradient-to-br from-[#EFF6FF] via-white to-[#EDE9FE] px-6 py-10 shadow-sm sm:px-10 lg:px-14 lg:py-14">
           <div className="pointer-events-none absolute -right-24 -top-24 size-80 rounded-full bg-[#2563EB]/10 blur-2xl" />
-          <div className="pointer-events-none absolute -bottom-32 left-1/3 size-80 rounded-full bg-[#22D3EE]/20 blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-32 left-1/3 size-80 rounded-full bg-[#7C3AED]/20 blur-3xl" />
           <div className="relative grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
             <div>
               <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#334155]">
@@ -635,7 +636,7 @@ export function ServicesPage() {
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link
                   href="/cotizador"
-                  className="inline-flex h-11 items-center gap-2 rounded-xl bg-[#22D3EE] px-5 text-sm font-bold text-[#0B1120] transition hover:bg-[#67E8F9]"
+                  className="inline-flex h-11 items-center gap-2 rounded-xl bg-gradient-to-r from-[#6D28D9] to-[#7C3AED] px-5 text-sm font-bold text-white transition hover:from-[#5B21B6] hover:to-[#6D28D9]"
                 >
                   Solicitar cotización <ArrowRight className="size-4" />
                 </Link>
