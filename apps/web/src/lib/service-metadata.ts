@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
-import { getServicePath, type ServiceDefinition } from './services'
+import { getServicePathFor, type ServiceDefinition } from './services'
 import { SITE_NAME } from './site'
 
 export function getServiceMetadata(service: ServiceDefinition): Metadata {
-  const path = getServicePath(service.slug)
+  const path = getServicePathFor(service)
   const title = `${service.title} | F&J Systems`
 
   return {

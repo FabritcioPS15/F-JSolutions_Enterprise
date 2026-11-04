@@ -278,6 +278,7 @@ export function ProductForm({
     categories,
     brands,
     settings,
+    catalogSource,
     createProduct,
     updateProduct,
     addCategory,
@@ -720,7 +721,7 @@ export function ProductForm({
     if (storedImageBytes > 3_000_000) {
       toast.error(
         'Las imágenes ocupan demasiado espacio',
-        'Reduce la galería o usa URLs externas. El panel guarda las imágenes en este navegador y tiene un límite de almacenamiento.'
+        'Reduce la galería o usa URLs externas. Las imágenes viajan con el producto y conviene mantenerlas ligeras.'
       )
       document
         .getElementById('product-section-images')
@@ -1820,8 +1821,8 @@ export function ProductForm({
 
               <p className="flex items-start gap-1.5 text-[10px] leading-relaxed text-slate-400 sm:col-span-2">
                 <Info className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
-                El slug se edita en la sección Información general. Los datos estructurados de
-                producto se generarán desde este contenido al conectar la tienda.
+                El slug se edita en la sección Información general. La tienda pública usa este
+                contenido para la ficha del producto.
               </p>
             </div>
           </SectionCard>
@@ -2143,10 +2144,13 @@ export function ProductForm({
             <div className="flex items-start gap-2.5">
               <CategoryGlyph label={draft.category || 'Catálogo'} className="mt-0.5 size-4 text-slate-400" />
               <div>
-                <p className="text-[11px] font-bold text-slate-700">Guardado local</p>
+                <p className="text-[11px] font-bold text-slate-700">
+                  {catalogSource === 'api' ? 'Sincronizado con la API' : 'Guardado local'}
+                </p>
                 <p className="mt-0.5 text-[10.5px] leading-relaxed text-slate-500">
-                  Este producto se almacena en este navegador. Cuando conectemos la base de datos,
-                  el mismo formulario seguirá funcionando.
+                  {catalogSource === 'api'
+                    ? 'Los cambios de este producto se guardan en la base de datos del catálogo.'
+                    : 'Este producto se almacena en este navegador mientras la API no esté disponible.'}
                 </p>
               </div>
             </div>

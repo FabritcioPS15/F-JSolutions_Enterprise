@@ -1,16 +1,27 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { ServiceDetail } from '@/components/service-detail'
-import { getService, getServicesByCategory } from '@/lib/services'
+import { getStoreServiceCatalog } from '@/lib/service-offerings'
+import type { ServiceDefinition } from '@/lib/services'
 import { getServiceMetadata, getServiceNotFoundMetadata } from '@/lib/service-metadata'
 
-export const dynamicParams = false
+export const revalidate = 60
 
-export function generateStaticParams() {
-  return [
-    ...getServicesByCategory('Soporte TI'),
-    ...getServicesByCategory('Infraestructura TI'),
-  ].map((service) => ({ slug: service.slug }))
+export async function generateStaticParams() {
+  const catalog = await getStoreServiceCatalog()
+  return catalog
+    .filter((service) => service.category !== 'Desarrollo de software')
+    .map((service) => ({ slug: service.slug }))
+}
+
+function relatedServices(
+  catalog: ServiceDefinition[],
+  service: ServiceDefinition
+): ServiceDefinition[] {
+  const bySlug = new Map(catalog.map((item) => [item.slug, item]))
+  return service.related
+    .map((slug) => bySlug.get(slug))
+    .filter((item): item is ServiceDefinition => item !== undefined)
 }
 
 export async function generateMetadata({
@@ -19,9 +30,12 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
   const { slug } = await params
-  const service = getService(slug)
+  const catalog = await getStoreServiceCatalog()
+  const service = catalog.find(
+    (item) => item.slug === slug && item.category !== 'Desarrollo de software'
+  )
 
-  if (!service || service.category === 'Desarrollo de software') {
+  if (!service) {
     return getServiceNotFoundMetadata()
   }
 
@@ -34,15 +48,19 @@ export default async function ServicioDetallePage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const service = getService(slug)
+  const catalog = await getStoreServiceCatalog()
+  const service = catalog.find(
+    (item) => item.slug === slug && item.category !== 'Desarrollo de software'
+  )
 
-  if (!service || service.category === 'Desarrollo de software') {
+  if (!service) {
     notFound()
   }
 
   return (
     <ServiceDetail
       service={service}
+      relatedServices={relatedServices(catalog, service)}
       categoryCrumb={
         service.category === 'Infraestructura TI'
           ? { label: 'Infraestructura TI', href: '/servicios' }

@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next'
 import { products } from '@/lib/catalog'
-import { getServicePath, serviceDefinitions } from '@/lib/services'
+import { getStoreServiceCatalog } from '@/lib/service-offerings'
+import { getServicePathFor } from '@/lib/services'
 import { SITE_URL } from '@/lib/site'
 
 const staticRoutes: { path: string; priority: number; changeFrequency: MetadataRoute.Sitemap[number]['changeFrequency'] }[] = [
@@ -23,8 +24,9 @@ const staticRoutes: { path: string; priority: number; changeFrequency: MetadataR
   { path: '/informacion-legal', priority: 0.3, changeFrequency: 'yearly' },
 ]
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const lastModified = new Date()
+  const serviceCatalog = await getStoreServiceCatalog()
 
   const pages: MetadataRoute.Sitemap = staticRoutes.map((route) => ({
     url: `${SITE_URL}${route.path}`,
@@ -33,8 +35,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: route.priority,
   }))
 
-  const services: MetadataRoute.Sitemap = serviceDefinitions.map((service) => ({
-    url: `${SITE_URL}${getServicePath(service.slug)}`,
+  const services: MetadataRoute.Sitemap = serviceCatalog.map((service) => ({
+    url: `${SITE_URL}${getServicePathFor(service)}`,
     lastModified,
     changeFrequency: 'monthly',
     priority: 0.8,

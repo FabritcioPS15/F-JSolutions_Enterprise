@@ -8,9 +8,6 @@ if (env.NODE_ENV === 'production') {
   if (env.JWT_SECRET === DEV_DEFAULTS.jwtSecret || env.JWT_REFRESH_SECRET === DEV_DEFAULTS.jwtRefreshSecret) {
     logger.warn('Usando secretos JWT de desarrollo en producción. Configura JWT_SECRET y JWT_REFRESH_SECRET.')
   }
-  if (env.ADMIN_API_KEY === DEV_DEFAULTS.adminKey) {
-    logger.warn('Usando ADMIN_API_KEY de desarrollo en producción. Configura una clave propia.')
-  }
 }
 
 app.listen(PORT, () => {

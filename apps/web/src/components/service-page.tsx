@@ -22,9 +22,13 @@ import {
   SoftwareHero,
   SupportVisual,
 } from '@/components/heroes'
-import { getServicesByCategory } from '@/lib/services'
+import { getServicesByCategory, type ServiceDefinition } from '@/lib/services'
 
-type ServicePageProps = { kind: 'cotizador' | 'soporte' | 'sistemas' | 'infraestructura' }
+type ServicePageProps = {
+  kind: 'cotizador' | 'soporte' | 'sistemas' | 'infraestructura'
+  softwareServices?: ServiceDefinition[]
+  infrastructureServices?: ServiceDefinition[]
+}
 
 const content = {
   cotizador: {
@@ -87,11 +91,17 @@ const content = {
   },
 } as const
 
-export function ServicePage({ kind }: ServicePageProps) {
+export function ServicePage({
+  kind,
+  softwareServices: softwareFromApi,
+  infrastructureServices: infrastructureFromApi,
+}: ServicePageProps) {
   const item = content[kind]
   const Icon = item.icon
-  const softwareServices = getServicesByCategory('Desarrollo de software')
-  const infrastructureServices = getServicesByCategory('Infraestructura TI')
+  const softwareServices =
+    softwareFromApi ?? getServicesByCategory('Desarrollo de software')
+  const infrastructureServices =
+    infrastructureFromApi ?? getServicesByCategory('Infraestructura TI')
 
   return (
     <main className="min-h-screen bg-white text-[#0F172A]">

@@ -57,9 +57,12 @@ export function ClientStatusBadge({ status }: { status: ClientStatus }) {
 
 const quoteStyles: Record<QuoteStatus, string> = {
   draft: 'bg-slate-100 text-slate-600 ring-slate-500/15',
+  new: 'bg-[#F5F3FF] text-[#5B21B6] ring-[#5B21B6]/15',
+  review: 'bg-amber-50 text-amber-700 ring-amber-600/15',
   sent: 'bg-[#F5F3FF] text-[#5B21B6] ring-[#5B21B6]/15',
-  answered: 'bg-emerald-50 text-emerald-700 ring-emerald-600/15',
-  closed: 'bg-slate-900 text-white ring-slate-900/10',
+  approved: 'bg-emerald-50 text-emerald-700 ring-emerald-600/15',
+  rejected: 'bg-red-50 text-red-700 ring-red-600/15',
+  expired: 'bg-slate-900 text-white ring-slate-900/10',
 }
 
 export function QuoteStatusBadge({ status }: { status: QuoteStatus }) {
@@ -74,9 +77,12 @@ export function QuoteStatusBadge({ status }: { status: QuoteStatus }) {
         className={cn(
           'size-1.5 rounded-full',
           status === 'draft' && 'bg-slate-400',
+          status === 'new' && 'bg-[#6D28D9]',
+          status === 'review' && 'bg-amber-500',
           status === 'sent' && 'bg-[#6D28D9]',
-          status === 'answered' && 'bg-emerald-500',
-          status === 'closed' && 'bg-white/70'
+          status === 'approved' && 'bg-emerald-500',
+          status === 'rejected' && 'bg-red-500',
+          status === 'expired' && 'bg-white/70'
         )}
       />
       {quoteStatusLabels[status]}

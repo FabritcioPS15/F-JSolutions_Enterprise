@@ -1,5 +1,6 @@
-// Prisma Schema para F&J Systems Enterprise Backend
-// Base de datos PostgreSQL recomendada para producción
+// Esquema de datos de F&J Systems
+// PostgreSQL es la base de datos de producción.
+// La migración inicial vive en database/migrations y se genera con Prisma.
 
 datasource db {
   provider = "postgresql"
@@ -10,11 +11,728 @@ generator client {
   provider = "prisma-client-js"
 }
 
-enum Role {
-  CUSTOMER
-  STAFF
-  ADMIN
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
 }
+
+enum ProductStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum ProductAvailability {
+  AVAILABLE
+  LIMITED
+  CONSULT
+}
+
+enum CategoryLevel {
+  CATEGORY
+  SUBCATEGORY
+  TYPE
+}
+
+enum CategoryStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum BrandStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum ClientSegment {
+  COMPANY
+  PERSON
+}
+
+enum ClientStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum DocumentType {
+  DNI
+  RUC
+  CE
+  PASSPORT
+}
+
+enum Currency {
+  PEN
+  USD
+}
+
+enum QuoteStatus {
+  DRAFT
+  NEW
+  REVIEW
+  SENT
+  APPROVED
+  REJECTED
+  EXPIRED
+}
+
+enum RequestStatus {
+  NEW
+  REVIEW
+  ATTENDED
+  DISCARDED
+}
+
+enum RequestChannel {
+  WEB
+  EMAIL
+  WHATSAPP
+  PHONE
+}
+
+enum RequestPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum ServiceCategory {
+  SUPPORT
+  INFRASTRUCTURE
+  SOFTWARE
+}
+
+enum ServiceStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum InventoryMovementType {
+  IN
+  OUT
+  ADJUSTMENT
+}
+
+enum ProjectType {
+  LANDING
+  WEBSITE
+  WEBAPP
+  ECOMMERCE
+  MAINTENANCE
+  SOFTWARE
+}
+
+enum ProjectStatus {
+  PLANNING
+  DEVELOPMENT
+  STAGING
+  LIVE
+  PAUSED
+  ARCHIVED
+}
+
+enum DeploymentEnvironment {
+  PRODUCTION
+  STAGING
+  PREVIEW
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  BLOCKED
+  DONE
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum NotificationKind {
+  QUOTE_NEW
+  QUOTE_STATUS
+  REQUEST_NEW
+  STOCK_LOW
+  SYSTEM
+}
+
+enum MediaKind {
+  IMAGE
+  VIDEO
+  DOCUMENT
+}
+
+// ─── Seguridad y acceso ───────────────────────────────────────────────────────
+
+model Role {
+  id          String           @id @default(uuid())
+  key         String           @unique
+  name        String
+  description String?
+  isSystem    Boolean          @default(false)
+  users       User[]
+  permissions RolePermission[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@map("roles")
+}
+
+model Permission {
+  id          String           @id @default(uuid())
+  key         String           @unique
+  module      String
+  action      String
+  description String?
+  roles       RolePermission[]
+  createdAt   DateTime         @default(now())
+
+  @@unique([module, action])
+  @@index([module])
+  @@map("permissions")
+}
+
+model RolePermission {
+  roleId       String
+  permissionId String
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+  @@index([permissionId])
+  @@map("role_permissions")
+}
+
+model User {
+  id           String     @id @default(uuid())
+  name         String
+  email        String     @unique
+  passwordHash String
+  roleId       String
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Restrict)
+  phone        String?
+  company      String?
+  status       UserStatus @default(ACTIVE)
+  lastLoginAt  DateTime?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  orders              Order[]
+  quotesCreated       Quote[]                  @relation("QuoteCreator")
+  quoteStatusChanges  QuoteStatusHistory[]     @relation("QuoteStatusChanger")
+  requestsAssigned    ServiceRequest[]         @relation("RequestAssignee")
+  requestActivities   ServiceRequestActivity[] @relation("RequestActivityActor")
+  projectsResponsible Project[]                @relation("ProjectResponsible")
+  tasksAssigned       ProjectTask[]            @relation("TaskAssignee")
+  auditLogs           AuditLog[]
+  notifications       Notification[]
+  mediaAssets         MediaAsset[]
+  settingsUpdated     Setting[]
+
+  @@index([roleId])
+  @@index([status])
+  @@map("users")
+}
+
+// ─── Catálogo ─────────────────────────────────────────────────────────────────
+
+model Category {
+  id          String         @id @default(uuid())
+  parentId    String?
+  parent      Category?      @relation("CategoryTree", fields: [parentId], references: [id], onDelete: Restrict)
+  children    Category[]     @relation("CategoryTree")
+  level       CategoryLevel  @default(CATEGORY)
+  name        String
+  slug        String         @unique
+  description String?
+  imageUrl    String?
+  status      CategoryStatus @default(ACTIVE)
+  sortOrder   Int            @default(0)
+  products    Product[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@unique([parentId, name])
+  @@index([parentId, sortOrder])
+  @@map("categories")
+}
+
+model Brand {
+  id          String      @id @default(uuid())
+  name        String      @unique
+  slug        String      @unique
+  description String?
+  logoUrl     String?
+  status      BrandStatus @default(ACTIVE)
+  sortOrder   Int         @default(0)
+  products    Product[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([status, sortOrder])
+  @@map("brands")
+}
+
+model Product {
+  id                String              @id @default(uuid())
+  categoryId        String?
+  category          Category?           @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  brandId           String?
+  brand             Brand?              @relation(fields: [brandId], references: [id], onDelete: SetNull)
+  name              String
+  slug              String              @unique
+  sku               String?             @unique
+  internalCode      String?
+  model             String?
+  shortDescription  String?
+  description       String              @db.Text
+  price             Decimal             @default(0) @db.Decimal(12, 2)
+  cost              Decimal?            @db.Decimal(12, 2)
+  showPrice         Boolean             @default(true)
+  commercialMessage String?
+  stock             Int                 @default(0)
+  minStock          Int                 @default(0)
+  availability      ProductAvailability @default(AVAILABLE)
+  status            ProductStatus       @default(DRAFT)
+  featured          Boolean             @default(false)
+  videoUrl          String?
+  seoTitle          String?
+  seoDescription    String?
+  publishedAt       DateTime?
+  archivedAt        DateTime?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+
+  images             ProductImage[]
+  specs              ProductSpec[]
+  quoteItems         QuoteItem[]
+  inventoryMovements InventoryMovement[]
+  orderItems         OrderItem[]
+
+  @@index([categoryId])
+  @@index([brandId])
+  @@index([status])
+  @@index([featured])
+  @@index([internalCode])
+  @@map("products")
+}
+
+model ProductImage {
+  id        String   @id @default(uuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String
+  alt       String?
+  position  Int      @default(0)
+  isPrimary Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([productId, position])
+  @@map("product_images")
+}
+
+model ProductSpec {
+  id        String  @id @default(uuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  name      String
+  value     String
+  unit      String?
+  position  Int     @default(0)
+
+  @@index([productId, position])
+  @@map("product_specs")
+}
+
+model InventoryMovement {
+  id             String                @id @default(uuid())
+  productId      String?
+  product        Product?              @relation(fields: [productId], references: [id], onDelete: SetNull)
+  productName    String
+  sku            String?
+  type           InventoryMovementType
+  quantity       Int
+  previousStock  Int
+  resultingStock Int
+  reason         String
+  note           String?
+  actorId        String?
+  createdAt      DateTime              @default(now())
+
+  @@index([productId, createdAt])
+  @@index([createdAt])
+  @@map("inventory_movements")
+}
+
+// ─── CRM ──────────────────────────────────────────────────────────────────────
+
+model Client {
+  id             String        @id @default(uuid())
+  name           String
+  company        String?
+  documentType   DocumentType?
+  documentNumber String?
+  email          String?
+  phone          String?
+  city           String?
+  address        String?
+  segment        ClientSegment @default(COMPANY)
+  status         ClientStatus  @default(ACTIVE)
+  notes          String?       @db.Text
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  contacts ClientContact[]
+  quotes   Quote[]
+  requests ServiceRequest[]
+  projects Project[]
+
+  @@unique([documentType, documentNumber])
+  @@index([email])
+  @@index([company])
+  @@index([status])
+  @@map("clients")
+}
+
+model ClientContact {
+  id        String   @id @default(uuid())
+  clientId  String
+  client    Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  name      String
+  role      String?
+  email     String?
+  phone     String?
+  isPrimary Boolean  @default(false)
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([clientId])
+  @@map("client_contacts")
+}
+
+// ─── Cotizaciones ─────────────────────────────────────────────────────────────
+
+model Quote {
+  id                   String        @id @default(uuid())
+  code                 String        @unique
+  sequenceNumber       Int?
+  clientId             String?
+  client               Client?       @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  clientName           String
+  clientCompany        String?
+  clientEmail          String?
+  clientPhone          String?
+  clientDocumentType   DocumentType?
+  clientDocumentNumber String?
+  clientAddress        String?
+  status               QuoteStatus   @default(DRAFT)
+  currency             Currency      @default(PEN)
+  subtotal             Decimal       @default(0) @db.Decimal(12, 2)
+  discountTotal        Decimal       @default(0) @db.Decimal(12, 2)
+  taxRate              Decimal       @default(18) @db.Decimal(5, 2)
+  taxAmount            Decimal       @default(0) @db.Decimal(12, 2)
+  total                Decimal       @default(0) @db.Decimal(12, 2)
+  notes                String?       @db.Text
+  internalNotes        String?       @db.Text
+  validUntil           DateTime?
+  issuedAt             DateTime?
+  sentAt               DateTime?
+  decidedAt            DateTime?
+  createdById          String?
+  createdBy            User?         @relation("QuoteCreator", fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+
+  items    QuoteItem[]
+  history  QuoteStatusHistory[]
+  requests ServiceRequest[]
+
+  @@index([status, createdAt])
+  @@index([clientId])
+  @@index([createdAt])
+  @@map("quotes")
+}
+
+model QuoteItem {
+  id              String   @id @default(uuid())
+  quoteId         String
+  quote           Quote    @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+  productId       String?
+  product         Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  name            String
+  sku             String?
+  description     String?
+  unitPrice       Decimal  @default(0) @db.Decimal(12, 2)
+  quantity        Int      @default(1)
+  discountPercent Decimal  @default(0) @db.Decimal(5, 2)
+  discountAmount  Decimal  @default(0) @db.Decimal(12, 2)
+  subtotal        Decimal  @default(0) @db.Decimal(12, 2)
+  snapshot        Json?
+  position        Int      @default(0)
+
+  @@index([quoteId, position])
+  @@index([productId])
+  @@map("quote_items")
+}
+
+model QuoteStatusHistory {
+  id          String       @id @default(uuid())
+  quoteId     String
+  quote       Quote        @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+  fromStatus  QuoteStatus?
+  toStatus    QuoteStatus
+  note        String?
+  changedById String?
+  changedBy   User?        @relation("QuoteStatusChanger", fields: [changedById], references: [id], onDelete: SetNull)
+  createdAt   DateTime     @default(now())
+
+  @@index([quoteId, createdAt])
+  @@map("quote_status_history")
+}
+
+model DocumentSequence {
+  id         String   @id @default(uuid())
+  key        String   @unique
+  prefix     String
+  nextNumber Int      @default(1)
+  padding    Int      @default(5)
+  updatedAt  DateTime @updatedAt
+
+  @@map("document_sequences")
+}
+
+// ─── Mesa de ayuda y servicios TI ────────────────────────────────────────────
+
+model ServiceOffering {
+  id           String          @id @default(uuid())
+  slug         String          @unique
+  title        String
+  category     ServiceCategory
+  summary      String
+  intro        String          @db.Text
+  heroImageSrc String?
+  heroImageAlt String?
+  includes     Json
+  faq          Json
+  related      String[]        @default([])
+  status       ServiceStatus   @default(DRAFT)
+  position     Int             @default(0)
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  @@index([status, category, position])
+  @@map("service_offerings")
+}
+
+model ServiceRequest {
+  id         String          @id @default(uuid())
+  code       String          @unique
+  clientId   String?
+  client     Client?         @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  name       String
+  company    String?
+  email      String
+  phone      String?
+  topic      String
+  message    String          @db.Text
+  category   String?
+  channel    RequestChannel  @default(WEB)
+  status     RequestStatus   @default(NEW)
+  priority   RequestPriority @default(MEDIUM)
+  assigneeId String?
+  assignee   User?           @relation("RequestAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
+  quoteId    String?
+  quote      Quote?          @relation(fields: [quoteId], references: [id], onDelete: SetNull)
+  notes      String?         @db.Text
+  repliedAt  DateTime?
+  resolvedAt DateTime?
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+
+  activities ServiceRequestActivity[]
+
+  @@index([status, createdAt])
+  @@index([assigneeId])
+  @@index([clientId])
+  @@index([quoteId])
+  @@map("service_requests")
+}
+
+model ServiceRequestActivity {
+  id        String         @id @default(uuid())
+  requestId String
+  request   ServiceRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  actorId   String?
+  actor     User?          @relation("RequestActivityActor", fields: [actorId], references: [id], onDelete: SetNull)
+  type      String
+  note      String         @db.Text
+  createdAt DateTime       @default(now())
+
+  @@index([requestId, createdAt])
+  @@map("service_request_activities")
+}
+
+// ─── Proyectos de software y web ─────────────────────────────────────────────
+
+model Project {
+  id                 String        @id @default(uuid())
+  clientId           String?
+  client             Client?       @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  clientName         String?
+  name               String
+  type               ProjectType   @default(SOFTWARE)
+  status             ProjectStatus @default(PLANNING)
+  responsibleId      String?
+  responsible        User?         @relation("ProjectResponsible", fields: [responsibleId], references: [id], onDelete: SetNull)
+  description        String?       @db.Text
+  scope              String?       @db.Text
+  startDate          DateTime?
+  endDate            DateTime?
+  productionUrl      String?
+  stagingUrl         String?
+  repoUrl            String?
+  hosting            String?
+  domain             String?
+  credentialLocation String?
+  launchedAt         DateTime?
+  renewalAt          DateTime?
+  notes              String?       @db.Text
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+
+  tasks       ProjectTask[]
+  deployments ProjectDeployment[]
+  documents   ProjectDocument[]
+
+  @@index([status])
+  @@index([clientId])
+  @@index([responsibleId])
+  @@map("projects")
+}
+
+model ProjectTask {
+  id          String       @id @default(uuid())
+  projectId   String
+  project     Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  title       String
+  description String?      @db.Text
+  status      TaskStatus   @default(TODO)
+  priority    TaskPriority @default(MEDIUM)
+  assigneeId  String?
+  assignee    User?        @relation("TaskAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
+  dueDate     DateTime?
+  completedAt DateTime?
+  position    Int          @default(0)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([projectId, status])
+  @@index([assigneeId])
+  @@map("project_tasks")
+}
+
+model ProjectDeployment {
+  id          String                @id @default(uuid())
+  projectId   String
+  project     Project               @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  environment DeploymentEnvironment @default(PRODUCTION)
+  url         String
+  version     String?
+  note        String?
+  deployedAt  DateTime              @default(now())
+
+  @@index([projectId, deployedAt])
+  @@map("project_deployments")
+}
+
+model ProjectDocument {
+  id        String    @id @default(uuid())
+  projectId String
+  project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  name      String
+  url       String
+  kind      MediaKind @default(DOCUMENT)
+  createdAt DateTime  @default(now())
+
+  @@index([projectId])
+  @@map("project_documents")
+}
+
+// ─── Notificaciones, auditoría y configuración ──────────────────────────────
+
+model Notification {
+  id         String           @id @default(uuid())
+  kind       NotificationKind
+  title      String
+  message    String           @db.Text
+  entityType String?
+  entityId   String?
+  userId     String?
+  user       User?            @relation(fields: [userId], references: [id], onDelete: SetNull)
+  readAt     DateTime?
+  createdAt  DateTime         @default(now())
+
+  @@index([userId, readAt])
+  @@index([createdAt])
+  @@map("notifications")
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  actorId    String?
+  actor      User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  actorEmail String?
+  action     String
+  entityType String
+  entityId   String?
+  summary    String
+  metadata   Json?
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([entityType, entityId])
+  @@index([actorId])
+  @@map("audit_logs")
+}
+
+model Setting {
+  id          String   @id @default(uuid())
+  key         String   @unique
+  value       Json
+  updatedById String?
+  updatedBy   User?    @relation(fields: [updatedById], references: [id], onDelete: SetNull)
+  updatedAt   DateTime @updatedAt
+
+  @@map("settings")
+}
+
+model MediaAsset {
+  id           String    @id @default(uuid())
+  url          String
+  kind         MediaKind @default(IMAGE)
+  mimeType     String?
+  sizeBytes    Int?
+  width        Int?
+  height       Int?
+  alt          String?
+  uploadedById String?
+  uploadedBy   User?     @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+  createdAt    DateTime  @default(now())
+
+  @@index([createdAt])
+  @@map("media_assets")
+}
+
+// ─── Pedidos (compatibilidad con el esquema anterior) ───────────────────────
 
 enum OrderStatus {
   PENDING
@@ -25,71 +743,10 @@ enum OrderStatus {
   CANCELLED
 }
 
-enum QuoteStatus {
-  PENDING
-  REVIEWED
-  SENT
-  ACCEPTED
-  REJECTED
-}
-
-model User {
-  id           String    @id @default(uuid())
-  name         String
-  email        String    @unique
-  passwordHash String
-  role         Role      @default(CUSTOMER)
-  phone        String?
-  company      String?
-  orders       Order[]
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-
-  @@map("users")
-}
-
-model Category {
-  id          String    @id @default(uuid())
-  name        String    @unique
-  slug        String    @unique
-  description String?
-  products    Product[]
-  createdAt   DateTime  @default(now())
-
-  @@map("categories")
-}
-
-model Product {
-  id          String      @id @default(uuid())
-  name        String
-  slug        String      @unique
-  description String      @db.Text
-  price       Decimal     @db.Decimal(10, 2)
-  oldPrice    Decimal?    @db.Decimal(10, 2)
-  stock       Int         @default(0)
-  brand       String
-  images      String[]
-  specs       Json?
-  badge       String?
-  rating      Decimal     @default(5.0) @db.Decimal(2, 1)
-  reviews     Int         @default(0)
-  isActive    Boolean     @default(true)
-  categoryId  String
-  category    Category    @relation(fields: [categoryId], references: [id])
-  orderItems  OrderItem[]
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-
-  @@index([categoryId])
-  @@index([slug])
-  @@index([brand])
-  @@map("products")
-}
-
 model Order {
   id            String      @id @default(uuid())
   userId        String?
-  user          User?       @relation(fields: [userId], references: [id])
+  user          User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
   customerName  String
   customerEmail String
   customerPhone String
@@ -106,42 +763,15 @@ model Order {
 }
 
 model OrderItem {
-  id        String   @id @default(uuid())
+  id        String  @id @default(uuid())
   orderId   String
-  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   productId String
-  product   Product  @relation(fields: [productId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
   name      String
-  price     Decimal  @db.Decimal(10, 2)
+  price     Decimal @db.Decimal(10, 2)
   quantity  Int
-  subtotal  Decimal  @db.Decimal(10, 2)
+  subtotal  Decimal @db.Decimal(10, 2)
 
   @@map("order_items")
-}
-
-model Cotizacion {
-  id        String      @id @default(uuid())
-  empresa   String
-  contacto  String
-  email     String
-  telefono  String
-  mensaje   String?     @db.Text
-  items     Json?
-  status    QuoteStatus @default(PENDING)
-  createdAt DateTime    @default(now())
-
-  @@map("cotizaciones")
-}
-
-model ContactMessage {
-  id        String   @id @default(uuid())
-  nombre    String
-  email     String
-  telefono  String?
-  empresa   String?
-  asunto    String
-  mensaje   String   @db.Text
-  createdAt DateTime @default(now())
-
-  @@map("contact_messages")
 }

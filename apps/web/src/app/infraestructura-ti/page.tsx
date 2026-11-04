@@ -1,5 +1,8 @@
 import type { Metadata } from 'next'
 import { ServicePage } from '@/components/service-page'
+import { getStoreServicesByCategory } from '@/lib/service-offerings'
+
+export const revalidate = 60
 
 export const metadata: Metadata = {
   title: 'Infraestructura TI para empresas | F&J Systems',
@@ -8,6 +11,12 @@ export const metadata: Metadata = {
   alternates: { canonical: '/infraestructura-ti' },
 }
 
-export default function InfraestructuraPage() {
-  return <ServicePage kind="infraestructura" />
+export default async function InfraestructuraPage() {
+  const infrastructureServices = await getStoreServicesByCategory('Infraestructura TI')
+  return (
+    <ServicePage
+      kind="infraestructura"
+      infrastructureServices={infrastructureServices}
+    />
+  )
 }

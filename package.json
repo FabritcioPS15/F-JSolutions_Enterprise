@@ -10,14 +10,16 @@
     "dev:api": "pnpm --filter fj-solutions-backend dev",
     "build": "pnpm --filter \"./apps/**\" build",
     "build:contracts": "pnpm --filter @fj-solutions/contracts build",
-    "db:migrate": "cd apps/api && npx prisma migrate dev --schema=../../database/schema.prisma",
-    "db:studio": "cd apps/api && npx prisma studio --schema=../../database/schema.prisma",
-    "db:generate": "cd apps/api && npx prisma generate --schema=../../database/schema.prisma",
-    "db:seed": "pnpm --filter fj-solutions-backend db:seed",
+    "db:migrate": "dotenv -e .env -- pnpm --filter fj-solutions-backend exec prisma migrate dev --schema=../../database/schema.prisma",
+    "db:studio": "dotenv -e .env -- pnpm --filter fj-solutions-backend exec prisma studio --schema=../../database/schema.prisma",
+    "db:generate": "dotenv -e .env -- pnpm --filter fj-solutions-backend exec prisma generate --schema=../../database/schema.prisma",
+    "db:seed": "dotenv -e .env -- pnpm --filter fj-solutions-backend db:seed",
+    "typecheck": "pnpm build:contracts && pnpm --filter fj-solutions-admin exec tsc --noEmit && pnpm --filter fj-solutions-web exec tsc --noEmit && pnpm --filter fj-solutions-backend exec tsc --noEmit",
     "test": "pnpm --filter fj-solutions-backend test"
   },
   "devDependencies": {
     "@prisma/client": "^5.22.0",
-    "prisma": "5.14.0"
+    "dotenv-cli": "^11.1.0",
+    "prisma": "5.22.0"
   }
 }

@@ -37,10 +37,14 @@ cp .env.example .env
 
 Edita `.env` con tus credenciales de base de datos.
 
-4. **Ejecutar migraciones**:
+4. **Ejecutar migraciones y seed**:
 ```bash
 pnpm db:migrate
+pnpm db:seed
 ```
+
+Define `SEED_ADMIN_EMAIL` y `SEED_ADMIN_PASSWORD` en `.env` antes del seed. Si
+omites la contraseña se usa un valor de desarrollo y el seed lo advierte.
 
 ## Ejecutar el Proyecto
 
@@ -64,8 +68,9 @@ pnpm dev:api
 ## Acceso a las Aplicaciones
 
 - **Tienda Pública**: http://localhost:3000
-- **Panel Admin**: http://localhost:3002
-- **API Backend**: http://localhost:3001
+- **Panel Admin**: http://localhost:3002 (`/login` requiere una cuenta creada por
+  el seed; el panel no funciona si la API o PostgreSQL están detenidos)
+- **API Backend**: http://localhost:4000
 
 ## Docker (Opcional)
 

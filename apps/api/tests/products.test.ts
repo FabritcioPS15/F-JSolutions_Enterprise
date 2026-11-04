@@ -1,29 +1,38 @@
 import request from 'supertest'
 import app from '../src/app'
 
-describe('Product API Endpoints', () => {
-  it('GET /api/v1/products should return 200 and paginated list', async () => {
-    const res = await request(app).get('/api/v1/products')
-    expect(res.status).toBe(200)
-    expect(res.body.success).toBe(true)
-    expect(Array.isArray(res.body.data)).toBe(true)
-    expect(res.body.pagination).toBeDefined()
-  })
-
-  it('GET /api/v1/products/:id should return 200 for existing product', async () => {
-    const res = await request(app).get('/api/v1/products/1')
-    expect(res.status).toBe(200)
-    expect(res.body.success).toBe(true)
-    expect(res.body.data.id).toBe('1')
-  })
-
-  it('POST /api/v1/products without auth token should return 401', async () => {
+describe('Catalog API guards', () => {
+  it('rechaza crear productos sin sesión', async () => {
     const res = await request(app)
       .post('/api/v1/products')
-      .send({
-        name: 'Nuevo Servidor Test',
-        price: 5000,
-      })
+      .send({ name: 'Servidor de prueba', price: 1000 })
     expect(res.status).toBe(401)
+    expect(res.body.success).toBe(false)
+  })
+
+  it('rechaza la lectura administrativa de productos sin sesión', async () => {
+    const res = await request(app).get('/api/v1/products?scope=admin')
+    expect(res.status).toBe(401)
+  })
+
+  it('rechaza crear categorías y marcas sin sesión', async () => {
+    const category = await request(app).post('/api/v1/categories').send({ name: 'Redes' })
+    const brand = await request(app).post('/api/v1/brands').send({ name: 'Cisco' })
+    expect(category.status).toBe(401)
+    expect(brand.status).toBe(401)
+  })
+
+  it('rechaza la lectura administrativa de categorías y marcas sin sesión', async () => {
+    const categories = await request(app).get('/api/v1/categories?scope=admin')
+    const brands = await request(app).get('/api/v1/brands?scope=admin')
+    expect(categories.status).toBe(401)
+    expect(brands.status).toBe(401)
+  })
+
+  it('rechaza actualizar y eliminar productos sin sesión', async () => {
+    const update = await request(app).put('/api/v1/products/producto-1').send({ price: 10 })
+    const remove = await request(app).delete('/api/v1/products/producto-1')
+    expect(update.status).toBe(401)
+    expect(remove.status).toBe(401)
   })
 })

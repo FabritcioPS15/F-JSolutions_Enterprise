@@ -14,10 +14,9 @@ export const createOrder = async (req: Request, res: Response, next: NextFunctio
   } catch (err) { next(err) }
 }
 
-export const getOrders = async (req: Request, res: Response, next: NextFunction) => {
+export const getOrders = async (_req: Request, res: Response, next: NextFunction) => {
   try {
-    const isCustomer = req.user?.role === 'customer'
-    const orders = await orderService.getOrders(isCustomer ? req.user?.sub : undefined)
+    const orders = await orderService.getOrders()
     return sendSuccess(res, orders)
   } catch (err) { next(err) }
 }

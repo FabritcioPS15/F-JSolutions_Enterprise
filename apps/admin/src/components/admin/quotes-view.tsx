@@ -52,7 +52,15 @@ import { cn } from '@/lib/utils'
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-const statusOrder: QuoteStatus[] = ['draft', 'sent', 'answered', 'closed']
+const statusOrder: QuoteStatus[] = [
+  'draft',
+  'new',
+  'review',
+  'sent',
+  'approved',
+  'rejected',
+  'expired',
+]
 
 type QuoteDraft = {
   clientId: string
@@ -233,9 +241,11 @@ export function QuotesView({ initialQuery = '' }: { initialQuery?: string }) {
     })
   }, [quotes, query, status, sort, settings.igv])
 
-  const draftCount = quotes.filter((quote) => quote.status === 'draft').length
+  const pendingCount = quotes.filter(
+    (quote) => quote.status === 'new' || quote.status === 'review'
+  ).length
   const sentCount = quotes.filter((quote) => quote.status === 'sent').length
-  const answeredCount = quotes.filter((quote) => quote.status === 'answered').length
+  const approvedCount = quotes.filter((quote) => quote.status === 'approved').length
   const totalAmount = quotes.reduce(
     (sum, quote) => sum + quoteTotals(quote.items, settings.igv).total,
     0
@@ -331,7 +341,7 @@ export function QuotesView({ initialQuery = '' }: { initialQuery?: string }) {
     setDraft((prev) => ({ ...prev, items: prev.items.filter((item) => item.id !== id) }))
   }
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const nextErrors: QuoteErrors = {}
     if (draft.clientName.trim().length < 2) {
@@ -368,7 +378,7 @@ export function QuotesView({ initialQuery = '' }: { initialQuery?: string }) {
       return
     }
 
-    const quote = createQuote(input)
+    const quote = await createQuote(input)
     toast.success('Cotización creada', `${quote.code} · ${quote.clientCompany || quote.clientName}`)
     setEditor(null)
   }
@@ -421,14 +431,14 @@ export function QuotesView({ initialQuery = '' }: { initialQuery?: string }) {
           label="Cotizaciones"
           value={formatNumber(quotes.length)}
           helper={
-            answeredCount === 1 ? '1 respondida' : `${answeredCount} respondidas`
+            approvedCount === 1 ? '1 aprobada' : `${approvedCount} aprobadas`
           }
           icon={FileText}
         />
         <StatCard
-          label="Borradores"
-          value={formatNumber(draftCount)}
-          helper="Pendientes de completar"
+          label="Pendientes"
+          value={formatNumber(pendingCount)}
+          helper="Solicitudes y revisiones"
           icon={Pencil}
         />
         <StatCard

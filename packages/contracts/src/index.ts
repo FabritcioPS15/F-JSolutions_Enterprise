@@ -115,3 +115,8 @@ export interface ContactMessage {
   mensaje: string;
   createdAt: Date;
 }
+
+// Modelo del panel administrativo, aislado en su propio namespace para no
+// colisionar con los contratos legacy (Category, QuoteStatus, etc.).
+export type * as admin from './admin'
+

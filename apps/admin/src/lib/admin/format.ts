@@ -178,9 +178,12 @@ export const clientSegmentLabels: Record<ClientSegment, string> = {
 
 export const quoteStatusLabels: Record<QuoteStatus, string> = {
   draft: 'Borrador',
+  new: 'Nueva',
+  review: 'En revisión',
   sent: 'Enviada',
-  answered: 'Respondida',
-  closed: 'Cerrada',
+  approved: 'Aprobada',
+  rejected: 'Rechazada',
+  expired: 'Vencida',
 }
 
 export const requestStatusLabels: Record<RequestStatus, string> = {

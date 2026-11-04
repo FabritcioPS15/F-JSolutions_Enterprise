@@ -30,6 +30,6 @@ COPY --from=builder /app/package.json ./package.json
 
 USER node
 
-EXPOSE 3001
+EXPOSE 4000
 
 CMD ["node", "dist/server.js"]

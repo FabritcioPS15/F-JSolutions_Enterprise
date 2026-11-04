@@ -19,7 +19,7 @@ export interface ApiResponse<T = unknown> {
 export interface JwtPayload {
   sub: string
   email: string
-  role: 'admin' | 'customer' | 'staff'
+  role: string
   iat?: number
   exp?: number
 }

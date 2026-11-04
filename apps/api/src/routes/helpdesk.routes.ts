@@ -6,7 +6,7 @@ import {
   replyTicket,
   updateTicket,
 } from '../controllers/helpdesk.controller'
-import { requireAdminKey } from '../middleware/admin-key'
+import { authenticate, requirePermission } from '../middleware/auth'
 import { validate } from '../middleware/validate'
 import {
   createHelpdeskSchema,
@@ -16,12 +16,12 @@ import {
 
 const router = Router()
 
-router.use(requireAdminKey)
+router.use(authenticate)
 
-router.get('/', listTickets)
-router.post('/', validate(createHelpdeskSchema), createTicket)
-router.patch('/:id', validate(updateHelpdeskSchema), updateTicket)
-router.delete('/:id', removeTicket)
-router.post('/:id/reply', validate(replyHelpdeskSchema), replyTicket)
+router.get('/', requirePermission('requests.view'), listTickets)
+router.post('/', requirePermission('requests.create'), validate(createHelpdeskSchema), createTicket)
+router.patch('/:id', requirePermission('requests.update'), validate(updateHelpdeskSchema), updateTicket)
+router.delete('/:id', requirePermission('requests.delete'), removeTicket)
+router.post('/:id/reply', requirePermission('requests.reply'), validate(replyHelpdeskSchema), replyTicket)
 
 export default router

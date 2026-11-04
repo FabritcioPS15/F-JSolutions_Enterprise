@@ -39,14 +39,20 @@ services:
     environment:
       NODE_ENV: production
       DATABASE_URL: postgresql://fj_solutions:fj_solutions_password@postgres:5432/fj_solutions
-      PORT: 3001
-      JWT_SECRET: ${JWT_SECRET:-your-secret-key-change-in-production}
-      EMAIL_HOST: ${EMAIL_HOST}
-      EMAIL_PORT: ${EMAIL_PORT:-587}
-      EMAIL_USER: ${EMAIL_USER}
-      EMAIL_PASS: ${EMAIL_PASS}
+      PORT: 4000
+      API_PREFIX: /api/v1
+      FRONTEND_URL: "${FRONTEND_URL:-http://localhost:3000}"
+      JWT_SECRET: "${JWT_SECRET:?Define JWT_SECRET en el archivo .env}"
+      JWT_REFRESH_SECRET: "${JWT_REFRESH_SECRET:?Define JWT_REFRESH_SECRET en el archivo .env}"
+      SMTP_HOST: "${SMTP_HOST:-}"
+      SMTP_PORT: "${SMTP_PORT:-587}"
+      SMTP_USER: "${SMTP_USER:-}"
+      SMTP_PASS: "${SMTP_PASS:-}"
+      EMAIL_FROM: "${EMAIL_FROM:-F&J Systems <no-reply@fjsolutions.pe>}"
+      UPLOAD_PATH: /app/uploads
+      MAX_FILE_SIZE_MB: "${MAX_FILE_SIZE_MB:-5}"
     ports:
-      - "3001:3001"
+      - "4000:4000"
     depends_on:
       - postgres
       - redis
@@ -64,7 +70,10 @@ services:
     restart: unless-stopped
     environment:
       NODE_ENV: production
-      NEXT_PUBLIC_API_URL: http://api:3001
+      NEXT_PUBLIC_API_URL: http://api:4000/api/v1
+      NEXT_PUBLIC_STORE_URL: "${NEXT_PUBLIC_STORE_URL:-http://localhost:3000}"
+      HELPDESK_API_URL: http://api:4000/api/v1
+      API_INTERNAL_URL: http://api:4000/api/v1
     ports:
       - "3000:3000"
     depends_on:
@@ -81,7 +90,10 @@ services:
     restart: unless-stopped
     environment:
       NODE_ENV: production
-      NEXT_PUBLIC_API_URL: http://api:3001
+      NEXT_PUBLIC_API_URL: http://api:4000/api/v1
+      NEXT_PUBLIC_STORE_URL: "${NEXT_PUBLIC_STORE_URL:-http://localhost:3000}"
+      HELPDESK_API_URL: http://api:4000/api/v1
+      API_INTERNAL_URL: http://api:4000/api/v1
     ports:
       - "3002:3000"
     depends_on:

@@ -1,221 +1,97 @@
-import { randomUUID } from 'node:crypto'
-import { mkdir, readFile, writeFile } from 'node:fs/promises'
-import path from 'node:path'
-import { env } from '../config/env'
-import { logger } from '../utils/logger'
+import { AppError } from '../middleware/error-handler'
+import { prismaHelpdeskRepository } from '../repositories/prisma-helpdesk.repository'
+import type {
+  CreateTicketInput,
+  HelpdeskRepository,
+  UpdateTicketInput,
+} from '../repositories/helpdesk.repository'
 
-export type HelpdeskStatus = 'NEW' | 'REVIEW' | 'ATTENDED' | 'DISCARDED'
-export type HelpdeskChannel = 'WEB' | 'EMAIL' | 'WHATSAPP' | 'PHONE'
+export type {
+  CreateTicketInput,
+  HelpdeskChannel,
+  HelpdeskReply,
+  HelpdeskStatus,
+  HelpdeskTicket,
+  UpdateTicketInput,
+} from '../repositories/helpdesk.repository'
 
-export type HelpdeskReply = {
-  subject: string
-  message: string
-  delivered: boolean
-  at: string
-}
+export class HelpdeskService {
+  constructor(
+    private readonly repository: HelpdeskRepository = prismaHelpdeskRepository
+  ) {}
 
-export type HelpdeskTicket = {
-  id: string
-  code: string
-  nombre: string
-  email: string
-  telefono: string
-  empresa: string
-  asunto: string
-  mensaje: string
-  status: HelpdeskStatus
-  channel: HelpdeskChannel
-  notes: string
-  quoteCode?: string
-  repliedAt?: string
-  lastReply?: HelpdeskReply
-  createdAt: string
-  updatedAt: string
-}
-
-export type CreateTicketInput = {
-  nombre: string
-  email: string
-  telefono?: string
-  empresa?: string
-  asunto: string
-  mensaje: string
-  channel?: HelpdeskChannel
-  notes?: string
-}
-
-export type UpdateTicketInput = {
-  status?: HelpdeskStatus
-  channel?: HelpdeskChannel
-  notes?: string
-  quoteCode?: string
-}
-
-const STATUSES: HelpdeskStatus[] = ['NEW', 'REVIEW', 'ATTENDED', 'DISCARDED']
-const CHANNELS: HelpdeskChannel[] = ['WEB', 'EMAIL', 'WHATSAPP', 'PHONE']
-
-const dataDir = path.resolve(process.cwd(), env.HELPDESK_DATA_DIR)
-const dataFile = path.join(dataDir, 'helpdesk.json')
-
-function buildCode(date = new Date(), taken = new Set<string>()): string {
-  const stamp = date.toISOString().slice(0, 10).replace(/-/g, '')
-  let code = ''
-  do {
-    const random = Math.random().toString(36).slice(2, 6).toUpperCase()
-    code = `SOL-${stamp}-${random}`
-  } while (taken.has(code))
-  return code
-}
-
-function normalizeTicket(raw: Record<string, unknown>): HelpdeskTicket {
-  const status = STATUSES.includes(raw.status as HelpdeskStatus)
-    ? (raw.status as HelpdeskStatus)
-    : 'NEW'
-  const channel = CHANNELS.includes(raw.channel as HelpdeskChannel)
-    ? (raw.channel as HelpdeskChannel)
-    : 'WEB'
-
-  return {
-    id: String(raw.id ?? randomUUID()),
-    code: String(raw.code ?? buildCode()),
-    nombre: String(raw.nombre ?? 'Contacto'),
-    email: String(raw.email ?? ''),
-    telefono: String(raw.telefono ?? ''),
-    empresa: String(raw.empresa ?? ''),
-    asunto: String(raw.asunto ?? 'Consulta'),
-    mensaje: String(raw.mensaje ?? ''),
-    status,
-    channel,
-    notes: String(raw.notes ?? ''),
-    quoteCode: raw.quoteCode ? String(raw.quoteCode) : undefined,
-    repliedAt: raw.repliedAt ? String(raw.repliedAt) : undefined,
-    lastReply:
-      raw.lastReply && typeof raw.lastReply === 'object'
-        ? {
-            subject: String((raw.lastReply as Record<string, unknown>).subject ?? ''),
-            message: String((raw.lastReply as Record<string, unknown>).message ?? ''),
-            delivered: Boolean((raw.lastReply as Record<string, unknown>).delivered),
-            at: String((raw.lastReply as Record<string, unknown>).at ?? new Date().toISOString()),
-          }
-        : undefined,
-    createdAt: String(raw.createdAt ?? new Date().toISOString()),
-    updatedAt: String(raw.updatedAt ?? new Date().toISOString()),
-  }
-}
-
-class HelpdeskService {
-  private tickets: HelpdeskTicket[] | null = null
-  private writeChain: Promise<void> = Promise.resolve()
-
-  private async load(): Promise<HelpdeskTicket[]> {
-    if (this.tickets) return this.tickets
-    try {
-      const raw = await readFile(dataFile, 'utf8')
-      const parsed = JSON.parse(raw) as unknown
-      this.tickets = Array.isArray(parsed)
-        ? parsed.map((item) => normalizeTicket(item as Record<string, unknown>))
-        : []
-    } catch (error) {
-      if ((error as NodeJS.ErrnoException).code !== 'ENOENT') {
-        logger.error('No se pudo leer el almacén de mesa de ayuda:', error)
-        throw error
-      }
-      this.tickets = []
-    }
-    return this.tickets
+  async list() {
+    return this.repository.list()
   }
 
-  private persist(tickets: HelpdeskTicket[]): Promise<void> {
-    this.writeChain = this.writeChain.then(async () => {
-      await mkdir(dataDir, { recursive: true })
-      await writeFile(dataFile, JSON.stringify(tickets, null, 2), 'utf8')
-    })
-    return this.writeChain
+  async findById(id: string) {
+    return this.repository.findById(id)
   }
 
-  async list(): Promise<HelpdeskTicket[]> {
-    const tickets = await this.load()
-    return [...tickets].sort(
-      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  async create(input: CreateTicketInput) {
+    const nombre = input.nombre?.trim() ?? ''
+    const email = input.email?.trim().toLowerCase() ?? ''
+    const asunto = input.asunto?.trim() ?? ''
+    const mensaje = input.mensaje?.trim() ?? ''
+
+    if (nombre.length < 2) throw new AppError('El nombre del contacto es obligatorio.', 400)
+    if (!email.includes('@')) throw new AppError('El correo del contacto no es válido.', 400)
+    if (asunto.length < 2) throw new AppError('El asunto es obligatorio.', 400)
+    if (mensaje.length < 10) throw new AppError('El mensaje es demasiado corto.', 400)
+
+    const client = await this.repository.findClientByEmail(email)
+    const sequence = await this.repository.nextTicketSequence()
+
+    return this.repository.create(
+      {
+        ...input,
+        nombre,
+        email,
+        asunto,
+        mensaje,
+      },
+      sequence,
+      client?.id ?? null
     )
   }
 
-  async findById(id: string): Promise<HelpdeskTicket | null> {
-    const tickets = await this.load()
-    return tickets.find((ticket) => ticket.id === id) ?? null
-  }
-
-  async create(input: CreateTicketInput): Promise<HelpdeskTicket> {
-    const tickets = await this.load()
-    const now = new Date().toISOString()
-    const ticket: HelpdeskTicket = {
-      id: randomUUID(),
-      code: buildCode(new Date(), new Set(tickets.map((item) => item.code))),
-      nombre: input.nombre.trim(),
-      email: input.email.trim(),
-      telefono: input.telefono?.trim() ?? '',
-      empresa: input.empresa?.trim() ?? '',
-      asunto: input.asunto.trim(),
-      mensaje: input.mensaje.trim(),
-      status: 'NEW',
-      channel: input.channel ?? 'WEB',
-      notes: input.notes?.trim() ?? '',
-      createdAt: now,
-      updatedAt: now,
-    }
-    this.tickets = [ticket, ...tickets]
-    await this.persist(this.tickets)
-    return ticket
-  }
-
-  async update(id: string, input: UpdateTicketInput): Promise<HelpdeskTicket | null> {
-    const tickets = await this.load()
-    const current = tickets.find((ticket) => ticket.id === id)
+  async update(id: string, input: UpdateTicketInput) {
+    const current = await this.repository.findById(id)
     if (!current) return null
 
-    const next: HelpdeskTicket = {
-      ...current,
-      ...(input.status ? { status: input.status } : {}),
-      ...(input.channel ? { channel: input.channel } : {}),
-      ...(input.notes !== undefined ? { notes: input.notes.trim() } : {}),
-      ...(input.quoteCode !== undefined ? { quoteCode: input.quoteCode.trim() || undefined } : {}),
-      updatedAt: new Date().toISOString(),
+    const changes = {
+      statusChanged: Boolean(input.status && input.status !== current.status),
+      notesChanged: input.notes !== undefined && input.notes.trim() !== current.notes,
+      quoteId: undefined as string | null | undefined,
+      clientId: undefined as string | null | undefined,
     }
 
-    this.tickets = tickets.map((ticket) => (ticket.id === id ? next : ticket))
-    await this.persist(this.tickets)
-    return next
+    if (input.quoteCode !== undefined) {
+      const code = input.quoteCode.trim()
+      if (!code) {
+        changes.quoteId = null
+      } else {
+        const quote = await this.repository.findQuoteByCode(code)
+        if (!quote) throw new AppError('La cotización indicada no existe.', 400)
+        changes.quoteId = quote.id
+        changes.clientId = quote.clientId ?? current.clientId ?? null
+      }
+    }
+
+    return this.repository.update(id, input, changes)
   }
 
   async registerReply(
     id: string,
     reply: { subject: string; message: string; delivered: boolean }
-  ): Promise<HelpdeskTicket | null> {
-    const tickets = await this.load()
-    const current = tickets.find((ticket) => ticket.id === id)
+  ) {
+    const current = await this.repository.findById(id)
     if (!current) return null
-
-    const now = new Date().toISOString()
-    const next: HelpdeskTicket = {
-      ...current,
-      status: reply.delivered ? 'ATTENDED' : current.status,
-      repliedAt: reply.delivered ? now : current.repliedAt,
-      lastReply: { ...reply, at: now },
-      updatedAt: now,
-    }
-
-    this.tickets = tickets.map((ticket) => (ticket.id === id ? next : ticket))
-    await this.persist(this.tickets)
-    return next
+    return this.repository.registerReply(id, reply)
   }
 
-  async remove(id: string): Promise<boolean> {
-    const tickets = await this.load()
-    const next = tickets.filter((ticket) => ticket.id !== id)
-    if (next.length === tickets.length) return false
-    this.tickets = next
-    await this.persist(next)
-    return true
+  async remove(id: string) {
+    return this.repository.remove(id)
   }
 }
 

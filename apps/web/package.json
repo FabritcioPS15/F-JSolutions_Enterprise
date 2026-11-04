@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "predev": "node ../../scripts/ensure-contracts.mjs",
     "dev": "next dev",
+    "prebuild": "node ../../scripts/ensure-contracts.mjs",
     "build": "next build",
     "start": "next start"
   },

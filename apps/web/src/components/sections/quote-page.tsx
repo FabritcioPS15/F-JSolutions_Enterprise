@@ -24,7 +24,6 @@ import { EnhancedHeader } from '@/components/layout/enhanced-header'
 import { QuotePanel } from '@/components/sections/quote-panel'
 import { QuantityInput } from '@/components/ui/quantity-input'
 import {
-  buildQuoteCode,
   documentLabel,
   formatQuoteDate,
   isValidDocument,
@@ -71,6 +70,7 @@ export function QuotePage() {
 
   const [showQuote, setShowQuote] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState('')
   const [isDownloading, setIsDownloading] = useState(false)
   const [successQuote, setSuccessQuote] = useState<SavedQuote | null>(null)
   const [formData, setFormData] = useState<QuoteFormData>(initialForm)
@@ -135,33 +135,69 @@ export function QuotePage() {
     return true
   }
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
     if (quote.count === 0 || isSubmitting) return
     if (!validateForm()) return
 
+    setSubmitError('')
     setIsSubmitting(true)
 
-    const now = new Date()
-    const savedQuote: SavedQuote = {
-      id: `quote_${now.getTime()}`,
-      code: buildQuoteCode(now),
-      createdAt: now.toISOString(),
-      status: 'enviada',
-      items: quote.quote.items,
-      itemCount: quote.count,
-      contactName: formData.contactName.trim(),
-      contactEmail: formData.contactEmail.trim(),
-      contactPhone: formData.contactPhone.trim(),
-      companyName: formData.companyName.trim() || undefined,
-      documentType: formData.documentNumber.trim() ? formData.documentType : undefined,
-      documentNumber: onlyDigits(formData.documentNumber) || undefined,
-      contactPreference: formData.contactPreference,
-      generalNotes: formData.generalNotes.trim() || undefined,
-    }
+    try {
+      const response = await fetch('/api/cotizacion', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contactName: formData.contactName.trim(),
+          contactEmail: formData.contactEmail.trim(),
+          contactPhone: formData.contactPhone.trim(),
+          companyName: formData.companyName.trim() || undefined,
+          documentType: formData.documentNumber.trim() ? formData.documentType : undefined,
+          documentNumber: onlyDigits(formData.documentNumber) || undefined,
+          contactPreference: formData.contactPreference,
+          generalNotes: formData.generalNotes.trim() || undefined,
+          items: quote.quote.items.map((item) => ({
+            productId: item.productId,
+            productName: item.productName,
+            productSku: item.productSku,
+            quantity: item.quantity,
+          })),
+        }),
+      })
 
-    // Simulación de envío: guarda el perfil y la cotización en el navegador.
-    window.setTimeout(() => {
+      const payload = (await response.json().catch(() => null)) as
+        | {
+            success?: boolean
+            message?: string
+            data?: { id?: string; code?: string; createdAt?: string }
+          }
+        | null
+
+      if (!response.ok || !payload?.success || !payload.data?.code) {
+        setSubmitError(
+          payload?.message ??
+            'No pudimos registrar tu solicitud en este momento. Inténtalo nuevamente.'
+        )
+        return
+      }
+
+      const savedQuote: SavedQuote = {
+        id: payload.data.id ?? `quote_${Date.now()}`,
+        code: payload.data.code,
+        createdAt: payload.data.createdAt ?? new Date().toISOString(),
+        status: 'enviada',
+        items: quote.quote.items,
+        itemCount: quote.count,
+        contactName: formData.contactName.trim(),
+        contactEmail: formData.contactEmail.trim(),
+        contactPhone: formData.contactPhone.trim(),
+        companyName: formData.companyName.trim() || undefined,
+        documentType: formData.documentNumber.trim() ? formData.documentType : undefined,
+        documentNumber: onlyDigits(formData.documentNumber) || undefined,
+        contactPreference: formData.contactPreference,
+        generalNotes: formData.generalNotes.trim() || undefined,
+      }
+
       account.saveProfile({
         name: savedQuote.contactName,
         email: savedQuote.contactEmail,
@@ -175,9 +211,14 @@ export function QuotePage() {
       account.addQuote(savedQuote)
       quote.clearQuote()
       setSuccessQuote(savedQuote)
-      setIsSubmitting(false)
       window.scrollTo({ top: 0, behavior: 'smooth' })
-    }, 900)
+    } catch {
+      setSubmitError(
+        'No pudimos conectar con el servicio de cotizaciones. Revisa tu conexión e inténtalo nuevamente.'
+      )
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const resetQuote = () => {
@@ -709,6 +750,15 @@ export function QuotePage() {
                       Los precios y la disponibilidad se confirman en la propuesta del asesor.
                     </p>
                   </div>
+
+                  {submitError ? (
+                    <p
+                      role="alert"
+                      className="mt-3 rounded-lg border border-[#FECACA] bg-[#FEF2F2] px-3 py-2 text-[11px] leading-4 text-[#B91C1C]"
+                    >
+                      {submitError}
+                    </p>
+                  ) : null}
 
                   <button
                     type="submit"

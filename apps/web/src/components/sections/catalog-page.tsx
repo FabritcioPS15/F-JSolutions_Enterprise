@@ -39,9 +39,10 @@ import { EnhancedHeader } from '@/components/layout/enhanced-header'
 import {
   categoryTaxonomy,
   getTaxonomyCategory,
-  products,
+  products as staticProducts,
   type Product,
 } from '@/lib/catalog'
+import { fetchStoreProducts } from '@/lib/catalog-api'
 import { useQuote } from '@/lib/use-quote'
 
 const categoryIconMap: Record<string, LucideIcon> = {
@@ -351,6 +352,23 @@ export function CatalogPage({
   )
   const [brand, setBrand] = useState(searchParams?.get('marca') || searchParams?.get('brand') || 'Todas')
   const [sort, setSort] = useState(searchParams?.get('orden') || 'relevancia')
+  // El catálogo se muestra al instante con los datos locales y se reemplaza
+  // por el catálogo publicado en la API en cuanto responde.
+  const [products, setProducts] = useState<Product[]>(staticProducts)
+
+  useEffect(() => {
+    let active = true
+
+    fetchStoreProducts()
+      .then((remote) => {
+        if (active) setProducts(remote)
+      })
+      .catch(() => undefined)
+
+    return () => {
+      active = false
+    }
+  }, [])
 
   // Sincronizar parámetros de URL
   useEffect(() => {
@@ -398,7 +416,7 @@ export function CatalogPage({
       })
     }
     return Array.from(new Set(list.map((product) => product.brand))).sort()
-  }, [category, activeTaxonomy])
+  }, [category, activeTaxonomy, products])
 
   // Filtrado de productos
   const filtered = useMemo(() => {
@@ -465,7 +483,7 @@ export function CatalogPage({
       if (sort === 'nombre-desc') return b.name.localeCompare(a.name)
       return 0
     })
-  }, [query, category, subcategory, subSubcategory, brand, sort, activeTaxonomy])
+  }, [query, category, subcategory, subSubcategory, brand, sort, activeTaxonomy, products])
 
   // Contadores de categorías
   const categoryCounts = useMemo(() => {
@@ -476,7 +494,7 @@ export function CatalogPage({
       counts[key] = (counts[key] || 0) + 1
     })
     return counts
-  }, [])
+  }, [products])
 
   // Cards de categorías para la vista de catálogo completo
   const categoryCards = useMemo<CategoryCardData[]>(() => {
@@ -521,7 +539,7 @@ export function CatalogPage({
       }
     })
     return counts
-  }, [activeTaxonomy])
+  }, [activeTaxonomy, products])
 
   // Contadores de tipos (sub-subcategorías)
   const subSubcategoryCounts = useMemo(() => {
@@ -534,7 +552,7 @@ export function CatalogPage({
       }
     })
     return counts
-  }, [activeTaxonomy])
+  }, [activeTaxonomy, products])
 
   // Contadores de marcas
   const brandCounts = useMemo(() => {
@@ -672,7 +690,7 @@ export function CatalogPage({
       icon: categoryIconMap[card.label],
     }))
     return [allOpt, ...catOpts]
-  }, [categoryCards])
+  }, [categoryCards, products])
 
   // Opciones para el dropdown de Subcategorías
   const subcategoryDropdownOptions = useMemo<DropdownOption[]>(() => {

@@ -1,8 +1,5 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
-import { AdminProvider } from '@/components/admin/admin-provider'
-import { AdminShell } from '@/components/admin/admin-shell'
-import { ToastProvider } from '@/components/admin/toast'
 import './globals.css'
 
 const inter = Inter({
@@ -30,13 +27,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es" className={inter.variable}>
-      <body>
-        <AdminProvider>
-          <ToastProvider>
-            <AdminShell>{children}</AdminShell>
-          </ToastProvider>
-        </AdminProvider>
-      </body>
+      <body>{children}</body>
     </html>
   )
 }

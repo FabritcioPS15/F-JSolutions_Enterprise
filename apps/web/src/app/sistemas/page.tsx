@@ -1,5 +1,8 @@
 import type { Metadata } from 'next'
 import { ServicePage } from '@/components/service-page'
+import { getStoreServicesByCategory } from '@/lib/service-offerings'
+
+export const revalidate = 60
 
 export const metadata: Metadata = {
   title: 'Desarrollo de software a medida | F&J Systems',
@@ -8,6 +11,7 @@ export const metadata: Metadata = {
   alternates: { canonical: '/sistemas' },
 }
 
-export default function SistemasPage() {
-  return <ServicePage kind="sistemas" />
+export default async function SistemasPage() {
+  const softwareServices = await getStoreServicesByCategory('Desarrollo de software')
+  return <ServicePage kind="sistemas" softwareServices={softwareServices} />
 }

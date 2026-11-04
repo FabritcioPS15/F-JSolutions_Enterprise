@@ -10,6 +10,19 @@ import {
 import { createSeedData } from '@/lib/admin/seed'
 import { buildQuoteCode, slugify, statusLabels } from '@/lib/admin/format'
 import {
+  CatalogApiError,
+  createBrand as createBrandNode,
+  createCategory as createCategoryNode,
+  deleteBrandNode,
+  deleteCategoryNode,
+  deleteProductNode,
+  fetchCatalogSnapshot,
+  saveProduct,
+  updateBrandNode,
+  updateCategoryNode,
+  type CatalogSnapshot,
+} from '@/lib/services/catalog'
+import {
   createTicket as createHelpdeskTicket,
   deleteTicket as deleteHelpdeskTicket,
   fetchTickets,
@@ -20,6 +33,16 @@ import {
   updateTicket as updateHelpdeskTicket,
   type TicketPatch,
 } from '@/lib/admin/helpdesk'
+import {
+  CommercialApiError,
+  deleteClientNode,
+  deleteQuoteNode,
+  fetchCommercialSnapshot,
+  saveClient,
+  saveQuote,
+  updateQuoteStatusNode,
+  type CommercialSnapshot,
+} from '@/lib/services/commercial'
 import type {
   ActivityEntry,
   ActivityType,
@@ -79,6 +102,12 @@ export type RequestPatch = Partial<
 
 type AdminContextValue = {
   hydrated: boolean
+  catalogSource: 'local' | 'api'
+  catalogError: string | null
+  refreshCatalog: () => Promise<void>
+  commercialSource: 'local' | 'api'
+  commercialError: string | null
+  refreshCommercial: () => Promise<void>
   products: AdminProduct[]
   categories: Category[]
   brands: Brand[]
@@ -129,7 +158,7 @@ type AdminContextValue = {
   createClient: (input: ClientInput) => Client
   updateClient: (id: string, input: ClientInput) => void
   removeClient: (id: string) => void
-  createQuote: (input: QuoteInput) => Quote
+  createQuote: (input: QuoteInput) => Promise<Quote>
   updateQuote: (id: string, input: QuoteInput) => void
   removeQuote: (id: string) => void
   setQuoteStatus: (id: string, status: QuoteStatus) => void
@@ -150,6 +179,136 @@ type AdminContextValue = {
 }
 
 const AdminContext = createContext<AdminContextValue | null>(null)
+
+type FlatCategory = Category & { parentId: string | null }
+
+function flattenCategoryTree(
+  categories: Category[],
+  parentId: string | null = null
+): FlatCategory[] {
+  return categories.flatMap((category) => [
+    { ...category, parentId },
+    ...category.subcategories.flatMap((subcategory) => [
+      {
+        id: subcategory.id,
+        label: subcategory.label,
+        slug: slugify(subcategory.label),
+        description: '',
+        image: '',
+        status: category.status,
+        order: category.order,
+        subcategories: [] as Category['subcategories'],
+        parentId: category.id,
+      },
+      ...subcategory.subSubcategories.map((type) => ({
+        id: type.id,
+        label: type.label,
+        slug: slugify(type.label),
+        description: '',
+        image: '',
+        status: category.status,
+        order: category.order,
+        subcategories: [] as Category['subcategories'],
+        parentId: subcategory.id,
+      })),
+    ]),
+  ])
+}
+
+function buildCategoryTree(nodes: FlatCategory[]): Category[] {
+  const sorted = [...nodes].sort((a, b) => a.order - b.order || a.label.localeCompare(b.label))
+  const byParent = new Map<string | null, FlatCategory[]>()
+  for (const node of sorted) {
+    const list = byParent.get(node.parentId) ?? []
+    list.push(node)
+    byParent.set(node.parentId, list)
+  }
+
+  return (byParent.get(null) ?? []).map((node) => ({
+    id: node.id,
+    label: node.label,
+    slug: node.slug,
+    description: node.description,
+    image: node.image,
+    status: node.status,
+    order: node.order,
+    subcategories: (byParent.get(node.id) ?? []).map((sub) => ({
+      id: sub.id,
+      label: sub.label,
+      subSubcategories: (byParent.get(sub.id) ?? []).map((type) => ({
+        id: type.id,
+        label: type.label,
+      })),
+    })),
+  }))
+}
+
+function mergeCategories(local: Category[], remote: Category[]): Category[] {
+  const nodes = new Map<string, FlatCategory>()
+  for (const node of flattenCategoryTree(local)) nodes.set(node.id, node)
+  for (const node of flattenCategoryTree(remote)) nodes.set(node.id, node)
+  return buildCategoryTree([...nodes.values()])
+}
+
+function mergeBrands(local: Brand[], remote: Brand[]): Brand[] {
+  const nodes = new Map<string, Brand>()
+  for (const brand of local) nodes.set(brand.id, brand)
+  for (const brand of remote) nodes.set(brand.id, brand)
+  const seenNames = new Set<string>()
+  return [...nodes.values()].filter((brand) => {
+    const key = brand.name.toLowerCase()
+    if (seenNames.has(key)) return false
+    seenNames.add(key)
+    return true
+  })
+}
+
+function mergeProducts(local: AdminProduct[], remote: AdminProduct[]): AdminProduct[] {
+  const remoteIds = new Set(remote.map((product) => product.id))
+  const remoteSlugs = new Set(remote.map((product) => product.slug))
+  return [
+    ...remote,
+    ...local.filter(
+      (product) => !remoteIds.has(product.id) && !remoteSlugs.has(product.slug)
+    ),
+  ]
+}
+
+function mergeCatalog(prev: AdminData, snapshot: CatalogSnapshot): AdminData {
+  return {
+    ...prev,
+    products: mergeProducts(prev.products, snapshot.products),
+    categories: mergeCategories(prev.categories, snapshot.categories),
+    brands: mergeBrands(prev.brands, snapshot.brands),
+  }
+}
+
+function mergeClients(local: Client[], remote: Client[]): Client[] {
+  const remoteIds = new Set(remote.map((client) => client.id))
+  return [...remote, ...local.filter((client) => !remoteIds.has(client.id))]
+}
+
+function mergeQuotes(local: Quote[], remote: Quote[]): Quote[] {
+  const remoteIds = new Set(remote.map((quote) => quote.id))
+  return [...remote, ...local.filter((quote) => !remoteIds.has(quote.id))]
+}
+
+function categoryApiInput(category: Category, parentId: string | null = null) {
+  return {
+    id: category.id,
+    parentId,
+    name: category.label,
+    slug: category.slug,
+    description: category.description,
+    imageUrl: category.image,
+    status: category.status,
+    sortOrder: category.order,
+  }
+}
+
+function allCategoryIds(categories: Category[]): string[] {
+  return flattenCategoryTree(categories).map((category) => category.id)
+}
 
 function uid(prefix: string) {
   return `${prefix}-${Math.random().toString(36).slice(2, 7)}${Date.now().toString(36).slice(-3)}`
@@ -505,7 +664,20 @@ function normalizeClient(raw: Record<string, unknown>): Client {
   }
 }
 
-const quoteStatuses: QuoteStatus[] = ['draft', 'sent', 'answered', 'closed']
+const quoteStatuses: QuoteStatus[] = [
+  'draft',
+  'new',
+  'review',
+  'sent',
+  'approved',
+  'rejected',
+  'expired',
+]
+
+const legacyQuoteStatuses: Record<string, QuoteStatus> = {
+  answered: 'approved',
+  closed: 'rejected',
+}
 
 function normalizeQuoteLine(raw: Record<string, unknown>): QuoteLine {
   return {
@@ -519,6 +691,7 @@ function normalizeQuoteLine(raw: Record<string, unknown>): QuoteLine {
 }
 
 function normalizeQuote(raw: Record<string, unknown>): Quote {
+  const rawStatus = legacyQuoteStatuses[String(raw.status)] ?? raw.status
   return {
     id: String(raw.id ?? uid('cotizacion')),
     code: String(raw.code ?? 'COT-SIN-CODIGO'),
@@ -527,8 +700,8 @@ function normalizeQuote(raw: Record<string, unknown>): Quote {
     clientCompany: String(raw.clientCompany ?? ''),
     clientEmail: String(raw.clientEmail ?? ''),
     clientPhone: String(raw.clientPhone ?? ''),
-    status: quoteStatuses.includes(raw.status as QuoteStatus)
-      ? (raw.status as QuoteStatus)
+    status: quoteStatuses.includes(rawStatus as QuoteStatus)
+      ? (rawStatus as QuoteStatus)
       : 'draft',
     items: Array.isArray(raw.items)
       ? (raw.items as Record<string, unknown>[]).map(normalizeQuoteLine)
@@ -634,8 +807,87 @@ function parseData(raw: string): AdminData {
 export function AdminProvider({ children }: { children: ReactNode }) {
   const [data, setData] = useState<AdminData>(() => createSeedData())
   const [hydrated, setHydrated] = useState(false)
+  const [catalogSource, setCatalogSource] = useState<'local' | 'api'>('local')
+  const [catalogError, setCatalogError] = useState<string | null>(null)
+  const [commercialSource, setCommercialSource] = useState<'local' | 'api'>('local')
+  const [commercialError, setCommercialError] = useState<string | null>(null)
   const [helpdeskError, setHelpdeskError] = useState<string | null>(null)
   const [helpdeskSynced, setHelpdeskSynced] = useState(false)
+
+  useEffect(() => {
+    void refreshCatalog().catch(() => undefined)
+  }, [])
+
+  function syncCatalog(task: Promise<unknown>) {
+    void task.catch((error: unknown) => {
+      setCatalogError(
+        error instanceof Error
+          ? error.message
+          : 'No se pudo sincronizar el catálogo con la base de datos.'
+      )
+    })
+  }
+
+  function syncCommercial<T>(task: Promise<T>, onSuccess?: (value: T) => void) {
+    void task
+      .then((value) => {
+        onSuccess?.(value)
+        setCommercialError(null)
+      })
+      .catch((error: unknown) => {
+        setCommercialError(
+          error instanceof Error
+            ? error.message
+            : 'No se pudo sincronizar la información comercial con la base de datos.'
+        )
+      })
+  }
+
+  async function refreshCommercial() {
+    try {
+      const snapshot: CommercialSnapshot = await fetchCommercialSnapshot()
+      setData((prev) => ({
+        ...prev,
+        clients: mergeClients(prev.clients, snapshot.clients),
+        quotes: mergeQuotes(prev.quotes, snapshot.quotes),
+      }))
+      setCommercialSource(
+        snapshot.clients.length > 0 || snapshot.quotes.length > 0 ? 'api' : 'local'
+      )
+      setCommercialError(null)
+    } catch (error) {
+      setCommercialSource('local')
+      setCommercialError(
+        error instanceof CommercialApiError
+          ? error.message
+          : 'No se pudo cargar la información comercial desde la API. Se usa el respaldo local.'
+      )
+      throw error
+    }
+  }
+
+  async function refreshCatalog() {
+    try {
+      const snapshot = await fetchCatalogSnapshot()
+      setData((prev) => mergeCatalog(prev, snapshot))
+      setCatalogSource(
+        snapshot.products.length > 0 ||
+          snapshot.categories.length > 0 ||
+          snapshot.brands.length > 0
+          ? 'api'
+          : 'local'
+      )
+      setCatalogError(null)
+    } catch (error) {
+      setCatalogSource('local')
+      setCatalogError(
+        error instanceof CatalogApiError
+          ? error.message
+          : 'No se pudo cargar el catálogo desde la API. Se usa el respaldo local.'
+      )
+      throw error
+    }
+  }
 
   useEffect(() => {
     try {
@@ -663,6 +915,11 @@ export function AdminProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!hydrated) return
     void refreshRequests().catch(() => undefined)
+  }, [hydrated])
+
+  useEffect(() => {
+    if (!hydrated) return
+    void refreshCommercial().catch(() => undefined)
   }, [hydrated])
 
   function createProduct(input: ProductInput) {
@@ -704,6 +961,14 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         ]
       )
     )
+    syncCatalog(
+      saveProduct(product).then((saved) =>
+        setData((prev) => ({
+          ...prev,
+          products: prev.products.map((item) => (item.id === saved.id ? saved : item)),
+        }))
+      )
+    )
     return product
   }
 
@@ -712,6 +977,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     if (!current) return
     const slug = uniqueSlug(input.slug || slugify(input.name), data.products, id)
     const now = new Date().toISOString()
+    const updated: AdminProduct = { ...current, ...input, slug, updatedAt: now }
     const stockMovement =
       input.stock !== current.stock
         ? buildMovement({
@@ -730,7 +996,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         {
           ...prev,
           products: prev.products.map((product) =>
-            product.id === id ? { ...product, ...input, slug, updatedAt: now } : product
+            product.id === id ? updated : product
           ),
           inventoryMovements: stockMovement
             ? prependMovements(prev, [stockMovement])
@@ -745,6 +1011,14 @@ export function AdminProvider({ children }: { children: ReactNode }) {
                 : 'Ficha actualizada',
           }),
         ]
+      )
+    )
+    syncCatalog(
+      saveProduct(updated).then((saved) =>
+        setData((prev) => ({
+          ...prev,
+          products: prev.products.map((item) => (item.id === saved.id ? saved : item)),
+        }))
       )
     )
   }
@@ -770,17 +1044,29 @@ export function AdminProvider({ children }: { children: ReactNode }) {
           ? { subcategory: undefined, subSubcategory: undefined }
           : { subSubcategory: undefined }
 
+    const updated: AdminProduct = {
+      ...current,
+      ...patch,
+      updatedAt: new Date().toISOString(),
+    }
+
     setData((prev) =>
       appendActivity(
         {
           ...prev,
           products: prev.products.map((product) =>
-            product.id === id
-              ? { ...product, ...patch, updatedAt: new Date().toISOString() }
-              : product
+            product.id === id ? updated : product
           ),
         },
         [createActivity('updated', current.name, { productId: id, detail })]
+      )
+    )
+    syncCatalog(
+      saveProduct(updated).then((saved) =>
+        setData((prev) => ({
+          ...prev,
+          products: prev.products.map((item) => (item.id === saved.id ? saved : item)),
+        }))
       )
     )
     return true
@@ -798,6 +1084,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         [createActivity('deleted', current.name, { detail: 'Eliminado del catálogo' })]
       )
     )
+    syncCatalog(deleteProductNode(id))
   }
 
   function duplicateProduct(id: string) {
@@ -844,6 +1131,14 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         ]
       )
     )
+    syncCatalog(
+      saveProduct(copy).then((saved) =>
+        setData((prev) => ({
+          ...prev,
+          products: prev.products.map((item) => (item.id === saved.id ? saved : item)),
+        }))
+      )
+    )
     return copy
   }
 
@@ -872,17 +1167,22 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         : status === 'archived'
           ? 'Producto archivado'
           : 'Producto retirado de publicación'
+    const updated: AdminProduct = { ...product, status, updatedAt: new Date().toISOString() }
     setData((prev) =>
       appendActivity(
         {
           ...prev,
-          products: prev.products.map((item) =>
-            item.id === id
-              ? { ...item, status, updatedAt: new Date().toISOString() }
-              : item
-          ),
+          products: prev.products.map((item) => (item.id === id ? updated : item)),
         },
         [createActivity(type, product.name, { productId: id, detail })]
+      )
+    )
+    syncCatalog(
+      saveProduct(updated).then((saved) =>
+        setData((prev) => ({
+          ...prev,
+          products: prev.products.map((item) => (item.id === saved.id ? saved : item)),
+        }))
       )
     )
   }
@@ -896,6 +1196,9 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     const type: ActivityType =
       status === 'active' ? 'published' : status === 'archived' ? 'archived' : 'unpublished'
     const now = new Date().toISOString()
+    const updatedProducts = data.products
+      .filter((product) => targetIds.has(product.id) && product.status !== status)
+      .map((product) => ({ ...product, status, updatedAt: now }))
     setData((prev) =>
       appendActivity(
         {
@@ -915,6 +1218,16 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         ]
       )
     )
+    for (const product of updatedProducts) {
+      syncCatalog(
+        saveProduct(product).then((saved) =>
+          setData((prev) => ({
+            ...prev,
+            products: prev.products.map((item) => (item.id === saved.id ? saved : item)),
+          }))
+        )
+      )
+    }
   }
 
   function bulkDeleteProducts(ids: string[]) {
@@ -936,6 +1249,9 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         ]
       )
     )
+    for (const product of affected) {
+      syncCatalog(deleteProductNode(product.id))
+    }
   }
 
   function registerMovement(input: InventoryMovementInput): { ok: boolean; error?: string } {
@@ -979,13 +1295,26 @@ export function AdminProvider({ children }: { children: ReactNode }) {
       at: now,
     })
 
+    const updatedProduct: AdminProduct = {
+      ...product,
+      stock: resultingStock,
+      updatedAt: now,
+    }
     setData((prev) => ({
       ...prev,
       products: prev.products.map((item) =>
-        item.id === product.id ? { ...item, stock: resultingStock, updatedAt: now } : item
+        item.id === product.id ? updatedProduct : item
       ),
       inventoryMovements: prependMovements(prev, [movement]),
     }))
+    syncCatalog(
+      saveProduct(updatedProduct).then((saved) =>
+        setData((prev) => ({
+          ...prev,
+          products: prev.products.map((item) => (item.id === saved.id ? saved : item)),
+        }))
+      )
+    )
 
     return { ok: true }
   }
@@ -1085,6 +1414,15 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         },
       ],
     }))
+    syncCatalog(
+      createCategoryNode({
+        id,
+        name: clean,
+        slug,
+        status: 'active',
+        sortOrder: data.categories.length,
+      })
+    )
     return true
   }
 
@@ -1132,6 +1470,17 @@ export function AdminProvider({ children }: { children: ReactNode }) {
           )
         : prev.products,
     }))
+    syncCatalog(
+      updateCategoryNode(id, {
+        name: nextLabel,
+        slug: nextSlug,
+        description:
+          patch.description !== undefined ? patch.description.trim() : category.description,
+        imageUrl: patch.image !== undefined ? patch.image.trim() : category.image,
+        status: patch.status ?? category.status,
+        sortOrder: nextOrder,
+      })
+    )
     return true
   }
 
@@ -1159,17 +1508,20 @@ export function AdminProvider({ children }: { children: ReactNode }) {
           : product
       ),
     }))
+    syncCatalog(updateCategoryNode(id, { name: clean }))
     return true
   }
 
   function removeCategory(id: string) {
     const category = data.categories.find((item) => item.id === id)
     if (!category) return false
+    if (category.subcategories.length > 0) return false
     if (data.products.some((product) => product.category === category.label)) return false
     setData((prev) => ({
       ...prev,
       categories: prev.categories.filter((item) => item.id !== id),
     }))
+    syncCatalog(deleteCategoryNode(id))
     return true
   }
 
@@ -1181,8 +1533,8 @@ export function AdminProvider({ children }: { children: ReactNode }) {
       return false
     }
     const id = uniqueId(
-      slugify(clean) || 'subcategoria',
-      category.subcategories.map((sub) => sub.id)
+      `${category.id}-${slugify(clean) || 'subcategoria'}`,
+      allCategoryIds(data.categories)
     )
     setData((prev) => ({
       ...prev,
@@ -1195,6 +1547,19 @@ export function AdminProvider({ children }: { children: ReactNode }) {
           : item
       ),
     }))
+    syncCatalog(
+      (async () => {
+        await createCategoryNode(categoryApiInput(category))
+        await createCategoryNode({
+          id,
+          parentId: category.id,
+          name: clean,
+          slug: id,
+          status: 'active',
+          sortOrder: category.subcategories.length,
+        })
+      })()
+    )
     return true
   }
 
@@ -1226,6 +1591,17 @@ export function AdminProvider({ children }: { children: ReactNode }) {
           : product
       ),
     }))
+    syncCatalog(
+      (async () => {
+        await createCategoryNode(categoryApiInput(category))
+        await updateCategoryNode(subcategoryId, {
+          id: subcategoryId,
+          parentId: category.id,
+          name: clean,
+          slug: subcategoryId,
+        })
+      })()
+    )
     return true
   }
 
@@ -1233,6 +1609,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     const category = data.categories.find((item) => item.id === categoryId)
     const sub = category?.subcategories.find((item) => item.id === subcategoryId)
     if (!category || !sub) return false
+    if (sub.subSubcategories.length > 0) return false
     if (
       data.products.some(
         (product) => product.category === category.label && product.subcategory === sub.label
@@ -1251,6 +1628,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
           : item
       ),
     }))
+    syncCatalog(deleteCategoryNode(subcategoryId))
     return true
   }
 
@@ -1263,8 +1641,8 @@ export function AdminProvider({ children }: { children: ReactNode }) {
       return false
     }
     const id = uniqueId(
-      slugify(clean) || 'tipo',
-      sub.subSubcategories.map((type) => type.id)
+      `${subcategoryId}-${slugify(clean) || 'tipo'}`,
+      allCategoryIds(data.categories)
     )
     setData((prev) => ({
       ...prev,
@@ -1287,6 +1665,26 @@ export function AdminProvider({ children }: { children: ReactNode }) {
           : item
       ),
     }))
+    syncCatalog(
+      (async () => {
+        await createCategoryNode(categoryApiInput(category))
+        await createCategoryNode({
+          id: sub.id,
+          parentId: category.id,
+          name: sub.label,
+          slug: sub.id,
+          status: category.status,
+        })
+        await createCategoryNode({
+          id,
+          parentId: sub.id,
+          name: clean,
+          slug: id,
+          status: 'active',
+          sortOrder: sub.subSubcategories.length,
+        })
+      })()
+    )
     return true
   }
 
@@ -1339,6 +1737,24 @@ export function AdminProvider({ children }: { children: ReactNode }) {
           : product
       ),
     }))
+    syncCatalog(
+      (async () => {
+        await createCategoryNode(categoryApiInput(category))
+        await createCategoryNode({
+          id: sub.id,
+          parentId: category.id,
+          name: sub.label,
+          slug: sub.id,
+          status: category.status,
+        })
+        await updateCategoryNode(subSubcategoryId, {
+          id: subSubcategoryId,
+          parentId: sub.id,
+          name: clean,
+          slug: subSubcategoryId,
+        })
+      })()
+    )
     return true
   }
 
@@ -1381,6 +1797,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
           : item
       ),
     }))
+    syncCatalog(deleteCategoryNode(subSubcategoryId))
     return true
   }
 
@@ -1390,21 +1807,30 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     if (data.brands.some((brand) => brand.name.toLowerCase() === clean.toLowerCase())) return false
     const slug = uniqueBrandSlug(patch.slug?.trim() || clean, data.brands)
     const id = uniqueId(slug, data.brands.map((brand) => brand.id))
+    const brand: Brand = {
+      id,
+      name: clean,
+      slug,
+      description: patch.description?.trim() ?? '',
+      logo: patch.logo?.trim() ?? '',
+      status: patch.status ?? 'active',
+      order: patch.order ?? data.brands.length,
+    }
     setData((prev) => ({
       ...prev,
-      brands: [
-        ...prev.brands,
-        {
-          id,
-          name: clean,
-          slug,
-          description: patch.description?.trim() ?? '',
-          logo: patch.logo?.trim() ?? '',
-          status: patch.status ?? 'active',
-          order: patch.order ?? prev.brands.length,
-        },
-      ],
+      brands: [...prev.brands, brand],
     }))
+    syncCatalog(
+      createBrandNode({
+        id: brand.id,
+        name: brand.name,
+        slug: brand.slug,
+        description: brand.description,
+        logoUrl: brand.logo,
+        status: brand.status,
+        sortOrder: brand.order,
+      })
+    )
     return true
   }
 
@@ -1429,21 +1855,20 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         : brand.order
     const now = new Date().toISOString()
 
+    const updatedBrand: Brand = {
+      ...brand,
+      name: nextName,
+      slug: nextSlug,
+      description:
+        patch.description !== undefined ? patch.description.trim() : brand.description,
+      logo: patch.logo !== undefined ? patch.logo.trim() : brand.logo,
+      status: patch.status ?? brand.status,
+      order: nextOrder,
+    }
+
     setData((prev) => ({
       ...prev,
-      brands: prev.brands.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              name: nextName,
-              slug: nextSlug,
-              description: patch.description !== undefined ? patch.description.trim() : item.description,
-              logo: patch.logo !== undefined ? patch.logo.trim() : item.logo,
-              status: patch.status ?? item.status,
-              order: nextOrder,
-            }
-          : item
-      ),
+      brands: prev.brands.map((item) => (item.id === id ? updatedBrand : item)),
       products: renamed
         ? prev.products.map((product) =>
             product.brand === brand.name
@@ -1452,6 +1877,16 @@ export function AdminProvider({ children }: { children: ReactNode }) {
           )
         : prev.products,
     }))
+    syncCatalog(
+      updateBrandNode(id, {
+        name: updatedBrand.name,
+        slug: updatedBrand.slug,
+        description: updatedBrand.description,
+        logoUrl: updatedBrand.logo,
+        status: updatedBrand.status,
+        sortOrder: updatedBrand.order,
+      })
+    )
     return true
   }
 
@@ -1460,6 +1895,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     if (!brand) return false
     if (data.products.some((product) => product.brand === brand.name)) return false
     setData((prev) => ({ ...prev, brands: prev.brands.filter((item) => item.id !== id) }))
+    syncCatalog(deleteBrandNode(id))
     return true
   }
 
@@ -1467,16 +1903,23 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     const now = new Date().toISOString()
     const client: Client = { ...input, id: uid('cliente'), createdAt: now, updatedAt: now }
     setData((prev) => ({ ...prev, clients: [client, ...prev.clients] }))
+    syncCommercial(saveClient(client), (saved) =>
+      setData((prev) => ({
+        ...prev,
+        clients: prev.clients.map((item) => (item.id === saved.id ? saved : item)),
+      }))
+    )
     return client
   }
 
   function updateClient(id: string, input: ClientInput) {
+    const current = data.clients.find((client) => client.id === id)
+    if (!current) return
     const now = new Date().toISOString()
+    const updated: Client = { ...current, ...input, updatedAt: now }
     setData((prev) => ({
       ...prev,
-      clients: prev.clients.map((client) =>
-        client.id === id ? { ...client, ...input, updatedAt: now } : client
-      ),
+      clients: prev.clients.map((client) => (client.id === id ? updated : client)),
       quotes: prev.quotes.map((quote) =>
         quote.clientId === id
           ? {
@@ -1494,6 +1937,12 @@ export function AdminProvider({ children }: { children: ReactNode }) {
           : project
       ),
     }))
+    syncCommercial(saveClient(updated), (saved) =>
+      setData((prev) => ({
+        ...prev,
+        clients: prev.clients.map((item) => (item.id === saved.id ? saved : item)),
+      }))
+    )
   }
 
   function removeClient(id: string) {
@@ -1510,6 +1959,20 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         project.clientId === id ? { ...project, clientId: undefined } : project
       ),
     }))
+    syncCommercial(deleteClientNode(id))
+  }
+
+  async function ensureCommercialClient(client: Client | undefined) {
+    if (!client) return
+    try {
+      const saved = await saveClient(client)
+      setData((prev) => ({
+        ...prev,
+        clients: prev.clients.map((item) => (item.id === saved.id ? saved : item)),
+      }))
+    } catch {
+      // La API devolverá el error al guardar la cotización si el cliente no existe.
+    }
   }
 
   function nextQuoteCode(prev: AdminData) {
@@ -1519,7 +1982,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     return code
   }
 
-  function createQuote(input: QuoteInput) {
+  async function createQuote(input: QuoteInput): Promise<Quote> {
     const now = new Date().toISOString()
     const quote: Quote = {
       ...input,
@@ -1529,16 +1992,52 @@ export function AdminProvider({ children }: { children: ReactNode }) {
       updatedAt: now,
     }
     setData((prev) => ({ ...prev, quotes: [quote, ...prev.quotes] }))
-    return quote
+
+    const client = quote.clientId
+      ? data.clients.find((item) => item.id === quote.clientId)
+      : undefined
+
+    try {
+      await ensureCommercialClient(client)
+      const saved = await saveQuote(quote, client)
+      setData((prev) => ({
+        ...prev,
+        quotes: prev.quotes.map((item) => (item.id === saved.id ? saved : item)),
+      }))
+      setCommercialError(null)
+      return saved
+    } catch (error) {
+      setCommercialError(
+        error instanceof Error
+          ? error.message
+          : 'No se pudo guardar la cotización en la base de datos.'
+      )
+      return quote
+    }
+  }
+
+  function replaceQuote(saved: Quote) {
+    setData((prev) => ({
+      ...prev,
+      quotes: prev.quotes.map((quote) => (quote.id === saved.id ? saved : quote)),
+    }))
   }
 
   function updateQuote(id: string, input: QuoteInput) {
+    const current = data.quotes.find((quote) => quote.id === id)
+    if (!current) return
+    const updated: Quote = { ...current, ...input, updatedAt: new Date().toISOString() }
     setData((prev) => ({
       ...prev,
-      quotes: prev.quotes.map((quote) =>
-        quote.id === id ? { ...quote, ...input, updatedAt: new Date().toISOString() } : quote
-      ),
+      quotes: prev.quotes.map((quote) => (quote.id === id ? updated : quote)),
     }))
+    const client = updated.clientId
+      ? data.clients.find((item) => item.id === updated.clientId)
+      : undefined
+    syncCommercial(
+      ensureCommercialClient(client).then(() => saveQuote(updated, client)),
+      replaceQuote
+    )
   }
 
   function setQuoteStatus(id: string, status: QuoteStatus) {
@@ -1548,6 +2047,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         quote.id === id ? { ...quote, status, updatedAt: new Date().toISOString() } : quote
       ),
     }))
+    syncCommercial(updateQuoteStatusNode(id, status), replaceQuote)
   }
 
   function removeQuote(id: string) {
@@ -1558,6 +2058,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         request.quoteId === id ? { ...request, quoteId: undefined } : request
       ),
     }))
+    syncCommercial(deleteQuoteNode(id))
   }
 
   async function refreshRequests() {
@@ -1655,8 +2156,12 @@ export function AdminProvider({ children }: { children: ReactNode }) {
       (email
         ? data.clients.find((client) => client.email.trim().toLowerCase() === email)
         : undefined) ?? null
-    const client: Client =
-      linked ?? {
+
+    let client: Client
+    if (linked) {
+      client = linked
+    } else {
+      client = {
         id: uid('cliente'),
         name: request.name,
         company: request.company,
@@ -1670,10 +2175,11 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         createdAt: now,
         updatedAt: now,
       }
+      setData((prev) => ({ ...prev, clients: [client, ...prev.clients] }))
+      await ensureCommercialClient(client)
+    }
 
-    const quote: Quote = {
-      id: uid('cotizacion'),
-      code: nextQuoteCode(data),
+    const quote = await createQuote({
       clientId: client.id,
       clientName: request.name,
       clientCompany: request.company,
@@ -1683,9 +2189,7 @@ export function AdminProvider({ children }: { children: ReactNode }) {
       items: [],
       notes: request.message,
       validUntil: new Date(Date.now() + 15 * 86_400_000).toISOString().slice(0, 10),
-      createdAt: now,
-      updatedAt: now,
-    }
+    })
 
     const ticket = await updateHelpdeskTicket(id, {
       status: 'REVIEW',
@@ -1694,10 +2198,6 @@ export function AdminProvider({ children }: { children: ReactNode }) {
 
     setData((prev) => ({
       ...prev,
-      clients: prev.clients.some((item) => item.id === client.id)
-        ? prev.clients
-        : [client, ...prev.clients],
-      quotes: [quote, ...prev.quotes],
       requests: prev.requests.map((item) =>
         item.id === id
           ? {
@@ -1732,6 +2232,12 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     <AdminContext.Provider
       value={{
         hydrated,
+        catalogSource,
+        catalogError,
+        refreshCatalog,
+        commercialSource,
+        commercialError,
+        refreshCommercial,
         products: data.products,
         categories: data.categories,
         brands: data.brands,

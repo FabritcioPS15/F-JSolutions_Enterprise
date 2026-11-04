@@ -22,6 +22,8 @@ export type ApiHelpdeskTicket = {
   channel: HelpdeskChannel
   notes: string
   quoteCode?: string
+  quoteId?: string
+  clientId?: string
   repliedAt?: string
   lastReply?: ServiceRequestReply
   createdAt: string
@@ -104,8 +106,8 @@ export function mapTicket(ticket: ApiHelpdeskTicket, quotes: Quote[] = []): Serv
     message: ticket.mensaje,
     channel: channelFromApi[ticket.channel] ?? 'web',
     status: statusFromApi[ticket.status] ?? 'new',
-    clientId: quote?.clientId,
-    quoteId: quote?.id,
+    clientId: ticket.clientId ?? quote?.clientId,
+    quoteId: ticket.quoteId ?? quote?.id,
     quoteCode: ticket.quoteCode,
     repliedAt: ticket.repliedAt,
     lastReply: ticket.lastReply,

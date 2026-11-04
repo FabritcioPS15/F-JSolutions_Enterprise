@@ -20,8 +20,7 @@ import { FaqAccordion } from '@/components/ui/faq-accordion'
 import { ProcessSequence } from '@/components/ui/process-sequence'
 import { EMPRESA } from '@/lib/constants'
 import {
-  getService,
-  getServicePath,
+  getServicePathFor,
   type ServiceCategory,
   type ServiceDefinition,
 } from '@/lib/services'
@@ -81,14 +80,17 @@ const quickFacts: Record<ServiceCategory, { label: string; value: string }[]> = 
 type ServiceDetailProps = {
   service: ServiceDefinition
   categoryCrumb: { label: string; href: string }
+  relatedServices?: ServiceDefinition[]
 }
 
-export function ServiceDetail({ service, categoryCrumb }: ServiceDetailProps) {
+export function ServiceDetail({
+  service,
+  categoryCrumb,
+  relatedServices,
+}: ServiceDetailProps) {
   const facts = quickFacts[service.category]
-  const related = service.related
-    .map((relatedSlug) => getService(relatedSlug))
-    .filter((item) => item !== undefined)
-  const path = getServicePath(service.slug)
+  const related = relatedServices ?? []
+  const path = getServicePathFor(service)
   const phoneHref = `tel:${EMPRESA.telefono.replace(/\s/g, '')}`
 
   const serviceJsonLd = {
@@ -444,7 +446,7 @@ export function ServiceDetail({ service, categoryCrumb }: ServiceDetailProps) {
                 return (
                   <Link
                     key={item.slug}
-                    href={getServicePath(item.slug)}
+                    href={getServicePathFor(item)}
                     className="group flex flex-col rounded-2xl border border-[#E2E8F0] bg-white p-6 transition hover:border-[#2563EB]/30 hover:shadow-lg hover:shadow-black/5"
                   >
                     <span className="grid size-10 place-items-center rounded-xl bg-[#EFF6FF] text-[#2563EB] transition group-hover:bg-[#2563EB] group-hover:text-white">

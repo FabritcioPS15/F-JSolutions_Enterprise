@@ -1,5 +1,5 @@
 import { categories as catalogCategories, products as catalogProducts } from './catalog'
-import { getServicePath, serviceDefinitions, type ServiceCategory } from './services'
+import { getServicePathFor, serviceDefinitions, type ServiceCategory } from './services'
 
 export type SiteSearchType = 'product' | 'system' | 'service' | 'category' | 'page' | 'legal'
 
@@ -281,7 +281,7 @@ function buildIndex(): SiteSearchEntry[] {
       type: isSoftware ? 'system' : 'service',
       title: service.title,
       description: service.summary,
-      href: getServicePath(service.slug),
+      href: getServicePathFor(service),
       keywords: [
         service.category,
         ...categoryKeywords[service.category],

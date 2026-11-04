@@ -19,6 +19,7 @@ import { FaFacebookF, FaLinkedinIn, FaWhatsapp, FaXTwitter } from 'react-icons/f
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
 import { QuotePanel } from '@/components/sections/quote-panel'
 import { findProductBySlug, type Product } from '@/lib/catalog'
+import { fetchStoreProductBySlug } from '@/lib/catalog-api'
 import { useQuote } from '@/lib/use-quote'
 import { useFavorites } from '@/lib/use-favorites'
 
@@ -27,7 +28,9 @@ type ProductDetailProps = {
 }
 
 export function ProductDetail({ slug }: ProductDetailProps) {
-  const product = findProductBySlug(slug)
+  const staticProduct = findProductBySlug(slug)
+  const [product, setProduct] = useState<Product | undefined>(staticProduct)
+  const [loading, setLoading] = useState(!staticProduct)
   const quote = useQuote()
   const { isFavorite, toggleFavorite } = useFavorites()
 
@@ -44,6 +47,28 @@ export function ProductDetail({ slug }: ProductDetailProps) {
   useEffect(() => {
     setCanNativeShare(typeof navigator !== 'undefined' && typeof navigator.share === 'function')
   }, [])
+
+  // El detalle local se muestra de inmediato; si el producto existe en la API,
+  // su versión publicada reemplaza al dato estático.
+  useEffect(() => {
+    let active = true
+
+    setProduct(staticProduct)
+    setLoading(!staticProduct)
+
+    fetchStoreProductBySlug(slug)
+      .then((remote) => {
+        if (!active || !remote) return
+        setProduct(remote)
+      })
+      .finally(() => {
+        if (active) setLoading(false)
+      })
+
+    return () => {
+      active = false
+    }
+  }, [slug, staticProduct])
 
   useEffect(() => {
     if (!shareOpen) return
@@ -71,11 +96,17 @@ export function ProductDetail({ slug }: ProductDetailProps) {
       <main className="min-h-screen bg-white text-[#0F172A]">
         <EnhancedHeader />
         <section className="mx-auto max-w-[1280px] px-4 py-20 sm:px-6 lg:px-8">
-          <h1 className="text-2xl font-bold">Producto no encontrado</h1>
-          <p className="mt-2 text-[#475569]">El producto que buscas no existe o ha sido eliminado.</p>
-          <Link href="/productos" className="mt-4 inline-flex items-center gap-2 text-[#2563EB] hover:underline">
-            <ChevronLeft className="size-4" /> Volver al catálogo
-          </Link>
+          {loading ? (
+            <p className="text-sm text-[#475569]">Cargando producto…</p>
+          ) : (
+            <>
+              <h1 className="text-2xl font-bold">Producto no encontrado</h1>
+              <p className="mt-2 text-[#475569]">El producto que buscas no existe o ha sido eliminado.</p>
+              <Link href="/productos" className="mt-4 inline-flex items-center gap-2 text-[#2563EB] hover:underline">
+                <ChevronLeft className="size-4" /> Volver al catálogo
+              </Link>
+            </>
+          )}
         </section>
       </main>
     )

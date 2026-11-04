@@ -10,6 +10,10 @@ export const registerSchema = z.object({
     ),
     phone: z.string().optional(),
     company: z.string().optional(),
+    roleKey: z
+      .string()
+      .regex(/^[a-z][a-z0-9-]*$/, 'El rol solo admite minúsculas, números y guiones')
+      .optional(),
   }),
 })
 

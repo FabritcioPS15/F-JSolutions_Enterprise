@@ -4,7 +4,9 @@
   "description": "API REST para FJ Tech Solutions",
   "main": "dist/server.js",
   "scripts": {
+    "predev": "node ../../scripts/ensure-contracts.mjs",
     "dev": "tsx watch src/server.ts",
+    "prebuild": "node ../../scripts/ensure-contracts.mjs",
     "build": "tsc",
     "start": "node dist/server.js",
     "db:migrate": "npx prisma migrate dev --schema=../../database/schema.prisma",
@@ -16,7 +18,7 @@
   },
   "dependencies": {
     "@fj-solutions/contracts": "workspace:*",
-    "@prisma/client": "^5.14.0",
+    "@prisma/client": "^5.22.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
@@ -38,7 +40,9 @@
     "@types/multer": "^1.4.11",
     "@types/node": "^20.14.2",
     "@types/nodemailer": "^6.4.15",
-    "prisma": "^5.14.0",
+    "@types/supertest": "^6.0.2",
+    "prisma": "^5.22.0",
+    "supertest": "^7.1.1",
     "tsx": "^4.14.1",
     "typescript": "^5.4.5",
     "vitest": "^1.6.0"

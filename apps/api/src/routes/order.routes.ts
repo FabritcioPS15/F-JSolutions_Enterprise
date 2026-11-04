@@ -5,15 +5,22 @@ import {
   getOrderById,
   updateOrderStatus,
 } from '../controllers/order.controller'
-import { authenticate, requireRole } from '../middleware/auth'
+import { authenticate, requirePermission } from '../middleware/auth'
 import { validate } from '../middleware/validate'
 import { createOrderSchema } from '../models/order.model'
 
 const router = Router()
 
 router.post('/', validate(createOrderSchema), createOrder)
-router.get('/', authenticate, getOrders)
-router.get('/:id', authenticate, getOrderById)
-router.patch('/:id/status', authenticate, requireRole('admin', 'staff'), updateOrderStatus)
+
+// Los pedidos heredados se consultan con el permiso comercial de cotizaciones.
+router.get('/', authenticate, requirePermission('quotes.view'), getOrders)
+router.get('/:id', authenticate, requirePermission('quotes.view'), getOrderById)
+router.patch(
+  '/:id/status',
+  authenticate,
+  requirePermission('quotes.manage-status'),
+  updateOrderStatus
+)
 
 export default router

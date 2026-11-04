@@ -1,4 +1,4 @@
-import { Order, OrderStatus, Cotizacion } from '../types'
+import { Order, OrderStatus, Quote as Cotizacion, QuoteStatus } from '../types'
 
 interface CreateOrderInput {
   userId?: string
@@ -29,9 +29,10 @@ export class OrderService {
   private mockCotizaciones: Cotizacion[] = []
 
   async createOrder(data: CreateOrderInput): Promise<Order> {
-    const items = data.items.map((item) => {
+    const items = data.items.map((item, index) => {
       const price = 1500 // Precio mock o resuelto de base de datos
       return {
+        id: `item_${Date.now()}_${index}`,
         productId: item.productId,
         name: `Producto ${item.productId}`,
         price,
@@ -54,7 +55,7 @@ export class OrderService {
       subtotal,
       igv,
       total,
-      status: 'pending',
+      status: OrderStatus.PENDING,
       notes: data.notes,
       createdAt: new Date(),
       updatedAt: new Date(),
@@ -101,7 +102,7 @@ export class OrderService {
       telefono: data.telefono,
       mensaje: data.mensaje,
       items,
-      status: 'pending',
+      status: QuoteStatus.PENDING,
       createdAt: new Date(),
     }
 

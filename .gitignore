@@ -15,6 +15,9 @@ dist/
 # Production
 *.tsbuildinfo
 
+# Contract build lock
+packages/contracts/.build.lock
+
 # Misc
 .DS_Store
 *.pem

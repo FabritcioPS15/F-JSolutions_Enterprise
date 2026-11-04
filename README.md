@@ -145,21 +145,33 @@ Copia `.env.example` a `.env` y configura las variables:
 
 ```env
 DATABASE_URL=postgresql://fj_solutions:fj_solutions_password@localhost:5432/fj_solutions
-PORT=3001
+PORT=4000
 NODE_ENV=development
-JWT_SECRET=your-secret-key
-NEXT_PUBLIC_API_URL=http://localhost:3001
+JWT_SECRET=change-me-dev-jwt-secret-0123456789abcdef
+JWT_REFRESH_SECRET=change-me-dev-refresh-secret-0123456789
+NEXT_PUBLIC_API_URL=http://localhost:4000/api/v1
 ```
+
+El archivo `.env.example` incluye todas las variables (seguridad, SMTP, seed y
+URLs internas). `API_INTERNAL_URL` y `HELPDESK_API_URL` son de uso exclusivo del
+servidor de Next.js: nunca se exponen al navegador.
+
+Tras `pnpm db:migrate` y `pnpm db:seed`, el panel en `/login` autentica contra la
+base de datos. El seed crea un superadministrador con `SEED_ADMIN_EMAIL` y
+`SEED_ADMIN_PASSWORD` (si no se define la contraseña, usa un valor de desarrollo
+y lo advierte en consola).
 
 ## 📦 Paquetes Compartidos
 
 ### @fj-solutions/contracts
 Contiene los tipos TypeScript compartidos entre web, admin y api:
-- Interfaces de dominio (User, Product, Order, etc.)
-- Enums (Role, OrderStatus, QuoteStatus)
-- Tipos de respuesta de API
+- Contratos legacy de la API (`User`, `Product`, `Order`, `Cotizacion`, etc.)
+- Modelo del panel administrativo en el namespace `admin`
+  (`import type { admin } from '@fj-solutions/contracts'`)
+- Enums compartidos (`Role`, `OrderStatus`, `QuoteStatus`)
 
-Instalado como workspace dependency en todas las apps.
+El paquete se compila a `dist/`; los scripts `predev`/`prebuild` de las apps lo
+compilan automáticamente si falta.
 
 ## 🛠️ Stack Tecnológico
 
@@ -175,6 +187,6 @@ Instalado como workspace dependency en todas las apps.
 
 - **Tienda Pública**: http://localhost:3000
 - **Panel Admin**: http://localhost:3002
-- **API Backend**: http://localhost:3001
+- **API Backend**: http://localhost:4000
 - **PostgreSQL**: localhost:5432
 - **Redis**: localhost:6379

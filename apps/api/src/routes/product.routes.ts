@@ -1,24 +1,51 @@
 import { Router } from 'express'
 import {
-  getProducts,
-  getProductById,
   createProduct,
-  updateProduct,
   deleteProduct,
+  getProductById,
+  getProductBySlug,
+  getProducts,
+  updateProduct,
 } from '../controllers/product.controller'
-import { authenticate, requireRole } from '../middleware/auth'
+import { authenticate, optionalAuthenticate, requirePermission } from '../middleware/auth'
 import { validate } from '../middleware/validate'
-import { createProductSchema, updateProductSchema, productQuerySchema } from '../models/product.model'
+import {
+  createProductSchema,
+  productIdSchema,
+  productQuerySchema,
+  productSlugSchema,
+  updateProductSchema,
+} from '../models/product.model'
 
 const router = Router()
 
-// Públicas
-router.get('/', validate(productQuerySchema), getProducts)
-router.get('/:id', getProductById)
+// Lectura pública; con ?scope=admin y sesión válida devuelve borradores.
+router.get('/', optionalAuthenticate, validate(productQuerySchema), getProducts)
+router.get('/slug/:slug', optionalAuthenticate, validate(productSlugSchema), getProductBySlug)
+router.get('/:id', optionalAuthenticate, validate(productIdSchema), getProductById)
 
-// Protegidas (Solo Admin y Staff)
-router.post('/', authenticate, requireRole('admin', 'staff'), validate(createProductSchema), createProduct)
-router.put('/:id', authenticate, requireRole('admin', 'staff'), validate(updateProductSchema), updateProduct)
-router.delete('/:id', authenticate, requireRole('admin'), deleteProduct)
+// Escritura protegida por permisos del catálogo.
+router.post(
+  '/',
+  authenticate,
+  requirePermission('products.create'),
+  validate(createProductSchema),
+  createProduct
+)
+router.put(
+  '/:id',
+  authenticate,
+  requirePermission('products.update'),
+  validate(productIdSchema),
+  validate(updateProductSchema),
+  updateProduct
+)
+router.delete(
+  '/:id',
+  authenticate,
+  requirePermission('products.delete'),
+  validate(productIdSchema),
+  deleteProduct
+)
 
 export default router

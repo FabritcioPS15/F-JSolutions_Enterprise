@@ -584,7 +584,13 @@ export function getServicesByCategory(category: ServiceCategory) {
   return serviceDefinitions.filter((service) => service.category === category)
 }
 
+export function getServicePathFor(service: Pick<ServiceDefinition, 'slug' | 'category'>) {
+  return service.category === 'Desarrollo de software'
+    ? `/sistemas/${service.slug}`
+    : `/servicios/${service.slug}`
+}
+
 export function getServicePath(slug: string) {
   const service = getService(slug)
-  return service?.category === 'Desarrollo de software' ? `/sistemas/${slug}` : `/servicios/${slug}`
+  return getServicePathFor(service ?? { slug, category: 'Soporte TI' })
 }

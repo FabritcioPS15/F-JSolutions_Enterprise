@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import {
+  BarChart3,
   Bell,
   Boxes,
   ChevronRight,
@@ -14,6 +15,7 @@ import {
   History,
   Inbox,
   LayoutDashboard,
+  Loader2,
   LogOut,
   Menu,
   Package,
@@ -26,12 +28,14 @@ import {
   Tags,
   Truck,
   Users,
+  Wrench,
   X,
   type LucideIcon,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useAdmin } from '@/components/admin/admin-provider'
 import { getStockState } from '@/lib/admin/format'
+import type { SessionUser } from '@/lib/auth/types'
 
 type NavItem = {
   href: string
@@ -51,6 +55,13 @@ type NavSection = {
 
 const storeUrl = process.env.NEXT_PUBLIC_STORE_URL ?? 'http://localhost:3000'
 
+function getInitials(name: string) {
+  const parts = name.trim().split(/\s+/).filter(Boolean)
+  if (parts.length === 0) return 'FJ'
+  const initials = parts.slice(0, 2).map((part) => part[0]?.toUpperCase() ?? '')
+  return initials.join('') || 'FJ'
+}
+
 function getBreadcrumb(pathname: string) {
   if (pathname === '/') return { section: 'Panel', title: 'Resumen general' }
   if (pathname === '/productos') return { section: 'Catálogo', title: 'Productos' }
@@ -64,6 +75,12 @@ function getBreadcrumb(pathname: string) {
   if (pathname === '/cotizaciones') return { section: 'Comercial', title: 'Cotizaciones' }
   if (pathname === '/clientes') return { section: 'Comercial', title: 'Clientes' }
   if (pathname === '/solicitudes') return { section: 'Atención al cliente', title: 'Mesa de ayuda' }
+  if (pathname === '/servicios') return { section: 'Servicios TI', title: 'Catálogo de servicios' }
+  if (pathname === '/servicios/nuevo') return { section: 'Servicios TI', title: 'Nuevo servicio' }
+  if (pathname.startsWith('/servicios/') && pathname.endsWith('/editar')) {
+    return { section: 'Servicios TI', title: 'Editar servicio' }
+  }
+  if (pathname === '/reportes') return { section: 'General', title: 'Reportes' }
   if (pathname === '/actividad') return { section: 'General', title: 'Actividad reciente' }
   if (pathname === '/inventario') return { section: 'Operaciones', title: 'Inventario' }
   if (pathname === '/proyectos') return { section: 'Operaciones', title: 'Proyectos web' }
@@ -71,15 +88,32 @@ function getBreadcrumb(pathname: string) {
   return { section: 'Panel', title: 'Administración' }
 }
 
-export function AdminShell({ children }: { children: ReactNode }) {
+export function AdminShell({
+  children,
+  user,
+}: {
+  children: ReactNode
+  user: SessionUser
+}) {
   const pathname = usePathname()
   const router = useRouter()
-  const { products, quotes, requests, settings } = useAdmin()
+  const {
+    products,
+    quotes,
+    requests,
+    settings,
+    catalogSource,
+    catalogError,
+    commercialSource,
+    commercialError,
+  } = useAdmin()
   const [open, setOpen] = useState(false)
   const [collapsed, setCollapsed] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
+  const [loggingOut, setLoggingOut] = useState(false)
   const [search, setSearch] = useState('')
   const profileRef = useRef<HTMLDivElement>(null)
+  const initials = getInitials(user.name)
 
   useEffect(() => {
     try {
@@ -137,12 +171,26 @@ export function AdminShell({ children }: { children: ReactNode }) {
     router.push(term ? `/productos?q=${encodeURIComponent(term)}` : '/productos')
   }
 
+  async function handleLogout() {
+    if (loggingOut) return
+    setLoggingOut(true)
+
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' })
+    } finally {
+      router.replace('/login')
+      router.refresh()
+    }
+  }
+
   const lowStockCount = products.filter((product) => {
     if (product.status === 'archived') return false
     const state = getStockState(product)
     return state === 'low' || state === 'out'
   }).length
-  const draftQuoteCount = quotes.filter((quote) => quote.status === 'draft').length
+  const pendingQuoteCount = quotes.filter(
+    (quote) => quote.status === 'draft' || quote.status === 'new' || quote.status === 'review'
+  ).length
   const newRequestCount = requests.filter((request) => request.status === 'new').length
 
   const sections: NavSection[] = [
@@ -150,6 +198,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
       label: 'General',
       items: [
         { href: '/', label: 'Resumen', icon: LayoutDashboard, exact: true },
+        { href: '/reportes', label: 'Reportes', icon: BarChart3 },
         { href: '/actividad', label: 'Actividad reciente', icon: History },
       ],
     },
@@ -178,11 +227,11 @@ export function AdminShell({ children }: { children: ReactNode }) {
           href: '/cotizaciones',
           label: 'Cotizaciones',
           icon: FileText,
-          badge: draftQuoteCount,
+          badge: pendingQuoteCount,
           badgeHint:
-            draftQuoteCount === 1
-              ? '1 cotización en borrador'
-              : `${draftQuoteCount} cotizaciones en borrador`,
+            pendingQuoteCount === 1
+              ? '1 cotización por atender'
+              : `${pendingQuoteCount} cotizaciones por atender`,
           badgeTone: 'blue',
         },
         { href: '/clientes', label: 'Clientes', icon: Users },
@@ -202,6 +251,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
       label: 'Operaciones',
       items: [
         { href: '/inventario', label: 'Inventario', icon: Boxes },
+        { href: '/servicios', label: 'Servicios TI', icon: Wrench },
         { href: '/proyectos', label: 'Proyectos web', icon: Globe2 },
         { href: '/proveedores', label: 'Proveedores', icon: Truck, planned: true },
       ],
@@ -404,10 +454,19 @@ export function AdminShell({ children }: { children: ReactNode }) {
                 <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-60" />
                 <span className="relative inline-flex size-2 rounded-full bg-emerald-400" />
               </span>
-              <p className="text-[11px] font-semibold text-slate-300">Datos locales activos</p>
+              <p className="text-[11px] font-semibold text-slate-300">
+                {catalogSource === 'api' ? 'Catálogo sincronizado' : 'Datos locales activos'}
+              </p>
             </div>
             <p className="mt-1.5 text-[10.5px] leading-relaxed text-slate-500">
-              El catálogo se guarda en este navegador. Exporta un respaldo desde Configuración.
+              {catalogSource === 'api'
+                ? 'Los cambios se guardan en la base de datos a través de la API del catálogo.'
+                : 'El catálogo se guarda en este navegador. Exporta un respaldo desde Configuración.'}
+            </p>
+            <p className="mt-1 text-[10.5px] leading-relaxed text-slate-500">
+              {commercialSource === 'api'
+                ? 'Clientes y cotizaciones sincronizados con la base de datos.'
+                : 'Clientes y cotizaciones se mantienen en el respaldo local.'}
             </p>
           </div>
 
@@ -418,11 +477,11 @@ export function AdminShell({ children }: { children: ReactNode }) {
             )}
           >
             <span className="grid size-9 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[#5B21B6] to-[#3B0764] text-[11px] font-bold text-white ring-1 ring-white/10">
-              AD
+              {initials}
             </span>
             <div className={cn('min-w-0', collapsed && 'lg:hidden')}>
-              <p className="truncate text-xs font-semibold text-white">Administrador</p>
-              <p className="truncate text-[10.5px] text-slate-500">Sesión local</p>
+              <p className="truncate text-xs font-semibold text-white">{user.name}</p>
+              <p className="truncate text-[10.5px] text-slate-500">{user.roleName}</p>
             </div>
           </div>
         </div>
@@ -504,7 +563,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
                   aria-label="Menú de perfil"
                   className="grid size-9 place-items-center rounded-full bg-slate-800 text-[11px] font-bold text-white ring-2 ring-white shadow-sm transition hover:bg-slate-700"
                 >
-                  AD
+                  {initials}
                 </button>
 
                 {profileOpen && (
@@ -513,10 +572,11 @@ export function AdminShell({ children }: { children: ReactNode }) {
                     className="absolute right-0 top-full z-50 mt-2 w-64 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl shadow-slate-900/10"
                   >
                     <div className="border-b border-slate-100 px-4 py-3">
-                      <p className="text-xs font-bold text-slate-900">Administrador</p>
-                      <p className="mt-0.5 text-[10.5px] text-slate-500">{settings.email}</p>
+                      <p className="text-xs font-bold text-slate-900">{user.name}</p>
+                      <p className="mt-0.5 truncate text-[10.5px] text-slate-500">{user.email}</p>
                       <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-2 py-0.5 text-[9.5px] font-semibold text-slate-500">
-                        Sesión local · sin autenticación remota
+                        <ShieldCheck className="size-3" aria-hidden="true" />
+                        {user.roleName}
                       </p>
                     </div>
                     <div className="p-1.5">
@@ -528,19 +588,20 @@ export function AdminShell({ children }: { children: ReactNode }) {
                         <Settings className="size-4 text-slate-400" aria-hidden="true" />
                         Configuración
                       </Link>
-                      <span
-                        className="flex cursor-not-allowed items-start gap-2.5 rounded-lg px-2.5 py-2 text-xs font-semibold text-slate-400"
-                        title="Disponible cuando se conecte la autenticación"
-                        aria-disabled="true"
+                      <button
+                        type="button"
+                        onClick={handleLogout}
+                        disabled={loggingOut}
+                        className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-xs font-semibold text-slate-600 transition hover:bg-red-50 hover:text-red-700 disabled:cursor-not-allowed disabled:opacity-60"
+                        role="menuitem"
                       >
-                        <LogOut className="mt-0.5 size-4 text-slate-300" aria-hidden="true" />
-                        <span>
-                          Cerrar sesión
-                          <span className="mt-0.5 block text-[9.5px] font-normal text-slate-400">
-                            Requiere autenticación conectada
-                          </span>
-                        </span>
-                      </span>
+                        {loggingOut ? (
+                          <Loader2 className="size-4 animate-spin text-slate-400" aria-hidden="true" />
+                        ) : (
+                          <LogOut className="size-4 text-slate-400" aria-hidden="true" />
+                        )}
+                        {loggingOut ? 'Cerrando sesión…' : 'Cerrar sesión'}
+                      </button>
                     </div>
                   </div>
                 )}
@@ -549,13 +610,36 @@ export function AdminShell({ children }: { children: ReactNode }) {
           </div>
         </header>
 
+        {catalogError ? (
+          <div className="mx-auto w-full max-w-[1440px] px-4 pt-4 sm:px-6 lg:px-8">
+            <p className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-2.5 text-xs text-amber-900">
+              El catálogo no está sincronizado con la base de datos. Se mantiene el respaldo
+              local. {catalogError}
+            </p>
+          </div>
+        ) : null}
+
+        {commercialError ? (
+          <div className="mx-auto w-full max-w-[1440px] px-4 pt-4 sm:px-6 lg:px-8">
+            <p className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-2.5 text-xs text-amber-900">
+              Clientes y cotizaciones no están sincronizados con la base de datos. Se mantiene el
+              respaldo local. {commercialError}
+            </p>
+          </div>
+        ) : null}
+
         <main className="mx-auto w-full max-w-[1440px] flex-1 px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
           {children}
         </main>
 
         <footer className="mx-auto flex w-full max-w-[1440px] flex-wrap items-center justify-between gap-2 px-4 pb-6 text-[10.5px] text-slate-400 sm:px-6 lg:px-8">
           <p>© 2026 {settings.storeName}. Panel interno de administración.</p>
-          <p className="font-medium">Almacenamiento local · v1.1</p>
+          <p className="font-medium">
+            {catalogSource === 'api' && commercialSource === 'api'
+              ? 'Catálogo y comercial en base de datos'
+              : 'Respaldo local'}{' '}
+            · v1.2
+          </p>
         </footer>
       </div>
     </div>

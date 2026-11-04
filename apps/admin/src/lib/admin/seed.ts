@@ -1114,7 +1114,7 @@ const quotes: Quote[] = [
     clientCompany: 'Colegio San Agustín',
     clientEmail: 'jsalazar@sanagustin.edu.pe',
     clientPhone: '+51 956 112 233',
-    status: 'answered',
+    status: 'approved',
     items: [
       {
         id: 'linea-colegio-1',
@@ -1170,7 +1170,7 @@ const quotes: Quote[] = [
     clientCompany: 'Clínica Santa Elena',
     clientEmail: 'atorres@clinicasantaelena.pe',
     clientPhone: '+51 981 220 340',
-    status: 'closed',
+    status: 'rejected',
     items: [
       {
         id: 'linea-clinica-1',
