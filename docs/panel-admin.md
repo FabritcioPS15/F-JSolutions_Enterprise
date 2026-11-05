@@ -209,6 +209,10 @@ pnpm db:seed
    desafío de la cookie `httpOnly`; `/api/auth/2fa/{status,setup,enable,disable,
    recovery-codes}` exigen sesión y reenvían el Bearer desde el servidor. Ningún
    secreto TOTP ni token se expone en `localStorage`.
+9. **Atajo de desarrollo local**: con `NODE_ENV=development`, `POST
+   /auth/2fa/verify` acepta el código `000000` para cualquier desafío válido. Es
+   una comodidad exclusiva de localhost: no se aplica en `test` ni en
+   `production` y no debe usarse en un entorno compartido.
 
 ### Limitaciones conocidas
 

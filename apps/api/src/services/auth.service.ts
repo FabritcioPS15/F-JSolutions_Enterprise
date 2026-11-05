@@ -37,6 +37,9 @@ const RESEND_COOLDOWN_MS = 30 * 1000
 const MAX_CHALLENGE_ATTEMPTS = 5
 const CHALLENGE_TTL_MINUTES = CHALLENGE_TTL_MS / (60 * 1000)
 
+// Atajo exclusivo de desarrollo local: nunca se acepta en test ni producción.
+const DEV_2FA_CODE = '000000'
+
 // Hash válido de un valor aleatorio: mantiene un costo de bcrypt similar cuando
 // el correo no existe y evita distinguir usuarios por tiempo de respuesta.
 const DUMMY_PASSWORD_HASH = '$2a$12$KO7/iYfMJENt739JaSUgb.Hzj0pTwORqTRSblwMziLDZrFTMz31Am'
@@ -248,6 +251,11 @@ export class AuthService {
 
     if (!input.code) {
       throw new AppError('Ingresa el código de verificación.', 400)
+    }
+
+    if (env.NODE_ENV === 'development' && input.code.trim() === DEV_2FA_CODE) {
+      logger.warn(`[2FA] Código de desarrollo aceptado para ${user.id}`)
+      return this.completeLogin(user)
     }
 
     if (payload.method === 'TOTP') {
