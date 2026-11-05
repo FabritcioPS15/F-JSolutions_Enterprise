@@ -12,6 +12,8 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const contractOutputs = [
   path.join(root, 'packages/contracts/dist/index.d.ts'),
   path.join(root, 'packages/contracts/dist/admin.d.ts'),
+  path.join(root, 'packages/contracts/dist/domain.d.ts'),
+  path.join(root, 'packages/contracts/dist/permissions.d.ts'),
 ]
 const lockFile = path.join(root, 'packages/contracts/.build.lock')
 

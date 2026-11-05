@@ -332,13 +332,18 @@ export function AdminShell({
       >
         <div
           className={cn(
-            'flex h-20 shrink-0 items-center gap-3 border-b border-white/[0.06] px-5',
-            collapsed && 'lg:justify-center lg:px-3'
+            'relative flex h-20 shrink-0 items-center border-b border-white/[0.06] px-4',
+            collapsed ? 'justify-center px-2' : 'justify-between'
           )}
         >
+          {!collapsed && <div className="hidden size-8 shrink-0 lg:block" aria-hidden="true" />}
+
           <Link
             href="/"
-            className="group flex min-w-0 items-center gap-3"
+            className={cn(
+              'group flex items-center justify-center transition-transform duration-200',
+              !collapsed && 'flex-1'
+            )}
             aria-label="FJ Systems, inicio"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -346,8 +351,8 @@ export function AdminShell({
               src="/logo.png"
               alt="F&J Systems"
               className={cn(
-                'h-14 w-auto shrink-0 object-contain brightness-0 invert transition-transform duration-200 group-hover:scale-105',
-                collapsed && 'lg:h-6'
+                'h-12 w-auto shrink-0 object-contain brightness-0 invert transition-transform duration-200 group-hover:scale-105',
+                collapsed && 'lg:h-7'
               )}
             />
           </Link>
@@ -356,7 +361,7 @@ export function AdminShell({
             type="button"
             onClick={toggleCollapsed}
             className={cn(
-              'ml-auto hidden size-8 place-items-center rounded-lg text-slate-400 transition hover:bg-white/10 hover:text-white lg:grid',
+              'hidden size-8 shrink-0 place-items-center rounded-lg text-slate-400 transition hover:bg-white/10 hover:text-white lg:grid',
               collapsed && 'lg:hidden'
             )}
             aria-label="Contraer menú lateral"
@@ -368,7 +373,7 @@ export function AdminShell({
           <button
             type="button"
             onClick={() => setOpen(false)}
-            className="ml-auto grid size-8 place-items-center rounded-lg text-slate-400 transition hover:bg-white/10 hover:text-white lg:hidden"
+            className="grid size-8 shrink-0 place-items-center rounded-lg text-slate-400 transition hover:bg-white/10 hover:text-white lg:hidden"
             aria-label="Cerrar menú"
           >
             <X className="size-4" />
