@@ -43,6 +43,25 @@ import {
   updateQuoteStatusNode,
   type CommercialSnapshot,
 } from '@/lib/services/commercial'
+import {
+  ProjectApiError,
+  createDeployment as createRemoteDeployment,
+  createProject as createRemoteProject,
+  deleteProject as deleteRemoteProject,
+  ensureProject,
+  fetchProjects,
+  saveProject,
+} from '@/lib/services/projects'
+import {
+  InventoryApiError,
+  createInventoryMovement as createRemoteMovement,
+  fetchInventoryMovements,
+} from '@/lib/services/inventory'
+import {
+  SettingsApiError,
+  fetchSettings,
+  saveSettings,
+} from '@/lib/services/settings'
 import type {
   ActivityEntry,
   ActivityType,
@@ -108,6 +127,15 @@ type AdminContextValue = {
   commercialSource: 'local' | 'api'
   commercialError: string | null
   refreshCommercial: () => Promise<void>
+  projectsSource: 'local' | 'api'
+  projectsError: string | null
+  refreshProjects: () => Promise<void>
+  settingsSource: 'local' | 'api'
+  settingsError: string | null
+  refreshSettings: () => Promise<void>
+  inventorySource: 'local' | 'api'
+  inventoryError: string | null
+  refreshInventory: () => Promise<void>
   products: AdminProduct[]
   categories: Category[]
   brands: Brand[]
@@ -129,7 +157,9 @@ type AdminContextValue = {
   setProductStatus: (id: string, status: ProductStatus) => void
   bulkSetStatus: (ids: string[], status: ProductStatus) => void
   bulkDeleteProducts: (ids: string[]) => void
-  registerMovement: (input: InventoryMovementInput) => { ok: boolean; error?: string }
+  registerMovement: (
+    input: InventoryMovementInput
+  ) => Promise<{ ok: boolean; error?: string }>
   createProject: (input: WebProjectInput) => WebProject
   updateProject: (id: string, input: WebProjectInput) => void
   deleteProject: (id: string) => void
@@ -172,7 +202,9 @@ type AdminContextValue = {
     id: string,
     input: { subject: string; message: string }
   ) => Promise<{ delivered: boolean; reason?: string }>
-  updateSettings: (settings: StoreSettings) => void
+  updateSettings: (
+    settings: StoreSettings
+  ) => Promise<{ ok: boolean; error?: string }>
   resetData: () => void
   exportData: () => string
   importData: (raw: string) => void
@@ -291,6 +323,11 @@ function mergeClients(local: Client[], remote: Client[]): Client[] {
 function mergeQuotes(local: Quote[], remote: Quote[]): Quote[] {
   const remoteIds = new Set(remote.map((quote) => quote.id))
   return [...remote, ...local.filter((quote) => !remoteIds.has(quote.id))]
+}
+
+function mergeProjects(local: WebProject[], remote: WebProject[]): WebProject[] {
+  const remoteIds = new Set(remote.map((project) => project.id))
+  return [...remote, ...local.filter((project) => !remoteIds.has(project.id))]
 }
 
 function categoryApiInput(category: Category, parentId: string | null = null) {
@@ -811,6 +848,12 @@ export function AdminProvider({ children }: { children: ReactNode }) {
   const [catalogError, setCatalogError] = useState<string | null>(null)
   const [commercialSource, setCommercialSource] = useState<'local' | 'api'>('local')
   const [commercialError, setCommercialError] = useState<string | null>(null)
+  const [projectsSource, setProjectsSource] = useState<'local' | 'api'>('local')
+  const [projectsError, setProjectsError] = useState<string | null>(null)
+  const [settingsSource, setSettingsSource] = useState<'local' | 'api'>('local')
+  const [settingsError, setSettingsError] = useState<string | null>(null)
+  const [inventorySource, setInventorySource] = useState<'local' | 'api'>('local')
+  const [inventoryError, setInventoryError] = useState<string | null>(null)
   const [helpdeskError, setHelpdeskError] = useState<string | null>(null)
   const [helpdeskSynced, setHelpdeskSynced] = useState(false)
 
@@ -841,6 +884,77 @@ export function AdminProvider({ children }: { children: ReactNode }) {
             : 'No se pudo sincronizar la información comercial con la base de datos.'
         )
       })
+  }
+
+  function syncProjects(task: Promise<unknown>) {
+    void task
+      .then(() => setProjectsError(null))
+      .catch((error: unknown) => {
+        setProjectsSource('local')
+        setProjectsError(
+          error instanceof ProjectApiError
+            ? error.message
+            : 'No se pudo sincronizar los proyectos con la base de datos. Se usa el respaldo local.'
+        )
+      })
+  }
+
+  async function refreshProjects() {
+    try {
+      const remote = await fetchProjects()
+      setData((prev) => ({
+        ...prev,
+        webProjects: mergeProjects(prev.webProjects, remote),
+      }))
+      setProjectsSource(remote.length > 0 ? 'api' : 'local')
+      setProjectsError(null)
+    } catch (error) {
+      setProjectsSource('local')
+      setProjectsError(
+        error instanceof ProjectApiError
+          ? error.message
+          : 'No se pudo cargar los proyectos desde la API. Se usa el respaldo local.'
+      )
+      throw error
+    }
+  }
+
+  async function refreshSettings() {
+    try {
+      const remote = await fetchSettings()
+      setData((prev) => ({ ...prev, settings: remote }))
+      setSettingsSource('api')
+      setSettingsError(null)
+    } catch (error) {
+      setSettingsSource('local')
+      setSettingsError(
+        error instanceof SettingsApiError
+          ? error.message
+          : 'No se pudo cargar la configuración desde la API. Se usa el respaldo local.'
+      )
+      throw error
+    }
+  }
+
+  async function refreshInventory() {
+    try {
+      const remote = await fetchInventoryMovements()
+      if (remote.length > 0) {
+        setData((prev) => ({ ...prev, inventoryMovements: remote }))
+        setInventorySource('api')
+      } else {
+        setInventorySource('local')
+      }
+      setInventoryError(null)
+    } catch (error) {
+      setInventorySource('local')
+      setInventoryError(
+        error instanceof InventoryApiError
+          ? error.message
+          : 'No se pudo cargar el historial de inventario desde la API. Se usa el respaldo local.'
+      )
+      throw error
+    }
   }
 
   async function refreshCommercial() {
@@ -920,6 +1034,21 @@ export function AdminProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!hydrated) return
     void refreshCommercial().catch(() => undefined)
+  }, [hydrated])
+
+  useEffect(() => {
+    if (!hydrated) return
+    void refreshProjects().catch(() => undefined)
+  }, [hydrated])
+
+  useEffect(() => {
+    if (!hydrated) return
+    void refreshSettings().catch(() => undefined)
+  }, [hydrated])
+
+  useEffect(() => {
+    if (!hydrated) return
+    void refreshInventory().catch(() => undefined)
   }, [hydrated])
 
   function createProduct(input: ProductInput) {
@@ -1254,7 +1383,9 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  function registerMovement(input: InventoryMovementInput): { ok: boolean; error?: string } {
+  async function registerMovement(
+    input: InventoryMovementInput
+  ): Promise<{ ok: boolean; error?: string }> {
     const product = data.products.find((item) => item.id === input.productId)
     if (!product) return { ok: false, error: 'Selecciona un producto válido.' }
 
@@ -1284,39 +1415,72 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     }
 
     const now = new Date().toISOString()
-    const movement = buildMovement({
+    const reason = input.reason.trim() || 'Movimiento manual'
+    const note = input.note?.trim() || undefined
+    const optimistic = buildMovement({
       product,
       type: input.type,
       quantity,
       previousStock: product.stock,
       resultingStock,
-      reason: input.reason.trim() || 'Movimiento manual',
-      note: input.note?.trim() || undefined,
+      reason,
+      note,
       at: now,
     })
 
-    const updatedProduct: AdminProduct = {
-      ...product,
-      stock: resultingStock,
-      updatedAt: now,
-    }
     setData((prev) => ({
       ...prev,
       products: prev.products.map((item) =>
-        item.id === product.id ? updatedProduct : item
+        item.id === product.id ? { ...item, stock: resultingStock, updatedAt: now } : item
       ),
-      inventoryMovements: prependMovements(prev, [movement]),
+      inventoryMovements: prependMovements(prev, [optimistic]),
     }))
-    syncCatalog(
-      saveProduct(updatedProduct).then((saved) =>
-        setData((prev) => ({
-          ...prev,
-          products: prev.products.map((item) => (item.id === saved.id ? saved : item)),
-        }))
-      )
-    )
 
-    return { ok: true }
+    try {
+      const persisted = await saveProduct(product)
+      const saved = await createRemoteMovement({
+        productId: persisted.id,
+        type: input.type,
+        quantity,
+        reason,
+        note,
+      })
+      setData((prev) => ({
+        ...prev,
+        products: prev.products.map((item) =>
+          item.id === product.id
+            ? {
+                ...item,
+                id: persisted.id,
+                stock: saved.resultingStock,
+                updatedAt: saved.createdAt,
+              }
+            : item
+        ),
+        inventoryMovements: [
+          saved,
+          ...prev.inventoryMovements.filter((item) => item.id !== optimistic.id),
+        ],
+      }))
+      setInventorySource('api')
+      setInventoryError(null)
+      return { ok: true }
+    } catch (error) {
+      setData((prev) => ({
+        ...prev,
+        products: prev.products.map((item) => (item.id === product.id ? product : item)),
+        inventoryMovements: prev.inventoryMovements.filter(
+          (item) => item.id !== optimistic.id
+        ),
+      }))
+      if (error instanceof CatalogApiError) setCatalogError(error.message)
+      const message =
+        error instanceof InventoryApiError || error instanceof CatalogApiError
+          ? error.message
+          : 'No se pudo registrar el movimiento en la base de datos.'
+      setInventoryError(message)
+      return { ok: false, error: message }
+    }
   }
 
   function createProject(input: WebProjectInput): WebProject {
@@ -1329,25 +1493,64 @@ export function AdminProvider({ children }: { children: ReactNode }) {
       updatedAt: now,
     }
     setData((prev) => ({ ...prev, webProjects: [project, ...prev.webProjects] }))
+    syncProjects(
+      createRemoteProject(input).then((saved) => {
+        setData((prev) => ({
+          ...prev,
+          webProjects: prev.webProjects.map((item) =>
+            item.id === project.id ? saved : item
+          ),
+        }))
+      })
+    )
     return project
   }
 
   function updateProject(id: string, input: WebProjectInput) {
+    const current = data.webProjects.find((project) => project.id === id)
+    if (!current) return
+    const updated: WebProject = {
+      ...current,
+      ...input,
+      updatedAt: new Date().toISOString(),
+    }
     setData((prev) => ({
       ...prev,
       webProjects: prev.webProjects.map((project) =>
-        project.id === id
-          ? { ...project, ...input, updatedAt: new Date().toISOString() }
-          : project
+        project.id === id ? updated : project
       ),
     }))
+    syncProjects(
+      saveProject(updated).then((saved) => {
+        setData((prev) => ({
+          ...prev,
+          webProjects: prev.webProjects.map((item) =>
+            item.id === id ? saved : item
+          ),
+        }))
+      })
+    )
   }
 
   function deleteProject(id: string) {
+    const current = data.webProjects.find((project) => project.id === id)
     setData((prev) => ({
       ...prev,
       webProjects: prev.webProjects.filter((project) => project.id !== id),
     }))
+    void deleteRemoteProject(id).catch((error: unknown) => {
+      if (current) {
+        setData((prev) => ({
+          ...prev,
+          webProjects: [current, ...prev.webProjects],
+        }))
+      }
+      setProjectsError(
+        error instanceof ProjectApiError
+          ? error.message
+          : 'No se pudo eliminar el proyecto en la base de datos.'
+      )
+    })
   }
 
   function registerDeployment(
@@ -1386,6 +1589,32 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         }
       }),
     }))
+
+    syncProjects(
+      ensureProject(project).then(async (savedProject) => {
+        if (savedProject.id !== projectId) {
+          setData((prev) => ({
+            ...prev,
+            webProjects: prev.webProjects.map((item) =>
+              item.id === projectId ? { ...item, id: savedProject.id } : item
+            ),
+          }))
+        }
+        const savedDeployment = await createRemoteDeployment(savedProject.id, input)
+        setData((prev) => ({
+          ...prev,
+          webProjects: prev.webProjects.map((item) => {
+            if (item.id !== savedProject.id) return item
+            return {
+              ...item,
+              deployments: item.deployments.map((entry) =>
+                entry.id === deployment.id ? savedDeployment : entry
+              ),
+            }
+          }),
+        }))
+      })
+    )
 
     return deployment
   }
@@ -2212,8 +2441,26 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     return quote
   }
 
-  function updateSettings(settings: StoreSettings) {
+  async function updateSettings(
+    settings: StoreSettings
+  ): Promise<{ ok: boolean; error?: string }> {
+    const previous = data.settings
     setData((prev) => ({ ...prev, settings }))
+    try {
+      const saved = await saveSettings(settings)
+      setData((prev) => ({ ...prev, settings: saved }))
+      setSettingsSource('api')
+      setSettingsError(null)
+      return { ok: true }
+    } catch (error) {
+      setData((prev) => ({ ...prev, settings: previous }))
+      const message =
+        error instanceof SettingsApiError
+          ? error.message
+          : 'No se pudo guardar la configuración en la base de datos.'
+      setSettingsError(message)
+      return { ok: false, error: message }
+    }
   }
 
   function resetData() {
@@ -2238,6 +2485,15 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         commercialSource,
         commercialError,
         refreshCommercial,
+        projectsSource,
+        projectsError,
+        refreshProjects,
+        settingsSource,
+        settingsError,
+        refreshSettings,
+        inventorySource,
+        inventoryError,
+        refreshInventory,
         products: data.products,
         categories: data.categories,
         brands: data.brands,

@@ -4,8 +4,10 @@ import type { SessionUser } from './types'
 
 export const ACCESS_COOKIE = 'fj_admin_access'
 export const REFRESH_COOKIE = 'fj_admin_refresh'
+export const TWO_FACTOR_COOKIE = 'fj_admin_2fa'
 
 const SESSION_MAX_AGE = 60 * 60 * 24 * 7
+const TWO_FACTOR_MAX_AGE = 60 * 10
 
 type AuthTokens = {
   accessToken: string
@@ -27,6 +29,34 @@ export async function getAccessToken() {
 
 export async function getRefreshToken() {
   return (await cookies()).get(REFRESH_COOKIE)?.value ?? null
+}
+
+export async function getTwoFactorToken() {
+  return (await cookies()).get(TWO_FACTOR_COOKIE)?.value ?? null
+}
+
+export function applyTwoFactorCookie(response: NextResponse, challengeToken: string) {
+  response.cookies.set({
+    name: TWO_FACTOR_COOKIE,
+    value: challengeToken,
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+    path: '/',
+    maxAge: TWO_FACTOR_MAX_AGE,
+  })
+}
+
+export function clearTwoFactorCookie(response: NextResponse) {
+  response.cookies.set({
+    name: TWO_FACTOR_COOKIE,
+    value: '',
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+    path: '/',
+    maxAge: 0,
+  })
 }
 
 export async function getSessionUser(): Promise<SessionUser | null> {
@@ -55,6 +85,8 @@ export async function getSessionUser(): Promise<SessionUser | null> {
 export function applySessionCookies(response: NextResponse, tokens: AuthTokens) {
   const secure = process.env.NODE_ENV === 'production'
 
+  clearTwoFactorCookie(response)
+
   response.cookies.set({
     name: ACCESS_COOKIE,
     value: tokens.accessToken,
@@ -77,7 +109,7 @@ export function applySessionCookies(response: NextResponse, tokens: AuthTokens) 
 }
 
 export function clearSessionCookies(response: NextResponse) {
-  for (const name of [ACCESS_COOKIE, REFRESH_COOKIE]) {
+  for (const name of [ACCESS_COOKIE, REFRESH_COOKIE, TWO_FACTOR_COOKIE]) {
     response.cookies.set({
       name,
       value: '',

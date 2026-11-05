@@ -9,6 +9,7 @@ import {
   Globe2,
   Pencil,
   Plus,
+  RefreshCw,
   Rocket,
   Search,
   Trash2,
@@ -166,7 +167,14 @@ function RenewalCell({ value, today }: { value?: string; today: string | null })
 }
 
 export function ProjectsView() {
-  const { webProjects, clients, deleteProject, registerDeployment } = useAdmin()
+  const {
+    webProjects,
+    clients,
+    deleteProject,
+    registerDeployment,
+    projectsError,
+    refreshProjects,
+  } = useAdmin()
   const toast = useToast()
 
   const [query, setQuery] = useState('')
@@ -249,6 +257,20 @@ export function ProjectsView() {
           </>
         }
       />
+
+      {projectsError && (
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+          <p>{projectsError}</p>
+          <button
+            type="button"
+            className="inline-flex items-center gap-2 rounded-lg border border-amber-300 bg-white px-3 py-1.5 text-xs font-semibold text-amber-800 transition hover:bg-amber-100"
+            onClick={() => void refreshProjects().catch(() => undefined)}
+          >
+            <RefreshCw className="size-3.5" aria-hidden="true" />
+            Reintentar
+          </button>
+        </div>
+      )}
 
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard

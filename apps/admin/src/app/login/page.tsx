@@ -13,6 +13,16 @@ export default async function LoginPage() {
   const user = await getSessionUser()
   if (user) redirect('/')
 
+  // Credenciales de desarrollo: el bloque solo se renderiza fuera de producción
+  // y refleja los valores del seed cuando están definidos.
+  const demo =
+    process.env.NODE_ENV !== 'production'
+      ? {
+          email: process.env.SEED_ADMIN_EMAIL?.trim() || 'admin@fjsolutions.com.pe',
+          password: process.env.SEED_ADMIN_PASSWORD || 'Admin12345!',
+        }
+      : null
+
   return (
     <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#F4F6FB] px-4 py-12">
       <div
@@ -35,14 +45,15 @@ export default async function LoginPage() {
             Ingresa con tu cuenta corporativa para acceder al panel.
           </p>
 
-          <LoginForm />
+          <LoginForm demo={demo} />
         </div>
 
         <div className="mt-6 flex items-start gap-2.5 px-1 text-[11px] leading-relaxed text-slate-500">
           <ShieldCheck className="mt-0.5 size-3.5 shrink-0 text-slate-400" aria-hidden="true" />
           <p>
-            El acceso está restringido a usuarios activos autorizados. Las credenciales se validan
-            contra la base de datos y nunca se almacenan en el navegador.
+            El acceso está restringido a usuarios activos autorizados. Si tu cuenta tiene la
+            verificación en dos pasos activa, se pedirá un código adicional después de la
+            contraseña. Las credenciales nunca se almacenan en el navegador.
           </p>
         </div>
 

@@ -19,6 +19,9 @@ import quoteRoutes from './routes/quote.routes'
 import helpdeskRoutes from './routes/helpdesk.routes'
 import dashboardRoutes from './routes/dashboard.routes'
 import serviceOfferingRoutes from './routes/service-offering.routes'
+import projectRoutes from './routes/project.routes'
+import settingsRoutes from './routes/settings.routes'
+import inventoryRoutes from './routes/inventory.routes'
 
 const app = express()
 
@@ -53,6 +56,9 @@ app.use(`${PREFIX}/quotes`, quoteRoutes)
 app.use(`${PREFIX}/helpdesk`, helpdeskRoutes)
 app.use(`${PREFIX}/dashboard`, dashboardRoutes)
 app.use(`${PREFIX}/services`, serviceOfferingRoutes)
+app.use(`${PREFIX}/projects`, projectRoutes)
+app.use(`${PREFIX}/settings`, settingsRoutes)
+app.use(`${PREFIX}/inventory`, inventoryRoutes)
 
 // ── Error handler (must be last) ──────────────────────────────────────────────
 app.use(errorHandler)

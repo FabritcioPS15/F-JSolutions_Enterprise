@@ -2,10 +2,8 @@ import { Request, Response, NextFunction } from 'express'
 import { verifyToken } from '../utils/jwt'
 import { sendError } from '../utils/response'
 import { JwtPayload } from '../types'
-import { prismaAuthRepository } from '../repositories/prisma-auth.repository'
-import { AuthService, type SafeAuthUser } from '../services/auth.service'
-
-const authService = new AuthService(prismaAuthRepository)
+import { authService } from '../services/auth.factory'
+import type { SafeAuthUser } from '../services/auth.service'
 
 declare global {
   namespace Express {

@@ -2,23 +2,41 @@
 
 Documento de arquitectura y estado del panel. Las **Etapas 0 (fundaciones)**,
 **1 (autenticación real)**, **2 (catálogo persistente)**, **3 (clientes y
-cotizaciones persistentes)** y **4 (CRM y mesa de ayuda persistente)** quedaron
-implementadas el 2026-11-04. El acceso requiere una cuenta activa validada contra
-PostgreSQL; catálogo, clientes, cotizaciones y mesa de ayuda se sincronizan con
-la API. Proyectos, inventario manual y configuración siguen siendo *local-first*
-(`localStorage`) hasta las siguientes etapas.
+cotizaciones persistentes)**, **4 (CRM y mesa de ayuda persistente)**,
+**5 (métricas y reportes)**, **6 (servicios TI)**, **7 (proyectos web)**,
+**8 (inventario y configuración persistentes)** y **9 (verificación en dos pasos
+y credenciales de desarrollo)** quedaron implementadas el 2026-11-04. El acceso
+requiere una cuenta activa validada contra PostgreSQL; catálogo, clientes,
+cotizaciones, mesa de ayuda, servicios, proyectos, inventario y configuración se
+sincronizan con la API. El navegador conserva solo una caché de respaldo para
+cuando la API no responde.
 
 ## Estado actual
 
 - App: `apps/admin` (Next.js App Router, TypeScript, Tailwind).
-- Autenticación: pantalla `/login`, Route Handlers `/api/auth/login` y
-  `/api/auth/logout`, cookie de sesión `httpOnly` emitida por el servidor Next.
+- Autenticación: pantalla `/login` de dos pasos, Route Handlers
+  `/api/auth/login`, `/api/auth/logout` y `/api/auth/2fa/*`, cookies de sesión
+  `httpOnly` emitidas por el servidor Next (`fj_admin_access`,
+  `fj_admin_refresh`) y cookie temporal de desafío (`fj_admin_2fa`, 10 minutos).
+- Verificación en dos pasos opcional por usuario (TOTP o correo) configurable en
+  Configuración → Seguridad de la cuenta. Si está activa, el login devuelve un
+  desafío antes de emitir la sesión.
+- Credenciales de desarrollo: bloque informativo en `/login` con el correo y la
+  contraseña del seed y un botón “Usar credenciales”, visible solo cuando
+  `NODE_ENV !== 'production'`; no se renderiza en producción.
 - Protección: el grupo de rutas `(panel)` verifica la sesión contra
   `GET /api/v1/auth/me` antes de renderizar; sin sesión redirige a `/login`.
-- Persistencia: `AdminProvider` fusiona el catálogo (`/api/catalog/...`) y los
-  datos comerciales (`/api/commercial/...`) de la API sobre el respaldo
-  `localStorage` con la clave `fj-systems-admin-v1`. Si la API falla, el panel
-  avisa y mantiene el respaldo.
+- Persistencia: `AdminProvider` fusiona el catálogo (`/api/catalog/...`), los
+  datos comerciales (`/api/commercial/...`), los servicios TI
+  (`/api/services/...`), los proyectos web (`/api/projects/...`), el historial
+  de inventario (`/api/inventory/...`) y la configuración (`/api/settings`) de la
+  API sobre el respaldo `localStorage` con la clave `fj-systems-admin-v1`. Si la
+  API falla, el panel avisa y mantiene el respaldo.
+- Inventario y configuración: el registro manual de entradas, salidas y ajustes
+  se persiste en `inventory_movements` y actualiza el stock del producto en una
+  transacción; la configuración de tienda se guarda como JSON en `settings`
+  (clave `store`). Ambos módulos muestran un aviso con “Reintentar” cuando la
+  API no responde y revierten los cambios locales.
 - Comercial: proxy `/api/commercial/[...path]` (restringido a `clients` y
   `quotes`) que reenvía el Bearer del servidor; `lib/services/commercial.ts`
   adapta los contratos y `AdminProvider` sincroniza altas, ediciones, cambios de
@@ -49,13 +67,18 @@ components/admin/           Presentación y formularios
 lib/admin/types.ts          Reexporta el modelo del paquete compartido
 lib/admin/seed.ts           Datos de demostración
 lib/admin/helpdesk.ts       Cliente del proxy de mesa de ayuda
-lib/services/               Clientes de API (catálogo y comercial) y adaptador local
+lib/services/               Clientes de API (catálogo, comercial, inventario, configuración) y adaptador local
 lib/validations/            Esquemas de validación compartidos
 lib/auth/session.ts         Cookie, verificación de sesión y URL interna (servidor)
 lib/auth/types.ts           Tipo `SessionUser` compartido con el shell
 app/api/catalog/            Proxy autenticado del catálogo (servidor)
 app/api/commercial/         Proxy autenticado de clientes y cotizaciones (servidor)
 app/api/helpdesk/           Proxy autenticado de la mesa de ayuda (servidor)
+app/api/dashboard/          Proxy autenticado de métricas y reportes (servidor)
+app/api/services/           Proxy autenticado de servicios TI (servidor)
+app/api/projects/           Proxy autenticado de proyectos web (servidor)
+app/api/inventory/          Proxy autenticado del historial de inventario (servidor)
+app/api/settings/           Proxy autenticado de configuración de tienda (servidor)
 app/login/                  Pantalla pública de acceso
 app/(panel)/                Rutas protegidas por sesión verificada en servidor
 ```
@@ -78,7 +101,7 @@ una propuesta: la Etapa 0 lo consolidó y generó la migración inicial.
 
 | Dominio | Tablas |
 | --- | --- |
-| Seguridad | `roles`, `permissions`, `role_permissions`, `users` |
+| Seguridad | `roles`, `permissions`, `role_permissions`, `users`, `two_factor_recovery_codes`, `two_factor_challenges` |
 | Catálogo | `categories` (árbol de 3 niveles), `brands`, `products`, `product_images`, `product_specs`, `inventory_movements` |
 | CRM | `clients`, `client_contacts` |
 | Cotizaciones | `quotes`, `quote_items`, `quote_status_history`, `document_sequences` |
@@ -97,6 +120,10 @@ Detalles relevantes:
 - `service_requests` unifica la mesa de ayuda y puede vincularse a cliente y
   cotización, con prioridad, responsable y bitácora de actividades.
 - `document_sequences` entrega correlativos (`COT`, `SOL`) sin carreras.
+- `users` incorpora `twoFactorEnabled`, `twoFactorMethod`, `twoFactorSecret`,
+  `twoFactorPendingSecret`, `twoFactorConfirmedAt` y `twoFactorLastStep`. Los
+  secretos TOTP se guardan cifrados; las columnas `two_factor_recovery_codes` y
+  `two_factor_challenges` almacenan hashes HMAC, intentos y vencimiento.
 - Los estados de Prisma usan mayúsculas (`PUBLISHED`, `NEW`, `PENDING`), mientras
   que el frontend conserva sus etiquetas en minúsculas (`active`, `new`, …). El
   mapeo se hace en la capa de persistencia, no en la UI.
@@ -116,6 +143,9 @@ pnpm db:seed
 
 - Migración base: `database/migrations/20261104120000_init/migration.sql`
   (28 tablas y 23 enums), junto con `migration_lock.toml`.
+- Migración 2FA: `database/migrations/20261104234500_two_factor_auth/migration.sql`
+  (enum `TwoFactorMethod`, columnas de 2FA en `users`, tablas de códigos de
+  recuperación y desafíos).
 - Seed idempotente: `apps/api/src/prisma/seed.ts`.
   - Roles: `superadmin`, `admin`, `ventas`, `soporte`, `consulta`.
   - Permisos por módulo y acción (`products.create`, `quotes.manage-status`, …).
@@ -154,17 +184,48 @@ pnpm db:seed
 8. **Errores genéricos de login** (`Credenciales incorrectas`) y rate limiting
    global de la API.
 
+### Verificación en dos pasos (Etapa 9)
+
+1. **Opcional por usuario**: cada cuenta la activa desde Configuración →
+   Seguridad de la cuenta. Mientras esté inactiva, el login sigue siendo solo con
+   contraseña; al activarla, la API devuelve un desafío antes de emitir tokens.
+2. **Métodos**: TOTP (aplicación de autenticación, QR + clave manual) o código
+   de 6 dígitos por correo (SMTP existente). El secreto TOTP se cifra con
+   AES-256-GCM usando una clave derivada de `TWO_FACTOR_SECRET`.
+3. **Desafío temporal**: el login 2FA responde con `challengeToken` (JWT de
+   alcance `2fa`, 10 minutos) en la cookie `fj_admin_2fa`; la sesión definitiva
+   solo se crea tras verificar el código.
+4. **Códigos de recuperación**: 10 códigos `XXXX-XXXX` de un solo uso, guardados
+   como HMAC; el panel los muestra una única vez y permite regenerarlos pidiendo
+   la contraseña.
+5. **Código por correo**: 6 dígitos generados con `randomInt`, hash HMAC, 10
+   minutos de vigencia, máximo 5 intentos y reenvío con enfriamiento de 30
+   segundos. El correo mostrado en el desafío va enmascarado (`ad***@dominio`).
+6. **TOTP sin repetición**: se rechaza un código ya usado comparando el paso de
+   tiempo (`twoFactorLastStep`).
+7. **Desactivación y regeneración** requieren la contraseña actual; desactivar
+   borra el secreto, los códigos de recuperación y los desafíos abiertos.
+8. **BFF del panel**: `/api/auth/2fa/verify` y `/api/auth/2fa/resend` leen el
+   desafío de la cookie `httpOnly`; `/api/auth/2fa/{status,setup,enable,disable,
+   recovery-codes}` exigen sesión y reenvían el Bearer desde el servidor. Ningún
+   secreto TOTP ni token se expone en `localStorage`.
+
 ### Limitaciones conocidas
 
-- **Catálogo, clientes, cotizaciones y mesa de ayuda ya se sincronizan con la
-  API; inventario manual, proyectos y configuración siguen en `localStorage`.**
+- **Catálogo, clientes, cotizaciones, mesa de ayuda, servicios, proyectos,
+  inventario y configuración ya se sincronizan con la API.** Solo la bitácora de
+  actividad visible y el respaldo JSON manual siguen viviendo en el navegador.
   El panel fusiona los datos remotos sobre el respaldo local y cae a ese respaldo
   si la API no responde; el aviso del shell indica cuál fuente está activa.
 - En este entorno **no había PostgreSQL ni Docker**, por lo que la migración, el
-  seed y las operaciones contra una base real no se ejecutaron aquí. Las Etapas 2,
-  3 y 4 se verificaron en navegador contra una API de contrato en memoria con las
+  seed y las operaciones contra una base real no se ejecutaron aquí. Las Etapas 2
+  a 8 se verificaron en navegador contra una API de contrato en memoria con las
   mismas rutas y formatos, y con pruebas unitarias de los servicios de catálogo,
-  comercial y mesa de ayuda.
+  comercial, mesa de ayuda, métricas, servicios, proyectos, inventario y
+  configuración. La Etapa 9 se verificó contra un stub en memoria que simula
+  TOTP, el código por correo, los códigos de recuperación y el enfriamiento de
+  reenvío; **falta repetir 2FA contra PostgreSQL y SMTP reales** (entrega de
+  correo incluida).
 - La tabla `client_contacts` existe en el esquema, pero la captura de contactos
   secundarios por cliente aún no tiene interfaz ni endpoints propios.
 - La sesión de navegación automatizada corre con la pestaña oculta
@@ -174,10 +235,12 @@ pnpm db:seed
 - Pendiente: refresh automático de sesión desde el panel, recuperación de
   contraseña, auditoría en `audit_logs`, bloqueo por intentos fallidos y pruebas
   de integración con PostgreSQL.
-- `DATABASE_URL`, `JWT_SECRET`, `JWT_REFRESH_SECRET`, `API_INTERNAL_URL` y
-  `HELPDESK_API_URL` deben permanecer solo en el servidor; nunca en variables
-  `NEXT_PUBLIC_*`. La tienda lee el catálogo mediante un proxy interno
-  (`/api/catalog/...`), no con una URL privada en el navegador.
+- `DATABASE_URL`, `JWT_SECRET`, `JWT_REFRESH_SECRET`, `TWO_FACTOR_SECRET`,
+  `API_INTERNAL_URL` y `HELPDESK_API_URL` deben permanecer solo en el servidor;
+  nunca en variables `NEXT_PUBLIC_*`. `TWO_FACTOR_SECRET` debe ser distinto de
+  los secretos JWT y de al menos 32 caracteres. La tienda lee el catálogo
+  mediante un proxy interno (`/api/catalog/...`), no con una URL privada en el
+  navegador.
 
 ## Etapa 0 — cambios aplicados
 
@@ -413,16 +476,183 @@ pnpm db:seed
     los relacionados enlazan a la ruta correcta según la categoría.
   - Queda pendiente repetir la verificación contra PostgreSQL real.
 
+## Etapa 7 — cambios aplicados
+
+- **Contratos**: `packages/contracts/src/admin.ts` amplía `WebProjectType` con
+  `software` para alinear el panel con el enum `SOFTWARE` que ya existía en
+  Prisma; las etiquetas se actualizan en `lib/admin/format.ts`.
+- **Modelo de datos**: `database/schema.prisma` añade `responsibleName` (texto
+  libre) al modelo `Project`, porque el panel captura el responsable como nombre
+  y `responsibleId` es una clave foránea a `users`. La migración vive en
+  `database/migrations/20261104230000_project_responsible/migration.sql`.
+- **API de proyectos**: `project.repository.ts` (interfaz),
+  `prisma-project.repository.ts` (consultas y transacciones) y `ProjectService`.
+  El servicio normaliza el payload, exige un nombre de al menos dos caracteres,
+  valida URLs de producción/staging/repositorio, acepta solo `clientId` con
+  formato UUID y comprueba que el cliente exista (400 si no). El registro de un
+  despliegue exige URL válida, usa `production` por defecto y, en una transacción,
+  actualiza la URL de producción o staging del proyecto.
+- **Endpoints** bajo `/api/v1/projects`: `GET /` con filtros `q`/`status`/`type`,
+  `GET /:id`, `POST /`, `PUT /:id`, `DELETE /:id` y
+  `POST /:id/deployments`, protegidos con `projects.view/create/update/delete` y
+  `projects.manage-deployments`. Los despliegues se devuelven del más reciente al
+  más antiguo.
+- **Panel**: proxy opcional `/api/projects/[[...path]]` que valida segmentos e
+  inyecta el token en el servidor. `lib/services/projects.ts` expone el cliente y
+  las operaciones `saveProject`/`ensureProject`: los proyectos de ejemplo con id
+  de slug se promueven a la API (alta) antes de editarlos o desplegarlos, y una
+  edición con id remoto se guarda con `PUT` (con alta de respaldo si la API
+  responde 404). El `clientId` solo se envía cuando es un UUID, porque los
+  clientes del respaldo local usan slugs.
+- **Sincronización**: `AdminProvider` incorpora `projectsSource`,
+  `projectsError` y `refreshProjects`; las altas, ediciones, despliegues y
+  borrados son optimistas y se reconcilian con la API. Si una operación falla, la
+  fila se restaura o se informa con un aviso y el botón “Reintentar” en
+  `/proyectos`.
+- **Pruebas**: 77/77 en verde en 8 archivos, con 15 casos nuevos del servicio de
+  proyectos (filtros, normalización, nombre corto, URLs inválidas, cliente no
+  UUID o inexistente, actualización parcial, limpieza de fecha, 404 de
+  actualización/borrado, URL de despliegue obligatoria, despliegue exitoso y
+  actualización de la URL del proyecto).
+- **Verificado en navegador** contra la API de contrato en memoria:
+  - Alta de “Monitoreo de sedes” con cliente, URLs, hosting, dominio,
+    responsable y referencia de credenciales; persistió tras recargar.
+  - Edición a “Monitoreo de sedes y red”, guardado y recarga → el nombre se
+    conserva.
+  - Registro de un despliegue de producción (`v0.1.0`) → aparece en el historial
+    y como último despliegue; se conserva tras recargar.
+  - Eliminación con confirmación → desaparece del listado y no reaparece tras
+    recargar; consola sin errores.
+  - Queda pendiente repetir la verificación contra PostgreSQL real.
+
+## Etapa 8 — cambios aplicados
+
+- **Modelo de datos reutilizado**: no hizo falta una migración nueva.
+  `InventoryMovement` (`inventory_movements`) y `Setting` (`settings`, clave
+  única) ya existían en la migración base. La configuración se guarda como JSON
+  bajo la clave `store`, que el seed inicializa con los datos de la tienda.
+- **API de configuración**: `settings.repository.ts`,
+  `prisma-settings.repository.ts` y `SettingsService`. `GET` combina la fila
+  guardada con los valores por defecto; `PUT` normaliza los textos y valida
+  nombre comercial, correo, RUC de 11 dígitos, IGV entre 0 y 100 y umbral de
+  stock entero mayor o igual a 0. La escritura usa `upsert`. Endpoints
+  `GET/PUT /api/v1/settings` con permisos `settings.view` y `settings.update`.
+- **API de inventario**: `inventory.repository.ts`,
+  `prisma-inventory.repository.ts`, `InventoryService` y su controlador.
+  `GET /api/v1/inventory/movements` admite filtros `q`, `type`, `productId` y
+  `limit` (máximo 500) con permiso `inventory.view`. `POST` exige
+  `inventory.manage`, valida el UUID del producto, el tipo (`in`/`out`/
+  `adjustment`), las cantidades y el motivo. En una transacción actualiza el
+  stock del producto y crea el movimiento con instantáneas de nombre y SKU.
+  Bloquea salidas sin stock (400 con las unidades disponibles) y ajustes que no
+  cambian el stock; registra el `actorId` del usuario autenticado.
+- **Permisos**: el seed ya declaraba `inventory.view/manage` y
+  `settings.view/update`. Ventas y soporte reciben `inventory.view` (ventas
+  también `settings.view`); la gestión de inventario y la actualización de
+  configuración quedan en `admin` y `superadmin`.
+- **Proxy y clientes del panel**: `/api/inventory/[[...path]]` y `/api/settings`
+  reenvían el Bearer desde el servidor y validan la ruta; `lib/services/inventory.ts`
+  y `lib/services/settings.ts` adaptan los contratos y errores.
+- **Sincronización**: `AdminProvider` incorpora `inventorySource`,
+  `inventoryError`, `refreshInventory`, `settingsSource`, `settingsError` y
+  `refreshSettings`, carga ambos módulos al hidratar y expone reintento. El
+  registro de movimientos es optimista: primero persiste el producto con su
+  stock original (`saveProduct`, que promueve los productos de ejemplo con id de
+  slug a la API), luego crea el movimiento y reconcilia stock e identificador con
+  la respuesta. Si algo falla, restaura el stock local, retira el movimiento
+  provisional y muestra el error. La configuración también es optimista y se
+  revierte si la API rechaza el cambio.
+- **Interfaz**: `/inventario` muestra un aviso ámbar con “Reintentar” cuando el
+  historial no está sincronizado y el modal deshabilita el envío mientras
+  registra. `/configuracion` guarda contra la API, revierte el formulario ante un
+  error y deshabilita el botón durante la petición. Los textos pasan de
+  “almacenamiento local” a “caché local / persistencia centralizada” y la tarjeta
+  de seguridad refleja la sesión y los permisos reales.
+- **Pruebas**: 99/99 en verde en 10 archivos, con 11 casos de configuración
+  (valores por defecto, fusión parcial, normalización, validaciones y moneda) y
+  11 de inventario (filtros, UUID, tipo, cantidades, 404, stock insuficiente,
+  ajuste sin cambio y entradas/salidas/ajustes con actualización de stock).
+- **Verificado en navegador** contra la API de contrato en memoria:
+  - Configuración: cambio a USD, IGV 19 y umbral 7 → guardado, visible en
+    `GET /settings` y conservado tras recargar; se restauró a PEN/18/5.
+  - Inventario: entrada de Access Point (3 → 7), salida de Laptop HP Pavilion
+    (12 → 10, promovida a producto con UUID) y ajuste de Router MikroTik
+    (17 → 20); el historial queda con 4 movimientos y se conserva tras recargar.
+  - Fallos: con la API detenida, guardar configuración muestra el aviso, revierte
+    el valor y ofrece “Reintentar”; registrar un movimiento muestra el error en
+    el modal y no altera el stock. Al restablecer la API, “Reintentar” limpia
+    ambos avisos.
+  - Queda pendiente repetir la verificación contra PostgreSQL real.
+
+## Etapa 9 — cambios aplicados
+
+- **Credenciales de desarrollo**: `/login` recibe desde el servidor el correo y
+  la contraseña del seed solo cuando `NODE_ENV !== 'production'`
+  (`apps/admin/src/app/login/page.tsx`) y muestra un bloque “Acceso de
+  desarrollo” con un botón que rellena el formulario. En producción el bloque no
+  se renderiza y las credenciales no se envían al navegador.
+- **Modelo de datos**: `database/schema.prisma` añade el enum `TwoFactorMethod`
+  (`TOTP`, `EMAIL`), las columnas de 2FA en `User` y las tablas
+  `two_factor_recovery_codes` y `two_factor_challenges`. La migración vive en
+  `database/migrations/20261104234500_two_factor_auth/migration.sql`.
+- **Utilidades criptográficas**: `apps/api/src/utils/two-factor.ts` cifra el
+  secreto TOTP con AES-256-GCM, hashea códigos con HMAC-SHA256, genera códigos
+  de recuperación y validaciones TOTP con `otplib` (tolerancia de un periodo de
+  30 s) y produce el QR con `qrcode`.
+- **Repositorio**: `two-factor.repository.ts` (interfaz) y
+  `prisma-two-factor.repository.ts`, además de los métodos de 2FA en
+  `auth.repository.ts` y `prisma-auth.repository.ts`. La verificación de
+  credenciales ahora devuelve una sesión o un desafío.
+- **Endpoints** bajo `/api/v1/auth`:
+  - Públicos: `POST /2fa/verify` y `POST /2fa/resend` (usan el `challengeToken`
+    del cuerpo; el reenvío solo aplica a `EMAIL` y respeta 30 s de enfriamiento).
+  - Autenticados: `GET /2fa/status`, `POST /2fa/setup`, `POST /2fa/enable`,
+    `POST /2fa/disable` y `POST /2fa/recovery-codes`. Desactivar y regenerar
+    exigen la contraseña actual.
+  - `POST /login` responde `{ twoFactorRequired, method, challengeToken,
+    expiresAt, email }` cuando la cuenta tiene 2FA activa.
+- **Desafío**: JWT de alcance `2fa` firmado con `TWO_FACTOR_SECRET`, vigencia de
+  10 minutos. Los códigos por correo vencen a los 10 minutos, admiten 5 intentos
+  y se invalidan al consumirse o reenviarse. Los códigos de recuperación son 10,
+  de un solo uso, y el correo del desafío se muestra enmascarado.
+- **BFF del panel**: `apps/admin/src/app/api/auth/login/route.ts` guarda el
+  desafío en la cookie `fj_admin_2fa`; `.../2fa/verify/route.ts` crea la sesión y
+  borra esa cookie; `.../2fa/resend/route.ts` reenvía el código; y
+  `.../2fa/[[...path]]/route.ts` expone `status`, `setup`, `enable`, `disable` y
+  `recovery-codes` con el Bearer del servidor.
+- **Interfaz**: `/login` pasa a dos pasos (credenciales → código), con reenvío
+  con cuenta regresiva, alternancia a código de recuperación y mensajes de error.
+  `/configuracion` incorpora la tarjeta “Seguridad de la cuenta” con estado,
+  método, fecha de activación, códigos restantes, alta TOTP (QR y clave manual),
+  alta por correo, regeneración y desactivación.
+- **Pruebas**: `apps/api/tests/two-factor.test.ts` añade 7 casos (desafío por
+  correo, límite de intentos, reenvío con enfriamiento, recuperación de un solo
+  uso, activación TOTP/EMAIL y rechazo de códigos inválidos). Total: **106/106**
+  en verde y typecheck limpio en admin, web y API.
+- **Verificado en navegador** contra un stub de API en memoria:
+  - El bloque de credenciales de desarrollo rellena el formulario y el login sin
+    2FA entra al panel.
+  - TOTP: QR y clave manual, activación con código, 10 códigos de recuperación,
+    regeneración con contraseña, desafío al iniciar sesión, rechazo de repetición
+    del mismo código, acceso con código de recuperación (queda en 9) y
+    desactivación con contraseña.
+  - EMAIL: activación con código, estado “Código por correo electrónico”,
+    desafío con correo enmascarado, error ante código inválido, reenvío
+    habilitado solo tras 30 s con aviso de entrega no confirmada y login con el
+    código válido.
+  - Queda pendiente repetir TOTP, correo y recuperación contra PostgreSQL y SMTP
+    reales.
+
 ## Próximos pasos
 
 1. Ejecutar migración y seed en un PostgreSQL real y repetir la verificación de
-   catálogo, clientes, cotizaciones, mesa de ayuda, reportes y servicios de TI
-   de punta a punta (incluido en Docker).
+   catálogo, clientes, cotizaciones, mesa de ayuda, reportes, servicios de TI,
+   proyectos web, inventario, configuración y 2FA de punta a punta (incluido en
+   Docker y con SMTP real para el código por correo).
 2. Importador de los respaldos JSON locales que resuelva nombres a IDs.
 3. Refresh automático de sesión, recuperación de contraseña y bloqueo por
-   intentos fallidos.
+   intentos fallidos de contraseña (el código 2FA ya limita a 5 intentos).
 4. Añadir pruebas de integración contra una base PostgreSQL de prueba.
 5. Interfaz y endpoints para contactos secundarios (`client_contacts`).
 6. Conectar las tarjetas de catálogo del resumen a `summary.catalog` y retirar los
    conteos locales cuando la API esté disponible.
-7. Continuar con la Etapa 7 (proyectos).

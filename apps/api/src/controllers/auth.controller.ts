@@ -1,9 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
-import { AuthService } from '../services/auth.service'
-import { prismaAuthRepository } from '../repositories/prisma-auth.repository'
+import { authService } from '../services/auth.factory'
 import { sendSuccess, sendError } from '../utils/response'
-
-const authService = new AuthService(prismaAuthRepository)
 
 export const register = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -20,12 +17,81 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
       return sendError(res, 'Credenciales incorrectas.', 401)
     }
 
-    const result = await authService.login(email, password)
-    if (!result) {
+    const outcome = await authService.login(email, password)
+    if (!outcome) {
       return sendError(res, 'Credenciales incorrectas.', 401)
     }
 
+    if (outcome.kind === 'session') {
+      return sendSuccess(res, outcome.session, 'Sesión iniciada')
+    }
+
+    return sendSuccess(
+      res,
+      {
+        twoFactorRequired: true,
+        method: outcome.challenge.method,
+        challengeToken: outcome.challenge.challengeToken,
+        expiresAt: outcome.challenge.expiresAt,
+        email: outcome.challenge.email,
+      },
+      'Verificación en dos pasos requerida'
+    )
+  } catch (err) { next(err) }
+}
+
+export const verifyTwoFactor = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { challengeToken, code, recoveryCode } = req.body
+    const result = await authService.verifyTwoFactor({ challengeToken, code, recoveryCode })
     return sendSuccess(res, result, 'Sesión iniciada')
+  } catch (err) { next(err) }
+}
+
+export const resendTwoFactor = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const result = await authService.resendEmailChallenge(req.body.challengeToken)
+    return sendSuccess(res, result, 'Código reenviado')
+  } catch (err) { next(err) }
+}
+
+export const twoFactorStatus = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    if (!req.auth) return sendError(res, 'No autorizado.', 401)
+    const result = await authService.getTwoFactorStatus(req.auth.user.id)
+    return sendSuccess(res, result)
+  } catch (err) { next(err) }
+}
+
+export const setupTwoFactor = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    if (!req.auth) return sendError(res, 'No autorizado.', 401)
+    const result = await authService.beginTwoFactorSetup(req.auth.user.id, req.body.method)
+    return sendSuccess(res, result)
+  } catch (err) { next(err) }
+}
+
+export const enableTwoFactor = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    if (!req.auth) return sendError(res, 'No autorizado.', 401)
+    const result = await authService.enableTwoFactor(req.auth.user.id, req.body.code)
+    return sendSuccess(res, result, 'Verificación en dos pasos activada')
+  } catch (err) { next(err) }
+}
+
+export const disableTwoFactor = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    if (!req.auth) return sendError(res, 'No autorizado.', 401)
+    const result = await authService.disableTwoFactor(req.auth.user.id, req.body.password)
+    return sendSuccess(res, result, 'Verificación en dos pasos desactivada')
+  } catch (err) { next(err) }
+}
+
+export const regenerateRecoveryCodes = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    if (!req.auth) return sendError(res, 'No autorizado.', 401)
+    const result = await authService.regenerateRecoveryCodes(req.auth.user.id, req.body.password)
+    return sendSuccess(res, result, 'Códigos de recuperación actualizados')
   } catch (err) { next(err) }
 }
 

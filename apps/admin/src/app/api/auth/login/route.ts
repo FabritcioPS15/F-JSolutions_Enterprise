@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { apiBaseUrl, applySessionCookies } from '@/lib/auth/session'
+import { apiBaseUrl, applySessionCookies, applyTwoFactorCookie } from '@/lib/auth/session'
 import type { SessionUser } from '@/lib/auth/types'
 
 type ApiLoginResponse = {
@@ -11,6 +11,11 @@ type ApiLoginResponse = {
       accessToken: string
       refreshToken: string
     }
+    twoFactorRequired?: boolean
+    method?: 'TOTP' | 'EMAIL'
+    challengeToken?: string
+    expiresAt?: string
+    email?: string
   }
 }
 
@@ -67,7 +72,7 @@ export async function POST(request: NextRequest) {
 
     const body = (await response.json().catch(() => null)) as ApiLoginResponse | null
 
-    if (!response.ok || !body?.success || !body.data?.tokens || !body.data.user) {
+    if (!response.ok || !body?.success || !body.data) {
       const status = response.status === 401 ? 401 : response.status === 503 ? 503 : 502
       return NextResponse.json(
         {
@@ -78,6 +83,36 @@ export async function POST(request: NextRequest) {
               : body?.message ?? 'No se pudo iniciar sesión en este momento.',
         },
         { status },
+      )
+    }
+
+    if (body.data.twoFactorRequired) {
+      const method = body.data.method
+      if (!body.data.challengeToken || (method !== 'TOTP' && method !== 'EMAIL')) {
+        return NextResponse.json(
+          { success: false, message: 'La API devolvió un desafío de verificación inválido.' },
+          { status: 502 },
+        )
+      }
+
+      const result = NextResponse.json({
+        success: true,
+        data: {
+          requiresTwoFactor: true,
+          method,
+          email: body.data.email ?? '',
+          expiresAt: body.data.expiresAt ?? null,
+        },
+      })
+
+      applyTwoFactorCookie(result, body.data.challengeToken)
+      return result
+    }
+
+    if (!body.data.tokens || !body.data.user) {
+      return NextResponse.json(
+        { success: false, message: 'No se pudo iniciar sesión en este momento.' },
+        { status: 502 },
       )
     }
 

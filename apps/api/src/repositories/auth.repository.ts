@@ -1,4 +1,5 @@
 export type AuthUserStatus = 'ACTIVE' | 'INACTIVE' | 'SUSPENDED'
+export type AuthTwoFactorMethod = 'TOTP' | 'EMAIL'
 
 export type AuthRoleRecord = {
   id: string
@@ -19,6 +20,21 @@ export type AuthUserRecord = {
   updatedAt: Date
   role: AuthRoleRecord
   permissions: string[]
+  twoFactorEnabled: boolean
+  twoFactorMethod: AuthTwoFactorMethod | null
+  twoFactorSecret: string | null
+  twoFactorPendingSecret: string | null
+  twoFactorConfirmedAt: Date | null
+  twoFactorLastStep: number | null
+}
+
+export type TwoFactorUpdate = {
+  enabled?: boolean
+  method?: AuthTwoFactorMethod | null
+  secret?: string | null
+  pendingSecret?: string | null
+  confirmedAt?: Date | null
+  lastStep?: number | null
 }
 
 export type CreateAuthUserInput = {
@@ -36,4 +52,5 @@ export interface AuthRepository {
   findRoleByKey(key: string): Promise<AuthRoleRecord | null>
   createUser(input: CreateAuthUserInput): Promise<AuthUserRecord>
   touchLastLogin(id: string): Promise<void>
+  updateTwoFactor(id: string, data: TwoFactorUpdate): Promise<void>
 }

@@ -17,6 +17,11 @@ enum UserStatus {
   SUSPENDED
 }
 
+enum TwoFactorMethod {
+  TOTP
+  EMAIL
+}
+
 enum ProductStatus {
   DRAFT
   PUBLISHED
@@ -223,6 +228,13 @@ model User {
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
 
+  twoFactorEnabled       Boolean          @default(false)
+  twoFactorMethod        TwoFactorMethod?
+  twoFactorSecret        String?
+  twoFactorPendingSecret String?
+  twoFactorConfirmedAt   DateTime?
+  twoFactorLastStep      Int?
+
   orders              Order[]
   quotesCreated       Quote[]                  @relation("QuoteCreator")
   quoteStatusChanges  QuoteStatusHistory[]     @relation("QuoteStatusChanger")
@@ -234,10 +246,39 @@ model User {
   notifications       Notification[]
   mediaAssets         MediaAsset[]
   settingsUpdated     Setting[]
+  twoFactorRecoveryCodes TwoFactorRecoveryCode[]
+  twoFactorChallenges    TwoFactorChallenge[]
 
   @@index([roleId])
   @@index([status])
   @@map("users")
+}
+
+model TwoFactorRecoveryCode {
+  id        String    @id @default(uuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  codeHash  String
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId, usedAt])
+  @@map("two_factor_recovery_codes")
+}
+
+model TwoFactorChallenge {
+  id         String          @id @default(uuid())
+  userId     String
+  user       User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  method     TwoFactorMethod
+  codeHash   String
+  attempts   Int             @default(0)
+  expiresAt  DateTime
+  consumedAt DateTime?
+  createdAt  DateTime        @default(now())
+
+  @@index([userId, method, consumedAt])
+  @@map("two_factor_challenges")
 }
 
 // ─── Catálogo ─────────────────────────────────────────────────────────────────
@@ -591,6 +632,7 @@ model Project {
   status             ProjectStatus @default(PLANNING)
   responsibleId      String?
   responsible        User?         @relation("ProjectResponsible", fields: [responsibleId], references: [id], onDelete: SetNull)
+  responsibleName    String?
   description        String?       @db.Text
   scope              String?       @db.Text
   startDate          DateTime?

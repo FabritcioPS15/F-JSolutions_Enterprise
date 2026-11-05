@@ -5,6 +5,7 @@ dotenv.config()
 
 const DEV_JWT_SECRET = 'dev-jwt-secret-change-me-0123456789abcdef'
 const DEV_JWT_REFRESH_SECRET = 'dev-jwt-refresh-secret-change-me-0123456789'
+const DEV_TWO_FACTOR_SECRET = 'dev-two-factor-secret-change-me-0123456789'
 
 const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
@@ -15,6 +16,7 @@ const envSchema = z.object({
   JWT_EXPIRES_IN: z.string().default('7d'),
   JWT_REFRESH_SECRET: z.string().min(32).default(DEV_JWT_REFRESH_SECRET),
   JWT_REFRESH_EXPIRES_IN: z.string().default('30d'),
+  TWO_FACTOR_SECRET: z.string().min(32).default(DEV_TWO_FACTOR_SECRET),
   SMTP_HOST: z.string().optional(),
   SMTP_PORT: z.coerce.number().default(587),
   SMTP_USER: z.string().optional(),
@@ -36,4 +38,5 @@ export const env = parsed.data
 export const DEV_DEFAULTS = {
   jwtSecret: DEV_JWT_SECRET,
   jwtRefreshSecret: DEV_JWT_REFRESH_SECRET,
+  twoFactorSecret: DEV_TWO_FACTOR_SECRET,
 }

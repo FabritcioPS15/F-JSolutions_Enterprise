@@ -106,6 +106,7 @@ export function AdminShell({
     catalogError,
     commercialSource,
     commercialError,
+    projectsSource,
   } = useAdmin()
   const [open, setOpen] = useState(false)
   const [collapsed, setCollapsed] = useState(false)
@@ -635,8 +636,8 @@ export function AdminShell({
         <footer className="mx-auto flex w-full max-w-[1440px] flex-wrap items-center justify-between gap-2 px-4 pb-6 text-[10.5px] text-slate-400 sm:px-6 lg:px-8">
           <p>© 2026 {settings.storeName}. Panel interno de administración.</p>
           <p className="font-medium">
-            {catalogSource === 'api' && commercialSource === 'api'
-              ? 'Catálogo y comercial en base de datos'
+            {catalogSource === 'api' && commercialSource === 'api' && projectsSource === 'api'
+              ? 'Catálogo, comercial y proyectos en base de datos'
               : 'Respaldo local'}{' '}
             · v1.2
           </p>

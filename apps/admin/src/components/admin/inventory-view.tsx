@@ -106,7 +106,13 @@ function DeltaChip({ value }: { value: number }) {
 }
 
 export function InventoryView() {
-  const { products, inventoryMovements, settings } = useAdmin()
+  const {
+    products,
+    inventoryMovements,
+    settings,
+    inventoryError,
+    refreshInventory,
+  } = useAdmin()
   const [tab, setTab] = useState<Tab>('stock')
   const [query, setQuery] = useState('')
   const [stockFilter, setStockFilter] = useState<StockFilter>('all')
@@ -236,6 +242,24 @@ export function InventoryView() {
           </>
         }
       />
+
+      {inventoryError ? (
+        <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-2.5 text-xs text-amber-900">
+          <span>
+            El historial de inventario no está sincronizado con la base de datos.{' '}
+            {inventoryError}
+          </span>
+          <button
+            type="button"
+            className="font-semibold underline underline-offset-2 hover:text-amber-950"
+            onClick={() => {
+              void refreshInventory().catch(() => undefined)
+            }}
+          >
+            Reintentar
+          </button>
+        </div>
+      ) : null}
 
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
@@ -649,6 +673,7 @@ function MovementModal({
   const [reason, setReason] = useState(inventoryReasons.in[0])
   const [note, setNote] = useState('')
   const [error, setError] = useState<string | null>(null)
+  const [saving, setSaving] = useState(false)
 
   const product = products.find((item) => item.id === productId)
   const currentStock = product ? Math.max(0, product.stock) : 0
@@ -681,30 +706,34 @@ function MovementModal({
     }
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setError(null)
+    setSaving(true)
+    try {
+      const result = await registerMovement({
+        productId,
+        type,
+        quantity: parsed,
+        reason,
+        note,
+      })
 
-    const result = registerMovement({
-      productId,
-      type,
-      quantity: parsed,
-      reason,
-      note,
-    })
+      if (!result.ok) {
+        setError(result.error ?? 'No se pudo registrar el movimiento.')
+        return
+      }
 
-    if (!result.ok) {
-      setError(result.error ?? 'No se pudo registrar el movimiento.')
-      return
+      toast.success(
+        'Movimiento registrado',
+        type === 'adjustment'
+          ? `${product?.name ?? 'Producto'} · stock ajustado a ${formatNumber(resulting)} unidades.`
+          : `${inventoryMovementLabels[type]} de ${formatNumber(Math.abs(delta))} unidades en ${product?.name ?? 'el producto'}.`
+      )
+      onClose()
+    } finally {
+      setSaving(false)
     }
-
-    toast.success(
-      'Movimiento registrado',
-      type === 'adjustment'
-        ? `${product?.name ?? 'Producto'} · stock ajustado a ${formatNumber(resulting)} unidades.`
-        : `${inventoryMovementLabels[type]} de ${formatNumber(Math.abs(delta))} unidades en ${product?.name ?? 'el producto'}.`
-    )
-    onClose()
   }
 
   return (
@@ -716,11 +745,21 @@ function MovementModal({
       size="lg"
       footer={
         <>
-          <button type="button" className={btnSecondary} onClick={onClose}>
+          <button
+            type="button"
+            className={btnSecondary}
+            onClick={onClose}
+            disabled={saving}
+          >
             Cancelar
           </button>
-          <button type="submit" form="movement-form" className={btnPrimary}>
-            Registrar movimiento
+          <button
+            type="submit"
+            form="movement-form"
+            className={btnPrimary}
+            disabled={saving}
+          >
+            {saving ? 'Registrando…' : 'Registrar movimiento'}
           </button>
         </>
       }

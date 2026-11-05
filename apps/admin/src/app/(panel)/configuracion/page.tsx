@@ -18,6 +18,7 @@ import {
 } from '@/components/admin/admin-provider'
 import { ConfirmDialog } from '@/components/admin/confirm-dialog'
 import { ExportMenu } from '@/components/admin/export-menu'
+import { TwoFactorSecurityCard } from '@/components/admin/two-factor-security'
 import { useToast } from '@/components/admin/toast'
 import {
   Field,
@@ -68,6 +69,8 @@ export default function ConfiguracionPage() {
     inventoryMovements,
     webProjects,
     settings,
+    settingsError,
+    refreshSettings,
     updateSettings,
     importData,
     resetData,
@@ -76,6 +79,7 @@ export default function ConfiguracionPage() {
 
   const [draft, setDraft] = useState<SettingsDraft>(() => toDraft(settings))
   const [errors, setErrors] = useState<SettingsErrors>({})
+  const [saving, setSaving] = useState(false)
   const [pendingImport, setPendingImport] = useState<{ name: string; raw: string } | null>(null)
   const [confirmReset, setConfirmReset] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -132,7 +136,7 @@ export default function ConfiguracionPage() {
     return next
   }
 
-  function handleSubmit(event: React.FormEvent) {
+  async function handleSubmit(event: React.FormEvent) {
     event.preventDefault()
     const nextErrors = validate(draft)
     setErrors(nextErrors)
@@ -140,18 +144,30 @@ export default function ConfiguracionPage() {
       toast.error('Revisa los datos', 'Hay campos con información inválida.')
       return
     }
-    updateSettings({
-      ...draft,
-      storeName: draft.storeName.trim(),
-      legalName: draft.legalName.trim(),
-      ruc: draft.ruc.trim(),
-      email: draft.email.trim(),
-      phone: draft.phone.trim(),
-      address: draft.address.trim(),
-      igv: Number(draft.igv),
-      lowStockThreshold: Math.trunc(Number(draft.lowStockThreshold)),
-    })
-    toast.success('Configuración guardada', 'Los cambios se aplicaron al panel.')
+    setSaving(true)
+    try {
+      const result = await updateSettings({
+        ...draft,
+        storeName: draft.storeName.trim(),
+        legalName: draft.legalName.trim(),
+        ruc: draft.ruc.trim(),
+        email: draft.email.trim(),
+        phone: draft.phone.trim(),
+        address: draft.address.trim(),
+        igv: Number(draft.igv),
+        lowStockThreshold: Math.trunc(Number(draft.lowStockThreshold)),
+      })
+      if (!result.ok) {
+        toast.error(
+          'No se pudo guardar',
+          result.error ?? 'La configuración no se sincronizó con la base de datos.'
+        )
+        return
+      }
+      toast.success('Configuración guardada', 'Los cambios se guardaron en la base de datos.')
+    } finally {
+      setSaving(false)
+    }
   }
 
   async function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -195,14 +211,34 @@ export default function ConfiguracionPage() {
       <PageHeader
         eyebrow="Sistema"
         title="Configuración"
-        description="Datos del negocio, preferencias del catálogo y respaldo de la información local."
+        description="Datos del negocio, preferencias del catálogo y respaldo de la información."
         actions={
-          <button type="submit" form="settings-form" className={btnPrimary} disabled={!dirty}>
+          <button
+            type="submit"
+            form="settings-form"
+            className={btnPrimary}
+            disabled={!dirty || saving}
+          >
             <Save className="size-4" aria-hidden="true" />
-            Guardar cambios
+            {saving ? 'Guardando…' : 'Guardar cambios'}
           </button>
         }
       />
+
+      {settingsError ? (
+        <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-2.5 text-xs text-amber-900">
+          <span>La configuración no está sincronizada con la base de datos. {settingsError}</span>
+          <button
+            type="button"
+            className="font-semibold underline underline-offset-2 hover:text-amber-950"
+            onClick={() => {
+              void refreshSettings().catch(() => undefined)
+            }}
+          >
+            Reintentar
+          </button>
+        </div>
+      ) : null}
 
       <form
         id="settings-form"
@@ -351,16 +387,16 @@ export default function ConfiguracionPage() {
                 <RotateCcw className="size-4" aria-hidden="true" />
                 Descartar
               </button>
-              <button type="submit" className={btnPrimary} disabled={!dirty}>
+              <button type="submit" className={btnPrimary} disabled={!dirty || saving}>
                 <Save className="size-4" aria-hidden="true" />
-                Guardar cambios
+                {saving ? 'Guardando…' : 'Guardar cambios'}
               </button>
             </div>
           </div>
         </div>
 
         <div className="space-y-5">
-          <SectionCard title="Almacenamiento local" icon={HardDrive}>
+          <SectionCard title="Caché local" icon={HardDrive}>
             <div className="space-y-4">
               <div>
                 <div className="flex items-baseline justify-between gap-2">
@@ -406,8 +442,8 @@ export default function ConfiguracionPage() {
 
               <p className="flex gap-2 text-[10.5px] leading-relaxed text-slate-500">
                 <ShieldCheck className="mt-0.5 size-3.5 shrink-0 text-slate-400" aria-hidden="true" />
-                Los datos viven solo en este navegador. Descarga un respaldo antes de limpiar la
-                caché o cambiar de equipo.
+                La información operativa se guarda en PostgreSQL a través de la API. Este navegador
+                mantiene una caché de respaldo por si la API no responde.
               </p>
             </div>
           </SectionCard>
@@ -473,27 +509,17 @@ export default function ConfiguracionPage() {
             </button>
           </SectionCard>
 
-          <SectionCard title="Seguridad" icon={ShieldCheck}>
-            <div className="space-y-2">
-              <p className="inline-flex rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[9.5px] font-bold uppercase tracking-wide text-amber-700">
-                Sin autenticación en esta versión
-              </p>
-              <p className="text-[10.5px] leading-relaxed text-slate-500">
-                El panel funciona solo en este navegador y no valida usuarios ni permisos. Antes de
-                publicarlo, conecta la autenticación del servidor, protege las rutas de
-                administración y aplica permisos por rol en la base de datos.
-              </p>
-            </div>
-          </SectionCard>
+          <TwoFactorSecurityCard />
 
           <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
             <p className="flex items-center gap-2 text-[11px] font-bold text-slate-700">
               <Info className="size-3.5 text-slate-400" aria-hidden="true" />
-              Preparado para la nube
+              Persistencia centralizada
             </p>
             <p className="mt-1.5 text-[10.5px] leading-relaxed text-slate-500">
-              Esta versión guarda la información en el navegador. La estructura ya está lista para
-              conectarse a la API y la base de datos sin cambiar las pantallas.
+              Catálogo, clientes, cotizaciones, mesa de ayuda, servicios, proyectos, inventario y
+              configuración se guardan en PostgreSQL a través de la API. El navegador conserva solo
+              una caché de respaldo.
             </p>
           </div>
         </div>

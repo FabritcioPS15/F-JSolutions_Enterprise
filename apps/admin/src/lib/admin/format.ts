@@ -117,6 +117,7 @@ export const webProjectTypeLabels: Record<WebProjectType, string> = {
   webapp: 'Sistema web',
   ecommerce: 'E-commerce',
   maintenance: 'Mantenimiento',
+  software: 'Software a medida',
 }
 
 export const webProjectStatusLabels: Record<WebProjectStatus, string> = {

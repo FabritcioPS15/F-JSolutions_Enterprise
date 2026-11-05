@@ -6,8 +6,15 @@ import type {
   AuthRoleRecord,
   AuthUserRecord,
   CreateAuthUserInput,
+  TwoFactorUpdate,
 } from '../src/repositories/auth.repository'
-import { AuthService } from '../src/services/auth.service'
+import type {
+  CreateChallengeInput,
+  TwoFactorChallengeRecord,
+  TwoFactorRecoveryCodeRecord,
+  TwoFactorRepository,
+} from '../src/repositories/two-factor.repository'
+import { AuthService, type LoginOutcome } from '../src/services/auth.service'
 import { verifyRefreshToken, verifyToken } from '../src/utils/jwt'
 import { hashPassword } from '../src/utils/password'
 
@@ -28,7 +35,93 @@ function makeUser(overrides: Partial<AuthUserRecord> = {}): AuthUserRecord {
     updatedAt: new Date('2026-01-01T00:00:00Z'),
     role: adminRole,
     permissions: ['dashboard.view', 'products.view'],
+    twoFactorEnabled: false,
+    twoFactorMethod: null,
+    twoFactorSecret: null,
+    twoFactorPendingSecret: null,
+    twoFactorConfirmedAt: null,
+    twoFactorLastStep: null,
     ...overrides,
+  }
+}
+
+function asSession(outcome: LoginOutcome | null) {
+  if (!outcome || outcome.kind !== 'session') {
+    throw new Error('Se esperaba una sesión completa')
+  }
+  return outcome.session
+}
+
+class FakeTwoFactorRepository implements TwoFactorRepository {
+  challenges: TwoFactorChallengeRecord[] = []
+  recoveryCodes: TwoFactorRecoveryCodeRecord[] = []
+
+  async createChallenge(input: CreateChallengeInput) {
+    const challenge: TwoFactorChallengeRecord = {
+      id: `challenge-${this.challenges.length + 1}`,
+      ...input,
+      attempts: 0,
+      consumedAt: null,
+      createdAt: new Date(),
+    }
+    this.challenges.push(challenge)
+    return challenge
+  }
+
+  async findLatestChallenge(userId: string, method: 'TOTP' | 'EMAIL') {
+    return (
+      [...this.challenges]
+        .reverse()
+        .find((item) => item.userId === userId && item.method === method && !item.consumedAt) ??
+      null
+    )
+  }
+
+  async incrementChallengeAttempts(id: string) {
+    const challenge = this.challenges.find((item) => item.id === id)
+    if (challenge) challenge.attempts += 1
+  }
+
+  async consumeChallenge(id: string) {
+    const challenge = this.challenges.find((item) => item.id === id)
+    if (challenge) challenge.consumedAt = new Date()
+  }
+
+  async consumeOpenChallenges(userId: string, method: 'TOTP' | 'EMAIL') {
+    for (const challenge of this.challenges) {
+      if (challenge.userId === userId && challenge.method === method && !challenge.consumedAt) {
+        challenge.consumedAt = new Date()
+      }
+    }
+  }
+
+  async replaceRecoveryCodes(userId: string, codeHashes: string[]) {
+    this.recoveryCodes = this.recoveryCodes.filter((item) => item.userId !== userId)
+    this.recoveryCodes.push(
+      ...codeHashes.map((codeHash, index) => ({
+        id: `recovery-${index + 1}`,
+        userId,
+        codeHash,
+        usedAt: null,
+      }))
+    )
+  }
+
+  async findRecoveryCode(userId: string, codeHash: string) {
+    return (
+      this.recoveryCodes.find(
+        (item) => item.userId === userId && item.codeHash === codeHash && !item.usedAt
+      ) ?? null
+    )
+  }
+
+  async consumeRecoveryCode(id: string) {
+    const record = this.recoveryCodes.find((item) => item.id === id)
+    if (record) record.usedAt = new Date()
+  }
+
+  async countAvailableRecoveryCodes(userId: string) {
+    return this.recoveryCodes.filter((item) => item.userId === userId && !item.usedAt).length
   }
 }
 
@@ -37,6 +130,7 @@ class FakeAuthRepository implements AuthRepository {
   roles: AuthRoleRecord[] = [adminRole, consultaRole]
   touchedLogin: string | null = null
   createdInputs: CreateAuthUserInput[] = []
+  twoFactorUpdates: Array<{ id: string; data: TwoFactorUpdate }> = []
 
   async findByEmail(email: string) {
     return this.users.find((user) => user.email === email.toLowerCase()) ?? null
@@ -73,31 +167,47 @@ class FakeAuthRepository implements AuthRepository {
   async touchLastLogin(id: string) {
     this.touchedLogin = id
   }
+
+  async updateTwoFactor(id: string, data: TwoFactorUpdate) {
+    this.twoFactorUpdates.push({ id, data })
+    const user = this.users.find((item) => item.id === id)
+    if (!user) return
+
+    if (data.enabled !== undefined) user.twoFactorEnabled = data.enabled
+    if (data.method !== undefined) user.twoFactorMethod = data.method
+    if (data.secret !== undefined) user.twoFactorSecret = data.secret
+    if (data.pendingSecret !== undefined) user.twoFactorPendingSecret = data.pendingSecret
+    if (data.confirmedAt !== undefined) user.twoFactorConfirmedAt = data.confirmedAt
+    if (data.lastStep !== undefined) user.twoFactorLastStep = data.lastStep
+  }
 }
 
 describe('AuthService', () => {
   let repository: FakeAuthRepository
   let service: AuthService
+  let twoFactorRepository: FakeTwoFactorRepository
 
   beforeEach(() => {
     repository = new FakeAuthRepository()
-    service = new AuthService(repository)
+    twoFactorRepository = new FakeTwoFactorRepository()
+    service = new AuthService(repository, twoFactorRepository, {
+      sendTwoFactorCode: async () => true,
+    })
   })
 
   it('inicia sesión con credenciales válidas y firma tokens con el rol actual', async () => {
     const passwordHash = await hashPassword('Secret123!')
     repository.users = [makeUser({ passwordHash })]
 
-    const session = await service.login('  ANA@fjsolutions.pe ', 'Secret123!')
+    const session = asSession(await service.login('  ANA@fjsolutions.pe ', 'Secret123!'))
 
-    expect(session).not.toBeNull()
-    expect(session?.user.email).toBe('ana@fjsolutions.pe')
-    expect(session?.user.role).toBe('admin')
-    expect(session?.user.permissions).toEqual(['dashboard.view', 'products.view'])
-    expect(session?.tokens.accessToken).toBeTruthy()
-    expect(session?.tokens.refreshToken).toBeTruthy()
-    expect(verifyToken(session!.tokens.accessToken).sub).toBe('user-1')
-    expect(verifyRefreshToken(session!.tokens.refreshToken).role).toBe('admin')
+    expect(session.user.email).toBe('ana@fjsolutions.pe')
+    expect(session.user.role).toBe('admin')
+    expect(session.user.permissions).toEqual(['dashboard.view', 'products.view'])
+    expect(session.tokens.accessToken).toBeTruthy()
+    expect(session.tokens.refreshToken).toBeTruthy()
+    expect(verifyToken(session.tokens.accessToken).sub).toBe('user-1')
+    expect(verifyRefreshToken(session.tokens.refreshToken).role).toBe('admin')
     expect(repository.touchedLogin).toBe('user-1')
   })
 
@@ -130,8 +240,8 @@ describe('AuthService', () => {
   it('renueva tokens con un refresh válido y rechaza uno inválido', async () => {
     repository.users = [makeUser({ passwordHash: await hashPassword('Secret123!') })]
 
-    const session = await service.login('ana@fjsolutions.pe', 'Secret123!')
-    const refreshed = await service.refresh(session!.tokens.refreshToken)
+    const session = asSession(await service.login('ana@fjsolutions.pe', 'Secret123!'))
+    const refreshed = await service.refresh(session.tokens.refreshToken)
 
     expect(refreshed.user.id).toBe('user-1')
     expect(verifyToken(refreshed.tokens.accessToken).sub).toBe('user-1')

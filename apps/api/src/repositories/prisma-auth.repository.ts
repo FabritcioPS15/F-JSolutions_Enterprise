@@ -5,6 +5,7 @@ import type {
   AuthRoleRecord,
   AuthUserRecord,
   CreateAuthUserInput,
+  TwoFactorUpdate,
 } from './auth.repository'
 
 const userInclude = {
@@ -31,6 +32,12 @@ function toRecord(user: PrismaUserWithAccess): AuthUserRecord {
     lastLoginAt: user.lastLoginAt,
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
+    twoFactorEnabled: user.twoFactorEnabled,
+    twoFactorMethod: user.twoFactorMethod,
+    twoFactorSecret: user.twoFactorSecret,
+    twoFactorPendingSecret: user.twoFactorPendingSecret,
+    twoFactorConfirmedAt: user.twoFactorConfirmedAt,
+    twoFactorLastStep: user.twoFactorLastStep,
     role: {
       id: user.role.id,
       key: user.role.key,
@@ -81,6 +88,20 @@ export class PrismaAuthRepository implements AuthRepository {
     await prisma.user.update({
       where: { id },
       data: { lastLoginAt: new Date() },
+    })
+  }
+
+  async updateTwoFactor(id: string, data: TwoFactorUpdate): Promise<void> {
+    await prisma.user.update({
+      where: { id },
+      data: {
+        ...(data.enabled !== undefined ? { twoFactorEnabled: data.enabled } : {}),
+        ...(data.method !== undefined ? { twoFactorMethod: data.method } : {}),
+        ...(data.secret !== undefined ? { twoFactorSecret: data.secret } : {}),
+        ...(data.pendingSecret !== undefined ? { twoFactorPendingSecret: data.pendingSecret } : {}),
+        ...(data.confirmedAt !== undefined ? { twoFactorConfirmedAt: data.confirmedAt } : {}),
+        ...(data.lastStep !== undefined ? { twoFactorLastStep: data.lastStep } : {}),
+      },
     })
   }
 }

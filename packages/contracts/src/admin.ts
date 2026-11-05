@@ -230,7 +230,13 @@ export type InventoryMovementInput = {
   note?: string
 }
 
-export type WebProjectType = 'landing' | 'website' | 'webapp' | 'ecommerce' | 'maintenance'
+export type WebProjectType =
+  | 'landing'
+  | 'website'
+  | 'webapp'
+  | 'ecommerce'
+  | 'maintenance'
+  | 'software'
 
 export type WebProjectStatus =
   | 'planning'

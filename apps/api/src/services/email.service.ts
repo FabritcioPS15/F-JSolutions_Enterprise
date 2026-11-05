@@ -151,6 +151,67 @@ export class EmailService {
     }
   }
 
+  async sendTwoFactorCode(input: {
+    to: string
+    name: string
+    code: string
+    expiresInMinutes: number
+  }): Promise<boolean> {
+    if (!this.transporter) {
+      logger.warn(
+        `[EmailService] SMTP no configurado: no se pudo enviar el código 2FA a ${input.to}.`
+      )
+      return false
+    }
+
+    const text = [
+      `Hola ${input.name},`,
+      '',
+      `Tu código de verificación es: ${input.code}`,
+      `Vence en ${input.expiresInMinutes} minutos.`,
+      '',
+      'Si no intentaste iniciar sesión, cambia tu contraseña de inmediato.',
+      '',
+      'F&J Systems',
+    ].join('\n')
+
+    const html = `<!doctype html>
+<html lang="es">
+  <body style="margin:0;padding:24px;background:#f1f5f9;font-family:Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#0f172a;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;margin:0 auto;background:#ffffff;border:1px solid #e2e8f0;border-radius:16px;overflow:hidden;">
+      <tr>
+        <td style="background:#0f172a;padding:20px 24px;">
+          <p style="margin:0;font-size:16px;font-weight:700;color:#ffffff;">F&amp;J Systems</p>
+          <p style="margin:4px 0 0;font-size:12px;color:#94a3b8;">Verificación en dos pasos</p>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding:24px;">
+          <p style="margin:0 0 16px;font-size:14px;color:#334155;">Hola ${escapeHtml(input.name)},</p>
+          <p style="margin:0 0 12px;font-size:14px;color:#334155;">Usa este código para completar tu inicio de sesión:</p>
+          <p style="margin:0 0 16px;font-size:30px;font-weight:700;letter-spacing:8px;color:#0f172a;text-align:center;padding:14px;border:1px solid #e2e8f0;border-radius:12px;background:#f8fafc;">${escapeHtml(input.code)}</p>
+          <p style="margin:0;font-size:12px;color:#64748b;">Vence en ${input.expiresInMinutes} minutos. Si no intentaste iniciar sesión, cambia tu contraseña de inmediato.</p>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>`
+
+    try {
+      await this.transporter.sendMail({
+        from: env.EMAIL_FROM,
+        to: input.to,
+        subject: cleanHeader('Código de verificación — F&J Systems'),
+        text,
+        html,
+      })
+      return true
+    } catch (error) {
+      logger.error('[EmailService] No se pudo enviar el código 2FA:', error)
+      return false
+    }
+  }
+
   async sendContactEmail(data: ContactInput): Promise<boolean> {
     logger.info(
       `[EmailService] Mensaje de contacto de ${data.nombre} (${data.email}) - Asunto: ${data.asunto}`
