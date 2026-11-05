@@ -68,6 +68,15 @@ export default function ConfiguracionPage() {
     activity,
     inventoryMovements,
     webProjects,
+    users,
+    suppliers,
+    orders,
+    attributes,
+    warehouseLocations,
+    purchaseRequests,
+    purchaseOrders,
+    goodsReceipts,
+    stockCounts,
     settings,
     settingsError,
     refreshSettings,
@@ -420,7 +429,11 @@ export default function ConfiguracionPage() {
                   { label: 'Marcas', value: brands.length },
                   { label: 'Clientes', value: clients.length },
                   { label: 'Cotizaciones', value: quotes.length },
+                  { label: 'Pedidos', value: orders.length },
                   { label: 'Mensajes', value: requests.length },
+                  { label: 'Proveedores', value: suppliers.length },
+                  { label: 'Atributos', value: attributes.length },
+                  { label: 'Usuarios', value: users.length },
                 ].map((item) => (
                   <div key={item.label} className="rounded-xl bg-slate-50 px-2 py-2.5">
                     <dd className="font-heading text-sm font-bold text-slate-900">
@@ -466,6 +479,15 @@ export default function ConfiguracionPage() {
                     activity,
                     inventoryMovements,
                     webProjects,
+                    users,
+                    suppliers,
+                    orders,
+                    attributes,
+                    warehouseLocations,
+                    purchaseRequests,
+                    purchaseOrders,
+                    goodsReceipts,
+                    stockCounts,
                     settings,
                   })
                 }

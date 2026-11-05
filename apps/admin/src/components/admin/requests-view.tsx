@@ -50,14 +50,13 @@ import {
   requestChannelLabels,
   requestStatusLabels,
 } from '@/lib/admin/format'
+import { isEmail } from '@fj-solutions/contracts/domain'
 import type {
   RequestChannel,
   RequestStatus,
   ServiceRequest,
 } from '@/lib/admin/types'
 import { cn } from '@/lib/utils'
-
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 const channelIcons = {
   web: Globe2,
@@ -95,7 +94,7 @@ const statusOrder: RequestStatus[] = ['new', 'review', 'attended', 'discarded']
 function validate(draft: RequestDraft): RequestErrors {
   const errors: RequestErrors = {}
   if (draft.name.trim().length < 2) errors.name = 'Ingresa el nombre del contacto.'
-  if (!EMAIL_PATTERN.test(draft.email.trim())) errors.email = 'Escribe un correo válido.'
+  if (!isEmail(draft.email)) errors.email = 'Escribe un correo válido.'
   if (!draft.topic.trim()) errors.topic = 'Resume el motivo de la consulta.'
   if (draft.message.trim().length < 10) {
     errors.message = 'Describe la necesidad con al menos 10 caracteres.'

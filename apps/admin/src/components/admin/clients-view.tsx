@@ -46,6 +46,7 @@ import {
   formatNumber,
 } from '@/lib/admin/format'
 import type { Client, ClientSegment, ClientStatus } from '@/lib/admin/types'
+import { isEmail, isValidDocument } from '@fj-solutions/contracts/domain'
 import { cn } from '@/lib/utils'
 
 type ClientDraft = {
@@ -63,8 +64,6 @@ type ClientDraft = {
 }
 
 type ClientErrors = Partial<Record<keyof ClientDraft, string>>
-
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 const emptyDraft: ClientDraft = {
   name: '',
@@ -99,11 +98,9 @@ function toDraft(client: Client): ClientDraft {
 function validate(draft: ClientDraft): ClientErrors {
   const errors: ClientErrors = {}
   if (draft.name.trim().length < 2) errors.name = 'Ingresa el nombre del contacto.'
-  if (!EMAIL_PATTERN.test(draft.email.trim())) errors.email = 'Escribe un correo válido.'
+  if (!isEmail(draft.email)) errors.email = 'Escribe un correo válido.'
   if (draft.documentType && draft.documentNumber.trim()) {
-    const digits = draft.documentNumber.replace(/\D/g, '')
-    const expected = draft.documentType === 'ruc' ? 11 : 8
-    if (digits.length !== expected) {
+    if (!isValidDocument(draft.documentType, draft.documentNumber)) {
       errors.documentNumber =
         draft.documentType === 'ruc' ? 'El RUC debe tener 11 dígitos.' : 'El DNI debe tener 8 dígitos.'
     }
@@ -114,6 +111,7 @@ function validate(draft: ClientDraft): ClientErrors {
 export function ClientsView() {
   const {
     hydrated,
+    can,
     clients,
     quotes,
     createClient,
@@ -232,10 +230,12 @@ export function ClientsView() {
               nouns={['cliente', 'clientes']}
               disabled={filtered.length === 0}
             />
-            <button type="button" className={btnPrimary} onClick={() => setEditing('new')}>
-              <Plus className="size-4" aria-hidden="true" />
-              Nuevo cliente
-            </button>
+            {can('clients', 'create') && (
+              <button type="button" className={btnPrimary} onClick={() => setEditing('new')}>
+                <Plus className="size-4" aria-hidden="true" />
+                Nuevo cliente
+              </button>
+            )}
           </>
         }
       />
@@ -470,24 +470,28 @@ export function ClientsView() {
                             >
                               <FileText className="size-3.5" />
                             </Link>
-                            <button
-                              type="button"
-                              onClick={() => setEditing(client)}
-                              className={iconButton}
-                              title="Editar cliente"
-                              aria-label={`Editar ${client.company || client.name}`}
-                            >
-                              <Pencil className="size-3.5" />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => setDeleteTarget(client)}
-                              className={cn(iconButton, 'hover:bg-red-50 hover:text-red-600')}
-                              title="Eliminar cliente"
-                              aria-label={`Eliminar ${client.company || client.name}`}
-                            >
-                              <Trash2 className="size-3.5" />
-                            </button>
+                            {can('clients', 'update') && (
+                              <button
+                                type="button"
+                                onClick={() => setEditing(client)}
+                                className={iconButton}
+                                title="Editar cliente"
+                                aria-label={`Editar ${client.company || client.name}`}
+                              >
+                                <Pencil className="size-3.5" />
+                              </button>
+                            )}
+                            {can('clients', 'delete') && (
+                              <button
+                                type="button"
+                                onClick={() => setDeleteTarget(client)}
+                                className={cn(iconButton, 'hover:bg-red-50 hover:text-red-600')}
+                                title="Eliminar cliente"
+                                aria-label={`Eliminar ${client.company || client.name}`}
+                              >
+                                <Trash2 className="size-3.5" />
+                              </button>
+                            )}
                           </div>
                         </td>
                       </tr>
@@ -543,25 +547,29 @@ export function ClientsView() {
                       <FileText className="size-3.5" aria-hidden="true" />
                       Cotizaciones
                     </Link>
-                    <button
-                      type="button"
-                      onClick={() => setEditing(client)}
-                      className={cn(iconButton, 'border border-slate-200 bg-white')}
-                      aria-label={`Editar ${client.company || client.name}`}
-                    >
-                      <Pencil className="size-3.5" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setDeleteTarget(client)}
-                      className={cn(
-                        iconButton,
-                        'border border-slate-200 bg-white hover:bg-red-50 hover:text-red-600'
-                      )}
-                      aria-label={`Eliminar ${client.company || client.name}`}
-                    >
-                      <Trash2 className="size-3.5" />
-                    </button>
+                    {can('clients', 'update') && (
+                      <button
+                        type="button"
+                        onClick={() => setEditing(client)}
+                        className={cn(iconButton, 'border border-slate-200 bg-white')}
+                        aria-label={`Editar ${client.company || client.name}`}
+                      >
+                        <Pencil className="size-3.5" />
+                      </button>
+                    )}
+                    {can('clients', 'delete') && (
+                      <button
+                        type="button"
+                        onClick={() => setDeleteTarget(client)}
+                        className={cn(
+                          iconButton,
+                          'border border-slate-200 bg-white hover:bg-red-50 hover:text-red-600'
+                        )}
+                        aria-label={`Eliminar ${client.company || client.name}`}
+                      >
+                        <Trash2 className="size-3.5" />
+                      </button>
+                    )}
                   </div>
                 </article>
               )

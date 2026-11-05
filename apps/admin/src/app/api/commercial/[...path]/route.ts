@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { actionForMethod } from '@/lib/admin/access'
+import { guardPermission } from '@/lib/auth/guard'
 import { apiBaseUrl, getAccessToken } from '@/lib/auth/session'
 
 const ALLOWED_SEGMENT = /^[A-Za-z0-9._-]+$/
@@ -38,6 +40,12 @@ async function forward(request: NextRequest) {
   const method = request.method
   const hasBody = method !== 'GET' && method !== 'HEAD'
   const body = hasBody ? await request.text() : undefined
+
+  // clients/... exige clients.*, quotes/... exige quotes.*; cambiar el estado de
+  // una cotización lo refuerza la API con quotes.manage-status.
+  const resource = request.nextUrl.pathname.replace(/^\/api\/commercial\/?/, '').split('/')[0]
+  const guard = await guardPermission(resource, actionForMethod(method))
+  if (!guard.ok) return guard.response
 
   try {
     const response = await fetch(target, {

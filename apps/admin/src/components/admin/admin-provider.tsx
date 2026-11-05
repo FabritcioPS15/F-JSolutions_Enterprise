@@ -8,7 +8,12 @@ import {
   type ReactNode,
 } from 'react'
 import { createSeedData } from '@/lib/admin/seed'
+import { accessFromSession, createCan, type Access, type CanFunction } from '@/lib/admin/access'
+import { withMutationGuard } from '@/lib/admin/mutation-acl'
+import { useToast } from '@/components/admin/toast'
+import type { SessionUser } from '@/lib/auth/types'
 import { buildQuoteCode, slugify, statusLabels } from '@/lib/admin/format'
+import { orderStatusLabels } from '@/lib/admin/operations'
 import {
   CatalogApiError,
   createBrand as createBrandNode,
@@ -67,17 +72,44 @@ import type {
   ActivityType,
   AdminData,
   AdminProduct,
+  AdminUser,
+  AdminUserInput,
+  AdminUserStatus,
+  AttributeStatus,
+  AttributeType,
   Brand,
   Category,
   Client,
   ClientInput,
+  Currency,
+  DeliveryEvent,
+  DeliveryMethod,
   DeploymentEnvironment,
   DeploymentInput,
+  GoodsReceipt,
+  GoodsReceiptInput,
   InventoryMovement,
   InventoryMovementInput,
   InventoryMovementType,
+  MovementSourceType,
+  Order,
+  OrderDeliveryInput,
+  OrderInput,
+  OrderLine,
+  OrderStatus,
+  PaymentStatus,
+  ProductAttribute,
+  ProductAttributeInput,
   ProductInput,
   ProductStatus,
+  PurchaseOrder,
+  PurchaseOrderInput,
+  PurchaseOrderLine,
+  PurchaseOrderStatus,
+  PurchaseRequest,
+  PurchaseRequestInput,
+  PurchaseRequestLine,
+  PurchaseRequestStatus,
   Quote,
   QuoteInput,
   QuoteLine,
@@ -85,7 +117,16 @@ import type {
   RequestInput,
   RequestStatus,
   ServiceRequest,
+  StockCount,
+  StockCountInput,
+  StockCountLine,
+  StockCountStatus,
   StoreSettings,
+  Supplier,
+  SupplierInput,
+  SupplierStatus,
+  WarehouseLocation,
+  WarehouseLocationInput,
   WebProject,
   WebProjectDeployment,
   WebProjectInput,
@@ -121,6 +162,8 @@ export type RequestPatch = Partial<
 
 type AdminContextValue = {
   hydrated: boolean
+  access: Access
+  can: CanFunction
   catalogSource: 'local' | 'api'
   catalogError: string | null
   refreshCatalog: () => Promise<void>
@@ -148,6 +191,15 @@ type AdminContextValue = {
   activity: ActivityEntry[]
   inventoryMovements: InventoryMovement[]
   webProjects: WebProject[]
+  users: AdminUser[]
+  suppliers: Supplier[]
+  orders: Order[]
+  attributes: ProductAttribute[]
+  warehouseLocations: WarehouseLocation[]
+  purchaseRequests: PurchaseRequest[]
+  purchaseOrders: PurchaseOrder[]
+  goodsReceipts: GoodsReceipt[]
+  stockCounts: StockCount[]
   createProduct: (input: ProductInput) => AdminProduct
   updateProduct: (id: string, input: ProductInput) => void
   unlinkProductTaxonomy: (id: string, level: 'category' | 'subcategory' | 'type') => boolean
@@ -167,6 +219,47 @@ type AdminContextValue = {
     projectId: string,
     input: DeploymentInput
   ) => WebProjectDeployment | null
+  createUser: (input: AdminUserInput) => AdminUser
+  updateUser: (id: string, input: AdminUserInput) => void
+  removeUser: (id: string) => void
+  setUserStatus: (id: string, status: AdminUserStatus) => void
+  createSupplier: (input: SupplierInput) => Supplier
+  updateSupplier: (id: string, input: SupplierInput) => void
+  removeSupplier: (id: string) => void
+  setSupplierStatus: (id: string, status: SupplierStatus) => void
+  createOrder: (input: OrderInput) => Order
+  updateOrder: (id: string, input: OrderInput) => void
+  removeOrder: (id: string) => void
+  setOrderStatus: (id: string, input: OrderDeliveryInput) => void
+  setOrderPayment: (id: string, status: PaymentStatus) => void
+  createAttribute: (input: ProductAttributeInput) => ProductAttribute
+  updateAttribute: (id: string, input: ProductAttributeInput) => void
+  removeAttribute: (id: string) => void
+  setAttributeStatus: (id: string, status: AttributeStatus) => void
+  createLocation: (input: WarehouseLocationInput) => WarehouseLocation
+  updateLocation: (id: string, input: WarehouseLocationInput) => void
+  removeLocation: (id: string) => { ok: boolean; error?: string }
+  createPurchaseRequest: (input: PurchaseRequestInput) => PurchaseRequest
+  updatePurchaseRequest: (id: string, input: PurchaseRequestInput) => void
+  removePurchaseRequest: (id: string) => void
+  decidePurchaseRequest: (
+    id: string,
+    status: PurchaseRequestStatus,
+    note?: string
+  ) => { ok: boolean; error?: string }
+  convertRequestToOrder: (id: string) => PurchaseOrder | null
+  createPurchaseOrder: (input: PurchaseOrderInput) => PurchaseOrder
+  updatePurchaseOrder: (id: string, input: PurchaseOrderInput) => void
+  removePurchaseOrder: (id: string) => void
+  setPurchaseOrderStatus: (id: string, status: PurchaseOrderStatus) => void
+  registerGoodsReceipt: (input: GoodsReceiptInput) => { ok: boolean; error?: string; receipt?: GoodsReceipt }
+  createStockCount: (input: StockCountInput) => StockCount
+  recordStockCountLine: (
+    id: string,
+    input: { productId: string; countedQuantity: number | null; note?: string }
+  ) => void
+  postStockCount: (id: string) => { ok: boolean; error?: string }
+  cancelStockCount: (id: string) => void
   addCategory: (label: string) => boolean
   updateCategory: (id: string, patch: CategoryPatch) => boolean
   renameCategory: (id: string, label: string) => boolean
@@ -484,9 +577,30 @@ function normalizeInventoryMovement(raw: Record<string, unknown>): InventoryMove
     resultingStock: Math.max(0, Math.trunc(Number(raw.resultingStock) || 0)),
     reason: String(raw.reason ?? 'Ajuste manual'),
     note: raw.note ? String(raw.note) : undefined,
+    unitCost:
+      raw.unitCost === undefined || raw.unitCost === null
+        ? undefined
+        : Math.max(0, Number(raw.unitCost) || 0),
+    sourceType: movementSourceTypes.includes(raw.sourceType as MovementSourceType)
+      ? (raw.sourceType as MovementSourceType)
+      : undefined,
+    sourceId: raw.sourceId ? String(raw.sourceId) : undefined,
+    sourceCode: raw.sourceCode ? String(raw.sourceCode) : undefined,
+    locationId: raw.locationId ? String(raw.locationId) : undefined,
+    toLocationId: raw.toLocationId ? String(raw.toLocationId) : undefined,
+    actor: raw.actor ? String(raw.actor) : undefined,
     createdAt: String(raw.createdAt ?? new Date().toISOString()),
   }
 }
+
+const movementSourceTypes: MovementSourceType[] = [
+  'manual',
+  'purchase_receipt',
+  'stock_count',
+  'transfer',
+  'order',
+  'quote',
+]
 
 const projectTypes: WebProjectType[] = [
   'landing',
@@ -560,6 +674,13 @@ type MovementSeed = {
   reason: string
   note?: string
   at?: string
+  unitCost?: number
+  sourceType?: InventoryMovement['sourceType']
+  sourceId?: string
+  sourceCode?: string
+  locationId?: string
+  toLocationId?: string
+  actor?: string
 }
 
 function buildMovement(seed: MovementSeed): InventoryMovement {
@@ -574,6 +695,13 @@ function buildMovement(seed: MovementSeed): InventoryMovement {
     resultingStock: seed.resultingStock,
     reason: seed.reason,
     note: seed.note,
+    unitCost: seed.unitCost,
+    sourceType: seed.sourceType ?? 'manual',
+    sourceId: seed.sourceId,
+    sourceCode: seed.sourceCode,
+    locationId: seed.locationId,
+    toLocationId: seed.toLocationId,
+    actor: seed.actor,
     createdAt: seed.at ?? new Date().toISOString(),
   }
 }
@@ -788,6 +916,301 @@ function normalizeRequest(raw: Record<string, unknown>): ServiceRequest {
   }
 }
 
+const adminUserRoles = ['superadmin', 'admin', 'ventas', 'soporte', 'consulta'] as const
+const adminUserStatuses = ['active', 'invited', 'disabled'] as const
+const orderStatuses = [
+  'pending',
+  'confirmed',
+  'processing',
+  'shipped',
+  'delivered',
+  'cancelled',
+] as const
+const paymentStatuses = ['pending', 'partial', 'paid'] as const
+const deliveryMethods = ['pickup', 'courier', 'own'] as const
+const attributeTypes = ['text', 'number', 'select', 'boolean'] as const
+
+function pickEnum<T extends string>(value: unknown, allowed: readonly T[], fallback: T): T {
+  return allowed.includes(value as T) ? (value as T) : fallback
+}
+
+function stringList(value: unknown): string[] {
+  return Array.isArray(value) ? value.map((item) => String(item)).filter(Boolean) : []
+}
+
+function normalizeUser(raw: Record<string, unknown>): AdminUser {
+  return {
+    id: String(raw.id ?? uid('usuario')),
+    name: String(raw.name ?? 'Sin nombre'),
+    email: String(raw.email ?? ''),
+    phone: String(raw.phone ?? ''),
+    role: pickEnum(raw.role, adminUserRoles, 'consulta'),
+    status: pickEnum(raw.status, adminUserStatuses, 'invited'),
+    twoFactorEnabled: Boolean(raw.twoFactorEnabled),
+    lastLoginAt: raw.lastLoginAt ? String(raw.lastLoginAt) : undefined,
+    createdAt: String(raw.createdAt ?? new Date().toISOString()),
+    updatedAt: String(raw.updatedAt ?? new Date().toISOString()),
+  }
+}
+
+function normalizeSupplier(raw: Record<string, unknown>): Supplier {
+  return {
+    id: String(raw.id ?? uid('proveedor')),
+    name: String(raw.name ?? 'Proveedor sin nombre'),
+    ruc: String(raw.ruc ?? ''),
+    contactName: String(raw.contactName ?? ''),
+    email: String(raw.email ?? ''),
+    phone: String(raw.phone ?? ''),
+    city: String(raw.city ?? ''),
+    address: String(raw.address ?? ''),
+    categoryIds: stringList(raw.categoryIds),
+    leadTimeDays: Number(raw.leadTimeDays ?? 0) || 0,
+    minimumOrder: Number(raw.minimumOrder ?? 0) || 0,
+    rating: Number(raw.rating ?? 0) || 0,
+    status: pickEnum(raw.status, ['active', 'inactive'] as const, 'active'),
+    notes: String(raw.notes ?? ''),
+    createdAt: String(raw.createdAt ?? new Date().toISOString()),
+    updatedAt: String(raw.updatedAt ?? new Date().toISOString()),
+  }
+}
+
+function normalizeOrderLine(raw: Record<string, unknown>): OrderLine {
+  return {
+    id: String(raw.id ?? uid('linea')),
+    productId: raw.productId ? String(raw.productId) : undefined,
+    name: String(raw.name ?? 'Ítem sin nombre'),
+    sku: raw.sku ? String(raw.sku) : undefined,
+    quantity: Number(raw.quantity ?? 0) || 0,
+    unitPrice: Number(raw.unitPrice ?? 0) || 0,
+    deliveredQuantity: Number(raw.deliveredQuantity ?? 0) || 0,
+  }
+}
+
+function normalizeDeliveryEvent(raw: Record<string, unknown>): DeliveryEvent {
+  return {
+    id: String(raw.id ?? uid('entrega')),
+    status: pickEnum(raw.status, orderStatuses, 'pending'),
+    note: String(raw.note ?? ''),
+    at: String(raw.at ?? new Date().toISOString()),
+  }
+}
+
+function normalizeOrder(raw: Record<string, unknown>): Order {
+  return {
+    id: String(raw.id ?? uid('pedido')),
+    code: String(raw.code ?? ''),
+    clientId: raw.clientId ? String(raw.clientId) : undefined,
+    clientName: String(raw.clientName ?? ''),
+    clientEmail: String(raw.clientEmail ?? ''),
+    clientPhone: String(raw.clientPhone ?? ''),
+    quoteCode: raw.quoteCode ? String(raw.quoteCode) : undefined,
+    status: pickEnum(raw.status, orderStatuses, 'pending'),
+    paymentStatus: pickEnum(raw.paymentStatus, paymentStatuses, 'pending'),
+    currency: pickEnum(raw.currency, ['PEN', 'USD'] as const, 'PEN' as Currency),
+    items: Array.isArray(raw.items)
+      ? (raw.items as Record<string, unknown>[]).map(normalizeOrderLine)
+      : [],
+    deliveryMethod: pickEnum(raw.deliveryMethod, deliveryMethods, 'own'),
+    deliveryAddress: String(raw.deliveryAddress ?? ''),
+    recipientName: String(raw.recipientName ?? ''),
+    carrier: String(raw.carrier ?? ''),
+    trackingNumber: String(raw.trackingNumber ?? ''),
+    expectedDeliveryAt: raw.expectedDeliveryAt ? String(raw.expectedDeliveryAt) : undefined,
+    deliveredAt: raw.deliveredAt ? String(raw.deliveredAt) : undefined,
+    deliveryEvents: Array.isArray(raw.deliveryEvents)
+      ? (raw.deliveryEvents as Record<string, unknown>[]).map(normalizeDeliveryEvent)
+      : [],
+    notes: String(raw.notes ?? ''),
+    createdAt: String(raw.createdAt ?? new Date().toISOString()),
+    updatedAt: String(raw.updatedAt ?? new Date().toISOString()),
+  }
+}
+
+function normalizeAttribute(raw: Record<string, unknown>): ProductAttribute {
+  return {
+    id: String(raw.id ?? uid('atributo')),
+    label: String(raw.label ?? 'Atributo sin nombre'),
+    type: pickEnum(raw.type, attributeTypes, 'text' as AttributeType),
+    unit: String(raw.unit ?? ''),
+    options: stringList(raw.options),
+    keywords: stringList(raw.keywords),
+    categoryIds: stringList(raw.categoryIds),
+    required: Boolean(raw.required),
+    status: pickEnum(raw.status, ['active', 'inactive'] as const, 'active' as AttributeStatus),
+    createdAt: String(raw.createdAt ?? new Date().toISOString()),
+    updatedAt: String(raw.updatedAt ?? new Date().toISOString()),
+  }
+}
+
+const locationKinds = ['warehouse', 'shelf', 'transit'] as const
+
+function toInt(value: unknown, fallback = 0): number {
+  const parsed = Math.trunc(Number(value))
+  return Number.isFinite(parsed) ? parsed : fallback
+}
+
+function optionalText(value: unknown): string | undefined {
+  const text = typeof value === 'string' ? value.trim() : ''
+  return text ? text : undefined
+}
+
+function normalizeLocation(raw: Record<string, unknown>): WarehouseLocation {
+  const name = String(raw.name ?? '').trim()
+  return {
+    id: String(raw.id ?? uid('almacen')),
+    code: String(raw.code ?? name.toUpperCase().replace(/\s+/g, '-')).trim(),
+    name,
+    kind: pickEnum(raw.kind, locationKinds, 'shelf'),
+    parentLocationId: optionalText(raw.parentLocationId),
+    address: optionalText(raw.address),
+    responsible: optionalText(raw.responsible),
+    isDefault: Boolean(raw.isDefault),
+    notes: optionalText(raw.notes),
+    createdAt: String(raw.createdAt ?? new Date().toISOString()),
+    updatedAt: String(raw.updatedAt ?? new Date().toISOString()),
+  }
+}
+
+const purchaseRequestStatuses = [
+  'draft',
+  'pending',
+  'approved',
+  'rejected',
+  'ordered',
+  'cancelled',
+] as const
+
+function normalizePurchaseRequestLine(raw: Record<string, unknown>): PurchaseRequestLine {
+  return {
+    productId: String(raw.productId ?? ''),
+    productName: String(raw.productName ?? ''),
+    sku: String(raw.sku ?? ''),
+    quantity: Math.max(toInt(raw.quantity), 0),
+    unitCost: raw.unitCost === undefined ? undefined : toInt(raw.unitCost),
+    note: optionalText(raw.note),
+  }
+}
+
+function normalizePurchaseRequest(raw: Record<string, unknown>): PurchaseRequest {
+  return {
+    id: String(raw.id ?? uid('solicitud')),
+    code: String(raw.code ?? 'SC-2026-000'),
+    status: pickEnum(raw.status, purchaseRequestStatuses, 'pending'),
+    requestedBy: String(raw.requestedBy ?? 'Equipo de compras'),
+    neededBy: optionalText(raw.neededBy),
+    supplierId: optionalText(raw.supplierId),
+    supplierName: optionalText(raw.supplierName),
+    justification: optionalText(raw.justification),
+    lines: Array.isArray(raw.lines)
+      ? (raw.lines as Record<string, unknown>[]).map(normalizePurchaseRequestLine)
+      : [],
+    decisionNote: optionalText(raw.decisionNote),
+    decidedBy: optionalText(raw.decidedBy),
+    decidedAt: optionalText(raw.decidedAt),
+    createdAt: String(raw.createdAt ?? new Date().toISOString()),
+    updatedAt: String(raw.updatedAt ?? new Date().toISOString()),
+  }
+}
+
+const purchaseOrderStatuses = ['draft', 'sent', 'partial', 'received', 'cancelled'] as const
+
+function normalizePurchaseOrderLine(raw: Record<string, unknown>): PurchaseOrderLine {
+  const quantity = Math.max(toInt(raw.quantity), 0)
+  return {
+    productId: String(raw.productId ?? ''),
+    productName: String(raw.productName ?? ''),
+    sku: String(raw.sku ?? ''),
+    quantity,
+    receivedQuantity: Math.min(Math.max(toInt(raw.receivedQuantity), 0), quantity),
+    unitCost: toInt(raw.unitCost),
+    note: optionalText(raw.note),
+  }
+}
+
+function normalizePurchaseOrder(raw: Record<string, unknown>): PurchaseOrder {
+  return {
+    id: String(raw.id ?? uid('orden')),
+    code: String(raw.code ?? 'OC-2026-000'),
+    supplierId: String(raw.supplierId ?? ''),
+    supplierName: String(raw.supplierName ?? ''),
+    status: pickEnum(raw.status, purchaseOrderStatuses, 'draft'),
+    currency: pickEnum(raw.currency, ['PEN', 'USD'] as const, 'PEN'),
+    requestId: optionalText(raw.requestId),
+    requestCode: optionalText(raw.requestCode),
+    expectedAt: optionalText(raw.expectedAt),
+    lines: Array.isArray(raw.lines)
+      ? (raw.lines as Record<string, unknown>[]).map(normalizePurchaseOrderLine)
+      : [],
+    notes: optionalText(raw.notes),
+    createdBy: String(raw.createdBy ?? 'Equipo de compras'),
+    createdAt: String(raw.createdAt ?? new Date().toISOString()),
+    updatedAt: String(raw.updatedAt ?? new Date().toISOString()),
+  }
+}
+
+const receiptConditions = ['good', 'damaged', 'incomplete'] as const
+
+function normalizeGoodsReceipt(raw: Record<string, unknown>): GoodsReceipt {
+  return {
+    id: String(raw.id ?? uid('recepcion')),
+    code: String(raw.code ?? 'RC-2026-000'),
+    purchaseOrderId: String(raw.purchaseOrderId ?? ''),
+    purchaseOrderCode: String(raw.purchaseOrderCode ?? ''),
+    supplierName: String(raw.supplierName ?? ''),
+    condition: pickEnum(raw.condition, receiptConditions, 'good'),
+    receivedBy: String(raw.receivedBy ?? 'Almacén'),
+    receivedAt: String(raw.receivedAt ?? new Date().toISOString()),
+    lines: Array.isArray(raw.lines)
+      ? (raw.lines as Record<string, unknown>[]).map((line) => ({
+          productId: String(line.productId ?? ''),
+          productName: String(line.productName ?? ''),
+          sku: String(line.sku ?? ''),
+          orderedQuantity: Math.max(toInt(line.orderedQuantity), 0),
+          receivedQuantity: Math.max(toInt(line.receivedQuantity), 0),
+          rejectedQuantity: Math.max(toInt(line.rejectedQuantity), 0),
+          locationId: optionalText(line.locationId),
+          note: optionalText(line.note),
+        }))
+      : [],
+    notes: optionalText(raw.notes),
+    createdAt: String(raw.createdAt ?? new Date().toISOString()),
+  }
+}
+
+const stockCountStatuses = ['open', 'posted', 'cancelled'] as const
+
+function normalizeStockCountLine(raw: Record<string, unknown>): StockCountLine {
+  return {
+    productId: String(raw.productId ?? ''),
+    productName: String(raw.productName ?? ''),
+    sku: String(raw.sku ?? ''),
+    systemQuantity: Math.max(toInt(raw.systemQuantity), 0),
+    countedQuantity:
+      raw.countedQuantity === undefined || raw.countedQuantity === null
+        ? null
+        : Math.max(toInt(raw.countedQuantity), 0),
+    locationId: optionalText(raw.locationId),
+    note: optionalText(raw.note),
+  }
+}
+
+function normalizeStockCount(raw: Record<string, unknown>): StockCount {
+  return {
+    id: String(raw.id ?? uid('conteo')),
+    code: String(raw.code ?? 'CT-2026-000'),
+    name: String(raw.name ?? 'Conteo físico'),
+    status: pickEnum(raw.status, stockCountStatuses, 'open'),
+    locationId: optionalText(raw.locationId),
+    countedBy: String(raw.countedBy ?? 'Almacén'),
+    startedAt: String(raw.startedAt ?? new Date().toISOString()),
+    finishedAt: optionalText(raw.finishedAt),
+    lines: Array.isArray(raw.lines)
+      ? (raw.lines as Record<string, unknown>[]).map(normalizeStockCountLine)
+      : [],
+    notes: optionalText(raw.notes),
+  }
+}
+
 function parseData(raw: string): AdminData {
   const parsed = JSON.parse(raw) as unknown
   const record = parsed as { data?: unknown }
@@ -838,10 +1261,49 @@ function parseData(raw: string): AdminData {
     inventoryMovements:
       storedMovements.length > 0 ? storedMovements : baselineMovements(products),
     webProjects: storedProjects,
+    // El respaldo local puede ser anterior a estas secciones; en ese caso se
+    // recuperan las muestras del seed para no dejar las vistas vacías.
+    users: Array.isArray(payload.users)
+      ? (payload.users as Record<string, unknown>[]).map(normalizeUser)
+      : seed.users,
+    suppliers: Array.isArray(payload.suppliers)
+      ? (payload.suppliers as Record<string, unknown>[]).map(normalizeSupplier)
+      : seed.suppliers,
+    orders: Array.isArray(payload.orders)
+      ? (payload.orders as Record<string, unknown>[]).map(normalizeOrder)
+      : seed.orders,
+    attributes: Array.isArray(payload.attributes)
+      ? (payload.attributes as Record<string, unknown>[]).map(normalizeAttribute)
+      : seed.attributes,
+    warehouseLocations: Array.isArray(payload.warehouseLocations)
+      ? (payload.warehouseLocations as Record<string, unknown>[]).map(normalizeLocation)
+      : seed.warehouseLocations,
+    purchaseRequests: Array.isArray(payload.purchaseRequests)
+      ? (payload.purchaseRequests as Record<string, unknown>[]).map(normalizePurchaseRequest)
+      : seed.purchaseRequests,
+    purchaseOrders: Array.isArray(payload.purchaseOrders)
+      ? (payload.purchaseOrders as Record<string, unknown>[]).map(normalizePurchaseOrder)
+      : seed.purchaseOrders,
+    goodsReceipts: Array.isArray(payload.goodsReceipts)
+      ? (payload.goodsReceipts as Record<string, unknown>[]).map(normalizeGoodsReceipt)
+      : seed.goodsReceipts,
+    stockCounts: Array.isArray(payload.stockCounts)
+      ? (payload.stockCounts as Record<string, unknown>[]).map(normalizeStockCount)
+      : seed.stockCounts,
   }
 }
 
-export function AdminProvider({ children }: { children: ReactNode }) {
+export function AdminProvider({
+  children,
+  session = null,
+}: {
+  children: ReactNode
+  session?: SessionUser | null
+}) {
+  // La sesión la trae el layout del panel desde /auth/me; con ella se resuelven
+  // los permisos que la UI usa para mostrar u ocultar secciones y acciones.
+  const access = accessFromSession(session)
+  const can = createCan(access)
   const [data, setData] = useState<AdminData>(() => createSeedData())
   const [hydrated, setHydrated] = useState(false)
   const [catalogSource, setCatalogSource] = useState<'local' | 'api'>('local')
@@ -971,11 +1433,13 @@ export function AdminProvider({ children }: { children: ReactNode }) {
       setCommercialError(null)
     } catch (error) {
       setCommercialSource('local')
-      setCommercialError(
-        error instanceof CommercialApiError
-          ? error.message
-          : 'No se pudo cargar la información comercial desde la API. Se usa el respaldo local.'
-      )
+      if (!(error instanceof CommercialApiError && error.status === 503)) {
+        setCommercialError(
+          error instanceof CommercialApiError
+            ? error.message
+            : 'No se pudo cargar la información comercial desde la API. Se usa el respaldo local.'
+        )
+      }
       throw error
     }
   }
@@ -994,11 +1458,15 @@ export function AdminProvider({ children }: { children: ReactNode }) {
       setCatalogError(null)
     } catch (error) {
       setCatalogSource('local')
-      setCatalogError(
-        error instanceof CatalogApiError
-          ? error.message
-          : 'No se pudo cargar el catálogo desde la API. Se usa el respaldo local.'
-      )
+      // Arrancar sin base de datos es el modo local esperado del panel, así que la
+      // hidratación no lo notifica; los errores al guardar sí (syncCatalog).
+      if (!(error instanceof CatalogApiError && error.status === 503)) {
+        setCatalogError(
+          error instanceof CatalogApiError
+            ? error.message
+            : 'No se pudo cargar el catálogo desde la API. Se usa el respaldo local.'
+        )
+      }
       throw error
     }
   }
@@ -1617,6 +2085,725 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     )
 
     return deployment
+  }
+
+  function createUser(input: AdminUserInput): AdminUser {
+    const now = new Date().toISOString()
+    const user: AdminUser = {
+      ...input,
+      id: uid('usuario'),
+      name: input.name.trim(),
+      email: input.email.trim().toLowerCase(),
+      phone: input.phone.trim(),
+      createdAt: now,
+      updatedAt: now,
+    }
+    setData((prev) => ({ ...prev, users: [user, ...prev.users] }))
+    return user
+  }
+
+  function updateUser(id: string, input: AdminUserInput) {
+    const current = data.users.find((user) => user.id === id)
+    if (!current) return
+    setData((prev) => ({
+      ...prev,
+      users: prev.users.map((user) =>
+        user.id === id
+          ? {
+              ...user,
+              ...input,
+              name: input.name.trim(),
+              email: input.email.trim().toLowerCase(),
+              phone: input.phone.trim(),
+              lastLoginAt: current.lastLoginAt,
+              updatedAt: new Date().toISOString(),
+            }
+          : user
+      ),
+    }))
+  }
+
+  function removeUser(id: string) {
+    setData((prev) => ({ ...prev, users: prev.users.filter((user) => user.id !== id) }))
+  }
+
+  function setUserStatus(id: string, status: AdminUserStatus) {
+    const now = new Date().toISOString()
+    setData((prev) => ({
+      ...prev,
+      users: prev.users.map((user) =>
+        user.id === id ? { ...user, status, updatedAt: now } : user
+      ),
+    }))
+  }
+
+  function createSupplier(input: SupplierInput): Supplier {
+    const now = new Date().toISOString()
+    const supplier: Supplier = {
+      ...input,
+      id: uid('proveedor'),
+      name: input.name.trim(),
+      ruc: input.ruc.trim(),
+      createdAt: now,
+      updatedAt: now,
+    }
+    setData((prev) => ({ ...prev, suppliers: [supplier, ...prev.suppliers] }))
+    return supplier
+  }
+
+  function updateSupplier(id: string, input: SupplierInput) {
+    setData((prev) => ({
+      ...prev,
+      suppliers: prev.suppliers.map((supplier) =>
+        supplier.id === id
+          ? { ...supplier, ...input, name: input.name.trim(), updatedAt: new Date().toISOString() }
+          : supplier
+      ),
+    }))
+  }
+
+  function removeSupplier(id: string) {
+    setData((prev) => ({
+      ...prev,
+      suppliers: prev.suppliers.filter((supplier) => supplier.id !== id),
+    }))
+  }
+
+  function setSupplierStatus(id: string, status: SupplierStatus) {
+    setData((prev) => ({
+      ...prev,
+      suppliers: prev.suppliers.map((supplier) =>
+        supplier.id === id
+          ? { ...supplier, status, updatedAt: new Date().toISOString() }
+          : supplier
+      ),
+    }))
+  }
+
+  function nextOrderCode(prev: AdminData) {
+    const stamp = new Date().toISOString().slice(0, 10).replace(/-/g, '')
+    const taken = new Set(prev.orders.map((order) => order.code))
+    let index = 1
+    let code = `PED-${stamp}-01`
+    while (taken.has(code)) {
+      index += 1
+      code = `PED-${stamp}-${String(index).padStart(2, '0')}`
+    }
+    return code
+  }
+
+  function createOrder(input: OrderInput): Order {
+    const now = new Date().toISOString()
+    const order: Order = {
+      ...input,
+      id: uid('pedido'),
+      code: nextOrderCode(data),
+      status: 'pending',
+      deliveryEvents: [
+        {
+          id: uid('entrega'),
+          status: 'pending',
+          note: 'Pedido registrado desde el panel.',
+          at: now,
+        },
+      ],
+      createdAt: now,
+      updatedAt: now,
+    }
+    setData((prev) => ({ ...prev, orders: [order, ...prev.orders] }))
+    return order
+  }
+
+  function updateOrder(id: string, input: OrderInput) {
+    const current = data.orders.find((order) => order.id === id)
+    if (!current) return
+    setData((prev) => ({
+      ...prev,
+      orders: prev.orders.map((order) =>
+        order.id === id
+          ? { ...order, ...input, code: current.code, updatedAt: new Date().toISOString() }
+          : order
+      ),
+    }))
+  }
+
+  function removeOrder(id: string) {
+    setData((prev) => ({ ...prev, orders: prev.orders.filter((order) => order.id !== id) }))
+  }
+
+  // Mover el estado de un pedido deja huella en la trazabilidad de la entrega;
+  // al marcarlo entregado se dan por cerradas todas las líneas.
+  function setOrderStatus(id: string, input: OrderDeliveryInput) {
+    const current = data.orders.find((order) => order.id === id)
+    if (!current || current.status === input.status) return
+
+    const now = new Date().toISOString()
+    const isDelivery = input.status === 'delivered'
+    setData((prev) => ({
+      ...prev,
+      orders: prev.orders.map((order) =>
+        order.id === id
+          ? {
+              ...order,
+              status: input.status,
+              carrier: input.carrier !== undefined ? input.carrier.trim() : order.carrier,
+              trackingNumber:
+                input.trackingNumber !== undefined
+                  ? input.trackingNumber.trim()
+                  : order.trackingNumber,
+              recipientName:
+                input.recipientName !== undefined
+                  ? input.recipientName.trim()
+                  : order.recipientName,
+              expectedDeliveryAt:
+                input.expectedDeliveryAt !== undefined
+                  ? input.expectedDeliveryAt || undefined
+                  : order.expectedDeliveryAt,
+              deliveredAt: isDelivery ? (order.deliveredAt ?? now) : order.deliveredAt,
+              items: isDelivery
+                ? order.items.map((item) => ({ ...item, deliveredQuantity: item.quantity }))
+                : order.items,
+              deliveryEvents: [
+                ...order.deliveryEvents,
+                {
+                  id: uid('entrega'),
+                  status: input.status,
+                  note: input.note?.trim() || orderStatusLabels[input.status],
+                  at: now,
+                },
+              ],
+              updatedAt: now,
+            }
+          : order
+      ),
+    }))
+  }
+
+  function setOrderPayment(id: string, status: PaymentStatus) {
+    setData((prev) => ({
+      ...prev,
+      orders: prev.orders.map((order) =>
+        order.id === id
+          ? { ...order, paymentStatus: status, updatedAt: new Date().toISOString() }
+          : order
+      ),
+    }))
+  }
+
+  function createAttribute(input: ProductAttributeInput): ProductAttribute {
+    const now = new Date().toISOString()
+    const attribute: ProductAttribute = {
+      ...input,
+      id: uniqueId(slugify(input.label) || 'atributo', data.attributes.map((item) => item.id)),
+      label: input.label.trim(),
+      createdAt: now,
+      updatedAt: now,
+    }
+    setData((prev) => ({ ...prev, attributes: [attribute, ...prev.attributes] }))
+    return attribute
+  }
+
+  function updateAttribute(id: string, input: ProductAttributeInput) {
+    setData((prev) => ({
+      ...prev,
+      attributes: prev.attributes.map((attribute) =>
+        attribute.id === id
+          ? {
+              ...attribute,
+              ...input,
+              label: input.label.trim(),
+              updatedAt: new Date().toISOString(),
+            }
+          : attribute
+      ),
+    }))
+  }
+
+  function removeAttribute(id: string) {
+    setData((prev) => ({
+      ...prev,
+      attributes: prev.attributes.filter((attribute) => attribute.id !== id),
+    }))
+  }
+
+  function setAttributeStatus(id: string, status: AttributeStatus) {
+    setData((prev) => ({
+      ...prev,
+      attributes: prev.attributes.map((attribute) =>
+        attribute.id === id
+          ? { ...attribute, status, updatedAt: new Date().toISOString() }
+          : attribute
+      ),
+    }))
+  }
+
+  const actorName = session?.name?.trim() || 'Equipo de compras'
+
+  function nextDocumentCode(prefix: string, taken: string[]): string {
+    const year = new Date().getFullYear()
+    let index = 1
+    let code = `${prefix}-${year}-${String(index).padStart(3, '0')}`
+    while (taken.includes(code)) {
+      index += 1
+      code = `${prefix}-${year}-${String(index).padStart(3, '0')}`
+    }
+    return code
+  }
+
+  function createLocation(input: WarehouseLocationInput): WarehouseLocation {
+    const now = new Date().toISOString()
+    const location: WarehouseLocation = {
+      ...input,
+      id: uid(input.kind),
+      code: input.code.trim().toUpperCase(),
+      name: input.name.trim(),
+      createdAt: now,
+      updatedAt: now,
+    }
+    setData((prev) => ({
+      ...prev,
+      warehouseLocations: [
+        ...prev.warehouseLocations.map((item) =>
+          location.isDefault ? { ...item, isDefault: false } : item
+        ),
+        location,
+      ],
+    }))
+    return location
+  }
+
+  function updateLocation(id: string, input: WarehouseLocationInput) {
+    const now = new Date().toISOString()
+    setData((prev) => ({
+      ...prev,
+      warehouseLocations: prev.warehouseLocations.map((item) => {
+        if (item.id === id) {
+          return { ...item, ...input, id, code: input.code.trim().toUpperCase(), name: input.name.trim(), updatedAt: now }
+        }
+        return input.isDefault ? { ...item, isDefault: false } : item
+      }),
+    }))
+  }
+
+  function removeLocation(id: string): { ok: boolean; error?: string } {
+    const target = data.warehouseLocations.find((item) => item.id === id)
+    if (!target) return { ok: false, error: 'La ubicación no existe.' }
+    if (target.isDefault) return { ok: false, error: 'La ubicación predeterminada no se elimina.' }
+    if (data.products.some((product) => product.locationId === id)) {
+      return { ok: false, error: 'Hay productos asignados a esta ubicación.' }
+    }
+    if (data.warehouseLocations.some((item) => item.parentLocationId === id)) {
+      return { ok: false, error: 'Primero elimina las estanterías asociadas.' }
+    }
+    setData((prev) => ({
+      ...prev,
+      warehouseLocations: prev.warehouseLocations.filter((item) => item.id !== id),
+    }))
+    return { ok: true }
+  }
+
+  function createPurchaseRequest(input: PurchaseRequestInput): PurchaseRequest {
+    const now = new Date().toISOString()
+    const request: PurchaseRequest = {
+      ...input,
+      id: uid('solicitud-compra'),
+      code: nextDocumentCode('SC', data.purchaseRequests.map((item) => item.code)),
+      status: 'pending',
+      requestedBy: input.requestedBy?.trim() || actorName,
+      createdAt: now,
+      updatedAt: now,
+    }
+    setData((prev) => ({ ...prev, purchaseRequests: [request, ...prev.purchaseRequests] }))
+    return request
+  }
+
+  function updatePurchaseRequest(id: string, input: PurchaseRequestInput) {
+    setData((prev) => ({
+      ...prev,
+      purchaseRequests: prev.purchaseRequests.map((request) =>
+        request.id === id
+          ? { ...request, ...input, id, code: request.code, status: request.status, updatedAt: new Date().toISOString() }
+          : request
+      ),
+    }))
+  }
+
+  function removePurchaseRequest(id: string) {
+    setData((prev) => ({
+      ...prev,
+      purchaseRequests: prev.purchaseRequests.filter((request) => request.id !== id),
+    }))
+  }
+
+  function decidePurchaseRequest(
+    id: string,
+    status: PurchaseRequestStatus,
+    note?: string
+  ): { ok: boolean; error?: string } {
+    const current = data.purchaseRequests.find((request) => request.id === id)
+    if (!current) return { ok: false, error: 'La solicitud no existe.' }
+    if (current.status === 'ordered') {
+      return { ok: false, error: 'La solicitud ya fue convertida en una orden de compra.' }
+    }
+    if (!['pending', 'approved', 'rejected', 'cancelled'].includes(status)) {
+      return { ok: false, error: 'La decisión seleccionada no es válida.' }
+    }
+    const now = new Date().toISOString()
+    setData((prev) => ({
+      ...prev,
+      purchaseRequests: prev.purchaseRequests.map((request) =>
+        request.id === id
+          ? {
+              ...request,
+              status,
+              decisionNote: note?.trim() || request.decisionNote,
+              decidedBy: actorName,
+              decidedAt: now,
+              updatedAt: now,
+            }
+          : request
+      ),
+    }))
+    return { ok: true }
+  }
+
+  function convertRequestToOrder(id: string): PurchaseOrder | null {
+    const request = data.purchaseRequests.find((item) => item.id === id)
+    if (!request || request.status !== 'approved') return null
+    const now = new Date().toISOString()
+    const order: PurchaseOrder = {
+      id: uid('orden-compra'),
+      code: nextDocumentCode('OC', data.purchaseOrders.map((item) => item.code)),
+      supplierId: request.supplierId ?? '',
+      supplierName: request.supplierName ?? '',
+      status: 'draft',
+      currency: 'PEN',
+      requestId: request.id,
+      requestCode: request.code,
+      expectedAt: request.neededBy,
+      lines: request.lines.map((line) => ({
+        productId: line.productId,
+        productName: line.productName,
+        sku: line.sku,
+        quantity: line.quantity,
+        receivedQuantity: 0,
+        unitCost: line.unitCost ?? data.products.find((p) => p.id === line.productId)?.cost ?? 0,
+        note: line.note,
+      })),
+      notes: request.justification,
+      createdBy: request.requestedBy,
+      createdAt: now,
+      updatedAt: now,
+    }
+    setData((prev) => ({
+      ...prev,
+      purchaseOrders: [order, ...prev.purchaseOrders],
+      purchaseRequests: prev.purchaseRequests.map((item) =>
+        item.id === id ? { ...item, status: 'ordered', updatedAt: now } : item
+      ),
+    }))
+    return order
+  }
+
+  function createPurchaseOrder(input: PurchaseOrderInput): PurchaseOrder {
+    const now = new Date().toISOString()
+    const order: PurchaseOrder = {
+      ...input,
+      id: uid('orden-compra'),
+      code: nextDocumentCode('OC', data.purchaseOrders.map((item) => item.code)),
+      status: 'draft',
+      createdBy: input.createdBy?.trim() || actorName,
+      lines: input.lines.map((line) => ({
+        productId: line.productId,
+        productName: line.productName,
+        sku: line.sku,
+        quantity: Math.max(Math.trunc(line.quantity) || 0, 0),
+        receivedQuantity: 0,
+        unitCost: Math.max(line.unitCost || 0, 0),
+        note: line.note,
+      })),
+      createdAt: now,
+      updatedAt: now,
+    }
+    setData((prev) => ({ ...prev, purchaseOrders: [order, ...prev.purchaseOrders] }))
+    return order
+  }
+
+  function updatePurchaseOrder(id: string, input: PurchaseOrderInput) {
+    const current = data.purchaseOrders.find((item) => item.id === id)
+    if (!current) return
+    setData((prev) => ({
+      ...prev,
+      purchaseOrders: prev.purchaseOrders.map((order) =>
+        order.id === id
+          ? {
+              ...order,
+              ...input,
+              id,
+              code: current.code,
+              status: current.status,
+              lines: input.lines.map((line) => {
+                const previous = current.lines.find((item) => item.productId === line.productId)
+                return {
+                  productId: line.productId,
+                  productName: line.productName,
+                  sku: line.sku,
+                  quantity: Math.max(Math.trunc(line.quantity) || 0, 0),
+                  receivedQuantity: Math.min(previous?.receivedQuantity ?? 0, Math.max(Math.trunc(line.quantity) || 0, 0)),
+                  unitCost: Math.max(line.unitCost || 0, 0),
+                  note: line.note,
+                }
+              }),
+              updatedAt: new Date().toISOString(),
+            }
+          : order
+      ),
+    }))
+  }
+
+  function removePurchaseOrder(id: string) {
+    setData((prev) => ({
+      ...prev,
+      purchaseOrders: prev.purchaseOrders.filter((order) => order.id !== id),
+    }))
+  }
+
+  function setPurchaseOrderStatus(id: string, status: PurchaseOrderStatus) {
+    setData((prev) => ({
+      ...prev,
+      purchaseOrders: prev.purchaseOrders.map((order) =>
+        order.id === id
+          ? { ...order, status, updatedAt: new Date().toISOString() }
+          : order
+      ),
+    }))
+  }
+
+  function registerGoodsReceipt(
+    input: GoodsReceiptInput
+  ): { ok: boolean; error?: string; receipt?: GoodsReceipt } {
+    const order = data.purchaseOrders.find((item) => item.id === input.purchaseOrderId)
+    if (!order) return { ok: false, error: 'Selecciona una orden de compra válida.' }
+    if (order.status === 'cancelled') return { ok: false, error: 'La orden está anulada.' }
+    if (order.status === 'received') return { ok: false, error: 'La orden ya fue recibida por completo.' }
+
+    const pendingByProduct = new Map(
+      order.lines.map((line) => [line.productId, line.quantity - line.receivedQuantity])
+    )
+    const lines = input.lines
+      .map((line) => ({
+        productId: line.productId,
+        productName: line.productName,
+        sku: line.sku,
+        orderedQuantity: line.orderedQuantity ?? order.lines.find((item) => item.productId === line.productId)?.quantity ?? 0,
+        receivedQuantity: Math.max(Math.trunc(line.receivedQuantity) || 0, 0),
+        rejectedQuantity: Math.max(Math.trunc(line.rejectedQuantity) || 0, 0),
+        locationId: line.locationId,
+        note: line.note,
+      }))
+      .filter((line) => line.receivedQuantity > 0 || line.rejectedQuantity > 0)
+
+    if (lines.length === 0) return { ok: false, error: 'Registra al menos una unidad recibida.' }
+
+    for (const line of lines) {
+      const product = data.products.find((item) => item.id === line.productId)
+      if (!product) return { ok: false, error: 'Una de las líneas no corresponde a un producto del catálogo.' }
+      const pending = pendingByProduct.get(line.productId) ?? 0
+      if (line.receivedQuantity > pending) {
+        return { ok: false, error: `${product.name}: solo faltan ${pending} unidades por recibir.` }
+      }
+    }
+
+    const now = new Date().toISOString()
+    const receipt: GoodsReceipt = {
+      ...input,
+      id: uid('recepcion'),
+      code: nextDocumentCode('RC', data.goodsReceipts.map((item) => item.code)),
+      purchaseOrderCode: order.code,
+      supplierName: input.supplierName?.trim() || order.supplierName,
+      receivedBy: input.receivedBy?.trim() || actorName,
+      receivedAt: input.receivedAt || now,
+      lines,
+      createdAt: now,
+    }
+
+    const movements = lines
+      .filter((line) => line.receivedQuantity > 0)
+      .map((line) => {
+        const product = data.products.find((item) => item.id === line.productId)!
+        const orderLine = order.lines.find((item) => item.productId === line.productId)
+        return buildMovement({
+          product,
+          type: 'in',
+          quantity: line.receivedQuantity,
+          previousStock: product.stock,
+          resultingStock: product.stock + line.receivedQuantity,
+          reason: 'Compra a proveedor',
+          note: `Recepción ${receipt.code} de la orden ${order.code}.`,
+          at: receipt.receivedAt,
+          unitCost: orderLine?.unitCost ?? product.cost,
+          sourceType: 'purchase_receipt',
+          sourceId: receipt.id,
+          sourceCode: receipt.code,
+          locationId: line.locationId ?? product.locationId,
+          actor: receipt.receivedBy,
+        })
+      })
+
+    const receivedByProduct = new Map(lines.map((line) => [line.productId, line.receivedQuantity]))
+
+    setData((prev) => {
+      const updatedOrders = prev.purchaseOrders.map((item) => {
+        if (item.id !== order.id) return item
+        const updatedLines = item.lines.map((line) => ({
+          ...line,
+          receivedQuantity: line.receivedQuantity + (receivedByProduct.get(line.productId) ?? 0),
+        }))
+        const complete = updatedLines.every((line) => line.receivedQuantity >= line.quantity)
+        return {
+          ...item,
+          lines: updatedLines,
+          status: complete ? ('received' as const) : ('partial' as const),
+          updatedAt: now,
+        }
+      })
+      return {
+        ...prev,
+        goodsReceipts: [receipt, ...prev.goodsReceipts],
+        purchaseOrders: updatedOrders,
+        products: prev.products.map((product) => {
+          const added = receivedByProduct.get(product.id)
+          return added ? { ...product, stock: product.stock + added, updatedAt: now } : product
+        }),
+        inventoryMovements: prependMovements(prev, movements),
+      }
+    })
+
+    return { ok: true, receipt }
+  }
+
+  function createStockCount(input: StockCountInput): StockCount {
+    const now = new Date().toISOString()
+    const count: StockCount = {
+      ...input,
+      id: uid('conteo'),
+      code: nextDocumentCode('CT', data.stockCounts.map((item) => item.code)),
+      status: 'open',
+      countedBy: input.countedBy?.trim() || actorName,
+      startedAt: now,
+      lines: input.lines.map((line) => ({
+        productId: line.productId,
+        productName: line.productName,
+        sku: line.sku,
+        systemQuantity: data.products.find((product) => product.id === line.productId)?.stock ?? 0,
+        countedQuantity: line.countedQuantity ?? null,
+        locationId: line.locationId,
+        note: line.note,
+      })),
+    }
+    setData((prev) => ({ ...prev, stockCounts: [count, ...prev.stockCounts] }))
+    return count
+  }
+
+  function recordStockCountLine(
+    id: string,
+    input: { productId: string; countedQuantity: number | null; note?: string }
+  ) {
+    setData((prev) => ({
+      ...prev,
+      stockCounts: prev.stockCounts.map((count) =>
+        count.id === id && count.status === 'open'
+          ? {
+              ...count,
+              lines: count.lines.map((line) =>
+                line.productId === input.productId
+                  ? {
+                      ...line,
+                      countedQuantity:
+                        input.countedQuantity === null
+                          ? null
+                          : Math.max(Math.trunc(input.countedQuantity) || 0, 0),
+                      note: input.note ?? line.note,
+                    }
+                  : line
+              ),
+            }
+          : count
+      ),
+    }))
+  }
+
+  function postStockCount(id: string): { ok: boolean; error?: string } {
+    const count = data.stockCounts.find((item) => item.id === id)
+    if (!count) return { ok: false, error: 'El conteo no existe.' }
+    if (count.status !== 'open') return { ok: false, error: 'El conteo ya fue contabilizado o anulado.' }
+
+    const differences = count.lines.filter(
+      (line) => line.countedQuantity !== null && line.countedQuantity !== line.systemQuantity
+    )
+    if (differences.length === 0) {
+      return { ok: false, error: 'No hay diferencias que ajustar: captura al menos un conteo distinto al sistema.' }
+    }
+
+    const now = new Date().toISOString()
+    const movements = differences
+      .filter((line) => data.products.some((product) => product.id === line.productId))
+      .map((line) => {
+        const product = data.products.find((item) => item.id === line.productId)!
+        const counted = line.countedQuantity as number
+        return buildMovement({
+          product,
+          type: 'adjustment',
+          quantity: counted,
+          previousStock: product.stock,
+          resultingStock: counted,
+          reason: 'Conteo físico',
+          note: `Ajuste por ${count.code}: el conteo marcó ${counted} uds. contra ${line.systemQuantity} del sistema.`,
+          at: now,
+          unitCost: product.cost,
+          sourceType: 'stock_count',
+          sourceId: count.id,
+          sourceCode: count.code,
+          locationId: line.locationId ?? product.locationId,
+          actor: count.countedBy,
+        })
+      })
+
+    const countedByProduct = new Map(differences.map((line) => [line.productId, line.countedQuantity as number]))
+
+    setData((prev) => ({
+      ...prev,
+      stockCounts: prev.stockCounts.map((item) =>
+        item.id === id
+          ? {
+              ...item,
+              status: 'posted',
+              finishedAt: now,
+              lines: item.lines.map((line) => ({
+                ...line,
+                systemQuantity: prev.products.find((product) => product.id === line.productId)?.stock ?? line.systemQuantity,
+              })),
+            }
+          : item
+      ),
+      products: prev.products.map((product) => {
+        const counted = countedByProduct.get(product.id)
+        return counted === undefined ? product : { ...product, stock: counted, updatedAt: now }
+      }),
+      inventoryMovements: prependMovements(prev, movements),
+    }))
+    return { ok: true }
+  }
+
+  function cancelStockCount(id: string) {
+    setData((prev) => ({
+      ...prev,
+      stockCounts: prev.stockCounts.map((count) =>
+        count.id === id && count.status === 'open'
+          ? { ...count, status: 'cancelled', finishedAt: new Date().toISOString() }
+          : count
+      ),
+    }))
   }
 
   function addCategory(label: string) {
@@ -2475,10 +3662,14 @@ export function AdminProvider({ children }: { children: ReactNode }) {
     setData(parseData(raw))
   }
 
-  return (
-    <AdminContext.Provider
-      value={{
+  const toast = useToast()
+
+  // Todas las escrituras del respaldo local se declaran en un mismo objeto para
+  // pasar por el guard de permisos: sin permiso no hay mutación ni datos falsos.
+  const contextValue: AdminContextValue = {
         hydrated,
+        access,
+        can,
         catalogSource,
         catalogError,
         refreshCatalog,
@@ -2506,6 +3697,32 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         activity: data.activity,
         inventoryMovements: data.inventoryMovements,
         webProjects: data.webProjects,
+        users: data.users,
+        suppliers: data.suppliers,
+        orders: data.orders,
+        attributes: data.attributes,
+        warehouseLocations: data.warehouseLocations,
+        purchaseRequests: data.purchaseRequests,
+        purchaseOrders: data.purchaseOrders,
+        goodsReceipts: data.goodsReceipts,
+        stockCounts: data.stockCounts,
+        createLocation,
+        updateLocation,
+        removeLocation,
+        createPurchaseRequest,
+        updatePurchaseRequest,
+        removePurchaseRequest,
+        decidePurchaseRequest,
+        convertRequestToOrder,
+        createPurchaseOrder,
+        updatePurchaseOrder,
+        removePurchaseOrder,
+        setPurchaseOrderStatus,
+        registerGoodsReceipt,
+        createStockCount,
+        recordStockCountLine,
+        postStockCount,
+        cancelStockCount,
         createProduct,
         updateProduct,
         unlinkProductTaxonomy,
@@ -2520,6 +3737,23 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         updateProject,
         deleteProject,
         registerDeployment,
+        createUser,
+        updateUser,
+        removeUser,
+        setUserStatus,
+        createSupplier,
+        updateSupplier,
+        removeSupplier,
+        setSupplierStatus,
+        createOrder,
+        updateOrder,
+        removeOrder,
+        setOrderStatus,
+        setOrderPayment,
+        createAttribute,
+        updateAttribute,
+        removeAttribute,
+        setAttributeStatus,
         addCategory,
         updateCategory,
         renameCategory,
@@ -2551,7 +3785,13 @@ export function AdminProvider({ children }: { children: ReactNode }) {
         resetData,
         exportData,
         importData,
-      }}
+  }
+
+  return (
+    <AdminContext.Provider
+      value={withMutationGuard(contextValue, can, (message) =>
+        toast.error('Acción no permitida', message)
+      )}
     >
       {children}
     </AdminContext.Provider>

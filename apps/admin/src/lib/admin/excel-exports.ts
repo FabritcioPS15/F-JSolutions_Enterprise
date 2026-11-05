@@ -18,6 +18,16 @@ import {
 } from './format'
 import type { DatasetExport } from './dataset-export'
 import {
+  attributeTypeLabels,
+  deliveryMethodLabels,
+  orderStatusLabels,
+  orderUnits,
+  paymentStatusLabels,
+  roleLabels,
+  supplierStatusLabels,
+  userStatusLabels,
+} from './operations'
+import {
   buildSheet,
   excelDate,
   type ExcelColumn,
@@ -28,15 +38,20 @@ import type {
   ActivityType,
   AdminData,
   AdminProduct,
+  AdminUser,
   Brand,
   Category,
   Client,
   Currency,
   InventoryMovement,
+  Order,
+  OrderLine,
+  ProductAttribute,
   Quote,
   QuoteLine,
   ServiceRequest,
   StoreSettings,
+  Supplier,
   WebProject,
   WebProjectDeployment,
 } from './types'
@@ -610,6 +625,203 @@ function settingsSheet(settings: StoreSettings): ExcelSheet[] {
   return [buildSheet('Configuración', columns, rows)]
 }
 
+type OrderLineRow = { order: Order; line: OrderLine }
+
+function orderSheets(orders: Order[], currency: Currency, igv: number): ExcelSheet[] {
+  const columns: ExcelColumn<Order>[] = [
+    { header: 'Código', width: 20, getValue: (order) => order.code },
+    { header: 'Estado', width: 16, getValue: (order) => orderStatusLabels[order.status] },
+    { header: 'Pago', width: 14, getValue: (order) => paymentStatusLabels[order.paymentStatus] },
+    { header: 'Cliente', width: 24, getValue: (order) => order.clientName },
+    { header: 'Correo', width: 28, getValue: (order) => order.clientEmail },
+    { header: 'Teléfono', width: 16, getValue: (order) => order.clientPhone },
+    { header: 'Cotización', width: 20, getValue: (order) => order.quoteCode ?? '' },
+    { header: 'Entrega', width: 18, getValue: (order) => deliveryMethodLabels[order.deliveryMethod] },
+    { header: 'Dirección', width: 34, getValue: (order) => order.deliveryAddress, wrap: true },
+    { header: 'Recibe', width: 22, getValue: (order) => order.recipientName },
+    { header: 'Courier', width: 18, getValue: (order) => order.carrier },
+    { header: 'Guía', width: 18, getValue: (order) => order.trackingNumber },
+    {
+      header: 'Fecha esperada',
+      width: 16,
+      getValue: (order) => (order.expectedDeliveryAt ? excelDate(order.expectedDeliveryAt) : ''),
+      format: dateOnly,
+    },
+    {
+      header: 'Entregado',
+      width: 18,
+      getValue: (order) => (order.deliveredAt ? excelDate(order.deliveredAt) : 'Pendiente'),
+      format: dateTime,
+    },
+    { header: 'Unidades', width: 11, getValue: (order) => orderUnits(order).ordered, format: integer },
+    { header: 'Entregadas', width: 12, getValue: (order) => orderUnits(order).delivered, format: integer },
+    {
+      header: `Total (${currency})`,
+      width: 14,
+      getValue: (order) => quoteTotals(order.items, igv).total,
+      format: money,
+    },
+    { header: 'Notas', width: 36, getValue: (order) => order.notes, wrap: true },
+    {
+      header: 'Creado',
+      width: 18,
+      getValue: (order) => excelDate(order.createdAt),
+      format: dateTime,
+    },
+  ]
+
+  const lineColumns: ExcelColumn<OrderLineRow>[] = [
+    { header: 'Código', width: 20, getValue: (row) => row.order.code },
+    { header: 'Estado', width: 16, getValue: (row) => orderStatusLabels[row.order.status] },
+    { header: 'Producto', width: 34, getValue: (row) => row.line.name, wrap: true },
+    { header: 'SKU', width: 16, getValue: (row) => row.line.sku ?? '' },
+    { header: 'Pedido', width: 11, getValue: (row) => row.line.quantity, format: integer },
+    { header: 'Entregado', width: 12, getValue: (row) => row.line.deliveredQuantity, format: integer },
+    {
+      header: `Unitario (${currency})`,
+      width: 15,
+      getValue: (row) => row.line.unitPrice,
+      format: money,
+    },
+    {
+      header: `Importe (${currency})`,
+      width: 15,
+      getValue: (row) => row.line.quantity * row.line.unitPrice,
+      format: money,
+    },
+  ]
+
+  const lineRows: OrderLineRow[] = orders.flatMap((order) =>
+    order.items.map((line) => ({ order, line }))
+  )
+
+  return [
+    buildSheet('Pedidos', columns, orders),
+    buildSheet('Líneas de pedido', lineColumns, lineRows),
+  ]
+}
+
+function supplierSheets(suppliers: Supplier[], currency: Currency): ExcelSheet[] {
+  const columns: ExcelColumn<Supplier>[] = [
+    { header: 'Proveedor', width: 34, getValue: (supplier) => supplier.name, wrap: true },
+    { header: 'RUC', width: 15, getValue: (supplier) => supplier.ruc },
+    { header: 'Estado', width: 13, getValue: (supplier) => supplierStatusLabels[supplier.status] },
+    { header: 'Contacto', width: 26, getValue: (supplier) => supplier.contactName },
+    { header: 'Correo', width: 28, getValue: (supplier) => supplier.email },
+    { header: 'Teléfono', width: 16, getValue: (supplier) => supplier.phone },
+    { header: 'Ciudad', width: 16, getValue: (supplier) => supplier.city },
+    { header: 'Dirección', width: 34, getValue: (supplier) => supplier.address, wrap: true },
+    { header: 'Plazo (días)', width: 14, getValue: (supplier) => supplier.leadTimeDays, format: integer },
+    {
+      header: `Mínimo (${currency})`,
+      width: 16,
+      getValue: (supplier) => supplier.minimumOrder,
+      format: money,
+    },
+    { header: 'Calificación', width: 14, getValue: (supplier) => supplier.rating, format: '0.0' },
+    { header: 'Notas', width: 40, getValue: (supplier) => supplier.notes, wrap: true },
+  ]
+
+  return [buildSheet('Proveedores', columns, suppliers)]
+}
+
+function userSheets(users: AdminUser[]): ExcelSheet[] {
+  const columns: ExcelColumn<AdminUser>[] = [
+    { header: 'Nombre', width: 28, getValue: (user) => user.name },
+    { header: 'Correo', width: 32, getValue: (user) => user.email },
+    { header: 'Teléfono', width: 16, getValue: (user) => user.phone },
+    { header: 'Rol', width: 20, getValue: (user) => roleLabels[user.role] },
+    { header: 'Estado', width: 14, getValue: (user) => userStatusLabels[user.status] },
+    {
+      header: '2FA',
+      width: 10,
+      align: 'center',
+      getValue: (user) => (user.twoFactorEnabled ? 'Sí' : 'No'),
+    },
+    {
+      header: 'Último acceso',
+      width: 18,
+      getValue: (user) => (user.lastLoginAt ? excelDate(user.lastLoginAt) : 'Nunca'),
+      format: dateTime,
+    },
+    {
+      header: 'Creado',
+      width: 18,
+      getValue: (user) => excelDate(user.createdAt),
+      format: dateTime,
+    },
+  ]
+
+  return [buildSheet('Usuarios', columns, users)]
+}
+
+function attributeSheets(attributes: ProductAttribute[]): ExcelSheet[] {
+  const columns: ExcelColumn<ProductAttribute>[] = [
+    { header: 'Atributo', width: 30, getValue: (attribute) => attribute.label },
+    { header: 'Tipo', width: 18, getValue: (attribute) => attributeTypeLabels[attribute.type] },
+    { header: 'Unidad', width: 12, getValue: (attribute) => attribute.unit },
+    { header: 'Opciones', width: 40, getValue: (attribute) => attribute.options.join(' · '), wrap: true },
+    { header: 'Palabras clave', width: 34, getValue: (attribute) => attribute.keywords.join(' · '), wrap: true },
+    {
+      header: 'Ámbito',
+      width: 26,
+      getValue: (attribute) =>
+        attribute.categoryIds.length === 0
+          ? 'Todas las categorías'
+          : attribute.categoryIds.join(', '),
+      wrap: true,
+    },
+    {
+      header: 'Obligatorio',
+      width: 13,
+      align: 'center',
+      getValue: (attribute) => (attribute.required ? 'Sí' : 'No'),
+    },
+    {
+      header: 'Estado',
+      width: 13,
+      getValue: (attribute) => (attribute.status === 'active' ? 'Activo' : 'Inactivo'),
+    },
+  ]
+
+  return [buildSheet('Atributos', columns, attributes)]
+}
+
+export function ordersDataset(
+  orders: Order[],
+  currency: Currency,
+  igv: number
+): DatasetExport {
+  return {
+    prefix: 'pedidos',
+    title: 'Pedidos y entregas',
+    json: orders,
+    sheets: orderSheets(orders, currency, igv),
+  }
+}
+
+export function suppliersDataset(suppliers: Supplier[], currency: Currency): DatasetExport {
+  return {
+    prefix: 'proveedores',
+    title: 'Proveedores',
+    json: suppliers,
+    sheets: supplierSheets(suppliers, currency),
+  }
+}
+
+export function usersDataset(users: AdminUser[]): DatasetExport {
+  return { prefix: 'usuarios', title: 'Usuarios y permisos', json: users, sheets: userSheets(users) }
+}
+
+export function attributesDataset(attributes: ProductAttribute[]): DatasetExport {
+  return {
+    prefix: 'atributos',
+    title: 'Atributos y especificaciones',
+    json: attributes,
+    sheets: attributeSheets(attributes),
+  }
+}
+
 export function productsDataset(products: AdminProduct[], currency: Currency): DatasetExport {
   return {
     prefix: 'productos',
@@ -707,8 +919,12 @@ export function backupDataset(data: AdminData): DatasetExport {
       ...categorySheets(data.categories),
       ...brandSheets(brandRows),
       ...quoteSheets(data.quotes, data.settings.currency, data.settings.igv),
+      ...orderSheets(data.orders, data.settings.currency, data.settings.igv),
       ...clientSheets(data.clients),
+      ...supplierSheets(data.suppliers, data.settings.currency),
       ...requestSheets(data.requests),
+      ...attributeSheets(data.attributes),
+      ...userSheets(data.users),
       ...activitySheets(data.activity),
       ...settingsSheet(data.settings),
     ],

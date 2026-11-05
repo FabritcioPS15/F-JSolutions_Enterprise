@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { actionForMethod } from '@/lib/admin/access'
+import { guardPermission } from '@/lib/auth/guard'
 import { apiBaseUrl, getAccessToken } from '@/lib/auth/session'
 
 const ALLOWED_SEGMENT = /^[A-Za-z0-9._-]+$/
@@ -36,6 +38,11 @@ async function forward(request: NextRequest) {
   const method = request.method
   const hasBody = method !== 'GET' && method !== 'HEAD'
   const body = hasBody ? await request.text() : undefined
+
+  // El verbo HTTP define la acción del catálogo; los despliegues los sigue
+  // validando la API con projects.manage-deployments.
+  const guard = await guardPermission('projects', actionForMethod(method))
+  if (!guard.ok) return guard.response
 
   try {
     const response = await fetch(target, {

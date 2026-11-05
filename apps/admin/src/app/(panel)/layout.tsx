@@ -13,10 +13,12 @@ export default async function PanelLayout({
   if (!user) redirect('/login')
 
   return (
-    <AdminProvider>
-      <ToastProvider>
+    // ToastProvider va por fuera: el provider de datos necesita el aviso para
+    // explicar por qué el rol bloqueó una mutación.
+    <ToastProvider>
+      <AdminProvider session={user}>
         <AdminShell user={user}>{children}</AdminShell>
-      </ToastProvider>
-    </AdminProvider>
+      </AdminProvider>
+    </ToastProvider>
   )
 }

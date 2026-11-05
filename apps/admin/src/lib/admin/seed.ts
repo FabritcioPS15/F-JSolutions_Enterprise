@@ -2,12 +2,26 @@ import type {
   ActivityEntry,
   AdminData,
   AdminProduct,
+  AdminUser,
   Brand,
   Category,
   Client,
+  GoodsReceipt,
   InventoryMovement,
+  MovementSourceType,
+  Order,
+  ProductAttribute,
+  PurchaseOrder,
+  PurchaseOrderLine,
+  PurchaseOrderStatus,
+  PurchaseRequest,
+  PurchaseRequestLine,
   Quote,
+  StockCount,
+  StockCountLine,
   StoreSettings,
+  Supplier,
+  WarehouseLocation,
   WebProject,
 } from './types'
 import { slugify } from './format'
@@ -1336,6 +1350,1233 @@ const webProjects: WebProject[] = [
   },
 ]
 
+const users: AdminUser[] = [
+  {
+    id: 'usuario-diego-fuentes',
+    name: 'Diego Fuentes Chávez',
+    email: 'admin@fjsolutions.com.pe',
+    phone: '+51 912 445 780',
+    role: 'superadmin',
+    status: 'active',
+    twoFactorEnabled: true,
+    lastLoginAt: '2026-11-05T08:12:00.000Z',
+    createdAt: '2025-09-01T08:00:00.000Z',
+    updatedAt: '2026-11-05T08:12:00.000Z',
+  },
+  {
+    id: 'usuario-maritza-leon',
+    name: 'Maritza León Galvez',
+    email: 'maritza.leon@fjsolutions.com.pe',
+    phone: '+51 964 118 205',
+    role: 'admin',
+    status: 'active',
+    twoFactorEnabled: true,
+    lastLoginAt: '2026-11-04T18:35:00.000Z',
+    createdAt: '2025-11-17T15:20:00.000Z',
+    updatedAt: '2026-11-04T18:35:00.000Z',
+  },
+  {
+    id: 'usuario-carlos-palomino',
+    name: 'Carlos Palomino Rueda',
+    email: 'ventas@fjsolutions.com.pe',
+    phone: '+51 977 302 145',
+    role: 'ventas',
+    status: 'active',
+    twoFactorEnabled: false,
+    lastLoginAt: '2026-11-05T09:05:00.000Z',
+    createdAt: '2026-02-09T10:45:00.000Z',
+    updatedAt: '2026-11-05T09:05:00.000Z',
+  },
+  {
+    id: 'usuario-silvia-ccama',
+    name: 'Silvia Ccama Huamán',
+    email: 'silvia.ccama@fjsolutions.com.pe',
+    phone: '',
+    role: 'ventas',
+    status: 'invited',
+    twoFactorEnabled: false,
+    createdAt: '2026-10-30T12:10:00.000Z',
+    updatedAt: '2026-10-30T12:10:00.000Z',
+  },
+  {
+    id: 'usuario-rafael-mendoza',
+    name: 'Rafael Mendoza Rivas',
+    email: 'soporte@fjsolutions.com.pe',
+    phone: '+51 951 776 020',
+    role: 'soporte',
+    status: 'active',
+    twoFactorEnabled: false,
+    lastLoginAt: '2026-11-03T21:40:00.000Z',
+    createdAt: '2026-03-24T09:30:00.000Z',
+    updatedAt: '2026-11-03T21:40:00.000Z',
+  },
+  {
+    id: 'usuario-violeta-nunez',
+    name: 'Violeta Núñez Prado',
+    email: 'violeta.nunez@contabilidadperuana.pe',
+    phone: '+51 998 640 133',
+    role: 'consulta',
+    status: 'disabled',
+    twoFactorEnabled: false,
+    lastLoginAt: '2026-09-28T16:50:00.000Z',
+    createdAt: '2026-05-06T11:05:00.000Z',
+    updatedAt: '2026-10-15T10:00:00.000Z',
+  },
+]
+
+const suppliers: Supplier[] = [
+  {
+    id: 'prov-insumos-andina',
+    name: 'Insumos y Distribución Andina S.A.C.',
+    ruc: '20654120019',
+    contactName: 'Miguel Ángel Sifuentes',
+    email: 'msifuentes@insumosandina.pe',
+    phone: '+51 1 640 2210',
+    city: 'Lima',
+    address: 'Av. Petit Thouars 3120, Lince',
+    categoryIds: ['impresoras-escaneres', 'componentes', 'cables-energia'],
+    leadTimeDays: 5,
+    minimumOrder: 2000,
+    rating: 4.5,
+    status: 'active',
+    notes: 'Tóner, tambores y consumibles con stock permanente. Acepta devoluciones por garantía.',
+    createdAt: '2025-10-06T09:00:00.000Z',
+    updatedAt: '2026-10-21T14:20:00.000Z',
+  },
+  {
+    id: 'prov-computrade',
+    name: 'CompuTrade Perú S.A.C.',
+    ruc: '20601874521',
+    contactName: 'Patricia Delgado Belmonte',
+    email: 'pdelgado@computrade.pe',
+    phone: '+51 1 512 8890',
+    city: 'Lima',
+    address: 'Jr. de la Unión 630, Cercado de Lima',
+    categoryIds: ['laptops', 'pc-servidores', 'monitores'],
+    leadTimeDays: 8,
+    minimumOrder: 5000,
+    rating: 4.2,
+    status: 'active',
+    notes: 'Distribuidor autorizado de Lenovo y Dell para la línea empresarial.',
+    createdAt: '2025-08-19T10:30:00.000Z',
+    updatedAt: '2026-11-02T09:15:00.000Z',
+  },
+  {
+    id: 'prov-tecno-norte',
+    name: 'Tecno Norte Distribuidor',
+    ruc: '20598874123',
+    contactName: 'Álvaro Castro Peña',
+    email: 'acastro@tecnonorte.pe',
+    phone: '+51 44 602 118',
+    city: 'Trujillo',
+    address: 'Jr. Independencia 545, Centro Histórico',
+    categoryIds: ['redes', 'accesorios', 'perifericos'],
+    leadTimeDays: 4,
+    minimumOrder: 1200,
+    rating: 3.8,
+    status: 'active',
+    notes: 'Mejor precio en networking TP-Link y Ubiquiti; entregas los martes y viernes.',
+    createdAt: '2026-01-13T08:45:00.000Z',
+    updatedAt: '2026-09-30T16:10:00.000Z',
+  },
+  {
+    id: 'prov-global-storage',
+    name: 'Global Storage Imports',
+    ruc: '20633214987',
+    contactName: 'Karina Huanca Ortiz',
+    email: 'khuanca@globalstorage.lat',
+    phone: '+51 1 397 4402',
+    city: 'Callao',
+    address: 'Av. José Gálvez 1850, Callao',
+    categoryIds: ['almacenamiento', 'componentes'],
+    leadTimeDays: 15,
+    minimumOrder: 8000,
+    rating: 4.0,
+    status: 'active',
+    notes: 'Importa SSD y HDD por contenedor. Anticipar los pedidos tres semanas.',
+    createdAt: '2025-12-02T11:20:00.000Z',
+    updatedAt: '2026-10-08T10:05:00.000Z',
+  },
+  {
+    id: 'prov-software-latam',
+    name: 'Software Licensing Latam',
+    ruc: '20677451203',
+    contactName: 'Renée Bertot',
+    email: 'rbertot@softwarelatam.co',
+    phone: '+51 1 705 8844',
+    city: 'Lima',
+    address: 'Av. Javier Prado Este 465, Santiago de Surco',
+    categoryIds: ['software'],
+    leadTimeDays: 2,
+    minimumOrder: 900,
+    rating: 4.7,
+    status: 'active',
+    notes: 'Licencias Microsoft y Adobe por suscripción. Entrega inmediata por correo.',
+    createdAt: '2026-03-05T15:00:00.000Z',
+    updatedAt: '2026-10-29T13:35:00.000Z',
+  },
+  {
+    id: 'prov-smart-gaming',
+    name: 'Smart Gaming Distribution',
+    ruc: '20550129876',
+    contactName: 'Gianfranco Poggi',
+    email: 'gpoggi@smartgaming.pe',
+    phone: '+51 1 447 6621',
+    city: 'Lima',
+    address: 'Av. La Marina 2450, San Miguel',
+    categoryIds: ['gaming', 'audio-video'],
+    leadTimeDays: 6,
+    minimumOrder: 1500,
+    rating: 3.2,
+    status: 'inactive',
+    notes: 'Contratación suspendida por demoras en la garantía de consolas.',
+    createdAt: '2025-07-28T09:10:00.000Z',
+    updatedAt: '2026-08-11T17:45:00.000Z',
+  },
+]
+
+const orders: Order[] = [
+  {
+    id: 'pedido-colegio-entregado',
+    code: 'PED-20261027-01',
+    clientId: 'colegio-san-agustin',
+    clientName: 'Jorge Salazar',
+    clientEmail: 'jsalazar@sanagustin.edu.pe',
+    clientPhone: '+51 956 112 233',
+    quoteCode: 'COT-20261026-7QW2',
+    status: 'delivered',
+    paymentStatus: 'paid',
+    currency: 'PEN',
+    items: [
+      {
+        id: 'ped-01-linea-1',
+        productId: 'hp-smart-tank-580',
+        name: 'Impresora HP Smart Tank 580',
+        sku: 'HP-ST580',
+        quantity: 12,
+        unitPrice: 899,
+        deliveredQuantity: 12,
+      },
+      {
+        id: 'ped-01-linea-2',
+        productId: 'forza-ups-1000va',
+        name: 'UPS Forza 1000VA · 600W',
+        sku: 'FORZA-1000VA',
+        quantity: 4,
+        unitPrice: 459,
+        deliveredQuantity: 4,
+      },
+    ],
+    deliveryMethod: 'own',
+    deliveryAddress: 'Calle Los Álamos 245, Santiago de Surco',
+    recipientName: 'Jorge Salazar',
+    carrier: '',
+    trackingNumber: '',
+    expectedDeliveryAt: '2026-10-31',
+    deliveredAt: '2026-10-31T16:20:00.000Z',
+    deliveryEvents: [
+      {
+        id: 'ped-01-ev-1',
+        status: 'confirmed',
+        note: 'Confirmación de la orden de compra.',
+        at: '2026-10-27T09:15:00.000Z',
+      },
+      {
+        id: 'ped-01-ev-2',
+        status: 'processing',
+        note: 'Separación de equipos en el almacén central.',
+        at: '2026-10-28T11:30:00.000Z',
+      },
+      {
+        id: 'ped-01-ev-3',
+        status: 'shipped',
+        note: 'Despacho con unidad propia hacia Surco.',
+        at: '2026-10-30T08:05:00.000Z',
+      },
+      {
+        id: 'ped-01-ev-4',
+        status: 'delivered',
+        note: 'Entregado e instalado en los tres pabellones.',
+        at: '2026-10-31T16:20:00.000Z',
+      },
+    ],
+    notes: 'Instalación incluida en la primera semana de noviembre.',
+    createdAt: '2026-10-27T09:10:00.000Z',
+    updatedAt: '2026-10-31T16:20:00.000Z',
+  },
+  {
+    id: 'pedido-banco-proceso',
+    code: 'PED-20261102-02',
+    clientId: 'banco-andino',
+    clientName: 'María Fernanda Ríos',
+    clientEmail: 'mrios@bancoandino.pe',
+    clientPhone: '+51 987 654 321',
+    quoteCode: 'COT-20261028-4KD9',
+    status: 'processing',
+    paymentStatus: 'partial',
+    currency: 'PEN',
+    items: [
+      {
+        id: 'ped-02-linea-1',
+        productId: 'lenovo-ideapad-slim-3',
+        name: 'Laptop Lenovo IdeaPad Slim 3 15.6"',
+        sku: '82R80005PE',
+        quantity: 8,
+        unitPrice: 2499,
+        deliveredQuantity: 0,
+      },
+      {
+        id: 'ped-02-linea-2',
+        productId: 'monitor-lg-ultragear-24',
+        name: 'Monitor LG UltraGear 24" 180Hz',
+        sku: '24GN650-B',
+        quantity: 2,
+        unitPrice: 899,
+        deliveredQuantity: 2,
+      },
+    ],
+    deliveryMethod: 'own',
+    deliveryAddress: 'Av. República de Panamá 3500, San Isidro',
+    recipientName: 'María Fernanda Ríos',
+    carrier: '',
+    trackingNumber: '',
+    expectedDeliveryAt: '2026-11-08',
+    deliveryEvents: [
+      {
+        id: 'ped-02-ev-1',
+        status: 'confirmed',
+        note: 'Adelanto del 50% recibido.',
+        at: '2026-11-02T10:20:00.000Z',
+      },
+      {
+        id: 'ped-02-ev-2',
+        status: 'processing',
+        note: 'Monitores entregados como muestra; laptops en separación.',
+        at: '2026-11-04T09:45:00.000Z',
+      },
+    ],
+    notes: 'Entrega parcial autorizada por la gerencia de TI.',
+    createdAt: '2026-11-02T10:15:00.000Z',
+    updatedAt: '2026-11-04T09:45:00.000Z',
+  },
+  {
+    id: 'pedido-vertice-enviado',
+    code: 'PED-20261103-03',
+    clientId: 'constructora-vertice',
+    clientName: 'Lucía Paredes',
+    clientEmail: 'lparedes@vertice.pe',
+    clientPhone: '+51 944 556 677',
+    status: 'shipped',
+    paymentStatus: 'pending',
+    currency: 'PEN',
+    items: [
+      {
+        id: 'ped-03-linea-1',
+        productId: 'dell-latitude-5440',
+        name: 'Laptop empresarial Dell Latitude 5440',
+        sku: 'LAT-5440-I5',
+        quantity: 5,
+        unitPrice: 4599,
+        deliveredQuantity: 0,
+      },
+    ],
+    deliveryMethod: 'courier',
+    deliveryAddress: 'Av. Ejército 1020, Cayma, Arequipa',
+    recipientName: 'Lucía Paredes',
+    carrier: 'Shalom.pe',
+    trackingNumber: 'SHA-4419283',
+    expectedDeliveryAt: '2026-11-06',
+    deliveryEvents: [
+      {
+        id: 'ped-03-ev-1',
+        status: 'confirmed',
+        note: 'Orden confirmada por correo.',
+        at: '2026-11-03T12:05:00.000Z',
+      },
+      {
+        id: 'ped-03-ev-2',
+        status: 'processing',
+        note: 'Configuración de la imagen de escritorio corporativa.',
+        at: '2026-11-03T17:30:00.000Z',
+      },
+      {
+        id: 'ped-03-ev-3',
+        status: 'shipped',
+        note: 'En ruta a Arequipa.',
+        at: '2026-11-04T07:50:00.000Z',
+      },
+    ],
+    notes: 'Coordinar recepción en la oficina técnica de Cayma.',
+    createdAt: '2026-11-03T12:00:00.000Z',
+    updatedAt: '2026-11-04T07:50:00.000Z',
+  },
+  {
+    id: 'pedido-estudio-recojo',
+    code: 'PED-20261104-04',
+    clientId: 'estudio-norte',
+    clientName: 'Diego Ramírez',
+    clientEmail: 'diego@disenonorte.pe',
+    clientPhone: '+51 949 332 118',
+    status: 'confirmed',
+    paymentStatus: 'paid',
+    currency: 'PEN',
+    items: [
+      {
+        id: 'ped-04-linea-1',
+        productId: 'asus-rtx-4060-8gb',
+        name: 'Tarjeta gráfica ASUS RTX 4060 8GB',
+        sku: 'ASUS-RTX4060-8G',
+        quantity: 2,
+        unitPrice: 1699,
+        deliveredQuantity: 0,
+      },
+      {
+        id: 'ped-04-linea-2',
+        productId: 'amd-ryzen-7-5700x',
+        name: 'Procesador AMD Ryzen 7 5700X',
+        sku: 'AMD-5700X',
+        quantity: 1,
+        unitPrice: 899,
+        deliveredQuantity: 0,
+      },
+    ],
+    deliveryMethod: 'pickup',
+    deliveryAddress: 'Retiro en tienda · Jr. de la Unión, Cercado de Lima',
+    recipientName: 'Diego Ramírez',
+    carrier: '',
+    trackingNumber: '',
+    expectedDeliveryAt: '2026-11-07',
+    deliveryEvents: [
+      {
+        id: 'ped-04-ev-1',
+        status: 'confirmed',
+        note: 'Pago íntegro confirmado; recojo programado.',
+        at: '2026-11-04T15:40:00.000Z',
+      },
+    ],
+    notes: 'El cliente recoge con su DNI.',
+    createdAt: '2026-11-04T15:35:00.000Z',
+    updatedAt: '2026-11-04T15:40:00.000Z',
+  },
+  {
+    id: 'pedido-clinica-nuevo',
+    code: 'PED-20261105-05',
+    clientId: 'clinica-santa-elena',
+    clientName: 'Ana Torres',
+    clientEmail: 'atorres@clinicasantaelena.pe',
+    clientPhone: '+51 981 220 340',
+    status: 'pending',
+    paymentStatus: 'pending',
+    currency: 'PEN',
+    items: [
+      {
+        id: 'ped-05-linea-1',
+        productId: 'kingston-nv2-1tb',
+        name: 'SSD Kingston NV2 1TB NVMe',
+        sku: 'KING-NV2-1TB',
+        quantity: 10,
+        unitPrice: 289,
+        deliveredQuantity: 0,
+      },
+      {
+        id: 'ped-05-linea-2',
+        productId: 'forza-ups-1000va',
+        name: 'UPS Forza 1000VA · 600W',
+        sku: 'FORZA-1000VA',
+        quantity: 2,
+        unitPrice: 459,
+        deliveredQuantity: 0,
+      },
+    ],
+    deliveryMethod: 'own',
+    deliveryAddress: 'Av. Arequipa 2150, Lince',
+    recipientName: 'Ana Torres',
+    carrier: '',
+    trackingNumber: '',
+    expectedDeliveryAt: '2026-11-10',
+    deliveryEvents: [
+      {
+        id: 'ped-05-ev-1',
+        status: 'pending',
+        note: 'Solicitud recibida desde la mesa de ayuda.',
+        at: '2026-11-05T08:25:00.000Z',
+      },
+    ],
+    notes: 'Falta confirmar la orden de compra firmada.',
+    createdAt: '2026-11-05T08:25:00.000Z',
+    updatedAt: '2026-11-05T08:25:00.000Z',
+  },
+  {
+    id: 'pedido-textiles-cancelado',
+    code: 'PED-20261020-06',
+    clientId: 'textiles-del-sur',
+    clientName: 'Rosa Quispe',
+    clientEmail: 'rquispe@textilesdelsur.pe',
+    clientPhone: '+51 973 441 209',
+    status: 'cancelled',
+    paymentStatus: 'pending',
+    currency: 'PEN',
+    items: [
+      {
+        id: 'ped-06-linea-1',
+        productId: 'epson-ecotank-l3250',
+        name: 'Impresora Epson EcoTank L3250',
+        sku: 'EPS-L3250',
+        quantity: 6,
+        unitPrice: 849,
+        deliveredQuantity: 0,
+      },
+    ],
+    deliveryMethod: 'courier',
+    deliveryAddress: 'Av. La Cultura 1205, Wanchaq, Cusco',
+    recipientName: 'Rosa Quispe',
+    carrier: 'Marvisur',
+    trackingNumber: '',
+    deliveryEvents: [
+      {
+        id: 'ped-06-ev-1',
+        status: 'confirmed',
+        note: 'Orden confirmada a la espera de la planta nueva.',
+        at: '2026-10-21T10:00:00.000Z',
+      },
+      {
+        id: 'ped-06-ev-2',
+        status: 'cancelled',
+        note: 'El cliente pospone la compra para el próximo trimestre.',
+        at: '2026-10-26T15:20:00.000Z',
+      },
+    ],
+    notes: 'La guía de envío quedó anulada antes del despacho.',
+    createdAt: '2026-10-20T11:30:00.000Z',
+    updatedAt: '2026-10-26T15:20:00.000Z',
+  },
+]
+
+const attributes: ProductAttribute[] = [
+  {
+    id: 'atributo-conectividad',
+    label: 'Conectividad inalámbrica',
+    type: 'select',
+    unit: '',
+    options: ['Wi-Fi', 'Bluetooth', 'Sin conexión'],
+    keywords: ['Wi-Fi', 'WiFi', 'Bluetooth'],
+    categoryIds: ['impresoras-escaneres', 'redes', 'laptops', 'perifericos', 'accesorios'],
+    required: false,
+    status: 'active',
+    createdAt: '2026-08-10T09:00:00.000Z',
+    updatedAt: '2026-10-20T14:10:00.000Z',
+  },
+  {
+    id: 'atributo-tecnologia-impresion',
+    label: 'Tecnología de impresión',
+    type: 'select',
+    unit: '',
+    options: ['Inyección de tinta', 'Láser monocromática', 'Láser color', 'Térmica'],
+    keywords: ['Inyección', 'Láser', 'Tinta', 'cartuchos'],
+    categoryIds: ['impresoras-escaneres'],
+    required: true,
+    status: 'active',
+    createdAt: '2026-08-10T09:05:00.000Z',
+    updatedAt: '2026-09-28T10:40:00.000Z',
+  },
+  {
+    id: 'atributo-velocidad-impresion',
+    label: 'Velocidad de impresión',
+    type: 'number',
+    unit: 'ppm',
+    options: [],
+    keywords: ['ppm', 'páginas por minuto', 'páginas'],
+    categoryIds: ['impresoras-escaneres'],
+    required: true,
+    status: 'active',
+    createdAt: '2026-08-10T09:10:00.000Z',
+    updatedAt: '2026-10-12T08:25:00.000Z',
+  },
+  {
+    id: 'atributo-bandeja',
+    label: 'Capacidad de bandeja',
+    type: 'number',
+    unit: 'hojas',
+    options: [],
+    keywords: ['Bandeja', 'hojas'],
+    categoryIds: ['impresoras-escaneres'],
+    required: false,
+    status: 'active',
+    createdAt: '2026-08-10T09:15:00.000Z',
+    updatedAt: '2026-08-10T09:15:00.000Z',
+  },
+  {
+    id: 'atributo-panel',
+    label: 'Tipo de panel',
+    type: 'select',
+    unit: '',
+    options: ['IPS', 'VA', 'TN', 'OLED'],
+    keywords: ['IPS', 'VA', 'TN', 'OLED', 'Panel'],
+    categoryIds: ['monitores'],
+    required: true,
+    status: 'active',
+    createdAt: '2026-08-14T11:00:00.000Z',
+    updatedAt: '2026-10-18T17:00:00.000Z',
+  },
+  {
+    id: 'atributo-refresco',
+    label: 'Tasa de refresco',
+    type: 'number',
+    unit: 'Hz',
+    options: [],
+    keywords: ['Hz'],
+    categoryIds: ['monitores', 'gaming'],
+    required: false,
+    status: 'active',
+    createdAt: '2026-08-14T11:05:00.000Z',
+    updatedAt: '2026-10-18T17:00:00.000Z',
+  },
+  {
+    id: 'atributo-procesador',
+    label: 'Procesador',
+    type: 'text',
+    unit: '',
+    options: [],
+    keywords: ['Ryzen', 'Core', 'Xeon', 'Celeron', 'Athlon'],
+    categoryIds: ['laptops', 'pc-servidores', 'componentes'],
+    required: true,
+    status: 'active',
+    createdAt: '2026-08-20T10:00:00.000Z',
+    updatedAt: '2026-11-02T09:20:00.000Z',
+  },
+  {
+    id: 'atributo-memoria',
+    label: 'Memoria RAM',
+    type: 'number',
+    unit: 'GB',
+    options: [],
+    keywords: ['RAM', 'DDR'],
+    categoryIds: ['laptops', 'pc-servidores', 'componentes'],
+    required: true,
+    status: 'active',
+    createdAt: '2026-08-20T10:05:00.000Z',
+    updatedAt: '2026-08-20T10:05:00.000Z',
+  },
+  {
+    id: 'atributo-almacenamiento',
+    label: 'Almacenamiento',
+    type: 'text',
+    unit: '',
+    options: [],
+    keywords: ['SSD', 'NVMe', 'HDD', 'TB'],
+    categoryIds: ['laptops', 'pc-servidores', 'componentes', 'almacenamiento'],
+    required: true,
+    status: 'active',
+    createdAt: '2026-08-20T10:10:00.000Z',
+    updatedAt: '2026-10-15T09:10:00.000Z',
+  },
+  {
+    id: 'atributo-garantia',
+    label: 'Garantía',
+    type: 'text',
+    unit: 'meses',
+    options: [],
+    keywords: ['garantía', 'Garantía', 'años de garantía'],
+    categoryIds: [],
+    required: true,
+    status: 'active',
+    createdAt: '2026-08-22T09:30:00.000Z',
+    updatedAt: '2026-08-22T09:30:00.000Z',
+  },
+  {
+    id: 'atributo-sistema-operativo',
+    label: 'Sistema operativo',
+    type: 'select',
+    unit: '',
+    options: ['Windows 11 Pro', 'Windows 11 Home', 'FreeDOS', 'Sin sistema'],
+    keywords: ['Windows', 'FreeDOS', 'DOS'],
+    categoryIds: ['laptops', 'pc-servidores'],
+    required: false,
+    status: 'active',
+    createdAt: '2026-08-22T09:35:00.000Z',
+    updatedAt: '2026-09-11T13:45:00.000Z',
+  },
+  {
+    id: 'atributo-resolucion',
+    label: 'Resolución de imagen',
+    type: 'text',
+    unit: 'dpi',
+    options: [],
+    keywords: ['dpi', 'Full HD', 'QHD', 'píxeles'],
+    categoryIds: ['impresoras-escaneres', 'monitores', 'perifericos'],
+    required: false,
+    status: 'inactive',
+    createdAt: '2026-08-22T09:40:00.000Z',
+    updatedAt: '2026-10-05T09:30:00.000Z',
+  },
+]
+
+const warehouseLocations: WarehouseLocation[] = [
+  {
+    id: 'alm-principal',
+    code: 'ALM-01',
+    name: 'Almacén principal · Lince',
+    kind: 'warehouse',
+    address: 'Av. Argentina 1853, Cercado de Lima',
+    responsible: 'Maritza León Galvez',
+    isDefault: true,
+    notes: 'Recepción de proveedores y picking de pedidos.',
+    createdAt: '2025-07-01T08:00:00.000Z',
+    updatedAt: '2026-10-12T18:05:00.000Z',
+  },
+  {
+    id: 'est-a1',
+    code: 'EST-A1',
+    name: 'Estantería A1 · Impresión y consumibles',
+    kind: 'shelf',
+    parentLocationId: 'alm-principal',
+    responsible: 'Maritza León Galvez',
+    isDefault: false,
+    createdAt: '2025-07-01T08:10:00.000Z',
+    updatedAt: '2026-10-12T18:05:00.000Z',
+  },
+  {
+    id: 'est-b2',
+    code: 'EST-B2',
+    name: 'Estantería B2 · Equipos y servidores',
+    kind: 'shelf',
+    parentLocationId: 'alm-principal',
+    responsible: 'Diego Fuentes Chávez',
+    isDefault: false,
+    createdAt: '2025-07-01T08:12:00.000Z',
+    updatedAt: '2026-10-12T18:05:00.000Z',
+  },
+  {
+    id: 'est-c3',
+    code: 'EST-C3',
+    name: 'Estantería C3 · Periféricos y red',
+    kind: 'shelf',
+    parentLocationId: 'alm-principal',
+    responsible: 'Rafael Mendoza Rivas',
+    isDefault: false,
+    createdAt: '2025-07-01T08:14:00.000Z',
+    updatedAt: '2026-10-12T18:05:00.000Z',
+  },
+  {
+    id: 'est-d4',
+    code: 'EST-D4',
+    name: 'Estantería D4 · Software y licencias',
+    kind: 'shelf',
+    parentLocationId: 'alm-principal',
+    responsible: 'Maritza León Galvez',
+    isDefault: false,
+    notes: 'Solo claves y soportes; las licencias se entregan por correo.',
+    createdAt: '2026-01-09T10:00:00.000Z',
+    updatedAt: '2026-10-12T18:05:00.000Z',
+  },
+  {
+    id: 'trn-01',
+    code: 'TRN-01',
+    name: 'Tránsito · por inspeccionar',
+    kind: 'transit',
+    isDefault: false,
+    notes: 'Mercadería en recepción o en reubicación; no es stock vendible.',
+    createdAt: '2025-07-01T08:20:00.000Z',
+    updatedAt: '2026-10-12T18:05:00.000Z',
+  },
+]
+
+const shelfByCategory: Record<string, string> = {
+  'Impresoras y Escáneres': 'est-a1',
+  Laptops: 'est-b2',
+  'PC y Servidores': 'est-b2',
+  Componentes: 'est-b2',
+  Almacenamiento: 'est-b2',
+  Monitores: 'est-c3',
+  Periféricos: 'est-c3',
+  Accesorios: 'est-c3',
+  Redes: 'est-c3',
+  'Audio y Video': 'est-c3',
+  Gaming: 'est-c3',
+  'Cables y Energía': 'est-c3',
+  Software: 'est-d4',
+}
+
+function shelfForCategory(category: string): string {
+  return shelfByCategory[category] ?? 'est-b2'
+}
+
+function locationCode(id: string): string {
+  return warehouseLocations.find((location) => location.id === id)?.code ?? id
+}
+
+/** El máximo operativo es 4× el punto de reorden; por encima hay capital inmovilizado. */
+function maxStockFor(minStock: number): number {
+  return Math.max(minStock * 4, minStock + 6)
+}
+
+function supplierForCategory(category: string, variant = 0): Supplier {
+  const categoryId = categories.find((item) => item.label === category)?.id
+  const matches = suppliers.filter(
+    (supplier) => supplier.status === 'active' && categoryId && supplier.categoryIds.includes(categoryId)
+  )
+  if (matches.length === 0) return suppliers[0]
+  return matches[variant % matches.length]
+}
+
+const PURCHASE_BUYERS = ['Maritza León Galvez', 'Diego Fuentes Chávez'] as const
+
+function buildSeedPurchaseRequests(items: AdminProduct[]): PurchaseRequest[] {
+  const needs = items
+    .filter((product) => product.status === 'active' && product.stock <= product.minStock)
+    .sort(
+      (a, b) =>
+        a.stock - a.minStock - (b.stock - b.minStock) ||
+        a.name.localeCompare(b.name, 'es')
+    )
+    .slice(0, 9)
+
+  const grouped = new Map<string, { supplier: Supplier; lines: PurchaseRequestLine[] }>()
+  needs.forEach((product) => {
+    const supplier = supplierForCategory(product.category)
+    const bucket = grouped.get(supplier.id) ?? { supplier, lines: [] }
+    bucket.lines.push({
+      productId: product.id,
+      productName: product.name,
+      sku: product.sku,
+      quantity: Math.max(maxStockFor(product.minStock) - product.stock, 2),
+      unitCost: product.cost,
+      note: `Punto de reorden ${product.minStock} uds.`,
+    })
+    grouped.set(supplier.id, bucket)
+  })
+
+  const statuses: PurchaseRequest['status'][] = ['ordered', 'approved', 'pending', 'rejected']
+  const now = new Date('2026-11-03T17:30:00.000Z')
+
+  return [...grouped.values()].map((bucket, index): PurchaseRequest => {
+    const status = statuses[Math.min(index, statuses.length - 1)]
+    const decided = status !== 'pending' && status !== 'draft'
+    return {
+      id: `sc-2026-${String(index + 11).padStart(3, '0')}`,
+      code: `SC-2026-${String(index + 11).padStart(3, '0')}`,
+      status,
+      requestedBy: PURCHASE_BUYERS[index % PURCHASE_BUYERS.length],
+      neededBy: new Date(now.getTime() + bucket.supplier.leadTimeDays * 86_400_000)
+        .toISOString()
+        .slice(0, 10),
+      supplierId: bucket.supplier.id,
+      supplierName: bucket.supplier.name,
+      justification:
+        status === 'rejected'
+          ? 'El proveedor cotizado no cubre estas categorías; reasignar la solicitud.'
+          : 'Stock por debajo del punto de reorden detectado en el último conteo.',
+      lines: bucket.lines,
+      decisionNote: decided
+        ? status === 'rejected'
+          ? 'Rechazado: falta cotización alternativa.'
+          : 'Aprobado con el presupuesto de abastecimiento del trimestre.'
+        : undefined,
+      decidedBy: decided ? 'Diego Fuentes Chávez' : undefined,
+      decidedAt: decided ? '2026-11-04T15:20:00.000Z' : undefined,
+      createdAt: '2026-11-02T09:10:00.000Z',
+      updatedAt: decided ? '2026-11-04T15:20:00.000Z' : '2026-11-02T09:10:00.000Z',
+    }
+  })
+}
+
+function buildSeedPurchaseOrders(
+  items: AdminProduct[],
+  requests: PurchaseRequest[]
+): PurchaseOrder[] {
+  const ordered = requests.find((request) => request.status === 'ordered')
+  const healthy = items
+    .filter((product) => product.status === 'active' && product.stock >= 10)
+    .sort((a, b) => b.price * b.stock - a.price * a.stock)
+
+  const orders: PurchaseOrder[] = []
+
+  if (ordered) {
+    orders.push({
+      id: 'oc-2026-043',
+      code: 'OC-2026-043',
+      supplierId: ordered.supplierId ?? suppliers[0].id,
+      supplierName: ordered.supplierName ?? suppliers[0].name,
+      status: 'sent',
+      currency: 'PEN',
+      requestId: ordered.id,
+      requestCode: ordered.code,
+      expectedAt: '2026-11-12T18:00:00.000Z',
+      lines: ordered.lines.map((line): PurchaseOrderLine => ({
+        productId: line.productId,
+        productName: line.productName,
+        sku: line.sku,
+        quantity: line.quantity,
+        receivedQuantity: 0,
+        unitCost: line.unitCost ?? 0,
+      })),
+      notes: 'Confirmada por correo; entrega fragmentada si falta stock en almacén del proveedor.',
+      createdBy: ordered.requestedBy,
+      createdAt: '2026-11-04T16:05:00.000Z',
+      updatedAt: '2026-11-04T16:05:00.000Z',
+    })
+  }
+
+  const historical: Array<{
+    code: string
+    status: PurchaseOrderStatus
+    variant: number
+    slice: number
+    receivedAt: string
+    part: number
+  }> = [
+    { code: 'OC-2026-038', status: 'received', variant: 0, slice: 0, receivedAt: '2026-10-19T16:40:00.000Z', part: 1 },
+    { code: 'OC-2026-041', status: 'partial', variant: 1, slice: 4, receivedAt: '2026-10-30T15:10:00.000Z', part: 0.6 },
+  ]
+
+  historical.forEach((template) => {
+    const group = healthy
+      .slice(template.slice, template.slice + 4)
+      .concat(healthy.slice(0, template.slice))
+      .slice(0, 4)
+    if (group.length === 0) return
+    const supplier = supplierForCategory(group[0].category, template.variant)
+    orders.push({
+      id: template.code.toLowerCase(),
+      code: template.code,
+      supplierId: supplier.id,
+      supplierName: supplier.name,
+      status: template.status,
+      currency: 'PEN',
+      expectedAt: template.receivedAt,
+      lines: group.map((product, lineIndex): PurchaseOrderLine => {
+        const quantity = Math.max(Math.round(product.stock * 0.2), 2)
+        return {
+          productId: product.id,
+          productName: product.name,
+          sku: product.sku,
+          quantity,
+          receivedQuantity:
+            template.status === 'received'
+              ? quantity
+              : lineIndex === 0
+                ? Math.max(Math.round(quantity * template.part), 1)
+                : 0,
+          unitCost: product.cost ?? Math.round(product.price * 0.78),
+        }
+      }),
+      notes:
+        template.status === 'partial'
+          ? 'El proveedor avisó quiebre de stock en la segunda partida.'
+          : 'Recepción conforme, sin observaciones de calidad.',
+      createdBy: PURCHASE_BUYERS[template.variant % PURCHASE_BUYERS.length],
+      createdAt: '2026-10-12T10:15:00.000Z',
+      updatedAt: template.receivedAt,
+    })
+  })
+
+  return orders
+}
+
+function buildSeedGoodsReceipts(orders: PurchaseOrder[]): GoodsReceipt[] {
+  return orders
+    .filter((order) => order.lines.some((line) => line.receivedQuantity > 0))
+    .map((order, index): GoodsReceipt => {
+      const receivedAt =
+        order.status === 'partial' ? '2026-10-30T15:10:00.000Z' : '2026-10-19T16:40:00.000Z'
+      return {
+        id: `rc-2026-${String(index + 27).padStart(3, '0')}`,
+        code: `RC-2026-${String(index + 27).padStart(3, '0')}`,
+        purchaseOrderId: order.id,
+        purchaseOrderCode: order.code,
+        supplierName: order.supplierName,
+        condition: order.status === 'partial' ? 'incomplete' : 'good',
+        receivedBy: 'Maritza León Galvez',
+        receivedAt,
+        lines: order.lines
+          .filter((line) => line.receivedQuantity > 0)
+          .map((line) => ({
+            productId: line.productId,
+            productName: line.productName,
+            sku: line.sku,
+            orderedQuantity: line.quantity,
+            receivedQuantity: line.receivedQuantity,
+            rejectedQuantity: 0,
+            locationId: shelfForCategory(
+              products.find((product) => product.id === line.productId)?.category ?? ''
+            ),
+          })),
+        notes:
+          order.status === 'partial'
+            ? 'Se registra solo lo físicamente recibido; el saldo queda pendiente de nueva recepción.'
+            : 'Factura del proveedor archivada en la carpeta de compras.',
+        createdAt: receivedAt,
+      }
+    })
+}
+
+function buildSeedStockCounts(items: AdminProduct[]): StockCount[] {
+  const active = items.filter((product) => product.status === 'active')
+  const countable = active.filter((product) => product.stock >= 4)
+  const countLines = (indexes: number[], deltas: number[]): StockCountLine[] =>
+    indexes.map((index, position) => {
+      const product = countable[index % countable.length] ?? active[index % active.length]
+      const delta = deltas[position % deltas.length]
+      const systemQuantity = Math.max(product.stock - delta, 0)
+      return {
+        productId: product.id,
+        productName: product.name,
+        sku: product.sku,
+        systemQuantity,
+        countedQuantity: product.stock,
+        locationId: shelfForCategory(product.category),
+        note:
+          delta === 0
+            ? undefined
+            : delta > 0
+              ? 'Sobrante: unidad encontrada en estantería vecina.'
+              : 'Faltante: unidad entregada sin despacho registrado.',
+      }
+    })
+
+  return [
+    {
+      id: 'ct-2026-009',
+      code: 'CT-2026-009',
+      name: 'Conteo cíclico · estanterías A1 y B2',
+      status: 'posted',
+      locationId: 'est-a1',
+      countedBy: 'Maritza León Galvez',
+      startedAt: '2026-10-23T08:00:00.000Z',
+      finishedAt: '2026-10-23T13:25:00.000Z',
+      lines: countLines([0, 3, 7, 12, 18, 25], [-2, 1, 3, -1, 2, -3]),
+      notes: 'Diferencias dentro del 2% tolerado; ajustes registrados en el kardex.',
+    },
+    {
+      id: 'ct-2026-010',
+      code: 'CT-2026-010',
+      name: 'Conteo anual · almacén completo',
+      status: 'open',
+      countedBy: 'Rafael Mendoza Rivas',
+      startedAt: '2026-11-04T07:45:00.000Z',
+      lines: [0, 1, 2, 5, 9, 14, 21, 30].map((index) => {
+        const product = active[index % active.length]
+        return {
+          productId: product.id,
+          productName: product.name,
+          sku: product.sku,
+          systemQuantity: product.stock,
+          countedQuantity: null,
+          locationId: shelfForCategory(product.category),
+        }
+      }),
+      notes: 'Pendiente la cuadratura de periféricos antes del cierre de noviembre.',
+    },
+  ]
+}
+
+type KardexEvent = {
+  at: string
+  type: InventoryMovement['type']
+  quantity: number
+  sign: 1 | -1
+  reason: string
+  note?: string
+  unitCost?: number
+  sourceType: MovementSourceType
+  sourceId?: string
+  sourceCode?: string
+  locationId?: string
+  toLocationId?: string
+  actor: string
+}
+
+function buildSeedMovements(
+  items: AdminProduct[],
+  receipts: GoodsReceipt[],
+  counts: StockCount[]
+): InventoryMovement[] {
+  const byProduct = new Map<string, KardexEvent[]>()
+  const push = (productId: string, event: KardexEvent) => {
+    const list = byProduct.get(productId) ?? []
+    list.push(event)
+    byProduct.set(productId, list)
+  }
+
+  receipts.forEach((receipt) => {
+    receipt.lines.forEach((line) => {
+      const product = items.find((item) => item.id === line.productId)
+      push(line.productId, {
+        at: receipt.receivedAt,
+        type: 'in',
+        quantity: line.receivedQuantity,
+        sign: 1,
+        reason: 'Compra a proveedor',
+        note: `Recepción ${receipt.code} de ${receipt.supplierName}.`,
+        unitCost: product?.cost,
+        sourceType: 'purchase_receipt',
+        sourceId: receipt.id,
+        sourceCode: receipt.code,
+        locationId: line.locationId,
+        actor: receipt.receivedBy,
+      })
+    })
+  })
+
+  counts
+    .filter((count) => count.status === 'posted')
+    .forEach((count) => {
+      count.lines.forEach((line) => {
+        if (line.countedQuantity === null) return
+        const delta = line.countedQuantity - line.systemQuantity
+        if (delta === 0) return
+        push(line.productId, {
+          at: count.finishedAt ?? count.startedAt,
+          type: 'adjustment',
+          quantity: Math.abs(delta),
+          sign: delta > 0 ? 1 : -1,
+          reason: 'Conteo físico',
+          note: `Diferencia detectada en ${count.code}.`,
+          sourceType: 'stock_count',
+          sourceId: count.id,
+          sourceCode: count.code,
+          locationId: line.locationId,
+          actor: count.countedBy,
+        })
+      })
+    })
+
+  orders.forEach((order) => {
+    if (order.status !== 'shipped' && order.status !== 'delivered') return
+    order.items.forEach((item) => {
+      if (!item.productId) return
+      const quantity = item.deliveredQuantity || item.quantity
+      if (quantity <= 0) return
+      push(item.productId, {
+        at: order.deliveredAt ?? order.updatedAt,
+        type: 'out',
+        quantity,
+        sign: -1,
+        reason: 'Venta',
+        note: `Despacho del pedido ${order.code} (${order.clientName}).`,
+        sourceType: 'order',
+        sourceId: order.id,
+        sourceCode: order.code,
+        actor: 'Carlos Palomino Rueda',
+      })
+    })
+  })
+
+  // Reubicación física de dos SKUs: sale del almacén central hacia su estantería.
+  const relocated = items.filter((product) => product.status === 'active').slice(40, 42)
+  relocated.forEach((product, index) => {
+    const at = index === 0 ? '2026-10-05T09:20:00.000Z' : '2026-10-05T09:35:00.000Z'
+    const shelf = shelfForCategory(product.category)
+    const quantity = 2
+    push(product.id, {
+      at,
+      type: 'out',
+      quantity,
+      sign: -1,
+      reason: 'Transferencia entre almacenes',
+      note: `Movida a tránsito para reubicación en ${locationCode(shelf)}.`,
+      sourceType: 'transfer',
+      sourceCode: `TR-2026-00${index + 1}`,
+      locationId: 'alm-principal',
+      toLocationId: 'trn-01',
+      actor: 'Rafael Mendoza Rivas',
+    })
+    push(product.id, {
+      at: index === 0 ? '2026-10-05T16:05:00.000Z' : '2026-10-05T16:20:00.000Z',
+      type: 'in',
+      quantity,
+      sign: 1,
+      reason: 'Transferencia entre almacenes',
+      note: 'Reubicación confirmada en la estantería destino.',
+      sourceType: 'transfer',
+      sourceCode: `TR-2026-00${index + 1}`,
+      locationId: 'trn-01',
+      toLocationId: shelf,
+      actor: 'Rafael Mendoza Rivas',
+    })
+  })
+
+  const movements: InventoryMovement[] = []
+  items.forEach((product) => {
+    const events = (byProduct.get(product.id) ?? [])
+      .filter((event) => event.quantity > 0)
+      .sort((a, b) => new Date(a.at).getTime() - new Date(b.at).getTime())
+
+    // Se descartan las entradas más grandes hasta que el saldo de apertura siga siendo positivo,
+    // para que el kardex cierre contra el stock actual de la ficha.
+    let kept = events
+    let chain: KardexEvent[] = []
+    let opening = 0
+    for (let attempt = 0; attempt <= events.length; attempt += 1) {
+      chain = []
+      let running = 0
+      kept.forEach((event) => {
+        const next = running + event.sign * event.quantity
+        if (next < 0) return
+        running = next
+        chain.push(event)
+      })
+      opening = product.stock - running
+      if (opening >= 0) break
+      let largestIndex = -1
+      kept.forEach((event, index) => {
+        if (event.sign !== 1) return
+        if (largestIndex === -1 || event.quantity > kept[largestIndex].quantity) {
+          largestIndex = index
+        }
+      })
+      if (largestIndex === -1) break
+      kept = kept.filter((_, index) => index !== largestIndex)
+    }
+
+    if (opening > 0) {
+      chain.unshift({
+        at: product.createdAt,
+        type: 'adjustment',
+        quantity: opening,
+        sign: 1,
+        reason: 'Carga inicial',
+        note: 'Stock inicial del catálogo de demostración.',
+        unitCost: product.cost,
+        sourceType: 'manual',
+        locationId: product.locationId,
+        actor: 'Maritza León Galvez',
+      })
+    }
+
+    let balance = 0
+    chain.forEach((event, index) => {
+      const previousStock = balance
+      balance += event.sign * event.quantity
+      movements.push({
+        id: `demo-mov-${product.id}-${index + 1}`,
+        productId: product.id,
+        productName: product.name,
+        sku: product.sku,
+        type: event.type,
+        // Un ajuste guarda el stock resultante (no la diferencia), igual que el alta manual del panel.
+        quantity: event.type === 'adjustment' ? balance : event.quantity,
+        previousStock,
+        resultingStock: balance,
+        reason: event.reason,
+        note: event.note,
+        unitCost: event.unitCost,
+        sourceType: event.sourceType,
+        sourceId: event.sourceId,
+        sourceCode: event.sourceCode,
+        locationId: event.locationId,
+        toLocationId: event.toLocationId,
+        actor: event.actor,
+        createdAt: event.at,
+      })
+    })
+  })
+
+  return movements.sort(
+    (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+  )
+}
+
 function summarize(description: string): string {
   const clean = description.replace(/\s+/g, ' ').trim()
   return clean.length <= 140 ? clean : `${clean.slice(0, 137).trimEnd()}…`
@@ -1355,25 +2596,6 @@ function buildSeedActivity(items: AdminProduct[]): ActivityEntry[] {
     }))
 }
 
-function buildSeedMovements(items: AdminProduct[]): InventoryMovement[] {
-  return items
-    .filter((product) => product.stock > 0)
-    .map((product, index): InventoryMovement => ({
-      id: `demo-mov-${index + 1}`,
-      productId: product.id,
-      productName: product.name,
-      sku: product.sku,
-      type: 'adjustment',
-      quantity: product.stock,
-      previousStock: 0,
-      resultingStock: product.stock,
-      reason: 'Carga inicial',
-      note: 'Stock inicial del catálogo de demostración.',
-      createdAt: product.createdAt,
-    }))
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-}
-
 export function createSeedData(): AdminData {
   const normalized: AdminProduct[] = products.map((product) => ({
     ...product,
@@ -1383,6 +2605,8 @@ export function createSeedData(): AdminData {
     seoTitle: '',
     seoDescription: '',
     imageAlt: product.name,
+    maxStock: maxStockFor(product.minStock),
+    locationId: shelfForCategory(product.category),
   }))
 
   const seededCategories: Category[] = categories.map((category, index) => ({
@@ -1394,6 +2618,11 @@ export function createSeedData(): AdminData {
     order: index,
   }))
 
+  const purchaseRequests = buildSeedPurchaseRequests(normalized)
+  const purchaseOrders = buildSeedPurchaseOrders(normalized, purchaseRequests)
+  const goodsReceipts = buildSeedGoodsReceipts(purchaseOrders)
+  const stockCounts = buildSeedStockCounts(normalized)
+
   return JSON.parse(
     JSON.stringify({
       products: normalized,
@@ -1404,8 +2633,17 @@ export function createSeedData(): AdminData {
       requests: [],
       settings,
       activity: buildSeedActivity(normalized),
-      inventoryMovements: buildSeedMovements(normalized),
+      inventoryMovements: buildSeedMovements(normalized, goodsReceipts, stockCounts),
+      warehouseLocations,
+      purchaseRequests,
+      purchaseOrders,
+      goodsReceipts,
+      stockCounts,
       webProjects,
+      users,
+      suppliers,
+      orders,
+      attributes,
     })
   ) as AdminData
 }

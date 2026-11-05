@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import {
   AlertTriangle,
   ArrowRight,
@@ -43,6 +43,7 @@ import {
   requestStatusLabels,
 } from '@/lib/admin/format'
 import { DashboardApiError, fetchDashboardSummary } from '@/lib/services/dashboard'
+import { buildLocalDashboardSummary } from '@/lib/admin/dashboard-local'
 import type { ActivityType, DashboardSummary } from '@/lib/admin/types'
 import { cn } from '@/lib/utils'
 
@@ -64,18 +65,27 @@ const activityMeta: Record<
 
 export default function DashboardPage() {
   const { products, categories, brands, clients, quotes, requests, settings, activity } = useAdmin()
-  const [summary, setSummary] = useState<DashboardSummary | null>(null)
+  const [remoteSummary, setRemoteSummary] = useState<DashboardSummary | null>(null)
   const [summaryError, setSummaryError] = useState<string | null>(null)
+
+  const localSummary = useMemo(
+    () => buildLocalDashboardSummary({ products, clients, quotes, requests, settings }),
+    [products, clients, quotes, requests, settings]
+  )
+  const summary = remoteSummary ?? localSummary
 
   useEffect(() => {
     let cancelled = false
 
     fetchDashboardSummary()
       .then((result) => {
-        if (!cancelled) setSummary(result)
+        if (!cancelled) setRemoteSummary(result)
       })
       .catch((error: unknown) => {
         if (cancelled) return
+        // Sin base de datos el resumen local ya cubre la pantalla; solo se avisa
+        // de los fallos que el respaldo local no explica.
+        if (error instanceof DashboardApiError && error.status === 503) return
         setSummaryError(
           error instanceof DashboardApiError
             ? error.message
@@ -88,7 +98,7 @@ export default function DashboardPage() {
     }
   }, [])
 
-  const penAmount = summary?.quotes.amounts.find((amount) => amount.currency === 'PEN')
+  const penAmount = summary.quotes.amounts.find((amount) => amount.currency === 'PEN')
 
   const published = products.filter((product) => product.status === 'active')
   const drafts = products.filter((product) => product.status === 'draft')
@@ -163,8 +173,8 @@ export default function DashboardPage() {
             </h1>
             <p className="mt-2 max-w-xl text-sm leading-relaxed text-slate-400">
               Revisa el estado del catálogo, la actividad reciente y los productos que necesitan
-              atención. El resumen comercial y de atención se calcula en la API con los datos
-              persistidos en la base de datos.
+              atención. El resumen comercial y de atención se calcula sobre los datos que muestra el
+              panel.
             </p>
             <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-[11px] font-medium text-slate-400">
               <span className="inline-flex items-center gap-1.5">
@@ -373,45 +383,29 @@ export default function DashboardPage() {
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
           label="Cotizaciones"
-          value={summary ? formatNumber(summary.quotes.total) : '—'}
-          helper={
-            summary
-              ? `${formatNumber(summary.quotes.open)} abiertas · ${formatCurrency(penAmount?.total ?? 0, 'PEN')}`
-              : 'Consultando la base de datos…'
-          }
+          value={formatNumber(summary.quotes.total)}
+          helper={`${formatNumber(summary.quotes.open)} abiertas · ${formatCurrency(penAmount?.total ?? 0, 'PEN')}`}
           icon={FileText}
           href="/cotizaciones"
         />
         <StatCard
           label="Conversión"
-          value={summary ? `${summary.quotes.conversionRate}%` : '—'}
-          helper={
-            summary
-              ? `${formatNumber(summary.quotes.approved)} aprobadas de ${formatNumber(summary.quotes.decided)} decididas`
-              : 'Consultando la base de datos…'
-          }
+          value={`${summary.quotes.conversionRate}%`}
+          helper={`${formatNumber(summary.quotes.approved)} aprobadas de ${formatNumber(summary.quotes.decided)} decididas`}
           icon={CheckCircle2}
           href="/reportes"
         />
         <StatCard
           label="Solicitudes"
-          value={summary ? formatNumber(summary.requests.total) : '—'}
-          helper={
-            summary
-              ? `${formatNumber(summary.requests.open)} pendientes · ${summary.requests.avgResolutionHours ?? '—'} h promedio`
-              : 'Consultando la base de datos…'
-          }
+          value={formatNumber(summary.requests.total)}
+          helper={`${formatNumber(summary.requests.open)} pendientes · ${summary.requests.avgResolutionHours ?? '—'} h promedio`}
           icon={Inbox}
           href="/solicitudes"
         />
         <StatCard
           label="Clientes"
-          value={summary ? formatNumber(summary.clients.total) : '—'}
-          helper={
-            summary
-              ? `${formatNumber(summary.clients.active)} activos · ${formatNumber(summary.clients.newThisMonth)} nuevos este mes`
-              : 'Consultando la base de datos…'
-          }
+          value={formatNumber(summary.clients.total)}
+          helper={`${formatNumber(summary.clients.active)} activos · ${formatNumber(summary.clients.newThisMonth)} nuevos este mes`}
           icon={Users}
           href="/clientes"
         />
@@ -420,7 +414,7 @@ export default function DashboardPage() {
       <div className="grid gap-4 xl:grid-cols-2">
         <SectionCard
           title="Últimas cotizaciones"
-          description="Registradas en la base de datos."
+          description="Ordenadas de la más reciente a la más antigua."
           icon={FileText}
           action={
             <Link
@@ -432,13 +426,7 @@ export default function DashboardPage() {
             </Link>
           }
         >
-          {!summary ? (
-            <EmptyState
-              icon={FileText}
-              title="Cargando cotizaciones"
-              description="Consultando los indicadores de la API."
-            />
-          ) : summary.recentQuotes.length === 0 ? (
+          {summary.recentQuotes.length === 0 ? (
             <EmptyState
               icon={FileText}
               title="Sin cotizaciones"
@@ -485,13 +473,7 @@ export default function DashboardPage() {
             </Link>
           }
         >
-          {!summary ? (
-            <EmptyState
-              icon={Inbox}
-              title="Cargando solicitudes"
-              description="Consultando los indicadores de la API."
-            />
-          ) : summary.recentRequests.length === 0 ? (
+          {summary.recentRequests.length === 0 ? (
             <EmptyState
               icon={Inbox}
               title="Sin solicitudes"

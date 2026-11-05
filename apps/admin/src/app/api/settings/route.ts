@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { guardPermission } from '@/lib/auth/guard'
 import { apiBaseUrl, getAccessToken } from '@/lib/auth/session'
 
 async function forward(request: NextRequest) {
@@ -12,6 +13,10 @@ async function forward(request: NextRequest) {
 
   const hasBody = request.method !== 'GET' && request.method !== 'HEAD'
   const body = hasBody ? await request.text() : undefined
+
+  // Ver la tienda es settings.view; guardarla es settings.update.
+  const guard = await guardPermission('settings', hasBody ? 'update' : 'view')
+  if (!guard.ok) return guard.response
 
   try {
     const response = await fetch(`${apiBaseUrl()}/settings`, {

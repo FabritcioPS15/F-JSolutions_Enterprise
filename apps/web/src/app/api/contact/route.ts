@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+import { isEmail } from '@fj-solutions/contracts/domain'
 
 const API_URL = (process.env.HELPDESK_API_URL ?? 'http://localhost:4000/api/v1').replace(/\/+$/, '')
 
@@ -52,7 +51,7 @@ export async function POST(request: NextRequest) {
     )
   }
 
-  if (!EMAIL_PATTERN.test(email)) {
+  if (!isEmail(email)) {
     return NextResponse.json(
       { success: false, message: 'Ingresa un correo electrónico válido.' },
       { status: 400 },

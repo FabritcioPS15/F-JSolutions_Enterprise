@@ -5,11 +5,17 @@ import {
   ArrowDownToLine,
   ArrowUpFromLine,
   Boxes,
+  ChevronLeft,
+  ChevronRight,
   CircleSlash,
   ClipboardList,
+  Gauge,
   History,
+  Layers,
+  PackagePlus,
   Plus,
   Search,
+  ShieldAlert,
   SlidersHorizontal,
   TriangleAlert,
   Wallet,
@@ -20,6 +26,8 @@ import { useAdmin } from '@/components/admin/admin-provider'
 import { ExportMenu } from '@/components/admin/export-menu'
 import { Modal } from '@/components/admin/modal'
 import { ProductThumb } from '@/components/admin/product-thumb'
+import { PurchasingPanel } from '@/components/admin/purchasing-panel'
+import { StockCountPanel } from '@/components/admin/stock-count-panel'
 import { useToast } from '@/components/admin/toast'
 import {
   EmptyState,
@@ -38,6 +46,7 @@ import {
 } from '@/components/admin/ui'
 import { inventoryDataset } from '@/lib/admin/excel-exports'
 import {
+  buildStockPositions,
   formatCurrency,
   formatDateTime,
   formatNumber,
@@ -45,21 +54,65 @@ import {
   inventoryMovementDescriptions,
   inventoryMovementLabels,
   inventoryReasons,
+  locationKindLabels,
   movementDelta,
+  movementSourceLabels,
+  stockLabels,
 } from '@/lib/admin/format'
 import type {
   AdminProduct,
   Currency,
   InventoryMovement,
   InventoryMovementType,
+  StockPosition,
+  StockState,
 } from '@/lib/admin/types'
 import { cn } from '@/lib/utils'
 
-type Tab = 'stock' | 'movements'
-type StockFilter = 'all' | 'ok' | 'low' | 'out'
+type Tab = 'stock' | 'movements' | 'purchase' | 'counts'
+type StockFilter = 'all' | StockState | 'replenish'
 type MovementFilter = 'all' | InventoryMovementType
+type SortKey =
+  | 'risk'
+  | 'name'
+  | 'onHand'
+  | 'available'
+  | 'committed'
+  | 'cover'
+  | 'valuationCost'
+  | 'suggested'
 
-const stockRank: Record<string, number> = { out: 0, low: 1, ok: 2 }
+const stockRank: Record<StockState | 'replenish', number> = {
+  out: 0,
+  low: 1,
+  over: 2,
+  ok: 3,
+  replenish: 0,
+}
+
+const PAGE_SIZES = [25, 50, 100] as const
+
+const sortComparators: Record<SortKey, (a: StockPosition, b: StockPosition) => number> = {
+  risk: (a, b) => stockRank[a.state] - stockRank[b.state] || a.name.localeCompare(b.name, 'es'),
+  name: (a, b) => a.name.localeCompare(b.name, 'es'),
+  onHand: (a, b) => b.onHand - a.onHand,
+  available: (a, b) => b.available - a.available,
+  committed: (a, b) => b.committed - a.committed,
+  cover: (a, b) => (a.daysOfCover ?? Number.POSITIVE_INFINITY) - (b.daysOfCover ?? Number.POSITIVE_INFINITY),
+  valuationCost: (a, b) => b.valuationCost - a.valuationCost,
+  suggested: (a, b) => b.suggestedOrderQuantity - a.suggestedOrderQuantity,
+}
+
+const columnLabels: Record<SortKey, string> = {
+  risk: 'Riesgo',
+  name: 'Producto',
+  onHand: 'Existencias',
+  available: 'Disponible',
+  committed: 'Comprometido',
+  cover: 'Cobertura',
+  valuationCost: 'Valor en costo',
+  suggested: 'Sugerido',
+}
 
 const typeStyles: Record<InventoryMovementType, string> = {
   in: 'bg-emerald-50 text-emerald-700 ring-emerald-600/15',
@@ -109,39 +162,104 @@ export function InventoryView() {
   const {
     products,
     inventoryMovements,
+    orders,
+    warehouseLocations,
     settings,
     inventoryError,
     refreshInventory,
+    can,
+    createPurchaseRequest,
+    updateProduct,
   } = useAdmin()
   const [tab, setTab] = useState<Tab>('stock')
   const [query, setQuery] = useState('')
   const [stockFilter, setStockFilter] = useState<StockFilter>('all')
   const [categoryFilter, setCategoryFilter] = useState('all')
+  const [brandFilter, setBrandFilter] = useState('all')
+  const [locationFilter, setLocationFilter] = useState('all')
+  const [sortKey, setSortKey] = useState<SortKey>('risk')
+  const [sortDesc, setSortDesc] = useState(false)
+  const [page, setPage] = useState(1)
+  const [pageSize, setPageSize] = useState<number>(25)
+  const [selected, setSelected] = useState<string[]>([])
+  const [bulkLocation, setBulkLocation] = useState('')
   const [movementFilter, setMovementFilter] = useState<MovementFilter>('all')
+  const [movementSourceFilter, setMovementSourceFilter] = useState('all')
+  const [movementFrom, setMovementFrom] = useState('')
+  const [movementTo, setMovementTo] = useState('')
   const [movementLimit, setMovementLimit] = useState(60)
   const [registerOpen, setRegisterOpen] = useState(false)
   const [prefillProductId, setPrefillProductId] = useState<string | undefined>()
   const [historyProductId, setHistoryProductId] = useState<string | null>(null)
+
+  const canWrite = can('inventory', 'manage')
 
   const categories = useMemo(() => {
     const names = new Set(products.map((product) => product.category).filter(Boolean))
     return [...names].sort((a, b) => a.localeCompare(b, 'es'))
   }, [products])
 
+  const brands = useMemo(() => {
+    const names = new Set(products.map((product) => product.brand).filter(Boolean))
+    return [...names].sort((a, b) => a.localeCompare(b, 'es'))
+  }, [products])
+
+  const positions = useMemo(
+    () => buildStockPositions({ products, orders, movements: inventoryMovements }),
+    [products, orders, inventoryMovements]
+  )
+
+  const positionById = useMemo(
+    () => new Map(positions.map((position) => [position.productId, position])),
+    [positions]
+  )
+
+  const locationById = useMemo(
+    () => new Map(warehouseLocations.map((location) => [location.id, location])),
+    [warehouseLocations]
+  )
+
   const totals = useMemo(() => {
     let units = 0
-    let value = 0
+    let cost = 0
+    let retail = 0
+    let committed = 0
     let low = 0
     let out = 0
-    products.forEach((product) => {
-      units += Math.max(0, product.stock)
-      value += Math.max(0, product.stock) * (product.cost ?? 0)
-      const state = getStockState(product)
-      if (state === 'low') low += 1
-      if (state === 'out') out += 1
+    let over = 0
+    let replenishValue = 0
+    let coverDays = 0
+    let coverCount = 0
+    positions.forEach((position) => {
+      units += position.onHand
+      cost += position.valuationCost
+      retail += position.valuationRetail
+      committed += position.committed
+      if (position.state === 'low') low += 1
+      if (position.state === 'out') out += 1
+      if (position.state === 'over') over += 1
+      if (position.suggestedOrderQuantity > 0) {
+        replenishValue += position.suggestedOrderQuantity * position.unitCost
+      }
+      if (position.daysOfCover !== null) {
+        coverDays += position.daysOfCover
+        coverCount += 1
+      }
     })
-    return { units, value, low, out }
-  }, [products])
+    const atRisk = low + out
+    return {
+      units,
+      cost,
+      retail,
+      margin: retail > 0 ? ((retail - cost) / retail) * 100 : 0,
+      committed,
+      atRisk,
+      over,
+      replenishValue,
+      coverDays: coverCount > 0 ? Math.round(coverDays / coverCount) : null,
+      immobilizedPct: cost > 0 ? (over === 0 ? 0 : 0) : 0,
+    }
+  }, [positions])
 
   const lastMovementByProduct = useMemo(() => {
     const map = new Map<string, InventoryMovement>()

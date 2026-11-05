@@ -48,9 +48,8 @@ import {
   quoteTotals,
 } from '@/lib/admin/format'
 import type { Quote, QuoteLine, QuoteStatus } from '@/lib/admin/types'
+import { isEmail } from '@fj-solutions/contracts/domain'
 import { cn } from '@/lib/utils'
-
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
 const statusOrder: QuoteStatus[] = [
   'draft',
@@ -347,7 +346,7 @@ export function QuotesView({ initialQuery = '' }: { initialQuery?: string }) {
     if (draft.clientName.trim().length < 2) {
       nextErrors.clientName = 'Indica el nombre del contacto.'
     }
-    if (!EMAIL_PATTERN.test(draft.clientEmail.trim())) {
+    if (!isEmail(draft.clientEmail)) {
       nextErrors.clientEmail = 'Escribe un correo válido.'
     }
     if (draft.status !== 'draft' && draft.items.length === 0) {

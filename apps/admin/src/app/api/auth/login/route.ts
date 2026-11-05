@@ -1,3 +1,4 @@
+import { isEmail } from '@fj-solutions/contracts/domain'
 import { NextRequest, NextResponse } from 'next/server'
 import { apiBaseUrl, applySessionCookies, applyTwoFactorCookie } from '@/lib/auth/session'
 import type { SessionUser } from '@/lib/auth/types'
@@ -19,9 +20,8 @@ type ApiLoginResponse = {
   }
 }
 
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-
 function isCrossOrigin(request: NextRequest) {
+
   const origin = request.headers.get('origin')
   if (!origin) return false
 
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
   const email = typeof payload.email === 'string' ? payload.email.trim().slice(0, 160) : ''
   const password = typeof payload.password === 'string' ? payload.password : ''
 
-  if (!EMAIL_PATTERN.test(email) || password.length === 0) {
+  if (!isEmail(email) || password.length === 0) {
     return NextResponse.json(
       { success: false, message: 'Ingresa tu correo y contraseña.' },
       { status: 400 },

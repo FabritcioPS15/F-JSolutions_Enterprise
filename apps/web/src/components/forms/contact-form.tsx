@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { AlertCircle, ArrowRight, CheckCircle2, Loader2, Send } from 'lucide-react'
+import { isEmail } from '@fj-solutions/contracts/domain'
 
 type ContactFormData = {
   name: string
@@ -59,7 +60,7 @@ export function ContactForm() {
       nextErrors.name = 'Indícanos tu nombre.'
     }
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
+    if (!isEmail(form.email)) {
       nextErrors.email = 'Ingresa un correo válido.'
     }
 

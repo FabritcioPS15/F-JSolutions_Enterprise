@@ -1,4 +1,10 @@
 import type { admin } from '@fj-solutions/contracts'
+import {
+  isValidDocument,
+  lineTotal,
+  onlyDigits,
+  quoteTotals,
+} from '@fj-solutions/contracts/domain'
 import { AppError } from '../middleware/error-handler'
 import { prismaCommercialRepository } from '../repositories/prisma-commercial.repository'
 import type {
@@ -98,9 +104,8 @@ function normalizeDocument(
     throw new AppError('Indica el tipo y el número de documento, o deja ambos vacíos.', 400)
   }
   if (type && number) {
-    const digits = number.replace(/\D/g, '')
-    const expected = type === 'ruc' ? 11 : 8
-    if (digits.length !== expected) {
+    const digits = onlyDigits(number)
+    if (!isValidDocument(type, digits)) {
       throw new AppError(
         type === 'ruc'
           ? 'El RUC debe tener 11 dígitos.'
@@ -137,23 +142,24 @@ function sanitizeItems(items: QuoteItemPayload[] | undefined): QuoteLineInput[] 
       sku: item.sku?.trim() || null,
       quantity,
       unitPrice,
-      subtotal: round2(quantity * unitPrice),
+      subtotal: round2(lineTotal({ quantity, unitPrice })),
     }
   })
 }
 
-export function computeQuoteAmounts(
-  items: Array<{ subtotal: number }>,
-  taxRate = 18
-) {
+// El importe guardado lleva IGV incluido, igual que el cálculo del panel:
+// quoteTotals despeja la base imponible y el impuesto a partir del total.
+export function computeQuoteAmounts(items: Array<{ subtotal: number }>, taxRate = 18) {
   const rate = Math.min(100, Math.max(0, Number(taxRate) || 0))
-  const total = round2(items.reduce((sum, item) => sum + Math.max(0, item.subtotal), 0))
-  const net = rate > 0 ? round2(total / (1 + rate / 100)) : total
+  const { total, net, tax } = quoteTotals(
+    items.map((item) => ({ quantity: 1, unitPrice: item.subtotal })),
+    rate
+  )
   return {
     subtotal: net,
     discountTotal: 0,
     taxRate: rate,
-    taxAmount: round2(total - net),
+    taxAmount: tax,
     total,
   }
 }

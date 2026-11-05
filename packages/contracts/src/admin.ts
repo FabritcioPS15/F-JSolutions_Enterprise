@@ -26,6 +26,10 @@ export type AdminProduct = {
   commercialMessage: string
   stock: number
   minStock: number
+  /** Techo de existencias deseado; por encima se considera sobre-stock. */
+  maxStock?: number
+  /** Ubicación de resguardo por defecto del SKU. */
+  locationId?: string
   availability: ProductAvailability
   status: ProductStatus
   featured: boolean
@@ -208,6 +212,37 @@ export type ActivityEntry = {
 
 export type InventoryMovementType = 'in' | 'out' | 'adjustment'
 
+/** Origen documental de un movimiento; evita duplicar el kardex por módulo. */
+export type MovementSourceType =
+  | 'manual'
+  | 'purchase_receipt'
+  | 'stock_count'
+  | 'transfer'
+  | 'order'
+  | 'quote'
+
+export type WarehouseLocationKind = 'warehouse' | 'shelf' | 'transit'
+
+export type WarehouseLocation = {
+  id: string
+  code: string
+  name: string
+  kind: WarehouseLocationKind
+  /** Almacén padre cuando `kind` es 'shelf'; los transit no tienen padre. */
+  parentLocationId?: string
+  address?: string
+  responsible?: string
+  isDefault: boolean
+  notes?: string
+  createdAt: string
+  updatedAt: string
+}
+
+export type WarehouseLocationInput = Omit<
+  WarehouseLocation,
+  'id' | 'createdAt' | 'updatedAt'
+>
+
 export type InventoryMovement = {
   id: string
   productId: string
@@ -219,6 +254,18 @@ export type InventoryMovement = {
   resultingStock: number
   reason: string
   note?: string
+  /** Costo unitario del movimiento; base de la valorización. */
+  unitCost?: number
+  /** Documentó la operación (recepción, conteo, pedido) en lugar de un alta manual. */
+  sourceType?: MovementSourceType
+  sourceId?: string
+  /** Folio legible del documento origen (RC-0007, CT-0002…). */
+  sourceCode?: string
+  locationId?: string
+  /** Destino en transferencias entre almacenes. */
+  toLocationId?: string
+  /** Usuario que registró el movimiento. */
+  actor?: string
   createdAt: string
 }
 
@@ -228,6 +275,186 @@ export type InventoryMovementInput = {
   quantity: number
   reason: string
   note?: string
+  unitCost?: number
+  locationId?: string
+  toLocationId?: string
+}
+
+/** Posición de stock derivada; nunca se persiste para no duplicar el saldo. */
+export type StockPosition = {
+  productId: string
+  name: string
+  sku: string
+  brand: string
+  category: string
+  locationId?: string
+  onHand: number
+  /** Unidades comprometidas por pedidos abiertos sin despacho. */
+  committed: number
+  /** onHand - committed; lo único vendible. */
+  available: number
+  minStock: number
+  maxStock?: number
+  state: StockState
+  unitCost: number
+  valuationCost: number
+  valuationRetail: number
+  /** Cobertura en días según la demanda de los últimos 30 días. */
+  demand30d: number
+  daysOfCover: number | null
+  turnover30d: number | null
+  suggestedOrderQuantity: number
+}
+
+export type PurchaseRequestStatus =
+  | 'draft'
+  | 'pending'
+  | 'approved'
+  | 'rejected'
+  | 'ordered'
+  | 'cancelled'
+
+export type PurchaseRequestLine = {
+  productId: string
+  productName: string
+  sku: string
+  quantity: number
+  unitCost?: number
+  note?: string
+}
+
+export type PurchaseRequest = {
+  id: string
+  code: string
+  status: PurchaseRequestStatus
+  requestedBy: string
+  neededBy?: string
+  supplierId?: string
+  supplierName?: string
+  justification?: string
+  lines: PurchaseRequestLine[]
+  decisionNote?: string
+  decidedBy?: string
+  decidedAt?: string
+  createdAt: string
+  updatedAt: string
+}
+
+export type PurchaseRequestInput = Omit<
+  PurchaseRequest,
+  'id' | 'code' | 'status' | 'createdAt' | 'updatedAt' | 'decidedBy' | 'decidedAt'
+>
+
+export type PurchaseOrderStatus =
+  | 'draft'
+  | 'sent'
+  | 'partial'
+  | 'received'
+  | 'cancelled'
+
+export type PurchaseOrderLine = {
+  productId: string
+  productName: string
+  sku: string
+  quantity: number
+  receivedQuantity: number
+  unitCost: number
+  note?: string
+}
+
+export type PurchaseOrder = {
+  id: string
+  code: string
+  supplierId: string
+  supplierName: string
+  status: PurchaseOrderStatus
+  currency: Currency
+  /** Ocasionada por una solicitud de compra aprobada. */
+  requestId?: string
+  requestCode?: string
+  expectedAt?: string
+  lines: PurchaseOrderLine[]
+  notes?: string
+  createdBy: string
+  createdAt: string
+  updatedAt: string
+}
+
+export type PurchaseOrderInput = Omit<
+  PurchaseOrder,
+  'id' | 'code' | 'status' | 'createdAt' | 'updatedAt' | 'lines'
+> & {
+  lines: Array<
+    Omit<PurchaseOrderLine, 'receivedQuantity'> & { receivedQuantity?: number }
+  >
+}
+
+export type GoodsReceiptCondition = 'good' | 'damaged' | 'incomplete'
+
+export type GoodsReceiptLine = {
+  productId: string
+  productName: string
+  sku: string
+  orderedQuantity: number
+  receivedQuantity: number
+  rejectedQuantity: number
+  locationId?: string
+  note?: string
+}
+
+export type GoodsReceipt = {
+  id: string
+  code: string
+  purchaseOrderId: string
+  purchaseOrderCode: string
+  supplierName: string
+  condition: GoodsReceiptCondition
+  receivedBy: string
+  receivedAt: string
+  lines: GoodsReceiptLine[]
+  notes?: string
+  createdAt: string
+}
+
+export type GoodsReceiptInput = Omit<
+  GoodsReceipt,
+  'id' | 'code' | 'createdAt' | 'lines'
+> & {
+  lines: Array<Omit<GoodsReceiptLine, 'orderedQuantity'> & { orderedQuantity?: number }>
+}
+
+export type StockCountStatus = 'open' | 'posted' | 'cancelled'
+
+export type StockCountLine = {
+  productId: string
+  productName: string
+  sku: string
+  /** Saldo del sistema al momento de abrir el conteo. */
+  systemQuantity: number
+  /** Null mientras no se captura el conteo. */
+  countedQuantity: number | null
+  locationId?: string
+  note?: string
+}
+
+export type StockCount = {
+  id: string
+  code: string
+  name: string
+  status: StockCountStatus
+  locationId?: string
+  countedBy: string
+  startedAt: string
+  finishedAt?: string
+  lines: StockCountLine[]
+  notes?: string
+}
+
+export type StockCountInput = Omit<
+  StockCount,
+  'id' | 'code' | 'status' | 'startedAt' | 'finishedAt' | 'lines'
+> & {
+  lines: Array<Omit<StockCountLine, 'systemQuantity' | 'countedQuantity'> & { countedQuantity?: number | null }>
 }
 
 export type WebProjectType =
@@ -292,6 +519,148 @@ export type DeploymentInput = {
   deployedAt?: string
 }
 
+// ─── Usuarios y permisos ─────────────────────────────────────────────────────
+
+export type AdminUserRole = 'superadmin' | 'admin' | 'ventas' | 'soporte' | 'consulta'
+
+export type AdminUserStatus = 'active' | 'invited' | 'disabled'
+
+export type AdminUser = {
+  id: string
+  name: string
+  email: string
+  phone: string
+  role: AdminUserRole
+  status: AdminUserStatus
+  twoFactorEnabled: boolean
+  lastLoginAt?: string
+  createdAt: string
+  updatedAt: string
+}
+
+export type AdminUserInput = Omit<
+  AdminUser,
+  'id' | 'lastLoginAt' | 'createdAt' | 'updatedAt'
+>
+
+export type SupplierStatus = 'active' | 'inactive'
+
+export type Supplier = {
+  id: string
+  name: string
+  ruc: string
+  contactName: string
+  email: string
+  phone: string
+  city: string
+  address: string
+  categoryIds: string[]
+  leadTimeDays: number
+  minimumOrder: number
+  rating: number
+  status: SupplierStatus
+  notes: string
+  createdAt: string
+  updatedAt: string
+}
+
+export type SupplierInput = Omit<Supplier, 'id' | 'createdAt' | 'updatedAt'>
+
+// Estados en minúsculas, como el resto del panel; la capa de persistencia los
+// mapea al enum OrderStatus de Prisma (PENDING … CANCELLED).
+export type OrderStatus =
+  | 'pending'
+  | 'confirmed'
+  | 'processing'
+  | 'shipped'
+  | 'delivered'
+  | 'cancelled'
+
+export type PaymentStatus = 'pending' | 'partial' | 'paid'
+
+export type DeliveryMethod = 'pickup' | 'courier' | 'own'
+
+export type OrderLine = {
+  id: string
+  productId?: string
+  name: string
+  sku?: string
+  quantity: number
+  unitPrice: number
+  deliveredQuantity: number
+}
+
+export type DeliveryEvent = {
+  id: string
+  status: OrderStatus
+  note: string
+  at: string
+}
+
+export type Order = {
+  id: string
+  code: string
+  clientId?: string
+  clientName: string
+  clientEmail: string
+  clientPhone: string
+  quoteCode?: string
+  status: OrderStatus
+  paymentStatus: PaymentStatus
+  currency: Currency
+  items: OrderLine[]
+  deliveryMethod: DeliveryMethod
+  deliveryAddress: string
+  recipientName: string
+  carrier: string
+  trackingNumber: string
+  expectedDeliveryAt?: string
+  deliveredAt?: string
+  deliveryEvents: DeliveryEvent[]
+  notes: string
+  createdAt: string
+  updatedAt: string
+}
+
+export type OrderInput = Omit<
+  Order,
+  'id' | 'code' | 'status' | 'deliveredAt' | 'deliveryEvents' | 'createdAt' | 'updatedAt'
+>
+
+export type OrderDeliveryInput = {
+  status: OrderStatus
+  note?: string
+  carrier?: string
+  trackingNumber?: string
+  recipientName?: string
+  expectedDeliveryAt?: string
+}
+
+export type AttributeType = 'text' | 'number' | 'select' | 'boolean'
+
+export type AttributeStatus = 'active' | 'inactive'
+
+// `keywords` detecta si las especificaciones libres de un producto ya declaran
+// el atributo; así la cobertura se calcula con los datos reales del catálogo.
+export type ProductAttribute = {
+  id: string
+  label: string
+  type: AttributeType
+  unit: string
+  options: string[]
+  keywords: string[]
+  categoryIds: string[]
+  required: boolean
+  status: AttributeStatus
+  createdAt: string
+  updatedAt: string
+}
+
+export type ProductAttributeInput = Omit<
+  ProductAttribute,
+  'id' | 'createdAt' | 'updatedAt'
+>
+
 export type AdminData = {
   products: AdminProduct[]
   categories: Category[]
@@ -302,10 +671,19 @@ export type AdminData = {
   settings: StoreSettings
   activity: ActivityEntry[]
   inventoryMovements: InventoryMovement[]
+  warehouseLocations: WarehouseLocation[]
+  purchaseRequests: PurchaseRequest[]
+  purchaseOrders: PurchaseOrder[]
+  goodsReceipts: GoodsReceipt[]
+  stockCounts: StockCount[]
   webProjects: WebProject[]
+  users: AdminUser[]
+  suppliers: Supplier[]
+  orders: Order[]
+  attributes: ProductAttribute[]
 }
 
-export type StockState = 'ok' | 'low' | 'out'
+export type StockState = 'ok' | 'low' | 'out' | 'over'
 
 export type ToastVariant = 'success' | 'error' | 'info'
 

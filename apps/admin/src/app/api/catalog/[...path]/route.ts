@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { actionForMethod } from '@/lib/admin/access'
+import { guardPermission } from '@/lib/auth/guard'
 import { apiBaseUrl, getAccessToken } from '@/lib/auth/session'
 
 const ALLOWED_SEGMENT = /^[A-Za-z0-9._-]+$/
@@ -33,6 +35,12 @@ async function forward(request: NextRequest) {
   const method = request.method
   const hasBody = method !== 'GET' && method !== 'HEAD'
   const body = hasBody ? await request.text() : undefined
+
+  // El primer segmento del catálogo es el módulo de permisos: products,
+  // categories, brands o attributes.
+  const resource = request.nextUrl.pathname.replace(/^\/api\/catalog\/?/, '').split('/')[0]
+  const guard = await guardPermission(resource, actionForMethod(method))
+  if (!guard.ok) return guard.response
 
   try {
     const response = await fetch(target, {

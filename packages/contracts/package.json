@@ -4,6 +4,13 @@
   "description": "Tipos compartidos entre web y api",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "admin": ["./dist/admin.d.ts"],
+      "domain": ["./dist/domain.d.ts"],
+      "permissions": ["./dist/permissions.d.ts"]
+    }
+  },
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -12,6 +19,14 @@
     "./admin": {
       "types": "./dist/admin.d.ts",
       "default": "./dist/admin.js"
+    },
+    "./domain": {
+      "types": "./dist/domain.d.ts",
+      "default": "./dist/domain.js"
+    },
+    "./permissions": {
+      "types": "./dist/permissions.d.ts",
+      "default": "./dist/permissions.js"
     }
   },
   "files": [

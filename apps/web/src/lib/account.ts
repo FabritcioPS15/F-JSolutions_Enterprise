@@ -1,5 +1,8 @@
 import type { QuoteItem } from '@/lib/quote'
 
+// Validaciones y correlativos canónicos compartidos con el panel y la API.
+export { buildQuoteCode, isEmail, isValidDocument, onlyDigits } from '@fj-solutions/contracts/domain'
+
 // ─── Perfil de la cuenta (se guarda en el navegador) ──────────────────────────
 
 export type ContactPreference = 'email' | 'phone' | 'whatsapp'
@@ -63,23 +66,8 @@ export function documentLabel(type: DocumentType | null | undefined): string {
   return type ? DOCUMENT_LABELS[type] : 'Documento'
 }
 
-export function onlyDigits(value: string): string {
-  return value.replace(/\D/g, '')
-}
-
-export function isValidDocument(type: DocumentType, value: string): boolean {
-  const digits = onlyDigits(value)
-  return type === 'dni' ? digits.length === 8 : digits.length === 11
-}
-
 export function isProfileComplete(profile: AccountProfile | null | undefined): boolean {
   return Boolean(profile?.name?.trim() && profile?.email?.trim())
-}
-
-export function buildQuoteCode(date = new Date()): string {
-  const stamp = date.toISOString().slice(0, 10).replace(/-/g, '')
-  const random = Math.random().toString(36).slice(2, 6).toUpperCase()
-  return `COT-${stamp}-${random}`
 }
 
 export function formatQuoteDate(value: string): string {

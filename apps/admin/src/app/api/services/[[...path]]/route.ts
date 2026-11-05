@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { actionForMethod } from '@/lib/admin/access'
+import { guardPermission } from '@/lib/auth/guard'
 import { apiBaseUrl, getAccessToken } from '@/lib/auth/session'
 
 const ALLOWED_SEGMENT = /^[A-Za-z0-9._-]+$/
@@ -36,6 +38,11 @@ async function forward(request: NextRequest) {
   const method = request.method
   const hasBody = method !== 'GET' && method !== 'HEAD'
   const body = hasBody ? await request.text() : undefined
+
+  // Publicar o despublicar un servicio lo decide la API; el proxy solo aplica el
+  // permiso grueso del verbo.
+  const guard = await guardPermission('services', actionForMethod(method))
+  if (!guard.ok) return guard.response
 
   try {
     const response = await fetch(target, {

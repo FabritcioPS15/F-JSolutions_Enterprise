@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { guardPermission } from '@/lib/auth/guard'
 import { apiBaseUrl, getAccessToken } from '@/lib/auth/session'
 
 const ALLOWED_SEGMENT = /^[A-Za-z0-9._-]+$/
@@ -35,6 +36,14 @@ export async function GET(request: NextRequest) {
       { status: 400 }
     )
   }
+
+  // El resumen pertenece a dashboard.view y los reportes a reports.view: son
+  // permisos distintos porque no todo el que ve el tablero exporta información.
+  const guard = await guardPermission(
+    request.nextUrl.pathname.includes('/reports/') ? 'reports' : 'dashboard',
+    'view'
+  )
+  if (!guard.ok) return guard.response
 
   try {
     const response = await fetch(target, {

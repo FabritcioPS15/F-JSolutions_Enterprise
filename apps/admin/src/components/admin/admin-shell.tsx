@@ -19,11 +19,13 @@ import {
   LogOut,
   Menu,
   Package,
+  PackageCheck,
   PanelLeftClose,
   PanelLeftOpen,
   Search,
   Settings,
   ShieldCheck,
+  ShieldX,
   SlidersHorizontal,
   Tags,
   Truck,
@@ -34,8 +36,12 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useAdmin } from '@/components/admin/admin-provider'
+import { EmptyState, btnSecondary } from '@/components/admin/ui'
+import { permissionModules } from '@/lib/admin/permissions'
 import { getStockState } from '@/lib/admin/format'
+import { openOrderStatuses } from '@/lib/admin/operations'
 import type { SessionUser } from '@/lib/auth/types'
+import { moduleByHref, moduleForPathname } from '@/lib/admin/access'
 
 type NavItem = {
   href: string
@@ -45,7 +51,6 @@ type NavItem = {
   badge?: number
   badgeHint?: string
   badgeTone?: 'amber' | 'blue'
-  planned?: boolean
 }
 
 type NavSection = {
@@ -72,6 +77,7 @@ function getBreadcrumb(pathname: string) {
   if (pathname.startsWith('/productos/')) return { section: 'Catálogo', title: 'Detalle del producto' }
   if (pathname === '/categorias') return { section: 'Catálogo', title: 'Categorías' }
   if (pathname === '/marcas') return { section: 'Catálogo', title: 'Marcas' }
+  if (pathname === '/atributos') return { section: 'Catálogo', title: 'Atributos y especificaciones' }
   if (pathname === '/cotizaciones') return { section: 'Comercial', title: 'Cotizaciones' }
   if (pathname === '/clientes') return { section: 'Comercial', title: 'Clientes' }
   if (pathname === '/solicitudes') return { section: 'Atención al cliente', title: 'Mesa de ayuda' }
@@ -83,6 +89,9 @@ function getBreadcrumb(pathname: string) {
   if (pathname === '/reportes') return { section: 'General', title: 'Reportes' }
   if (pathname === '/actividad') return { section: 'General', title: 'Actividad reciente' }
   if (pathname === '/inventario') return { section: 'Operaciones', title: 'Inventario' }
+  if (pathname === '/pedidos') return { section: 'Operaciones', title: 'Pedidos y entregas' }
+  if (pathname === '/proveedores') return { section: 'Operaciones', title: 'Proveedores' }
+  if (pathname === '/usuarios') return { section: 'Sistema', title: 'Usuarios y permisos' }
   if (pathname === '/proyectos') return { section: 'Operaciones', title: 'Proyectos web' }
   if (pathname === '/configuracion') return { section: 'Sistema', title: 'Configuración' }
   return { section: 'Panel', title: 'Administración' }
@@ -98,8 +107,10 @@ export function AdminShell({
   const pathname = usePathname()
   const router = useRouter()
   const {
+    can,
     products,
     quotes,
+    orders,
     requests,
     settings,
     catalogSource,
@@ -193,6 +204,9 @@ export function AdminShell({
     (quote) => quote.status === 'draft' || quote.status === 'new' || quote.status === 'review'
   ).length
   const newRequestCount = requests.filter((request) => request.status === 'new').length
+  const openOrderCount = orders.filter((order) =>
+    openOrderStatuses.includes(order.status)
+  ).length
 
   const sections: NavSection[] = [
     {
@@ -218,7 +232,7 @@ export function AdminShell({
         },
         { href: '/categorias', label: 'Categorías', icon: FolderTree },
         { href: '/marcas', label: 'Marcas', icon: Tags },
-        { href: '/atributos', label: 'Atributos y especificaciones', icon: SlidersHorizontal, planned: true },
+        { href: '/atributos', label: 'Atributos y especificaciones', icon: SlidersHorizontal },
       ],
     },
     {
@@ -251,20 +265,50 @@ export function AdminShell({
     {
       label: 'Operaciones',
       items: [
+        {
+          href: '/pedidos',
+          label: 'Pedidos y entregas',
+          icon: PackageCheck,
+          badge: openOrderCount,
+          badgeHint:
+            openOrderCount === 1
+              ? '1 pedido en ruta de entrega'
+              : `${openOrderCount} pedidos en ruta de entrega`,
+          badgeTone: 'blue',
+        },
         { href: '/inventario', label: 'Inventario', icon: Boxes },
         { href: '/servicios', label: 'Servicios TI', icon: Wrench },
         { href: '/proyectos', label: 'Proyectos web', icon: Globe2 },
-        { href: '/proveedores', label: 'Proveedores', icon: Truck, planned: true },
+        { href: '/proveedores', label: 'Proveedores', icon: Truck },
       ],
     },
     {
       label: 'Administración',
       items: [
-        { href: '/usuarios', label: 'Usuarios y permisos', icon: ShieldCheck, planned: true },
+        { href: '/usuarios', label: 'Usuarios y permisos', icon: ShieldCheck },
         { href: '/configuracion', label: 'Configuración', icon: Settings },
       ],
     },
   ]
+
+  // El sidebar lista solo lo que el rol puede ver. Es la misma matriz que revisa
+  // el BFF antes de reenviar a la API, así que ocultar no es la única barrera.
+  const visibleSections = sections
+    .map((section) => ({
+      ...section,
+      items: section.items.filter((item) => {
+        const module = moduleByHref[item.href]
+        return !module || can(module)
+      }),
+    }))
+    .filter((section) => section.items.length > 0)
+
+  // Entrar directo por URL también está cubierto: si falta el permiso de lectura
+  // se muestra el bloqueo en lugar de la pantalla pedida.
+  const requestedModule = moduleForPathname(pathname)
+  const blockedByPermission = requestedModule ? !can(requestedModule) : false
+  const blockedModuleLabel =
+    permissionModules.find((module) => module.key === requestedModule)?.label ?? requestedModule
 
   const breadcrumb = getBreadcrumb(pathname)
 
@@ -343,7 +387,7 @@ export function AdminShell({
               <PanelLeftOpen className="size-4" />
             </button>
           )}
-          {sections.map((section) => (
+          {visibleSections.map((section) => (
             <div key={section.label} className="mb-6 last:mb-0">
               <p
                 className={cn(
@@ -357,37 +401,9 @@ export function AdminShell({
               <ul className="space-y-0.5">
                 {section.items.map((item) => {
                   const Icon = item.icon
-                  const active =
-                    !item.planned &&
-                    (item.exact
-                      ? pathname === item.href
-                      : pathname === item.href || pathname.startsWith(`${item.href}/`))
-
-                  if (item.planned) {
-                    return (
-                      <li key={item.href}>
-                        <span
-                          className={cn(
-                            'flex cursor-not-allowed items-center gap-3 rounded-xl px-3 py-2.5 text-[13px] font-medium text-slate-600',
-                            collapsed && 'lg:justify-center lg:px-0'
-                          )}
-                          title={`${item.label} · disponible en una próxima etapa`}
-                          aria-disabled="true"
-                        >
-                          <Icon className="size-[18px] shrink-0 text-slate-600" aria-hidden="true" />
-                          <span className={cn('truncate', collapsed && 'lg:hidden')}>{item.label}</span>
-                          <span
-                            className={cn(
-                              'ml-auto rounded-full bg-white/[0.04] px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-slate-500 ring-1 ring-inset ring-white/[0.06]',
-                              collapsed && 'lg:hidden'
-                            )}
-                          >
-                            Pronto
-                          </span>
-                        </span>
-                      </li>
-                    )
-                  }
+                  const active = item.exact
+                    ? pathname === item.href
+                    : pathname === item.href || pathname.startsWith(`${item.href}/`)
 
                   return (
                     <li key={item.href}>
@@ -446,28 +462,13 @@ export function AdminShell({
         <div className="shrink-0 space-y-3 border-t border-white/[0.06] p-4">
           <div
             className={cn(
-              'rounded-2xl bg-white/[0.035] p-3 ring-1 ring-inset ring-white/[0.06]',
+              'rounded-2xl bg-white/[0.035] px-3 py-2.5 ring-1 ring-inset ring-white/[0.06]',
               collapsed && 'lg:hidden'
             )}
           >
-            <div className="flex items-center gap-2">
-              <span className="relative flex size-2">
-                <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-60" />
-                <span className="relative inline-flex size-2 rounded-full bg-emerald-400" />
-              </span>
-              <p className="text-[11px] font-semibold text-slate-300">
-                {catalogSource === 'api' ? 'Catálogo sincronizado' : 'Datos locales activos'}
-              </p>
-            </div>
-            <p className="mt-1.5 text-[10.5px] leading-relaxed text-slate-500">
-              {catalogSource === 'api'
-                ? 'Los cambios se guardan en la base de datos a través de la API del catálogo.'
-                : 'El catálogo se guarda en este navegador. Exporta un respaldo desde Configuración.'}
-            </p>
-            <p className="mt-1 text-[10.5px] leading-relaxed text-slate-500">
-              {commercialSource === 'api'
-                ? 'Clientes y cotizaciones sincronizados con la base de datos.'
-                : 'Clientes y cotizaciones se mantienen en el respaldo local.'}
+            <p className="truncate text-xs font-semibold text-slate-200">{settings.legalName}</p>
+            <p className="mt-0.5 font-mono text-[11px] tabular-nums tracking-tight text-slate-400">
+              RUC {settings.ruc}
             </p>
           </div>
 
@@ -630,7 +631,20 @@ export function AdminShell({
         ) : null}
 
         <main className="mx-auto w-full max-w-[1440px] flex-1 px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
-          {children}
+          {blockedByPermission ? (
+            <EmptyState
+              icon={ShieldX}
+              title="Sin acceso a esta sección"
+              description={`Tu rol (${user.roleName}) no tiene el permiso de lectura de ${blockedModuleLabel}. Un superadministrador puede ampliarlo desde Usuarios y permisos.`}
+              action={
+                <Link href="/" className={btnSecondary}>
+                  Volver al resumen
+                </Link>
+              }
+            />
+          ) : (
+            children
+          )}
         </main>
 
         <footer className="mx-auto flex w-full max-w-[1440px] flex-wrap items-center justify-between gap-2 px-4 pb-6 text-[10.5px] text-slate-400 sm:px-6 lg:px-8">

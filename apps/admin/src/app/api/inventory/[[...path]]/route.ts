@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { guardPermission } from '@/lib/auth/guard'
 import { apiBaseUrl, getAccessToken } from '@/lib/auth/session'
 
 const ALLOWED_SEGMENT = /^[A-Za-z0-9._-]+$/
@@ -34,6 +35,11 @@ async function forward(request: NextRequest) {
 
   const hasBody = request.method !== 'GET' && request.method !== 'HEAD'
   const body = hasBody ? await request.text() : undefined
+
+  // Leer existencias es inventory.view; registrar movimientos y ajustes exige
+  // inventory.manage. La API repite el check, el proxy solo corta antes.
+  const guard = await guardPermission('inventory', hasBody ? 'manage' : 'view')
+  if (!guard.ok) return guard.response
 
   try {
     const response = await fetch(target, {

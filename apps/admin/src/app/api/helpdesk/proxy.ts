@@ -1,4 +1,6 @@
 import { NextResponse } from 'next/server'
+import { actionForMethod } from '@/lib/admin/access'
+import { guardPermission } from '@/lib/auth/guard'
 import { apiBaseUrl, getAccessToken } from '@/lib/auth/session'
 
 export async function proxyHelpdesk(path: string, init: RequestInit = {}) {
@@ -9,6 +11,12 @@ export async function proxyHelpdesk(path: string, init: RequestInit = {}) {
       { status: 401 },
     )
   }
+
+  // Todo lo de mesa de ayuda vive bajo el módulo requests; responder tiene su
+  // propia acción y la API sigue validando requests.assign por separado.
+  const action = path.endsWith('/reply') ? 'reply' : actionForMethod(init.method ?? 'GET')
+  const guard = await guardPermission('requests', action)
+  if (!guard.ok) return guard.response
 
   const headers = new Headers(init.headers)
   headers.set('authorization', `Bearer ${token}`)
