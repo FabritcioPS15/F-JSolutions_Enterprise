@@ -22,6 +22,7 @@ import {
 import { ConfirmDialog } from '@/components/admin/confirm-dialog'
 import { ExportMenu } from '@/components/admin/export-menu'
 import { Modal } from '@/components/admin/modal'
+import { RowActions } from '@/components/admin/row-actions'
 import { useToast } from '@/components/admin/toast'
 import {
   EmptyState,
@@ -460,39 +461,40 @@ export function ClientsView() {
                         <td className="px-4 py-3">
                           <ClientStatusBadge status={client.status} />
                         </td>
-                        <td className="whitespace-nowrap px-5 py-3">
-                          <div className="flex items-center justify-end gap-0.5">
-                            <Link
-                              href={`/cotizaciones?q=${encodeURIComponent(client.email)}`}
-                              className={iconButton}
-                              title="Ver cotizaciones del cliente"
-                              aria-label={`Ver cotizaciones de ${client.company || client.name}`}
-                            >
-                              <FileText className="size-3.5" />
-                            </Link>
-                            {can('clients', 'update') && (
-                              <button
-                                type="button"
-                                onClick={() => setEditing(client)}
-                                className={iconButton}
-                                title="Editar cliente"
-                                aria-label={`Editar ${client.company || client.name}`}
-                              >
-                                <Pencil className="size-3.5" />
-                              </button>
-                            )}
-                            {can('clients', 'delete') && (
-                              <button
-                                type="button"
-                                onClick={() => setDeleteTarget(client)}
-                                className={cn(iconButton, 'hover:bg-red-50 hover:text-red-600')}
-                                title="Eliminar cliente"
-                                aria-label={`Eliminar ${client.company || client.name}`}
-                              >
-                                <Trash2 className="size-3.5" />
-                              </button>
-                            )}
-                          </div>
+                        <td className="whitespace-nowrap px-5 py-3 text-right">
+                          <RowActions
+                            label={`Acciones para ${client.company || client.name}`}
+                            title={client.company || client.name}
+                            items={[
+                              {
+                                key: 'quotes',
+                                label: 'Ver cotizaciones',
+                                icon: FileText,
+                                href: `/cotizaciones?q=${encodeURIComponent(client.email)}`,
+                              },
+                              ...(can('clients', 'update')
+                                ? [
+                                    {
+                                      key: 'edit',
+                                      label: 'Editar cliente',
+                                      icon: Pencil,
+                                      onSelect: () => setEditing(client),
+                                    },
+                                  ]
+                                : []),
+                              ...(can('clients', 'delete')
+                                ? [
+                                    {
+                                      key: 'delete',
+                                      label: 'Eliminar cliente',
+                                      icon: Trash2,
+                                      tone: 'danger' as const,
+                                      onSelect: () => setDeleteTarget(client),
+                                    },
+                                  ]
+                                : []),
+                            ]}
+                          />
                         </td>
                       </tr>
                     )

@@ -17,6 +17,7 @@ import { useAdmin } from '@/components/admin/admin-provider'
 import { ConfirmDialog } from '@/components/admin/confirm-dialog'
 import { ExportMenu } from '@/components/admin/export-menu'
 import { Modal } from '@/components/admin/modal'
+import { RowActions } from '@/components/admin/row-actions'
 import { useToast } from '@/components/admin/toast'
 import {
   EmptyState,
@@ -29,7 +30,6 @@ import {
   StatusToggle,
   btnPrimary,
   btnSecondary,
-  iconButton,
   inputClass,
   tableClass,
   tableHeadRowClass,
@@ -582,48 +582,35 @@ export function AttributesView() {
                           Alta el {formatDate(attribute.createdAt)}
                         </p>
                       </td>
-                      <td className="px-4 py-3">
-                        <div className="flex items-center justify-end gap-1">
-                          <button
-                            type="button"
-                            className={iconButton}
-                            onClick={() => toggleStatus(attribute)}
-                            aria-label={
-                              attribute.status === 'active'
-                                ? `Desactivar ${attribute.label}`
-                                : `Activar ${attribute.label}`
-                            }
-                            title={
-                              attribute.status === 'active'
-                                ? 'Desactivar atributo'
-                                : 'Activar atributo'
-                            }
-                          >
-                            {attribute.status === 'active' ? (
-                              <Ban className="size-4" />
-                            ) : (
-                              <CheckCircle2 className="size-4" />
-                            )}
-                          </button>
-                          <button
-                            type="button"
-                            className={iconButton}
-                            onClick={() => setEditing(attribute)}
-                            aria-label={`Editar ${attribute.label}`}
-                            title="Editar"
-                          >
-                            <Pencil className="size-4" />
-                          </button>
-                          <button
-                            type="button"
-                            className={cn(iconButton, 'hover:bg-rose-50 hover:text-rose-600')}
-                            onClick={() => setDeleteTarget(attribute)}
-                            aria-label={`Eliminar ${attribute.label}`}
-                            title="Eliminar"
-                          >
-                            <Trash2 className="size-4" />
-                          </button>
-                        </div>
+                      <td className="px-4 py-3 text-right">
+                        <RowActions
+                          label={`Acciones para ${attribute.label}`}
+                          title={attribute.label}
+                          items={[
+                            {
+                              key: 'status',
+                              label:
+                                attribute.status === 'active'
+                                  ? 'Desactivar atributo'
+                                  : 'Activar atributo',
+                              icon: attribute.status === 'active' ? Ban : CheckCircle2,
+                              onSelect: () => toggleStatus(attribute),
+                            },
+                            {
+                              key: 'edit',
+                              label: 'Editar atributo',
+                              icon: Pencil,
+                              onSelect: () => setEditing(attribute),
+                            },
+                            {
+                              key: 'delete',
+                              label: 'Eliminar atributo',
+                              icon: Trash2,
+                              tone: 'danger',
+                              onSelect: () => setDeleteTarget(attribute),
+                            },
+                          ]}
+                        />
                       </td>
                     </tr>
                   )

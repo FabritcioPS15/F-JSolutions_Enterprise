@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers'
 import type { NextResponse } from 'next/server'
+import { LOCAL_SESSION_MAX_AGE, readLocalSession } from './local-auth'
 import type { SessionUser } from './types'
 
 export const ACCESS_COOKIE = 'fj_admin_access'
@@ -63,23 +64,22 @@ export async function getSessionUser(): Promise<SessionUser | null> {
   const token = await getAccessToken()
   if (!token) return null
 
-  try {
-    const response = await fetch(`${apiBaseUrl()}/auth/me`, {
-      headers: { Authorization: `Bearer ${token}` },
-      cache: 'no-store',
-      signal: AbortSignal.timeout(5_000),
-    })
+  // Sesión local: se valida la firma de la cookie sin consultar la API.
+  return readLocalSession(token)
+}
 
-    if (!response.ok) return null
+export function applyLocalSessionCookie(response: NextResponse, token: string) {
+  clearTwoFactorCookie(response)
 
-    const body = (await response.json().catch(() => null)) as
-      | { success?: boolean; data?: SessionUser }
-      | null
-
-    return body?.success && body.data ? body.data : null
-  } catch {
-    return null
-  }
+  response.cookies.set({
+    name: ACCESS_COOKIE,
+    value: token,
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+    path: '/',
+    maxAge: LOCAL_SESSION_MAX_AGE,
+  })
 }
 
 export function applySessionCookies(response: NextResponse, tokens: AuthTokens) {

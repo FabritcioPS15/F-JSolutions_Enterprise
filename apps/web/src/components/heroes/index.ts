@@ -1,4 +1,12 @@
+export {
+  ACTIVE_HOME_HERO,
+  HomeHero,
+  HomeHeroCarousel,
+  homeHeroVariants,
+  type HomeHeroVariant,
+} from '@/components/heroes/home-hero'
 export { CorporateHero } from '@/components/heroes/corporate-hero'
+export { SpotlightHero } from '@/components/heroes/spotlight-hero'
 export { CatalogHero } from '@/components/heroes/catalog-hero'
 export { QuoteHero } from '@/components/heroes/quote-hero'
 export { ServiceHero, type ServiceHeroLink } from '@/components/heroes/service-hero'

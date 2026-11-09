@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import {
   ArrowRight,
@@ -18,8 +18,10 @@ import {
 import { FaFacebookF, FaLinkedinIn, FaWhatsapp, FaXTwitter } from 'react-icons/fa6'
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
 import { QuotePanel } from '@/components/sections/quote-panel'
-import { findProductBySlug, type Product } from '@/lib/catalog'
-import { fetchStoreProductBySlug } from '@/lib/catalog-api'
+import { ProductCard } from '@/components/cards/product-card'
+import { findProductBySlug, products as staticProducts, type Product } from '@/lib/catalog'
+import { fetchStoreProductBySlug, fetchStoreProducts } from '@/lib/catalog-api'
+import { resolveRelatedProducts } from '@/lib/related-products'
 import { useQuote } from '@/lib/use-quote'
 import { useFavorites } from '@/lib/use-favorites'
 
@@ -30,6 +32,7 @@ type ProductDetailProps = {
 export function ProductDetail({ slug }: ProductDetailProps) {
   const staticProduct = findProductBySlug(slug)
   const [product, setProduct] = useState<Product | undefined>(staticProduct)
+  const [catalog, setCatalog] = useState<Product[]>(staticProducts)
   const [loading, setLoading] = useState(!staticProduct)
   const quote = useQuote()
   const { isFavorite, toggleFavorite } = useFavorites()
@@ -90,6 +93,26 @@ export function ProductDetail({ slug }: ProductDetailProps) {
       document.removeEventListener('keydown', handleKeyDown)
     }
   }, [shareOpen])
+
+  // Los productos publicados amplían el catálogo local para calcular sugerencias.
+  useEffect(() => {
+    let active = true
+
+    fetchStoreProducts()
+      .then((items) => {
+        if (active && items.length > 0) setCatalog(items)
+      })
+      .catch(() => undefined)
+
+    return () => {
+      active = false
+    }
+  }, [])
+
+  const relatedProducts = useMemo(
+    () => (product ? resolveRelatedProducts(product, catalog) : []),
+    [product, catalog]
+  )
 
   if (!product) {
     return (
@@ -492,16 +515,32 @@ export function ProductDetail({ slug }: ProductDetailProps) {
         </div>
 
         {/* Productos relacionados */}
-        {product.relatedProducts && product.relatedProducts.length > 0 && (
+        {relatedProducts.length > 0 && (
           <div className="mt-12 border-t border-[#E2E8F0] pt-8">
-            <h2 className="text-2xl font-bold">Productos relacionados</h2>
-            <div className="mt-6">
+            <div className="flex flex-wrap items-end justify-between gap-3">
+              <div>
+                <h2 className="text-2xl font-bold">Productos relacionados</h2>
+                <p className="mt-1 text-sm text-[#64748B]">
+                  Equipos y accesorios que suelen elegirse junto a este producto.
+                </p>
+              </div>
               <Link
-                href="/productos"
+                href={`/productos?categoria=${encodeURIComponent(product.category)}`}
                 className="inline-flex items-center gap-2 text-sm font-semibold text-[#2563EB] hover:underline"
               >
-                Ver productos similares <ArrowRight className="size-4" />
+                Ver todos <ArrowRight className="size-4" />
               </Link>
+            </div>
+
+            <div className="-mx-4 mt-6 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-4">
+              {relatedProducts.map((related) => (
+                <div
+                  key={related.id}
+                  className="w-[78%] shrink-0 snap-start sm:w-auto"
+                >
+                  <ProductCard product={related} onAddToQuote={quote.addItem} />
+                </div>
+              ))}
             </div>
           </div>
         )}

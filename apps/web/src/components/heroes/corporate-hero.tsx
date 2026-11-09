@@ -18,9 +18,11 @@ import { OpsConsoleVisual } from '@/components/heroes/hero-visuals'
  */
 export function CorporateHero() {
   return (
-    <HeroSection id="inicio">
-      <div className={`${HERO_CONTAINER} pb-8 pt-6 sm:pb-10 sm:pt-9 lg:pb-16 lg:pt-14`}>
-        <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)] lg:gap-12 xl:gap-16">
+    <HeroSection id="inicio" fill>
+      <div
+        className={`${HERO_CONTAINER} flex flex-1 items-center py-[clamp(1.5rem,4vh,3.5rem)]`}
+      >
+        <div className="grid w-full items-center gap-8 lg:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)] lg:gap-12 xl:gap-16">
           <div className="max-w-[620px] order-2 lg:order-1">
             <HeroTitle size="lg">
               Tecnología que <HeroAccent>mueve</HeroAccent> tu operación.

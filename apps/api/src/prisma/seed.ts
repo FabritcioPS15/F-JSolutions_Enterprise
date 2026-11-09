@@ -100,8 +100,10 @@ const ROLES: RoleSeed[] = [
   {
     key: 'admin',
     name: 'Administrador',
-    description: 'Gestiona la operación completa sin administrar roles del sistema.',
-    permissions: ALL_KEYS.filter((key) => !key.startsWith('roles.')),
+    description: 'Gestiona la operación completa sin administrar roles ni cuentas del sistema.',
+    permissions: ALL_KEYS.filter(
+      (key) => !key.startsWith('roles.') && !/^users\.(create|update|delete)$/.test(key)
+    ),
   },
   {
     key: 'ventas',

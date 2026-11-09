@@ -26,11 +26,20 @@ type HeroSectionProps = {
   children: ReactNode
   className?: string
   overlay?: boolean
+  /** Ocupa el alto disponible del contenedor (hero de portada). */
+  fill?: boolean
 }
 
-export function HeroSection({ id, children, className, overlay = true }: HeroSectionProps) {
+export function HeroSection({ id, children, className, overlay = true, fill = false }: HeroSectionProps) {
   return (
-    <section id={id} className={cn('relative isolate overflow-hidden bg-white', className)}>
+    <section
+      id={id}
+      className={cn(
+        'relative isolate overflow-hidden bg-white',
+        fill && 'flex flex-1 flex-col',
+        className,
+      )}
+    >
       {overlay && (
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
           <div className="absolute inset-0 bg-[linear-gradient(180deg,#FFFFFF_0%,#FCFDFE_52%,#F8FAFC_100%)]" />

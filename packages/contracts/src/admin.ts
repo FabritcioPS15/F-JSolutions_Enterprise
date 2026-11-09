@@ -533,6 +533,8 @@ export type AdminUser = {
   role: AdminUserRole
   status: AdminUserStatus
   twoFactorEnabled: boolean
+  /** Cuenta base del superadministrador: no se edita ni se elimina desde el panel. */
+  seeded?: boolean
   lastLoginAt?: string
   createdAt: string
   updatedAt: string
@@ -540,7 +542,7 @@ export type AdminUser = {
 
 export type AdminUserInput = Omit<
   AdminUser,
-  'id' | 'lastLoginAt' | 'createdAt' | 'updatedAt'
+  'id' | 'seeded' | 'lastLoginAt' | 'createdAt' | 'updatedAt'
 >
 
 export type SupplierStatus = 'active' | 'inactive'

@@ -1,3 +1,5 @@
+import type { AdminUserRole, AdminUserStatus } from '@/lib/admin/types'
+
 export type TwoFactorMethod = 'TOTP' | 'EMAIL'
 
 export type TwoFactorStatus = {
@@ -14,6 +16,20 @@ export type TwoFactorSetupResult = {
   secret?: string
   expiresAt?: string
   delivered?: boolean
+}
+
+export type ManagedUser = {
+  id: string
+  name: string
+  email: string
+  phone: string
+  role: AdminUserRole
+  status: AdminUserStatus
+  twoFactorEnabled: boolean
+  seeded: boolean
+  lastLoginAt: string | null
+  createdAt: string
+  updatedAt: string
 }
 
 export type SessionUser = {

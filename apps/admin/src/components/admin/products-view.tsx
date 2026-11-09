@@ -25,6 +25,7 @@ import { useAdmin } from '@/components/admin/admin-provider'
 import { ConfirmDialog } from '@/components/admin/confirm-dialog'
 import { ExportMenu } from '@/components/admin/export-menu'
 import { ProductThumb } from '@/components/admin/product-thumb'
+import { RowActions } from '@/components/admin/row-actions'
 import { useToast } from '@/components/admin/toast'
 import {
   EmptyState,
@@ -676,64 +677,46 @@ export function ProductsView({
                         <td className="hidden whitespace-nowrap px-4 py-3 text-[11px] text-slate-500 2xl:table-cell">
                           {formatDate(product.updatedAt)}
                         </td>
-                        <td className="whitespace-nowrap px-5 py-3">
-                          <div className="flex items-center justify-end gap-0.5">
-                            <Link
-                              href={`/productos/${product.id}`}
-                              className={iconButton}
-                              title="Ver detalle"
-                              aria-label={`Ver detalle de ${product.name}`}
-                            >
-                              <Eye className="size-3.5" />
-                            </Link>
-                            <Link
-                              href={`/productos/${product.id}/editar`}
-                              className={iconButton}
-                              title="Editar producto"
-                              aria-label={`Editar ${product.name}`}
-                            >
-                              <Pencil className="size-3.5" />
-                            </Link>
-                            <button
-                              type="button"
-                              onClick={() => handleDuplicate(product)}
-                              className={iconButton}
-                              title="Duplicar producto"
-                              aria-label={`Duplicar ${product.name}`}
-                            >
-                              <Copy className="size-3.5" />
-                            </button>
-                            {product.status === 'archived' ? (
-                              <button
-                                type="button"
-                                onClick={() => handleRestore(product)}
-                                className={iconButton}
-                                title="Restaurar como borrador"
-                                aria-label={`Restaurar ${product.name}`}
-                              >
-                                <ArchiveRestore className="size-3.5" />
-                              </button>
-                            ) : (
-                              <button
-                                type="button"
-                                onClick={() => handleArchive(product)}
-                                className={iconButton}
-                                title="Archivar producto"
-                                aria-label={`Archivar ${product.name}`}
-                              >
-                                <Archive className="size-3.5" />
-                              </button>
-                            )}
-                            <button
-                              type="button"
-                              onClick={() => setDeleteTarget(product)}
-                              className={cn(iconButton, 'hover:bg-red-50 hover:text-red-600')}
-                              title="Eliminar producto"
-                              aria-label={`Eliminar ${product.name}`}
-                            >
-                              <Trash2 className="size-3.5" />
-                            </button>
-                          </div>
+                        <td className="whitespace-nowrap px-5 py-3 text-right">
+                          <RowActions
+                            label={`Acciones para ${product.name}`}
+                            title={product.name}
+                            items={[
+                              { key: 'view', label: 'Ver detalle', icon: Eye, href: `/productos/${product.id}` },
+                              {
+                                key: 'edit',
+                                label: 'Editar producto',
+                                icon: Pencil,
+                                href: `/productos/${product.id}/editar`,
+                              },
+                              {
+                                key: 'duplicate',
+                                label: 'Duplicar producto',
+                                icon: Copy,
+                                onSelect: () => handleDuplicate(product),
+                              },
+                              product.status === 'archived'
+                                ? {
+                                    key: 'restore',
+                                    label: 'Restaurar como borrador',
+                                    icon: ArchiveRestore,
+                                    onSelect: () => handleRestore(product),
+                                  }
+                                : {
+                                    key: 'archive',
+                                    label: 'Archivar producto',
+                                    icon: Archive,
+                                    onSelect: () => handleArchive(product),
+                                  },
+                              {
+                                key: 'delete',
+                                label: 'Eliminar producto',
+                                icon: Trash2,
+                                tone: 'danger',
+                                onSelect: () => setDeleteTarget(product),
+                              },
+                            ]}
+                          />
                         </td>
                       </tr>
                     )

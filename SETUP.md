@@ -68,9 +68,48 @@ pnpm dev:api
 ## Acceso a las Aplicaciones
 
 - **Tienda Pública**: http://localhost:3000
-- **Panel Admin**: http://localhost:3002 (`/login` requiere una cuenta creada por
-  el seed; el panel no funciona si la API o PostgreSQL están detenidos)
+- **Panel Admin**: http://localhost:3002 (`/login` valida las credenciales en
+  local, sin API ni PostgreSQL; por defecto `admin@fjsolutions.com.pe` /
+  `Admin12345!`, o los valores de `SEED_ADMIN_EMAIL` / `SEED_ADMIN_PASSWORD`)
 - **API Backend**: http://localhost:4000
+
+### Cuentas del panel
+
+No existe registro público: la cuenta base (superadministrador) se define por
+variables de entorno y, desde **Usuarios**, es la única que puede registrar
+nuevas cuentas con su contraseña inicial, rol y estado. Las cuentas creadas se
+guardan en `apps/admin/.data/admin-users.json` con la contraseña hasheada
+(scrypt); ese archivo está en `.gitignore` y no se versiona. Borrarlo reinicia
+el panel dejando solo la cuenta base.
+
+Los roles `admin`, `ventas`, `soporte` y `consulta` pueden ver la lista de
+usuarios, pero no crear, editar ni eliminar cuentas.
+
+### Cuentas web de clientes
+
+Los clientes sí pueden crear su propia cuenta desde la tienda (`/registro`) con
+correo y contraseña, o con Google/Facebook cuando el entorno define las
+credenciales (`GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET`,
+`FACEBOOK_APP_ID`/`FACEBOOK_APP_SECRET`). Sin ellas, esos botones aparecen
+desactivados y solo se puede usar el correo.
+
+Con la opción de correo, la cuenta queda **pendiente** hasta que el cliente abre
+el enlace de confirmación enviado a su bandeja; no puede iniciar sesión antes.
+En el panel, **Clientes → Cuentas web** lista las cuentas creadas y permite
+reenviar la confirmación, verificarla manualmente, bloquear o reactivar el
+acceso. Reenviar y verificar requieren permiso `clients.update`.
+
+El registro se guarda en `.data/customer-accounts.json` (raíz del repositorio,
+compartido por tienda y panel; cambia `FJ_DATA_DIR` para moverlo) y los correos
+de confirmación en `.data/outbox/`. Ambos están en `.gitignore`. Sin SMTP
+configurado el correo no sale: queda en la bandeja local y el panel muestra el
+enlace de confirmación. Al definir `SMTP_HOST`, `SMTP_USER`, `SMTP_PASS` (y
+opcionalmente `SMTP_PORT`, `EMAIL_FROM`) en el `.env` de la tienda y del panel,
+el envío es real.
+
+La sesión de la tienda se firma con `CUSTOMER_SESSION_SECRET` (si falta, usa
+`ADMIN_SESSION_SECRET`) y los enlaces de confirmación se arman con
+`CUSTOMER_APP_URL` (por defecto `http://localhost:3000`).
 
 ## Docker (Opcional)
 

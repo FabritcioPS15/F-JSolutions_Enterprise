@@ -1,10 +1,11 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import {
   AlertCircle,
   ArrowLeft,
+  ChevronUp,
   Eye,
   EyeOff,
   KeyRound,
@@ -50,6 +51,8 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
   const [code, setCode] = useState('')
   const [useRecoveryCode, setUseRecoveryCode] = useState(false)
   const [resendIn, setResendIn] = useState(0)
+  const [demoOpen, setDemoOpen] = useState(false)
+  const demoRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     if (resendIn <= 0) return
@@ -58,6 +61,26 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
     }, 1000)
     return () => window.clearInterval(timer)
   }, [resendIn])
+
+  useEffect(() => {
+    if (!demoOpen) return
+
+    function onPointerDown(event: PointerEvent) {
+      if (!demoRef.current?.contains(event.target as Node)) setDemoOpen(false)
+    }
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') setDemoOpen(false)
+    }
+
+    document.addEventListener('pointerdown', onPointerDown)
+    document.addEventListener('keydown', onKeyDown)
+
+    return () => {
+      document.removeEventListener('pointerdown', onPointerDown)
+      document.removeEventListener('keydown', onKeyDown)
+    }
+  }, [demoOpen])
 
   function resetToCredentials() {
     setChallenge(null)
@@ -74,6 +97,7 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
     setEmail(demo.email)
     setPassword(demo.password)
     setError(null)
+    setDemoOpen(false)
   }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -234,7 +258,7 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
           </div>
         )}
 
-        <form onSubmit={handleVerify} className="space-y-4" noValidate>
+        <form onSubmit={handleVerify} className="login-form space-y-4" noValidate>
           <div className="space-y-1.5">
             <label
               htmlFor="code"
@@ -262,7 +286,7 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
           <button
             type="submit"
             disabled={loading}
-            className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-[#2E1065] text-[13px] font-semibold text-white transition hover:bg-[#3B0764] focus:outline-none focus:ring-4 focus:ring-[#5B21B6]/25 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#2E1065] text-[13px] font-semibold text-white transition hover:bg-[#3B0764] focus:outline-none focus:ring-4 focus:ring-[#5B21B6]/25 disabled:cursor-not-allowed disabled:opacity-60 sm:h-10"
           >
             {loading ? (
               <>
@@ -320,7 +344,7 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mt-6 space-y-4" noValidate>
+    <form onSubmit={handleSubmit} className="login-form mt-6 space-y-4" noValidate>
       {error && (
         <div
           role="alert"
@@ -344,7 +368,7 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           placeholder="nombre@fjsolutions.pe"
-          className="h-10 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-[13px] text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-[#5B21B6] focus:ring-4 focus:ring-[#5B21B6]/10"
+          className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-[16px] text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-[#5B21B6] focus:ring-4 focus:ring-[#5B21B6]/10 sm:h-10 sm:text-[13px]"
         />
       </div>
 
@@ -362,7 +386,7 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
             value={password}
             onChange={(event) => setPassword(event.target.value)}
             placeholder="Tu contraseña"
-            className="h-10 w-full rounded-xl border border-slate-200 bg-white pl-3.5 pr-10 text-[13px] text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-[#5B21B6] focus:ring-4 focus:ring-[#5B21B6]/10"
+            className="h-11 w-full rounded-xl border border-slate-200 bg-white pl-3.5 pr-10 text-[16px] text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-[#5B21B6] focus:ring-4 focus:ring-[#5B21B6]/10 sm:h-10 sm:text-[13px]"
           />
           <button
             type="button"
@@ -378,7 +402,7 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
       <button
         type="submit"
         disabled={loading}
-        className="mt-2 inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-[#2E1065] text-[13px] font-semibold text-white transition hover:bg-[#3B0764] focus:outline-none focus:ring-4 focus:ring-[#5B21B6]/25 disabled:cursor-not-allowed disabled:opacity-60"
+        className="mt-2 inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#2E1065] text-[13px] font-semibold text-white transition hover:bg-[#3B0764] focus:outline-none focus:ring-4 focus:ring-[#5B21B6]/25 disabled:cursor-not-allowed disabled:opacity-60 sm:h-10"
       >
         {loading ? (
           <>
@@ -394,35 +418,72 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
       </button>
 
       {demo && (
-        <div className="rounded-xl border border-dashed border-slate-300 bg-slate-50/80 p-3.5">
-          <div className="flex items-center justify-between gap-2">
-            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">
-              Acceso de desarrollo
-            </p>
-            <span className="rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-amber-700">
-              Solo local
-            </span>
-          </div>
-          <dl className="mt-2 space-y-1 text-[11.5px]">
-            <div className="flex items-center justify-between gap-3">
-              <dt className="text-slate-500">Correo</dt>
-              <dd className="truncate font-mono text-slate-800">{demo.email}</dd>
-            </div>
-            <div className="flex items-center justify-between gap-3">
-              <dt className="text-slate-500">Contraseña</dt>
-              <dd className="font-mono text-slate-800">{demo.password}</dd>
-            </div>
-          </dl>
+        <div ref={demoRef} className="relative">
           <button
             type="button"
-            onClick={applyDemoCredentials}
-            className="mt-2.5 inline-flex h-8 items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 text-[11.5px] font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
+            onClick={() => setDemoOpen((value) => !value)}
+            aria-expanded={demoOpen}
+            aria-controls="login-dev-panel"
+            className="flex w-full items-center justify-between gap-2 rounded-xl border border-dashed border-slate-300 bg-slate-50/70 px-3 py-2 text-left transition hover:border-slate-400 hover:bg-slate-50 focus:outline-none focus-visible:ring-4 focus-visible:ring-[#5B21B6]/15"
           >
-            Usar credenciales
+            <span className="inline-flex items-center gap-1.5 whitespace-nowrap text-[9px] font-bold uppercase tracking-[0.12em] text-slate-400 min-[380px]:text-[10px] min-[380px]:tracking-[0.16em]">
+              <KeyRound className="size-3.5 shrink-0" aria-hidden="true" />
+              Acceso de desarrollo
+            </span>
+            <span className="inline-flex shrink-0 items-center gap-1.5">
+              <span className="whitespace-nowrap rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-amber-700">
+                Solo local
+              </span>
+              <ChevronUp
+                className={`size-4 text-slate-400 transition-transform duration-200 ${
+                  demoOpen ? 'rotate-180' : ''
+                }`}
+                aria-hidden="true"
+              />
+            </span>
           </button>
-          <p className="mt-2 text-[10px] leading-relaxed text-slate-400">
-            Este bloque nunca se muestra en producción.
-          </p>
+
+          {demoOpen && (
+            <div
+              id="login-dev-panel"
+              role="region"
+              aria-label="Credenciales de desarrollo"
+              className="absolute inset-x-0 bottom-[calc(100%+0.5rem)] z-30 rounded-xl border border-slate-200 bg-white p-3.5 shadow-[0_20px_45px_-20px_rgba(15,23,42,0.35)]"
+            >
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">
+                  Credenciales locales
+                </p>
+                <span className="rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-amber-700">
+                  Solo local
+                </span>
+              </div>
+              <dl className="mt-2 space-y-1 text-[11.5px]">
+                <div className="flex items-start justify-between gap-3">
+                  <dt className="shrink-0 text-slate-500">Correo</dt>
+                  <dd className="min-w-0 break-all text-right font-mono text-slate-800">
+                    {demo.email}
+                  </dd>
+                </div>
+                <div className="flex items-start justify-between gap-3">
+                  <dt className="shrink-0 text-slate-500">Contraseña</dt>
+                  <dd className="min-w-0 break-all text-right font-mono text-slate-800">
+                    {demo.password}
+                  </dd>
+                </div>
+              </dl>
+              <button
+                type="button"
+                onClick={applyDemoCredentials}
+                className="mt-2.5 inline-flex h-8 items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 text-[11.5px] font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
+              >
+                Usar credenciales
+              </button>
+              <p className="mt-2 text-[10px] leading-relaxed text-slate-400">
+                Este bloque nunca se muestra en producción.
+              </p>
+            </div>
+          )}
         </div>
       )}
     </form>

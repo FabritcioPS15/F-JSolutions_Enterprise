@@ -79,7 +79,7 @@ export const rolePermissions: Record<AdminUserRole, string[]> = {
     requests: ['view', 'create', 'update', 'reply', 'assign'],
     services: ['view', 'create', 'update', 'publish'],
     projects: ['view', 'update', 'manage-deployments'],
-    users: ['view', 'create', 'update'],
+    users: ['view'],
     roles: ['view'],
     settings: ['view', 'update'],
     audit: ['view'],

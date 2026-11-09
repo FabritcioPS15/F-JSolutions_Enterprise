@@ -14,6 +14,31 @@ html {
    Se mantienen fuera de capas para que cualquier variante pueda reutilizarlas.
    ─────────────────────────────────────────────────────────────────────────── */
 
+/* Alto del header sticky (ver enhanced-header.tsx): el hero de portada ocupa
+   el resto del viewport para no dejar huecos ni exigir scroll en laptops. */
+:root {
+  --home-header-height: 69px;
+}
+
+@media (min-width: 640px) {
+  :root {
+    --home-header-height: 81px;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --home-header-height: 145px;
+  }
+}
+
+.home-hero-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - var(--home-header-height));
+  min-height: calc(100svh - var(--home-header-height));
+}
+
 @keyframes hero-rise {
   from {
     opacity: 0;

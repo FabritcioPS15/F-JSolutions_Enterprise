@@ -19,6 +19,7 @@ import { useAdmin } from '@/components/admin/admin-provider'
 import { ConfirmDialog } from '@/components/admin/confirm-dialog'
 import { ExportMenu } from '@/components/admin/export-menu'
 import { Modal } from '@/components/admin/modal'
+import { RowActions } from '@/components/admin/row-actions'
 import { useToast } from '@/components/admin/toast'
 import {
   EmptyState,
@@ -648,49 +649,46 @@ export function OrdersView() {
                       <td className="px-4 py-3.5 text-right font-semibold tabular-nums text-slate-900">
                         {formatCurrency(totals.total, order.currency)}
                       </td>
-                      <td className="px-4 py-3.5">
-                        <div className="flex items-center justify-end gap-1">
-                          {next ? (
-                            <button
-                              type="button"
-                              className={iconButton}
-                              onClick={() => advance(order)}
-                              title={`Avanzar a ${orderStatusLabels[next]}`}
-                              aria-label={`Avanzar ${order.code} a ${orderStatusLabels[next]}`}
-                            >
-                              <ArrowRight className="size-4" />
-                            </button>
-                          ) : null}
-                          {order.status === 'shipped' ? (
-                            <button
-                              type="button"
-                              className={iconButton}
-                              onClick={() => deliver(order)}
-                              title="Confirmar entrega"
-                              aria-label={`Confirmar entrega de ${order.code}`}
-                            >
-                              <CheckCircle2 className="size-4" />
-                            </button>
-                          ) : null}
-                          <button
-                            type="button"
-                            className={iconButton}
-                            onClick={() => setEditing(order)}
-                            title="Editar"
-                            aria-label={`Editar ${order.code}`}
-                          >
-                            <Pencil className="size-4" />
-                          </button>
-                          <button
-                            type="button"
-                            className={cn(iconButton, 'hover:bg-red-50 hover:text-red-600')}
-                            onClick={() => setDeleteTarget(order)}
-                            title="Eliminar"
-                            aria-label={`Eliminar ${order.code}`}
-                          >
-                            <Trash2 className="size-4" />
-                          </button>
-                        </div>
+                      <td className="px-4 py-3.5 text-right">
+                        <RowActions
+                          label={`Acciones para ${order.code}`}
+                          title={order.code}
+                          items={[
+                            ...(next
+                              ? [
+                                  {
+                                    key: 'advance',
+                                    label: `Avanzar a ${orderStatusLabels[next]}`,
+                                    icon: ArrowRight,
+                                    onSelect: () => advance(order),
+                                  },
+                                ]
+                              : []),
+                            ...(order.status === 'shipped'
+                              ? [
+                                  {
+                                    key: 'deliver',
+                                    label: 'Confirmar entrega',
+                                    icon: CheckCircle2,
+                                    onSelect: () => deliver(order),
+                                  },
+                                ]
+                              : []),
+                            {
+                              key: 'edit',
+                              label: 'Editar pedido',
+                              icon: Pencil,
+                              onSelect: () => setEditing(order),
+                            },
+                            {
+                              key: 'delete',
+                              label: 'Eliminar pedido',
+                              icon: Trash2,
+                              tone: 'danger' as const,
+                              onSelect: () => setDeleteTarget(order),
+                            },
+                          ]}
+                        />
                       </td>
                     </tr>
                   )

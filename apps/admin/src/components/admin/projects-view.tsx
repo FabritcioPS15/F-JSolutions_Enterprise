@@ -20,6 +20,7 @@ import { ConfirmDialog } from '@/components/admin/confirm-dialog'
 import { DatePicker } from '@/components/admin/date-picker'
 import { ExportMenu } from '@/components/admin/export-menu'
 import { Modal } from '@/components/admin/modal'
+import { RowActions } from '@/components/admin/row-actions'
 import { useToast } from '@/components/admin/toast'
 import {
   EmptyState,
@@ -30,7 +31,6 @@ import {
   StatCard,
   btnPrimary,
   btnSecondary,
-  iconButton,
   inputClass,
   tableClass,
   tableHeadRowClass,
@@ -464,36 +464,32 @@ export function ProjectsView() {
                           <span className="text-[11.5px] text-slate-300">Sin despliegues</span>
                         )}
                       </td>
-                      <td className="px-5 py-3">
-                        <div className="flex items-center justify-end gap-1">
-                          <button
-                            type="button"
-                            onClick={() => setDeployProjectId(project.id)}
-                            className={iconButton}
-                            aria-label={`Ver despliegues de ${project.name}`}
-                            title="Despliegues"
-                          >
-                            <Rocket className="size-4" />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => openEdit(project)}
-                            className={iconButton}
-                            aria-label={`Editar ${project.name}`}
-                            title="Editar"
-                          >
-                            <Pencil className="size-4" />
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setDeleteTarget(project)}
-                            className={cn(iconButton, 'hover:bg-red-50 hover:text-red-600')}
-                            aria-label={`Eliminar ${project.name}`}
-                            title="Eliminar"
-                          >
-                            <Trash2 className="size-4" />
-                          </button>
-                        </div>
+                      <td className="px-5 py-3 text-right">
+                        <RowActions
+                          label={`Acciones para ${project.name}`}
+                          title={project.name}
+                          items={[
+                            {
+                              key: 'deployments',
+                              label: 'Ver despliegues',
+                              icon: Rocket,
+                              onSelect: () => setDeployProjectId(project.id),
+                            },
+                            {
+                              key: 'edit',
+                              label: 'Editar proyecto',
+                              icon: Pencil,
+                              onSelect: () => openEdit(project),
+                            },
+                            {
+                              key: 'delete',
+                              label: 'Eliminar proyecto',
+                              icon: Trash2,
+                              tone: 'danger',
+                              onSelect: () => setDeleteTarget(project),
+                            },
+                          ]}
+                        />
                       </td>
                     </tr>
                   )

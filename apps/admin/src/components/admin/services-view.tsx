@@ -16,6 +16,7 @@ import {
   Undo2,
 } from 'lucide-react'
 import { ConfirmDialog } from '@/components/admin/confirm-dialog'
+import { RowActions } from '@/components/admin/row-actions'
 import { useToast } from '@/components/admin/toast'
 import {
   EmptyState,
@@ -25,7 +26,6 @@ import {
   StatCard,
   btnPrimary,
   btnSecondary,
-  iconButton,
   inputClass,
   tableClass,
   tableHeadRowClass,
@@ -317,57 +317,42 @@ export function ServicesView() {
                     </td>
                     <td className="px-4 py-3.5 text-slate-600">{service.related.length}</td>
                     <td className="px-4 py-3.5 text-slate-500">{formatDate(service.updatedAt)}</td>
-                    <td className="px-4 py-3.5">
-                      <div className="flex items-center justify-end gap-1">
-                        <a
-                          href={storePath(service)}
-                          target="_blank"
-                          rel="noreferrer"
-                          className={iconButton}
-                          title="Ver en la tienda"
-                          aria-label={`Ver ${service.title} en la tienda`}
-                        >
-                          <ExternalLink className="size-4" />
-                        </a>
-                        <Link
-                          href={`/servicios/${service.id}/editar`}
-                          className={iconButton}
-                          title="Editar"
-                          aria-label={`Editar ${service.title}`}
-                        >
-                          <Pencil className="size-4" />
-                        </Link>
-                        <button
-                          type="button"
-                          className={iconButton}
-                          onClick={() => void toggleStatus(service)}
-                          disabled={busyId === service.id}
-                          title={
-                            service.status === 'published' ? 'Despublicar' : 'Publicar'
-                          }
-                          aria-label={
-                            service.status === 'published'
-                              ? `Despublicar ${service.title}`
-                              : `Publicar ${service.title}`
-                          }
-                        >
-                          {service.status === 'published' ? (
-                            <Undo2 className="size-4" />
-                          ) : (
-                            <Send className="size-4" />
-                          )}
-                        </button>
-                        <button
-                          type="button"
-                          className={cn(iconButton, 'hover:bg-red-50 hover:text-red-600')}
-                          onClick={() => setDeleteTarget(service)}
-                          disabled={busyId === service.id}
-                          title="Eliminar"
-                          aria-label={`Eliminar ${service.title}`}
-                        >
-                          <Trash2 className="size-4" />
-                        </button>
-                      </div>
+                    <td className="px-4 py-3.5 text-right">
+                      <RowActions
+                        label={`Acciones para ${service.title}`}
+                        title={service.title}
+                        items={[
+                          {
+                            key: 'store',
+                            label: 'Ver en la tienda',
+                            icon: ExternalLink,
+                            href: storePath(service),
+                            external: true,
+                          },
+                          {
+                            key: 'edit',
+                            label: 'Editar servicio',
+                            icon: Pencil,
+                            href: `/servicios/${service.id}/editar`,
+                          },
+                          {
+                            key: 'status',
+                            label:
+                              service.status === 'published' ? 'Despublicar' : 'Publicar',
+                            icon: service.status === 'published' ? Undo2 : Send,
+                            disabled: busyId === service.id,
+                            onSelect: () => void toggleStatus(service),
+                          },
+                          {
+                            key: 'delete',
+                            label: 'Eliminar servicio',
+                            icon: Trash2,
+                            tone: 'danger',
+                            disabled: busyId === service.id,
+                            onSelect: () => setDeleteTarget(service),
+                          },
+                        ]}
+                      />
                     </td>
                   </tr>
                 ))}

@@ -21,6 +21,7 @@ import { DatePicker } from '@/components/admin/date-picker'
 import { ExportMenu } from '@/components/admin/export-menu'
 import { Modal } from '@/components/admin/modal'
 import { QuoteDocumentPreview } from '@/components/admin/quote-document-preview'
+import { RowActions } from '@/components/admin/row-actions'
 import { useToast } from '@/components/admin/toast'
 import {
   EmptyState,
@@ -622,45 +623,38 @@ export function QuotesView({ initialQuery = '' }: { initialQuery?: string }) {
                         <td className="whitespace-nowrap px-4 py-3 text-[12.5px] text-slate-500">
                           {quote.validUntil ? formatDate(quote.validUntil) : 'Sin fecha'}
                         </td>
-                        <td className="whitespace-nowrap px-5 py-3">
-                          <div className="flex items-center justify-end gap-0.5">
-                            <button
-                              type="button"
-                              onClick={() => setViewerId(quote.id)}
-                              className={iconButton}
-                              title="Ver cotización"
-                              aria-label={`Ver cotización ${quote.code}`}
-                            >
-                              <Eye className="size-3.5" />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => setPreviewId(quote.id)}
-                              className={iconButton}
-                              title="Vista previa del documento"
-                              aria-label={`Vista previa del documento de ${quote.code}`}
-                            >
-                              <FileText className="size-3.5" />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => setEditor({ mode: 'edit', id: quote.id })}
-                              className={iconButton}
-                              title="Editar cotización"
-                              aria-label={`Editar cotización ${quote.code}`}
-                            >
-                              <Pencil className="size-3.5" />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => setDeleteTarget(quote)}
-                              className={cn(iconButton, 'hover:bg-red-50 hover:text-red-600')}
-                              title="Eliminar cotización"
-                              aria-label={`Eliminar cotización ${quote.code}`}
-                            >
-                              <Trash2 className="size-3.5" />
-                            </button>
-                          </div>
+                        <td className="whitespace-nowrap px-5 py-3 text-right">
+                          <RowActions
+                            label={`Acciones para la cotización ${quote.code}`}
+                            title={quote.code}
+                            items={[
+                              {
+                                key: 'view',
+                                label: 'Ver cotización',
+                                icon: Eye,
+                                onSelect: () => setViewerId(quote.id),
+                              },
+                              {
+                                key: 'preview',
+                                label: 'Vista previa del documento',
+                                icon: FileText,
+                                onSelect: () => setPreviewId(quote.id),
+                              },
+                              {
+                                key: 'edit',
+                                label: 'Editar cotización',
+                                icon: Pencil,
+                                onSelect: () => setEditor({ mode: 'edit', id: quote.id }),
+                              },
+                              {
+                                key: 'delete',
+                                label: 'Eliminar cotización',
+                                icon: Trash2,
+                                tone: 'danger',
+                                onSelect: () => setDeleteTarget(quote),
+                              },
+                            ]}
+                          />
                         </td>
                       </tr>
                     )

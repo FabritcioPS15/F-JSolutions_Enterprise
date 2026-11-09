@@ -67,6 +67,12 @@ import {
   fetchSettings,
   saveSettings,
 } from '@/lib/services/settings'
+import {
+  createUserRecord,
+  deleteUserRecord,
+  fetchUsers,
+  updateUserRecord,
+} from '@/lib/services/users'
 import type {
   ActivityEntry,
   ActivityType,
@@ -192,6 +198,7 @@ type AdminContextValue = {
   inventoryMovements: InventoryMovement[]
   webProjects: WebProject[]
   users: AdminUser[]
+  usersReady: boolean
   suppliers: Supplier[]
   orders: Order[]
   attributes: ProductAttribute[]
@@ -219,10 +226,13 @@ type AdminContextValue = {
     projectId: string,
     input: DeploymentInput
   ) => WebProjectDeployment | null
-  createUser: (input: AdminUserInput) => AdminUser
-  updateUser: (id: string, input: AdminUserInput) => void
-  removeUser: (id: string) => void
-  setUserStatus: (id: string, status: AdminUserStatus) => void
+  createUser: (input: AdminUserInput & { password: string }) => Promise<AdminUser>
+  updateUser: (
+    id: string,
+    input: AdminUserInput & { password?: string }
+  ) => Promise<AdminUser>
+  removeUser: (id: string) => Promise<void>
+  setUserStatus: (id: string, status: AdminUserStatus) => Promise<AdminUser>
   createSupplier: (input: SupplierInput) => Supplier
   updateSupplier: (id: string, input: SupplierInput) => void
   removeSupplier: (id: string) => void
@@ -947,6 +957,7 @@ function normalizeUser(raw: Record<string, unknown>): AdminUser {
     role: pickEnum(raw.role, adminUserRoles, 'consulta'),
     status: pickEnum(raw.status, adminUserStatuses, 'invited'),
     twoFactorEnabled: Boolean(raw.twoFactorEnabled),
+    seeded: raw.seeded === true ? true : undefined,
     lastLoginAt: raw.lastLoginAt ? String(raw.lastLoginAt) : undefined,
     createdAt: String(raw.createdAt ?? new Date().toISOString()),
     updatedAt: String(raw.updatedAt ?? new Date().toISOString()),
@@ -1261,11 +1272,9 @@ function parseData(raw: string): AdminData {
     inventoryMovements:
       storedMovements.length > 0 ? storedMovements : baselineMovements(products),
     webProjects: storedProjects,
-    // El respaldo local puede ser anterior a estas secciones; en ese caso se
-    // recuperan las muestras del seed para no dejar las vistas vacías.
-    users: Array.isArray(payload.users)
-      ? (payload.users as Record<string, unknown>[]).map(normalizeUser)
-      : seed.users,
+    // Las cuentas del panel se cargan del servidor; el respaldo local solo
+    // guarda el resto de la operación.
+    users: [],
     suppliers: Array.isArray(payload.suppliers)
       ? (payload.suppliers as Record<string, unknown>[]).map(normalizeSupplier)
       : seed.suppliers,
@@ -1306,6 +1315,7 @@ export function AdminProvider({
   const can = createCan(access)
   const [data, setData] = useState<AdminData>(() => createSeedData())
   const [hydrated, setHydrated] = useState(false)
+  const [usersReady, setUsersReady] = useState(false)
   const [catalogSource, setCatalogSource] = useState<'local' | 'api'>('local')
   const [catalogError, setCatalogError] = useState<string | null>(null)
   const [commercialSource, setCommercialSource] = useState<'local' | 'api'>('local')
@@ -1378,6 +1388,15 @@ export function AdminProvider({
           : 'No se pudo cargar los proyectos desde la API. Se usa el respaldo local.'
       )
       throw error
+    }
+  }
+
+  async function refreshUsers() {
+    try {
+      const remote = (await fetchUsers()).map(normalizeUser)
+      setData((prev) => ({ ...prev, users: remote }))
+    } finally {
+      setUsersReady(true)
     }
   }
 
@@ -1487,7 +1506,7 @@ export function AdminProvider({
     try {
       window.localStorage.setItem(
         ADMIN_STORAGE_KEY,
-        JSON.stringify({ version: 5, data })
+        JSON.stringify({ version: 5, data: { ...data, users: [] } })
       )
     } catch (error) {
       console.warn('No se pudo guardar el catálogo local.', error)
@@ -1517,6 +1536,11 @@ export function AdminProvider({
   useEffect(() => {
     if (!hydrated) return
     void refreshInventory().catch(() => undefined)
+  }, [hydrated])
+
+  useEffect(() => {
+    if (!hydrated) return
+    void refreshUsers().catch(() => undefined)
   }, [hydrated])
 
   function createProduct(input: ProductInput) {
@@ -2087,54 +2111,36 @@ export function AdminProvider({
     return deployment
   }
 
-  function createUser(input: AdminUserInput): AdminUser {
-    const now = new Date().toISOString()
-    const user: AdminUser = {
-      ...input,
-      id: uid('usuario'),
-      name: input.name.trim(),
-      email: input.email.trim().toLowerCase(),
-      phone: input.phone.trim(),
-      createdAt: now,
-      updatedAt: now,
-    }
+  async function createUser(input: AdminUserInput & { password: string }): Promise<AdminUser> {
+    const user = normalizeUser(await createUserRecord(input))
     setData((prev) => ({ ...prev, users: [user, ...prev.users] }))
     return user
   }
 
-  function updateUser(id: string, input: AdminUserInput) {
-    const current = data.users.find((user) => user.id === id)
-    if (!current) return
+  async function updateUser(
+    id: string,
+    input: AdminUserInput & { password?: string }
+  ): Promise<AdminUser> {
+    const user = normalizeUser(await updateUserRecord(id, input))
     setData((prev) => ({
       ...prev,
-      users: prev.users.map((user) =>
-        user.id === id
-          ? {
-              ...user,
-              ...input,
-              name: input.name.trim(),
-              email: input.email.trim().toLowerCase(),
-              phone: input.phone.trim(),
-              lastLoginAt: current.lastLoginAt,
-              updatedAt: new Date().toISOString(),
-            }
-          : user
-      ),
+      users: prev.users.map((item) => (item.id === id ? user : item)),
     }))
+    return user
   }
 
-  function removeUser(id: string) {
+  async function removeUser(id: string) {
+    await deleteUserRecord(id)
     setData((prev) => ({ ...prev, users: prev.users.filter((user) => user.id !== id) }))
   }
 
-  function setUserStatus(id: string, status: AdminUserStatus) {
-    const now = new Date().toISOString()
+  async function setUserStatus(id: string, status: AdminUserStatus): Promise<AdminUser> {
+    const user = normalizeUser(await updateUserRecord(id, { status }))
     setData((prev) => ({
       ...prev,
-      users: prev.users.map((user) =>
-        user.id === id ? { ...user, status, updatedAt: now } : user
-      ),
+      users: prev.users.map((item) => (item.id === id ? user : item)),
     }))
+    return user
   }
 
   function createSupplier(input: SupplierInput): Supplier {
@@ -3698,6 +3704,7 @@ export function AdminProvider({
         inventoryMovements: data.inventoryMovements,
         webProjects: data.webProjects,
         users: data.users,
+        usersReady,
         suppliers: data.suppliers,
         orders: data.orders,
         attributes: data.attributes,

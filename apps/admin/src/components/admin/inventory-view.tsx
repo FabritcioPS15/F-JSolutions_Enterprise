@@ -27,6 +27,7 @@ import { ExportMenu } from '@/components/admin/export-menu'
 import { Modal } from '@/components/admin/modal'
 import { ProductThumb } from '@/components/admin/product-thumb'
 import { PurchasingPanel } from '@/components/admin/purchasing-panel'
+import { RowActions } from '@/components/admin/row-actions'
 import { StockCountPanel } from '@/components/admin/stock-count-panel'
 import { useToast } from '@/components/admin/toast'
 import {
@@ -38,7 +39,6 @@ import {
   StockBadge,
   btnPrimary,
   btnSecondary,
-  iconButton,
   inputClass,
   tableClass,
   tableHeadRowClass,
@@ -624,27 +624,25 @@ export function InventoryView() {
                             <span className="text-[12px] text-slate-400">Sin movimientos</span>
                           )}
                         </td>
-                        <td className="px-5 py-3">
-                          <div className="flex items-center justify-end gap-1">
-                            <button
-                              type="button"
-                              onClick={() => openRegister(product.id)}
-                              className={iconButton}
-                              aria-label={`Registrar movimiento para ${product.name}`}
-                              title="Registrar movimiento"
-                            >
-                              <Plus className="size-4" />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => setHistoryProductId(product.id)}
-                              className={iconButton}
-                              aria-label={`Ver historial de ${product.name}`}
-                              title="Ver historial"
-                            >
-                              <History className="size-4" />
-                            </button>
-                          </div>
+                        <td className="px-5 py-3 text-right">
+                          <RowActions
+                            label={`Acciones para ${product.name}`}
+                            title={product.name}
+                            items={[
+                              {
+                                key: 'register',
+                                label: 'Registrar movimiento',
+                                icon: Plus,
+                                onSelect: () => openRegister(product.id),
+                              },
+                              {
+                                key: 'history',
+                                label: 'Ver historial',
+                                icon: History,
+                                onSelect: () => setHistoryProductId(product.id),
+                              },
+                            ]}
+                          />
                         </td>
                       </tr>
                     )

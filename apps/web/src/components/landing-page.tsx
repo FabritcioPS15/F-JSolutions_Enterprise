@@ -13,23 +13,84 @@ import {
   Laptop,
   SlidersHorizontal,
 } from 'lucide-react'
+import {
+  HiOutlineAcademicCap,
+  HiOutlineCodeBracketSquare,
+  HiOutlineComputerDesktop,
+  HiOutlineCpuChip,
+  HiOutlineServerStack,
+  HiOutlineShieldCheck,
+  HiOutlineWifi,
+  HiOutlineWrenchScrewdriver,
+} from 'react-icons/hi2'
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
-import { CorporateHero } from '@/components/heroes'
+import { HomeHero } from '@/components/heroes'
 import { ProductCard } from '@/components/cards/product-card'
 import { categories } from '@/lib/catalog'
 import { getFeaturedProducts } from '@/lib/product-feed'
 import { cn } from '@/lib/utils'
 import { useQuote } from '@/lib/use-quote'
 
-const businessLinks = ['Ventas corporativas', 'Facturación electrónica', 'Soporte postventa', 'Garantías y devoluciones', 'Despachos y entregas', 'Medios de pago']
-const serviceOptions = ['Desarrollo de sistemas', 'Soporte TI', 'Redes y conectividad', 'Servidores y nube', 'Ciberseguridad', 'Mantenimiento preventivo', 'Instalación y configuración', 'Capacitación tecnológica']
-
-const quickStats = [
-  { value: '10K+', label: 'Clientes satisfechos' },
-  { value: '500+', label: 'Productos' },
-  { value: '15+', label: 'Años de experiencia' },
-  { value: '24/7', label: 'Soporte TI' },
+const businessLinks = [
+  'Ventas corporativas',
+  'Facturación electrónica',
+  'Soporte postventa',
+  'Garantías y devoluciones',
+  'Despachos y entregas',
+  'Medios de pago',
 ]
+
+const enterpriseServices = [
+  {
+    title: 'Desarrollo de sistemas',
+    copy: 'Aplicaciones a la medida y plataformas web',
+    href: '/sistemas',
+    icon: HiOutlineCodeBracketSquare,
+  },
+  {
+    title: 'Soporte TI',
+    copy: 'Atención técnica remota y en sitio',
+    href: '/soporte-ti',
+    icon: HiOutlineWrenchScrewdriver,
+  },
+  {
+    title: 'Redes y conectividad',
+    copy: 'Cableado estructurado y Wi-Fi corporativo',
+    href: '/servicios',
+    icon: HiOutlineWifi,
+  },
+  {
+    title: 'Servidores y nube',
+    copy: 'Infraestructura escalable y servidores dedicados',
+    href: '/servicios',
+    icon: HiOutlineServerStack,
+  },
+  {
+    title: 'Ciberseguridad',
+    copy: 'Protección de datos, firewalls y respaldos',
+    href: '/servicios',
+    icon: HiOutlineShieldCheck,
+  },
+  {
+    title: 'Mantenimiento preventivo',
+    copy: 'Diagnóstico periódico y optimización de hardware',
+    href: '/soporte-ti',
+    icon: HiOutlineCpuChip,
+  },
+  {
+    title: 'Instalación y configuración',
+    copy: 'Puesta en marcha de equipos y estaciones',
+    href: '/soporte-ti',
+    icon: HiOutlineComputerDesktop,
+  },
+  {
+    title: 'Capacitación tecnológica',
+    copy: 'Formación y buenas prácticas para tu equipo',
+    href: '/soporte-ti',
+    icon: HiOutlineAcademicCap,
+  },
+]
+
 
 export function LandingPage() {
   const quote = useQuote()
@@ -96,39 +157,29 @@ export function LandingPage() {
     <main className="min-h-screen overflow-x-clip bg-[#f8fafc] text-[#172033]">
       <EnhancedHeader quoteCount={quote.count} />
 
-      <CorporateHero />
+      <HomeHero />
 
       {/* Accesos rápidos */}
-      <section className="mx-auto max-w-[1280px] px-4 pb-4 sm:px-6 lg:px-8">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <Reveal className="h-full">
-            <Feature icon={<Calculator />} title="Cotizador de PC" copy="Arma tu equipo ideal" onClick={() => { window.location.href = '/cotizacion' }} />
-          </Reveal>
-          <Reveal className="h-full" delay={70}>
-            <Feature icon={<BarChart3 />} title="Comparar productos" copy="Elige con confianza" />
-          </Reveal>
-          <Reveal className="h-full" delay={140}>
-            <Feature icon={<Laptop />} title="Asesoría especializada" copy="Te ayudamos a decidir" />
-          </Reveal>
-          <Reveal className="h-full" delay={210}>
-            <Feature icon={<Globe />} title="Servicios TI" copy="Soporte para empresas" onClick={() => { window.location.href = '/servicios' }} />
-          </Reveal>
+      <section className="relative z-10 border-y border-[#D8E4F2] bg-[#EEF5FC] py-6 sm:py-8 shadow-[inset_0_2px_4px_rgba(15,23,42,0.02)]">
+        <div className="mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-3.5 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
+            <Reveal className="h-full">
+              <Feature icon={<Calculator />} title="Cotizador de PC" copy="Arma tu equipo ideal" onClick={() => { window.location.href = '/cotizacion' }} />
+            </Reveal>
+            <Reveal className="h-full" delay={70}>
+              <Feature icon={<BarChart3 />} title="Comparar productos" copy="Elige con confianza" />
+            </Reveal>
+            <Reveal className="h-full" delay={140}>
+              <Feature icon={<Laptop />} title="Asesoría especializada" copy="Te ayudamos a decidir" />
+            </Reveal>
+            <Reveal className="h-full" delay={210}>
+              <Feature icon={<Globe />} title="Servicios TI" copy="Soporte para empresas" onClick={() => { window.location.href = '/servicios' }} />
+            </Reveal>
+          </div>
         </div>
       </section>
 
-      {/* Quick Stats Section */}
-      <section className="mx-auto max-w-[1280px] px-4 pb-6 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 gap-3 rounded-2xl border border-[#e5eaf0] bg-white p-4 sm:p-5 shadow-sm sm:grid-cols-4">
-          {quickStats.map((stat, index) => (
-            <Reveal key={stat.label} className="h-full" delay={index * 70}>
-              <div className="text-center transition-transform duration-300 hover:scale-105">
-                <p className="text-lg font-bold text-[#155eef] sm:text-xl lg:text-2xl">{stat.value}</p>
-                <p className="mt-1 text-[10px] font-semibold text-[#64748b] sm:text-xs">{stat.label}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </section>
+
 
       <section id="productos" className="mx-auto max-w-[1280px] scroll-mt-20 sm:scroll-mt-24 px-4 py-8 sm:py-10 sm:px-6 lg:px-8">
         <Reveal className="relative z-20 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -229,9 +280,14 @@ export function LandingPage() {
             <p className="mt-3 max-w-2xl text-sm leading-6 text-[#64748b]">Además de vender tecnología, ayudamos a implementar, mantener y proteger tu operación.</p>
           </Reveal>
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {serviceOptions.map((service, index) => (
-              <Reveal key={service} className="h-full" delay={(index % 4) * 70}>
-                <Info href={['/sistemas', '/soporte-ti', '/soporte-ti', '/soporte-ti', '/soporte-ti', '/soporte-ti', '/soporte-ti', '/soporte-ti'][index]} icon={['⌘', '◫', '◈', '✓', '◆', '◌', '＋', '◇'][index]} title={service} copy={['Atención remota y en sitio', 'Configuración y monitoreo', 'Protección para tu empresa', 'Asesoría para compras corporativas', 'Aplicaciones a la medida', 'Infraestructura escalable', 'Implementación profesional', 'Formación para tu equipo'][index]} />
+            {enterpriseServices.map((service, index) => (
+              <Reveal key={service.title} className="h-full" delay={(index % 4) * 70}>
+                <Info
+                  href={service.href}
+                  icon={service.icon}
+                  title={service.title}
+                  copy={service.copy}
+                />
               </Reveal>
             ))}
           </div>
@@ -303,20 +359,34 @@ function Feature({ icon, title, copy, onClick }: { icon: React.ReactNode; title:
   )
 }
 
-function Info({ href, icon, title, copy }: { href: string; icon: string; title: string; copy: string }) {
+function Info({
+  href,
+  icon: Icon,
+  title,
+  copy,
+}: {
+  href: string
+  icon: React.ComponentType<{ className?: string }>
+  title: string
+  copy: string
+}) {
   return (
     <a
       href={href}
-      className="group flex h-full w-full items-center gap-3 sm:gap-4 rounded-xl bg-[#f8fafc] p-3 sm:p-4 transition-all duration-300 hover:bg-gradient-to-br hover:from-[#eef5ff] hover:to-[#dbeafe] hover:shadow-md hover:shadow-[#3B82F6]/10 hover:-translate-y-0.5"
+      className="group flex h-full w-full items-center gap-3.5 rounded-2xl border border-[#e5eaf0] bg-[#f8fafc] p-4 transition-all duration-300 hover:border-[#3B82F6]/40 hover:bg-gradient-to-br hover:from-[#eef5ff] hover:to-[#dbeafe] hover:shadow-md hover:shadow-[#3B82F6]/10 hover:-translate-y-0.5"
     >
-      <span className="flex size-9 sm:size-10 items-center justify-center rounded-full bg-gradient-to-br from-[#dbeafe] to-[#bfdbfe] font-bold text-[#155eef] transition-all duration-300 group-hover:scale-110 group-hover:from-[#3B82F6] group-hover:to-[#7C3AED] group-hover:text-white">
-        {icon}
+      <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#dbeafe] to-[#bfdbfe] text-[#155eef] transition-all duration-300 group-hover:scale-110 group-hover:from-[#3B82F6] group-hover:to-[#1D4ED8] group-hover:text-white shadow-xs">
+        <Icon className="size-5" />
       </span>
-      <span className="flex-1">
-        <span className="block font-heading text-xs sm:text-sm font-bold text-[#172033] transition-colors duration-300 group-hover:text-[#3B82F6]">{title}</span>
-        <span className="mt-1 block text-[10px] sm:text-xs text-[#64748b]">{copy}</span>
+      <span className="min-w-0 flex-1">
+        <span className="block font-heading text-xs sm:text-sm font-bold text-[#172033] transition-colors duration-300 group-hover:text-[#3B82F6]">
+          {title}
+        </span>
+        <span className="mt-1 block text-[10px] sm:text-xs leading-relaxed text-[#64748b]">
+          {copy}
+        </span>
       </span>
-      <ArrowRight className="size-4 text-[#94a3b8] opacity-0 transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100" />
+      <ArrowRight className="size-4 shrink-0 text-[#94a3b8] opacity-0 transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100" />
     </a>
   )
 }

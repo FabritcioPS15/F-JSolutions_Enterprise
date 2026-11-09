@@ -19,6 +19,7 @@ import { useAdmin } from '@/components/admin/admin-provider'
 import { ConfirmDialog } from '@/components/admin/confirm-dialog'
 import { ExportMenu } from '@/components/admin/export-menu'
 import { Modal } from '@/components/admin/modal'
+import { RowActions } from '@/components/admin/row-actions'
 import { useToast } from '@/components/admin/toast'
 import {
   EmptyState,
@@ -30,7 +31,6 @@ import {
   StatCard,
   btnPrimary,
   btnSecondary,
-  iconButton,
   inputClass,
   tableClass,
   tableHeadRowClass,
@@ -471,43 +471,42 @@ export function SuppliersView() {
                         Alta el {formatDate(supplier.createdAt)}
                       </p>
                     </td>
-                    <td className="px-4 py-3.5">
-                      <div className="flex items-center justify-end gap-1">
-                        <button
-                          type="button"
-                          className={iconButton}
-                          onClick={() => {
-                            const next = supplier.status === 'active' ? 'inactive' : 'active'
-                            setSupplierStatus(supplier.id, next)
-                            toast.success(
-                              next === 'active' ? 'Proveedor reactivado' : 'Proveedor inactivo',
-                              supplier.name
-                            )
-                          }}
-                          title={supplier.status === 'active' ? 'Marcar inactivo' : 'Reactivar'}
-                          aria-label={`Cambiar estado de ${supplier.name}`}
-                        >
-                          <Undo2 className="size-4" />
-                        </button>
-                        <button
-                          type="button"
-                          className={iconButton}
-                          onClick={() => setEditing(supplier)}
-                          title="Editar"
-                          aria-label={`Editar ${supplier.name}`}
-                        >
-                          <Pencil className="size-4" />
-                        </button>
-                        <button
-                          type="button"
-                          className={cn(iconButton, 'hover:bg-red-50 hover:text-red-600')}
-                          onClick={() => setDeleteTarget(supplier)}
-                          title="Eliminar"
-                          aria-label={`Eliminar ${supplier.name}`}
-                        >
-                          <Trash2 className="size-4" />
-                        </button>
-                      </div>
+                    <td className="px-4 py-3.5 text-right">
+                      <RowActions
+                        label={`Acciones para ${supplier.name}`}
+                        title={supplier.name}
+                        items={[
+                          {
+                            key: 'status',
+                            label:
+                              supplier.status === 'active'
+                                ? 'Marcar inactivo'
+                                : 'Reactivar proveedor',
+                            icon: Undo2,
+                            onSelect: () => {
+                              const next = supplier.status === 'active' ? 'inactive' : 'active'
+                              setSupplierStatus(supplier.id, next)
+                              toast.success(
+                                next === 'active' ? 'Proveedor reactivado' : 'Proveedor inactivo',
+                                supplier.name
+                              )
+                            },
+                          },
+                          {
+                            key: 'edit',
+                            label: 'Editar proveedor',
+                            icon: Pencil,
+                            onSelect: () => setEditing(supplier),
+                          },
+                          {
+                            key: 'delete',
+                            label: 'Eliminar proveedor',
+                            icon: Trash2,
+                            tone: 'danger',
+                            onSelect: () => setDeleteTarget(supplier),
+                          },
+                        ]}
+                      />
                     </td>
                   </tr>
                 ))}

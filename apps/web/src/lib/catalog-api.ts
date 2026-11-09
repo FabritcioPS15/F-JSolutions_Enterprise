@@ -126,7 +126,16 @@ export async function fetchStoreProductBySlug(slug: string): Promise<Product | n
     const data = await fetchJson<ApiProduct>(
       `/api/catalog/products/slug/${encodeURIComponent(slug)}`
     )
-    return data ? mapApiProduct(data) : null
+    const mapped = data ? mapApiProduct(data) : null
+    if (!mapped) return null
+
+    // La API publicada no administra selecciones manuales: conserva las del catálogo local.
+    if (!mapped.relatedProducts?.length) {
+      const local = staticProducts.find((product) => product.slug === mapped.slug)
+      if (local?.relatedProducts?.length) mapped.relatedProducts = local.relatedProducts
+    }
+
+    return mapped
   } catch {
     return null
   }

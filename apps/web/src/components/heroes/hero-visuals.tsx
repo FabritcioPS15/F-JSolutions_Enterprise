@@ -64,7 +64,7 @@ export function OpsConsoleVisual() {
             ))}
           </div>
 
-          <div className="mt-3 rounded-xl border border-[#EEF2F7] bg-[#F8FAFC] p-3">
+          <div className="mt-3 hidden rounded-xl border border-[#EEF2F7] bg-[#F8FAFC] p-3 lg:block">
             <div className="flex items-center justify-between gap-2">
               <p className="text-[10px] font-bold text-[#0F172A]">Actividad de la red</p>
               <span className="font-mono text-[9px] text-[#64748B]">Últimas 24 h</span>
@@ -107,7 +107,7 @@ export function OpsConsoleVisual() {
             </div>
           </div>
 
-          <div className="mt-3 space-y-1.5">
+          <div className="mt-3 hidden space-y-1.5 lg:block">
             {operationRows.map((row) => (
               <div
                 key={row.label}
@@ -139,7 +139,7 @@ export function OpsConsoleVisual() {
             ))}
           </div>
 
-          <div className="mt-3 flex items-center justify-between gap-2 border-t border-[#EEF2F7] pt-2.5">
+          <div className="mt-3 hidden items-center justify-between gap-2 border-t border-[#EEF2F7] pt-2.5 lg:flex">
             <span className="text-[8.5px] font-medium text-[#94A3B8]">Vista de referencia</span>
             <span className="inline-flex items-center gap-1 text-[8.5px] font-bold text-[#1D4ED8]">
               Ver detalle <ArrowRight aria-hidden="true" className="size-2.5" />

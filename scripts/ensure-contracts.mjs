@@ -14,6 +14,7 @@ const contractOutputs = [
   path.join(root, 'packages/contracts/dist/admin.d.ts'),
   path.join(root, 'packages/contracts/dist/domain.d.ts'),
   path.join(root, 'packages/contracts/dist/permissions.d.ts'),
+  path.join(root, 'packages/contracts/dist/customer-accounts.d.ts'),
 ]
 const lockFile = path.join(root, 'packages/contracts/.build.lock')
 

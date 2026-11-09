@@ -18,6 +18,7 @@ import { useAdmin } from '@/components/admin/admin-provider'
 import { ConfirmDialog } from '@/components/admin/confirm-dialog'
 import { ExportMenu } from '@/components/admin/export-menu'
 import { Modal } from '@/components/admin/modal'
+import { RowActions } from '@/components/admin/row-actions'
 import { useToast } from '@/components/admin/toast'
 import {
   EmptyState,
@@ -31,13 +32,13 @@ import {
   StatusToggle,
   btnPrimary,
   btnSecondary,
-  iconButton,
   inputClass,
   tableClass,
   tableHeadRowClass,
 } from '@/components/admin/ui'
 import { usersDataset } from '@/lib/admin/excel-exports'
 import { formatDate, formatDateTime, formatNumber } from '@/lib/admin/format'
+import { PASSWORD_HINT, passwordProblem } from '@/lib/auth/password'
 import { isEmail } from '@fj-solutions/contracts/domain'
 import { permissionActionLabels, permissionModules, rolePermissions, roleSummary } from '@/lib/admin/permissions'
 import {
@@ -59,6 +60,7 @@ type UserDraft = {
   role: AdminUserRole
   status: AdminUserStatus
   twoFactorEnabled: boolean
+  password: string
 }
 
 type UserErrors = Partial<Record<keyof UserDraft, string>>
@@ -69,7 +71,8 @@ const emptyDraft: UserDraft = {
   phone: '',
   role: 'ventas',
   status: 'invited',
-  twoFactorEnabled: true,
+  twoFactorEnabled: false,
+  password: '',
 }
 
 function toDraft(user: AdminUser): UserDraft {
@@ -80,6 +83,7 @@ function toDraft(user: AdminUser): UserDraft {
     role: user.role,
     status: user.status,
     twoFactorEnabled: user.twoFactorEnabled,
+    password: '',
   }
 }
 
@@ -97,8 +101,19 @@ function StatusChip({ status }: { status: AdminUserStatus }) {
 }
 
 export function UsersView() {
-  const { hydrated, users, createUser, updateUser, removeUser, setUserStatus } = useAdmin()
+  const {
+    hydrated,
+    users,
+    usersReady,
+    access,
+    createUser,
+    updateUser,
+    removeUser,
+    setUserStatus,
+  } = useAdmin()
   const toast = useToast()
+  // Solo el superadministrador registra cuentas; el resto puede consultarlas.
+  const canManage = access.role === 'superadmin'
 
   const [query, setQuery] = useState('')
   const [role, setRole] = useState<'all' | AdminUserRole>('all')
@@ -106,6 +121,7 @@ export function UsersView() {
   const [editing, setEditing] = useState<AdminUser | 'new' | null>(null)
   const [draft, setDraft] = useState<UserDraft>(emptyDraft)
   const [errors, setErrors] = useState<UserErrors>({})
+  const [saving, setSaving] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState<AdminUser | null>(null)
   const [permissionsTarget, setPermissionsTarget] = useState<AdminUser | null>(null)
 
@@ -170,7 +186,7 @@ export function UsersView() {
     setStatus('all')
   }
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const email = draft.email.trim().toLowerCase()
     const editingId = editing === 'new' || editing === null ? null : editing.id
@@ -179,6 +195,10 @@ export function UsersView() {
     if (!isEmail(email)) nextErrors.email = 'Escribe un correo válido.'
     else if (users.some((user) => user.id !== editingId && user.email.toLowerCase() === email)) {
       nextErrors.email = 'Ya existe un usuario con este correo.'
+    }
+    if (editing === 'new' || draft.password) {
+      const problem = passwordProblem(draft.password)
+      if (problem) nextErrors.password = problem
     }
     setErrors(nextErrors)
     if (Object.keys(nextErrors).length > 0) {
@@ -195,46 +215,81 @@ export function UsersView() {
       twoFactorEnabled: draft.twoFactorEnabled,
     }
 
-    if (editing === 'new') {
-      createUser(input)
-      toast.success(
-        input.status === 'invited' ? 'Invitación registrada' : 'Usuario creado',
-        input.name
+    setSaving(true)
+    try {
+      if (editing === 'new') {
+        await createUser({ ...input, password: draft.password })
+        toast.success(
+          input.status === 'invited' ? 'Invitación registrada' : 'Usuario creado',
+          input.name
+        )
+      } else if (editing) {
+        await updateUser(editing.id, {
+          ...input,
+          password: draft.password || undefined,
+        })
+        toast.success('Usuario actualizado', input.name)
+      }
+      setEditing(null)
+    } catch (error) {
+      toast.error(
+        'No se pudo guardar',
+        error instanceof Error ? error.message : 'Revisa la conexión con el servidor.'
       )
-    } else if (editing) {
-      updateUser(editing.id, input)
-      toast.success('Usuario actualizado', input.name)
+    } finally {
+      setSaving(false)
     }
-    setEditing(null)
   }
 
-  function toggleStatus(user: AdminUser) {
+  async function toggleStatus(user: AdminUser) {
     if (user.status === 'active') {
       if (user.role === 'superadmin' && activeSuperadmins <= 1) {
         toast.error('No se puede desactivar', 'Debe quedar al menos un superadministrador activo.')
         return
       }
-      setUserStatus(user.id, 'disabled')
-      toast.info('Acceso desactivado', user.name)
+      try {
+        await setUserStatus(user.id, 'disabled')
+        toast.info('Acceso desactivado', user.name)
+      } catch (error) {
+        toast.error(
+          'No se pudo desactivar',
+          error instanceof Error ? error.message : 'Revisa la conexión con el servidor.'
+        )
+      }
       return
     }
-    setUserStatus(user.id, 'active')
-    toast.success('Acceso habilitado', `${user.name} · ${roleLabels[user.role]}`)
+
+    try {
+      const updated = await setUserStatus(user.id, 'active')
+      toast.success('Acceso habilitado', `${updated.name} · ${roleLabels[updated.role]}`)
+    } catch (error) {
+      toast.error(
+        'No se pudo activar',
+        error instanceof Error ? error.message : 'Revisa la conexión con el servidor.'
+      )
+    }
   }
 
-  function handleDelete() {
+  async function handleDelete() {
     if (!deleteTarget) return
     if (deleteTarget.role === 'superadmin' && activeSuperadmins <= 1) {
       toast.error('No se puede eliminar', 'Debe quedar al menos un superadministrador activo.')
       setDeleteTarget(null)
       return
     }
-    removeUser(deleteTarget.id)
-    toast.success('Usuario eliminado', deleteTarget.name)
-    setDeleteTarget(null)
+    try {
+      await removeUser(deleteTarget.id)
+      toast.success('Usuario eliminado', deleteTarget.name)
+      setDeleteTarget(null)
+    } catch (error) {
+      toast.error(
+        'No se pudo eliminar',
+        error instanceof Error ? error.message : 'Revisa la conexión con el servidor.'
+      )
+    }
   }
 
-  if (!hydrated) {
+  if (!hydrated || !usersReady) {
     return <LoadingState label="Cargando usuarios…" />
   }
 
@@ -243,7 +298,7 @@ export function UsersView() {
       <PageHeader
         eyebrow="Administración"
         title="Usuarios y permisos"
-        description="Cuentas con acceso al panel, su rol y lo que cada rol puede hacer dentro de FJ Systems."
+        description="Cuentas con acceso al panel, su rol y lo que cada rol puede hacer dentro de FJ Systems. No hay registro público: solo el superadministrador crea usuarios."
         actions={
           <>
             <ExportMenu
@@ -251,10 +306,12 @@ export function UsersView() {
               nouns={['usuario', 'usuarios']}
               disabled={filtered.length === 0}
             />
-            <button type="button" className={btnPrimary} onClick={() => setEditing('new')}>
-              <Plus className="size-4" aria-hidden="true" />
-              Nuevo usuario
-            </button>
+            {canManage && (
+              <button type="button" className={btnPrimary} onClick={() => setEditing('new')}>
+                <Plus className="size-4" aria-hidden="true" />
+                Registrar usuario
+              </button>
+            )}
           </>
         }
       />
@@ -410,9 +467,16 @@ export function UsersView() {
                           {userInitials(user)}
                         </span>
                         <div className="min-w-0">
-                          <p className="truncate text-[13px] font-semibold text-slate-900">
-                            {user.name}
-                          </p>
+                          <div className="flex items-center gap-1.5">
+                            <p className="truncate text-[13px] font-semibold text-slate-900">
+                              {user.name}
+                            </p>
+                            {user.seeded && (
+                              <span className="shrink-0 rounded-full bg-[#F5F3FF] px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-[#5B21B6]">
+                                Cuenta base
+                              </span>
+                            )}
+                          </div>
                           <p className="truncate text-[11.5px] text-slate-500">{user.email}</p>
                           {user.phone && (
                             <p className="truncate text-[11px] text-slate-400">{user.phone}</p>
@@ -447,53 +511,45 @@ export function UsersView() {
                     <td className="px-4 py-3 text-[11.5px] text-slate-600">
                       {formatDate(user.createdAt)}
                     </td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center justify-end gap-1">
-                        <button
-                          type="button"
-                          className={iconButton}
-                          onClick={() => setPermissionsTarget(user)}
-                          aria-label={`Ver permisos de ${user.name}`}
-                          title="Ver permisos"
-                        >
-                          <ShieldCheck className="size-4" />
-                        </button>
-                        <button
-                          type="button"
-                          className={iconButton}
-                          onClick={() => toggleStatus(user)}
-                          aria-label={
-                            user.status === 'active'
-                              ? `Desactivar a ${user.name}`
-                              : `Activar a ${user.name}`
-                          }
-                          title={user.status === 'active' ? 'Desactivar acceso' : 'Activar acceso'}
-                        >
-                          {user.status === 'active' ? (
-                            <UserX className="size-4" />
-                          ) : (
-                            <UserCheck className="size-4" />
-                          )}
-                        </button>
-                        <button
-                          type="button"
-                          className={iconButton}
-                          onClick={() => setEditing(user)}
-                          aria-label={`Editar a ${user.name}`}
-                          title="Editar"
-                        >
-                          <Pencil className="size-4" />
-                        </button>
-                        <button
-                          type="button"
-                          className={cn(iconButton, 'hover:bg-rose-50 hover:text-rose-600')}
-                          onClick={() => setDeleteTarget(user)}
-                          aria-label={`Eliminar a ${user.name}`}
-                          title="Eliminar"
-                        >
-                          <Trash2 className="size-4" />
-                        </button>
-                      </div>
+                    <td className="px-4 py-3 text-right">
+                      <RowActions
+                        label={`Acciones para ${user.name}`}
+                        title={user.name}
+                        items={[
+                          {
+                            key: 'permissions',
+                            label: 'Ver permisos',
+                            icon: ShieldCheck,
+                            onSelect: () => setPermissionsTarget(user),
+                          },
+                          ...(canManage && !user.seeded
+                            ? [
+                                {
+                                  key: 'status',
+                                  label:
+                                    user.status === 'active'
+                                      ? 'Desactivar acceso'
+                                      : 'Activar acceso',
+                                  icon: user.status === 'active' ? UserX : UserCheck,
+                                  onSelect: () => void toggleStatus(user),
+                                },
+                                {
+                                  key: 'edit',
+                                  label: 'Editar usuario',
+                                  icon: Pencil,
+                                  onSelect: () => setEditing(user),
+                                },
+                                {
+                                  key: 'delete',
+                                  label: 'Eliminar usuario',
+                                  icon: Trash2,
+                                  tone: 'danger' as const,
+                                  onSelect: () => setDeleteTarget(user),
+                                },
+                              ]
+                            : []),
+                        ]}
+                      />
                     </td>
                   </tr>
                 ))}
@@ -633,15 +689,23 @@ export function UsersView() {
       <Modal
         open={editing !== null}
         onClose={() => setEditing(null)}
-        title={editing === 'new' ? 'Nuevo usuario' : 'Editar usuario'}
-        description="El rol define qué puede ver y modificar dentro del panel."
+        title={editing === 'new' ? 'Registrar usuario' : 'Editar usuario'}
+        description={
+          editing === 'new'
+            ? 'Solo el superadministrador crea cuentas. Define la contraseña inicial y compártela por un canal seguro.'
+            : 'El rol define qué puede ver y modificar dentro del panel.'
+        }
         footer={
           <>
             <button type="button" className={btnSecondary} onClick={() => setEditing(null)}>
               Cancelar
             </button>
-            <button type="submit" form="user-form" className={btnPrimary}>
-              {editing === 'new' ? 'Crear usuario' : 'Guardar cambios'}
+            <button type="submit" form="user-form" className={btnPrimary} disabled={saving}>
+              {saving
+                ? 'Guardando…'
+                : editing === 'new'
+                  ? 'Crear usuario'
+                  : 'Guardar cambios'}
             </button>
           </>
         }
@@ -685,6 +749,28 @@ export function UsersView() {
             </Field>
           </div>
 
+          <Field
+            label={editing === 'new' ? 'Contraseña inicial' : 'Nueva contraseña'}
+            htmlFor="user-password"
+            required={editing === 'new'}
+            error={errors.password}
+            hint={
+              editing === 'new'
+                ? PASSWORD_HINT
+                : 'Déjala vacía para conservar la contraseña actual.'
+            }
+          >
+            <input
+              id="user-password"
+              type="password"
+              autoComplete="new-password"
+              value={draft.password}
+              onChange={(event) => update('password', event.target.value)}
+              className={inputClass}
+              placeholder="••••••••"
+            />
+          </Field>
+
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="Rol" htmlFor="user-role" required>
               <Select
@@ -718,8 +804,8 @@ export function UsersView() {
             <div className="min-w-0">
               <p className="text-[12.5px] font-semibold text-slate-900">Doble factor</p>
               <p className="text-[11px] leading-relaxed text-slate-500">
-                Exige un código adicional al iniciar sesión. Recomendado para roles con permisos de
-                escritura.
+                Se guarda como preferencia de la cuenta. El segundo factor todavía no se exige en
+                el acceso local.
               </p>
             </div>
             <StatusToggle
@@ -736,7 +822,7 @@ export function UsersView() {
             </p>
             <p className="mt-1 text-[11px] leading-relaxed text-[#6D28D9]/80">
               {draft.status === 'invited'
-                ? 'El invitado podrá definir su contraseña la primera vez que ingrese.'
+                ? 'La cuenta queda como invitada hasta que la persona ingrese por primera vez.'
                 : draft.status === 'disabled'
                   ? 'Esta cuenta no podrá ingresar hasta que la actives.'
                   : 'Puedes revisar el detalle de la matriz de permisos de esta sección.'}

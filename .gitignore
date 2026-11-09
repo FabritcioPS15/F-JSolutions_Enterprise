@@ -59,3 +59,9 @@ uploads/
 
 # Helpdesk runtime data
 apps/api/data/*.json
+
+# Admin local user store (contraseñas hasheadas)
+apps/admin/.data/
+
+# Cuentas web de clientes y bandeja de correos local (hashes y enlaces)
+.data/

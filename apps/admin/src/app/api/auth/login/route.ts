@@ -1,27 +1,10 @@
 import { isEmail } from '@fj-solutions/contracts/domain'
 import { NextRequest, NextResponse } from 'next/server'
-import { apiBaseUrl, applySessionCookies, applyTwoFactorCookie } from '@/lib/auth/session'
-import type { SessionUser } from '@/lib/auth/types'
-
-type ApiLoginResponse = {
-  success?: boolean
-  message?: string
-  data?: {
-    user?: SessionUser
-    tokens?: {
-      accessToken: string
-      refreshToken: string
-    }
-    twoFactorRequired?: boolean
-    method?: 'TOTP' | 'EMAIL'
-    challengeToken?: string
-    expiresAt?: string
-    email?: string
-  }
-}
+import { authenticateLocalUser, createLocalSessionToken } from '@/lib/auth/local-auth'
+import { applyLocalSessionCookie } from '@/lib/auth/session'
+import { managedSessionUser, touchManagedUserLogin } from '@/lib/auth/user-store'
 
 function isCrossOrigin(request: NextRequest) {
-
   const origin = request.headers.get('origin')
   if (!origin) return false
 
@@ -61,76 +44,37 @@ export async function POST(request: NextRequest) {
     )
   }
 
-  try {
-    const response = await fetch(`${apiBaseUrl()}/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, password }),
-      cache: 'no-store',
-      signal: AbortSignal.timeout(10_000),
-    })
-
-    const body = (await response.json().catch(() => null)) as ApiLoginResponse | null
-
-    if (!response.ok || !body?.success || !body.data) {
-      const status = response.status === 401 ? 401 : response.status === 503 ? 503 : 502
-      return NextResponse.json(
-        {
-          success: false,
-          message:
-            status === 401
-              ? 'Credenciales incorrectas.'
-              : body?.message ?? 'No se pudo iniciar sesión en este momento.',
-        },
-        { status },
-      )
-    }
-
-    if (body.data.twoFactorRequired) {
-      const method = body.data.method
-      if (!body.data.challengeToken || (method !== 'TOTP' && method !== 'EMAIL')) {
-        return NextResponse.json(
-          { success: false, message: 'La API devolvió un desafío de verificación inválido.' },
-          { status: 502 },
-        )
-      }
-
-      const result = NextResponse.json({
-        success: true,
-        data: {
-          requiresTwoFactor: true,
-          method,
-          email: body.data.email ?? '',
-          expiresAt: body.data.expiresAt ?? null,
-        },
-      })
-
-      applyTwoFactorCookie(result, body.data.challengeToken)
-      return result
-    }
-
-    if (!body.data.tokens || !body.data.user) {
-      return NextResponse.json(
-        { success: false, message: 'No se pudo iniciar sesión en este momento.' },
-        { status: 502 },
-      )
-    }
-
-    const result = NextResponse.json({
-      success: true,
-      data: { user: body.data.user },
-    })
-
-    applySessionCookies(result, body.data.tokens)
-    return result
-  } catch {
+  // Validación local: solo cuentas creadas por el superadministrador y la
+  // cuenta base configurada con variables de entorno pueden ingresar.
+  const auth = await authenticateLocalUser(email, password)
+  if (!auth.ok) {
     return NextResponse.json(
       {
         success: false,
         message:
-          'El servicio de autenticación no está disponible. Verifica que la API y la base de datos estén activas.',
+          auth.reason === 'disabled'
+            ? 'Tu cuenta está desactivada. Contacta al superadministrador.'
+            : 'Credenciales incorrectas.',
       },
-      { status: 503 },
+      { status: auth.reason === 'disabled' ? 403 : 401 },
     )
   }
+
+  const userId = auth.userId
+  await touchManagedUserLogin(userId)
+  const user = await managedSessionUser(userId)
+  if (!user) {
+    return NextResponse.json(
+      { success: false, message: 'La cuenta no tiene acceso al panel.' },
+      { status: 403 },
+    )
+  }
+
+  const response = NextResponse.json({
+    success: true,
+    data: { user },
+  })
+
+  applyLocalSessionCookie(response, createLocalSessionToken(userId))
+  return response
 }

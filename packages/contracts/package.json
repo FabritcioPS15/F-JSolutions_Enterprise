@@ -6,9 +6,18 @@
   "types": "dist/index.d.ts",
   "typesVersions": {
     "*": {
-      "admin": ["./dist/admin.d.ts"],
-      "domain": ["./dist/domain.d.ts"],
-      "permissions": ["./dist/permissions.d.ts"]
+      "admin": [
+        "./dist/admin.d.ts"
+      ],
+      "domain": [
+        "./dist/domain.d.ts"
+      ],
+      "permissions": [
+        "./dist/permissions.d.ts"
+      ],
+      "customer-accounts": [
+        "./dist/customer-accounts.d.ts"
+      ]
     }
   },
   "exports": {
@@ -27,6 +36,10 @@
     "./permissions": {
       "types": "./dist/permissions.d.ts",
       "default": "./dist/permissions.js"
+    },
+    "./customer-accounts": {
+      "types": "./dist/customer-accounts.d.ts",
+      "default": "./dist/customer-accounts.js"
     }
   },
   "files": [
@@ -37,6 +50,7 @@
     "dev": "tsc --watch"
   },
   "devDependencies": {
+    "@types/node": "^24.10.4",
     "typescript": "^5.4.5"
   }
 }

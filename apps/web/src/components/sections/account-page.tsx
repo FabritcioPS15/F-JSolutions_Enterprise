@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import {
@@ -14,6 +14,7 @@ import {
   FileText,
   Heart,
   Loader2,
+  LogOut,
   Mail,
   MessageCircle,
   Phone,
@@ -49,6 +50,21 @@ type Tab = 'perfil' | 'favoritos' | 'cotizaciones'
 type FavoriteSort = 'name' | 'brand'
 type QuoteFilter = 'todas' | SavedQuote['status']
 type QuoteSort = 'recientes' | 'antiguas'
+
+type SessionCustomer = {
+  id: string
+  name: string
+  email: string
+  phone: string
+  company: string
+  documentType: 'dni' | 'ruc' | null
+  documentNumber: string
+  createdAt: string
+}
+
+// Marca a qué cuenta pertenece el perfil guardado en el navegador, para no
+// mezclar datos si otra persona inicia sesión en el mismo equipo.
+const PROFILE_OWNER_KEY = 'fj_account_owner'
 
 const tabs: { id: Tab; label: string; icon: LucideIcon }[] = [
   { id: 'perfil', label: 'Mi perfil', icon: UserRound },
@@ -111,7 +127,7 @@ function normalizeProfile(profile: AccountProfile): string {
   ].join('|')
 }
 
-export function AccountPage() {
+export function AccountPage({ customer }: { customer: SessionCustomer }) {
   const account = useAccount()
   const favorites = useFavorites()
   const quote = useQuote()
@@ -142,6 +158,36 @@ export function AccountPage() {
   useEffect(() => {
     if (account.isLoaded && account.profile) setForm(account.profile)
   }, [account.isLoaded, account.profile])
+
+  // La identidad de la cuenta inicia sesión en el servidor; el perfil local se
+  // alinea con ella cuando el navegador todavía no tenía datos de esta cuenta.
+  useEffect(() => {
+    if (!account.isLoaded) return
+    if (window.localStorage.getItem(PROFILE_OWNER_KEY) === customer.id) return
+    window.localStorage.setItem(PROFILE_OWNER_KEY, customer.id)
+    account.saveProfile({
+      ...(account.profile ?? EMPTY_PROFILE),
+      name: customer.name,
+      email: customer.email,
+      phone: customer.phone || account.profile?.phone || '',
+      company: customer.company || account.profile?.company || '',
+      documentType: customer.documentType ?? account.profile?.documentType ?? 'ruc',
+      documentNumber: customer.documentNumber || account.profile?.documentNumber || '',
+      createdAt: account.profile?.createdAt ?? customer.createdAt,
+    })
+  }, [
+    account.isLoaded,
+    account.profile,
+    account.saveProfile,
+    customer.id,
+    customer.name,
+    customer.email,
+    customer.phone,
+    customer.company,
+    customer.documentType,
+    customer.documentNumber,
+    customer.createdAt,
+  ])
 
   useEffect(() => {
     const applyHash = () => {
@@ -360,6 +406,15 @@ export function AccountPage() {
     setNotice('Descargamos un archivo con tus datos')
   }
 
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/customer/logout', { method: 'POST' })
+    } finally {
+      router.push('/login')
+      router.refresh()
+    }
+  }
+
   const wipeData = () => {
     account.clearProfile()
     account.clearQuotes()
@@ -453,6 +508,14 @@ export function AccountPage() {
                     <CalendarDays className="size-3.5" /> Miembro desde {memberSince}
                   </p>
                 )}
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-white/15 px-3 py-1.5 text-[11px] font-semibold text-[#E2E8F0] transition hover:border-white/30 hover:bg-white/10"
+                >
+                  <LogOut aria-hidden="true" className="size-3.5" />
+                  Cerrar sesión
+                </button>
               </div>
             </div>
 
