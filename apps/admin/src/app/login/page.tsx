@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
 import { FileSpreadsheet, Globe, History, LifeBuoy, Package, ShieldCheck } from 'lucide-react'
+import { localAdminEmail, localAdminPassword } from '@/lib/auth/local-admin'
 import { getSessionUser } from '@/lib/auth/session'
 import { LoginForm } from './login-form'
 import { LoginTypewriter } from './login-typewriter'
@@ -26,15 +27,13 @@ export default async function LoginPage() {
   const user = await getSessionUser()
   if (user) redirect('/')
 
-  // Credenciales de desarrollo: el bloque solo se renderiza fuera de producción
-  // y refleja los valores del seed cuando están definidos.
-  const demo =
-    process.env.NODE_ENV !== 'production'
-      ? {
-        email: process.env.SEED_ADMIN_EMAIL?.trim() || 'admin@fjsolutions.com.pe',
-        password: process.env.SEED_ADMIN_PASSWORD || 'Admin12345!',
-      }
-      : null
+  // Acceso de demostración: visible también en el sitio publicado para poder
+  // entrar al panel sin cuenta propia. La contraseña solo se muestra cuando la
+  // cuenta base la tiene configurada.
+  const demo = {
+    email: localAdminEmail(),
+    password: localAdminPassword(),
+  }
 
   return (
     <main className="relative min-h-dvh bg-[#F4F6FB] lg:grid lg:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)]">

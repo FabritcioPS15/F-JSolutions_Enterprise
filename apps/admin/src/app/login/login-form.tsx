@@ -28,7 +28,7 @@ type ApiResponse = {
 
 type DemoCredentials = {
   email: string
-  password: string
+  password: string | null
 }
 
 type Challenge = {
@@ -95,7 +95,7 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
   function applyDemoCredentials() {
     if (!demo) return
     setEmail(demo.email)
-    setPassword(demo.password)
+    setPassword(demo.password ?? '')
     setError(null)
     setDemoOpen(false)
   }
@@ -432,7 +432,7 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
             </span>
             <span className="inline-flex shrink-0 items-center gap-1.5">
               <span className="whitespace-nowrap rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-amber-700">
-                Solo local
+                Demo público
               </span>
               <ChevronUp
                 className={`size-4 text-slate-400 transition-transform duration-200 ${
@@ -447,15 +447,15 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
             <div
               id="login-dev-panel"
               role="region"
-              aria-label="Credenciales de desarrollo"
+              aria-label="Acceso de demostración"
               className="absolute inset-x-0 bottom-[calc(100%+0.5rem)] z-30 rounded-xl border border-slate-200 bg-white p-3.5 shadow-[0_20px_45px_-20px_rgba(15,23,42,0.35)]"
             >
               <div className="flex items-center justify-between gap-2">
                 <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">
-                  Credenciales locales
+                  Acceso de demostración
                 </p>
                 <span className="rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-amber-700">
-                  Solo local
+                  Demo público
                 </span>
               </div>
               <dl className="mt-2 space-y-1 text-[11.5px]">
@@ -468,7 +468,7 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
                 <div className="flex items-start justify-between gap-3">
                   <dt className="shrink-0 text-slate-500">Contraseña</dt>
                   <dd className="min-w-0 break-all text-right font-mono text-slate-800">
-                    {demo.password}
+                    {demo.password ?? 'Usa la entrada directa'}
                   </dd>
                 </div>
               </dl>
@@ -487,7 +487,8 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
                 Usar credenciales
               </button>
               <p className="mt-2 text-[10px] leading-relaxed text-slate-400">
-                Este bloque nunca se muestra en producción.
+                Cualquiera con este enlace puede entrar al panel. No lo dejes visible si el entorno
+                tiene datos reales.
               </p>
             </div>
           )}
