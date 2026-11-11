@@ -174,8 +174,8 @@ export function CatalogHero({
   return (
     <HeroSection>
       <div className={`${HERO_CONTAINER} pb-8 pt-6 sm:pb-12 sm:pt-10 lg:pb-14 lg:pt-12`}>
-        <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.96fr)] lg:gap-12 xl:gap-16">
-          <div className="max-w-[620px]">
+        <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.96fr)] lg:gap-12 xl:gap-16">
+          <div className="min-w-0 max-w-[620px]">
             <HeroTitle size="lg">
               Equipos y tecnología para <HeroAccent>cada área</HeroAccent> de tu empresa.
             </HeroTitle>
@@ -201,7 +201,7 @@ export function CatalogHero({
             </HeroActions>
           </div>
 
-          <div className="hero-reveal hero-delay-2 relative mx-auto w-full max-w-[560px] lg:max-w-none">
+          <div className="hero-reveal hero-delay-2 relative mx-auto w-full min-w-0 max-w-[560px] lg:max-w-none">
             <div
               aria-hidden="true"
               className="absolute inset-x-8 inset-y-10 -z-10 rounded-[40px] bg-gradient-to-br from-[#2563EB]/10 to-[#7C3AED]/10 blur-3xl"

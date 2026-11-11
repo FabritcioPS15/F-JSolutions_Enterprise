@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { AlertCircle, ArrowRight, CheckCircle2, Eye, EyeOff, Loader2, MailCheck } from 'lucide-react'
+import { AlertCircle, ArrowRight, CheckCircle2, Eye, EyeOff, Loader2, MailCheck, Plus } from 'lucide-react'
 import { PASSWORD_HINT, isEmail, onlyDigits, passwordProblem } from '@fj-solutions/contracts/domain'
 import { AuthDivider, OAuthButtons } from './oauth-buttons'
 
@@ -13,13 +13,12 @@ type FieldErrors = Partial<
 >
 
 const fieldClass =
-  'mt-1.5 h-11 w-full rounded-xl border border-[#E2E8F0] bg-white px-3 text-sm font-normal text-[#0F172A] outline-none transition placeholder:text-[#94A3B8] focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 aria-[invalid=true]:border-[#EF4444]'
+  'mt-1 h-10 w-full rounded-xl border border-[#E2E8F0] bg-white px-3 text-sm font-normal text-[#0F172A] outline-none transition placeholder:text-[#94A3B8] focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 aria-[invalid=true]:border-[#EF4444]'
 
 const initialDraft = {
   name: '',
   email: '',
   phone: '',
-  company: '',
   documentType: 'dni' as DocumentType,
   documentNumber: '',
   password: '',
@@ -34,9 +33,18 @@ export function RegisterForm({ availability }: { availability: Availability }) {
   const [status, setStatus] = useState<'idle' | 'sending' | 'resending'>('idle')
   const [serverError, setServerError] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  const [showRuc, setShowRuc] = useState(false)
   const [created, setCreated] = useState<{ email: string; verificationLink: string } | null>(null)
   const [resendInfo, setResendInfo] = useState('')
   const [devLink, setDevLink] = useState('')
+
+  const isCompany = draft.documentType === 'ruc'
+
+  const selectAccountKind = (kind: DocumentType) => {
+    setDraft((previous) => ({ ...previous, documentType: kind, documentNumber: '' }))
+    setErrors((previous) => ({ ...previous, documentNumber: undefined }))
+    setShowRuc(false)
+  }
 
   const update = <K extends keyof typeof draft>(key: K, value: (typeof draft)[K]) => {
     setDraft((previous) => ({ ...previous, [key]: value }))
@@ -50,17 +58,15 @@ export function RegisterForm({ availability }: { availability: Availability }) {
     const nextErrors: FieldErrors = {}
 
     if (draft.name.trim().length < 3) {
-      nextErrors.name = 'Escribe tu nombre completo.'
+      nextErrors.name =
+        draft.documentType === 'ruc' ? 'Escribe la razón social.' : 'Escribe tu nombre completo.'
     }
     if (!isEmail(draft.email)) {
       nextErrors.email = 'Ingresa un correo válido.'
     }
     const digits = onlyDigits(draft.documentNumber)
-    if (digits.length > 0) {
-      const expected = draft.documentType === 'dni' ? 8 : 11
-      if (digits.length !== expected) {
-        nextErrors.documentNumber = `El ${draft.documentType === 'dni' ? 'DNI' : 'RUC'} debe tener ${expected} dígitos.`
-      }
+    if (digits.length > 0 && digits.length !== 11) {
+      nextErrors.documentNumber = 'El RUC debe tener 11 dígitos.'
     }
     const passwordIssue = passwordProblem(draft.password)
     if (passwordIssue) nextErrors.password = passwordIssue
@@ -89,7 +95,7 @@ export function RegisterForm({ availability }: { availability: Availability }) {
           name: draft.name.trim(),
           email: draft.email.trim(),
           phone: draft.phone.trim(),
-          company: draft.company.trim(),
+          company: isCompany ? draft.name.trim() : '',
           documentType: onlyDigits(draft.documentNumber) ? draft.documentType : null,
           documentNumber: onlyDigits(draft.documentNumber),
           password: draft.password,
@@ -228,28 +234,28 @@ export function RegisterForm({ availability }: { availability: Availability }) {
       {serverError && (
         <div
           role="alert"
-          className="mb-4 flex items-start gap-2.5 rounded-2xl border border-[#FECACA] bg-[#FEF2F2] px-4 py-3 text-[13px] text-[#991B1B]"
+          className="mb-3 flex items-start gap-2.5 rounded-2xl border border-[#FECACA] bg-[#FEF2F2] px-3.5 py-2.5 text-[13px] text-[#991B1B] sm:mb-4"
         >
           <AlertCircle aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
           <p className="font-semibold">{serverError}</p>
         </div>
       )}
 
-      <form onSubmit={handleSubmit} noValidate className="space-y-4">
-        <label className="block text-xs font-semibold text-[#0F172A]">
-          Nombre completo *
-          <input
-            value={draft.name}
-            onChange={(event) => update('name', event.target.value)}
-            placeholder="Nombres y apellidos"
-            autoComplete="name"
-            aria-invalid={Boolean(errors.name)}
-            className={fieldClass}
-          />
-          {errors.name && <span className="mt-1 block text-[10px] font-normal text-[#EF4444]">{errors.name}</span>}
-        </label>
+      <form onSubmit={handleSubmit} noValidate className="space-y-2.5 sm:space-y-3">
+        <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
+          <label className="col-span-2 block text-xs font-semibold text-[#0F172A] sm:col-span-1">
+            {isCompany ? 'Razón social *' : 'Nombre completo *'}
+            <input
+              value={draft.name}
+              onChange={(event) => update('name', event.target.value)}
+              placeholder={isCompany ? 'Razón social de la empresa' : 'Nombres y apellidos'}
+              autoComplete={isCompany ? 'organization' : 'name'}
+              aria-invalid={Boolean(errors.name)}
+              className={fieldClass}
+            />
+            {errors.name && <span className="mt-1 block text-[10px] font-normal text-[#EF4444]">{errors.name}</span>}
+          </label>
 
-        <div className="grid gap-4 sm:grid-cols-2">
           <label className="block text-xs font-semibold text-[#0F172A]">
             Correo electrónico *
             <input
@@ -275,51 +281,75 @@ export function RegisterForm({ availability }: { availability: Availability }) {
               className={fieldClass}
             />
           </label>
-        </div>
 
-        <label className="block text-xs font-semibold text-[#0F172A]">
-          Empresa
-          <input
-            value={draft.company}
-            onChange={(event) => update('company', event.target.value)}
-            placeholder="Nombre de tu empresa (opcional)"
-            autoComplete="organization"
-            className={fieldClass}
-          />
-        </label>
-
-        <div className="grid gap-4 sm:grid-cols-[9rem_minmax(0,1fr)]">
-          <label className="block text-xs font-semibold text-[#0F172A]">
-            Documento
-            <select
-              value={draft.documentType}
-              onChange={(event) => update('documentType', event.target.value as DocumentType)}
-              className={fieldClass}
+          <div className="col-span-2 sm:col-span-1">
+            <div className="flex items-center justify-between gap-2">
+              <span className="block text-xs font-semibold text-[#0F172A]">Tipo de cuenta *</span>
+              {isCompany && !showRuc && (
+                <button
+                  type="button"
+                  onClick={() => setShowRuc(true)}
+                  aria-label="Agregar RUC (opcional)"
+                  className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#2563EB] transition hover:text-[#1D4ED8]"
+                >
+                  <Plus aria-hidden="true" className="size-3" />
+                  RUC
+                </button>
+              )}
+            </div>
+            <div
+              role="group"
+              aria-label="Tipo de cuenta"
+              className="mt-1 grid h-10 grid-cols-2 gap-1 rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] p-1"
             >
-              <option value="dni">DNI</option>
-              <option value="ruc">RUC</option>
-            </select>
-          </label>
-          <label className="block text-xs font-semibold text-[#0F172A]">
-            Número (opcional)
-            <input
-              inputMode="numeric"
-              value={draft.documentNumber}
-              onChange={(event) => update('documentNumber', onlyDigits(event.target.value))}
-              placeholder={draft.documentType === 'dni' ? '8 dígitos' : '11 dígitos'}
-              aria-invalid={Boolean(errors.documentNumber)}
-              className={fieldClass}
-            />
-            {errors.documentNumber && (
-              <span className="mt-1 block text-[10px] font-normal text-[#EF4444]">{errors.documentNumber}</span>
-            )}
-          </label>
-        </div>
+              <button
+                type="button"
+                aria-pressed={!isCompany}
+                onClick={() => selectAccountKind('dni')}
+                className={`rounded-lg text-[11px] font-semibold transition ${
+                  !isCompany
+                    ? 'bg-white text-[#1D4ED8] shadow-sm'
+                    : 'text-[#64748B] hover:text-[#0F172A]'
+                }`}
+              >
+                Persona natural
+              </button>
+              <button
+                type="button"
+                aria-pressed={isCompany}
+                onClick={() => selectAccountKind('ruc')}
+                className={`rounded-lg text-[11px] font-semibold transition ${
+                  isCompany
+                    ? 'bg-white text-[#1D4ED8] shadow-sm'
+                    : 'text-[#64748B] hover:text-[#0F172A]'
+                }`}
+              >
+                Empresa
+              </button>
+            </div>
+          </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
+          {isCompany && showRuc && (
+            <label className="col-span-2 block text-xs font-semibold text-[#0F172A]">
+              RUC (opcional)
+              <input
+                inputMode="numeric"
+                maxLength={11}
+                value={draft.documentNumber}
+                onChange={(event) => update('documentNumber', onlyDigits(event.target.value))}
+                placeholder="11 dígitos"
+                aria-invalid={Boolean(errors.documentNumber)}
+                className={fieldClass}
+              />
+              {errors.documentNumber && (
+                <span className="mt-1 block text-[10px] font-normal text-[#EF4444]">{errors.documentNumber}</span>
+              )}
+            </label>
+          )}
+
           <label className="block text-xs font-semibold text-[#0F172A]">
             Contraseña *
-            <span className="relative mt-1.5 block">
+            <span className="relative mt-1 block">
               <input
                 type={showPassword ? 'text' : 'password'}
                 value={draft.password}
@@ -341,7 +371,7 @@ export function RegisterForm({ availability }: { availability: Availability }) {
             {errors.password ? (
               <span className="mt-1 block text-[10px] font-normal text-[#EF4444]">{errors.password}</span>
             ) : (
-              <span className="mt-1 block text-[10px] font-normal leading-4 text-[#94A3B8]">
+              <span className="mt-1 hidden text-[10px] font-normal leading-4 text-[#94A3B8] xl:block">
                 {PASSWORD_HINT}
               </span>
             )}
@@ -364,44 +394,46 @@ export function RegisterForm({ availability }: { availability: Availability }) {
           </label>
         </div>
 
-        <div className="space-y-2.5 rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-4">
-          <label className="flex items-start gap-2.5 text-xs leading-5 text-[#334155]">
-            <input
-              type="checkbox"
-              checked={draft.acceptTerms}
-              onChange={(event) => update('acceptTerms', event.target.checked)}
-              aria-invalid={Boolean(errors.terms)}
-              className="mt-0.5 size-4 rounded border-[#CBD5E1] text-[#2563EB] focus:ring-[#2563EB]/30"
-            />
-            <span>
-              Acepto los{' '}
-              <Link href="/terminos-y-condiciones" className="font-semibold text-[#2563EB] hover:underline">
-                términos y condiciones
-              </Link>{' '}
-              y la{' '}
-              <Link href="/politica-de-privacidad" className="font-semibold text-[#2563EB] hover:underline">
-                política de privacidad
-              </Link>
-              . *
-            </span>
-          </label>
-          {errors.terms && <p className="text-[10px] font-semibold text-[#EF4444]">{errors.terms}</p>}
+        <div className="rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-2.5 sm:p-3">
+          <div className="grid gap-2 sm:grid-cols-2 sm:gap-3">
+            <label className="flex items-start gap-2 text-[11px] leading-4 text-[#334155] sm:gap-2.5 sm:text-xs sm:leading-5">
+              <input
+                type="checkbox"
+                checked={draft.acceptTerms}
+                onChange={(event) => update('acceptTerms', event.target.checked)}
+                aria-invalid={Boolean(errors.terms)}
+                className="mt-0.5 size-4 shrink-0 rounded border-[#CBD5E1] text-[#2563EB] focus:ring-[#2563EB]/30"
+              />
+              <span>
+                Acepto los{' '}
+                <Link href="/terminos-y-condiciones" className="font-semibold text-[#2563EB] hover:underline">
+                  términos y condiciones
+                </Link>{' '}
+                y la{' '}
+                <Link href="/politica-de-privacidad" className="font-semibold text-[#2563EB] hover:underline">
+                  política de privacidad
+                </Link>
+                . *
+              </span>
+            </label>
 
-          <label className="flex items-start gap-2.5 text-xs leading-5 text-[#334155]">
-            <input
-              type="checkbox"
-              checked={draft.marketingConsent}
-              onChange={(event) => update('marketingConsent', event.target.checked)}
-              className="mt-0.5 size-4 rounded border-[#CBD5E1] text-[#2563EB] focus:ring-[#2563EB]/30"
-            />
-            <span>Quiero recibir novedades y promociones de F&amp;J Systems (opcional).</span>
-          </label>
+            <label className="flex items-start gap-2 text-[11px] leading-4 text-[#334155] sm:gap-2.5 sm:text-xs sm:leading-5">
+              <input
+                type="checkbox"
+                checked={draft.marketingConsent}
+                onChange={(event) => update('marketingConsent', event.target.checked)}
+                className="mt-0.5 size-4 shrink-0 rounded border-[#CBD5E1] text-[#2563EB] focus:ring-[#2563EB]/30"
+              />
+              <span>Quiero recibir novedades y promociones de F&amp;J Systems (opcional).</span>
+            </label>
+          </div>
+          {errors.terms && <p className="mt-1 text-[10px] font-semibold text-[#EF4444]">{errors.terms}</p>}
         </div>
 
         <button
           type="submit"
           disabled={status === 'sending'}
-          className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#2563EB] text-sm font-bold text-white transition hover:bg-[#1D4ED8] disabled:opacity-60"
+          className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-[#2563EB] text-sm font-bold text-white transition hover:bg-[#1D4ED8] disabled:opacity-60"
         >
           {status === 'sending' ? (
             <Loader2 aria-hidden="true" className="size-4 animate-spin" />
@@ -412,7 +444,7 @@ export function RegisterForm({ availability }: { availability: Availability }) {
         </button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-[#64748B]">
+      <p className="mt-2.5 text-center text-[13px] text-[#64748B] sm:mt-4 sm:text-sm">
         ¿Ya tienes cuenta?{' '}
         <Link href="/login" className="font-semibold text-[#2563EB] hover:underline">
           Inicia sesión

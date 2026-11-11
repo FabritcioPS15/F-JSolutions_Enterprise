@@ -42,11 +42,11 @@ export function EditorialHero({
       <div className={`${HERO_CONTAINER} pb-10 pt-10 sm:pb-12 sm:pt-12 lg:pb-14 lg:pt-14`}>
         <div
           className={cn(
-            'grid gap-8',
+            'grid grid-cols-1 gap-8',
             aside && 'lg:grid-cols-[minmax(0,1fr)_320px] lg:items-end lg:gap-12',
           )}
         >
-          <div className="max-w-[780px]">
+          <div className="min-w-0 max-w-[780px]">
             {eyebrow ? <HeroEyebrow>{eyebrow}</HeroEyebrow> : null}
 
             <HeroTitle size={size}>{title}</HeroTitle>
@@ -70,7 +70,11 @@ export function EditorialHero({
             {actions && <HeroActions>{actions}</HeroActions>}
           </div>
 
-          {aside && <div className="hero-reveal hero-delay-2 w-full max-w-[420px] lg:max-w-none">{aside}</div>}
+          {aside && (
+            <div className="hero-reveal hero-delay-2 w-full min-w-0 max-w-[420px] lg:max-w-none">
+              {aside}
+            </div>
+          )}
         </div>
 
         {children}

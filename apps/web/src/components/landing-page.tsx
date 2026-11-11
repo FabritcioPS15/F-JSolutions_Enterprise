@@ -4,13 +4,13 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   ArrowRight,
   BarChart3,
-  Calculator,
   Check,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
   Globe,
   Laptop,
+  Package,
   SlidersHorizontal,
 } from 'lucide-react'
 import {
@@ -164,7 +164,7 @@ export function LandingPage() {
         <div className="mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
           <div className="grid gap-3.5 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
             <Reveal className="h-full">
-              <Feature icon={<Calculator />} title="Cotizador de PC" copy="Arma tu equipo ideal" onClick={() => { window.location.href = '/cotizacion' }} />
+              <Feature icon={<Package />} title="Catálogo de productos" copy="Explora equipos y componentes" onClick={() => { window.location.href = '/productos' }} />
             </Reveal>
             <Reveal className="h-full" delay={70}>
               <Feature icon={<BarChart3 />} title="Comparar productos" copy="Elige con confianza" />
@@ -345,16 +345,26 @@ function Feature({ icon, title, copy, onClick }: { icon: React.ReactNode; title:
   return (
     <button
       onClick={onClick}
-      className="group flex h-full w-full items-center gap-3 sm:gap-4 rounded-2xl border border-[#e5eaf0] bg-white p-4 sm:p-5 text-left transition-all duration-300 hover:border-[#3B82F6] hover:shadow-lg hover:shadow-[#3B82F6]/15 hover:-translate-y-1"
+      className="group relative flex h-full w-full items-center gap-3 overflow-hidden rounded-2xl border border-[#e5eaf0] bg-white p-4 text-left transition-[transform,box-shadow,border-color] duration-300 ease-out hover:-translate-y-1 hover:border-[#3B82F6]/60 hover:shadow-[0_22px_45px_-24px_rgba(59,130,246,0.6)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3B82F6]/45 focus-visible:ring-offset-2 active:translate-y-0 active:shadow-sm sm:gap-4 sm:p-5"
     >
-      <span className="flex size-10 sm:size-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#e8f0ff] to-[#dbeafe] text-[#155eef] transition-all duration-300 group-hover:scale-110 group-hover:bg-gradient-to-br group-hover:from-[#3B82F6] group-hover:to-[#7C3AED] group-hover:text-white">
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#EFF6FF] via-white to-[#F5F3FF] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+      />
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-8 -top-10 size-28 rounded-full bg-[#7C3AED]/10 opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100"
+      />
+      <span className="relative flex size-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#e8f0ff] to-[#dbeafe] text-[#155eef] shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] transition-all duration-300 group-hover:scale-110 group-hover:from-[#3B82F6] group-hover:to-[#7C3AED] group-hover:text-white group-hover:shadow-[0_12px_24px_-10px_rgba(59,130,246,0.85)] sm:size-11">
         {icon}
       </span>
-      <span className="flex-1">
-        <span className="block font-heading text-xs sm:text-sm font-bold text-[#172033] transition-colors duration-300 group-hover:text-[#3B82F6]">{title}</span>
-        <span className="mt-1 block text-[10px] sm:text-xs text-[#64748b]">{copy}</span>
+      <span className="relative flex-1">
+        <span className="block font-heading text-xs font-bold text-[#172033] transition-colors duration-300 group-hover:text-[#1D4ED8] sm:text-sm">{title}</span>
+        <span className="mt-1 block text-[10px] text-[#64748b] transition-colors duration-300 group-hover:text-[#475569] sm:text-xs">{copy}</span>
       </span>
-      <ArrowRight className="size-4 text-[#94a3b8] opacity-0 transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100" />
+      <span className="relative grid size-7 shrink-0 translate-x-1 place-items-center rounded-full border border-[#E2E8F0] bg-white text-[#94A3B8] opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:border-[#3B82F6]/30 group-hover:text-[#2563EB] group-hover:opacity-100">
+        <ArrowRight className="size-3.5" />
+      </span>
     </button>
   )
 }

@@ -40,8 +40,8 @@ export function QuoteHero({
   return (
     <HeroSection id={id}>
       <div className={`${HERO_CONTAINER} pb-10 pt-9 sm:pb-12 sm:pt-11 lg:pb-14 lg:pt-12`}>
-        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1.02fr)_minmax(0,0.98fr)] lg:gap-12 xl:gap-16">
-          <div className="max-w-[620px]">
+        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[minmax(0,1.02fr)_minmax(0,0.98fr)] lg:gap-12 xl:gap-16">
+          <div className="min-w-0 max-w-[620px]">
             <HeroTitle size="lg">
               {title ?? (
                 <>
@@ -60,7 +60,9 @@ export function QuoteHero({
             </HeroActions>
           </div>
 
-          <QuoteSummaryVisual />
+          <div className="min-w-0">
+            <QuoteSummaryVisual />
+          </div>
         </div>
       </div>
     </HeroSection>

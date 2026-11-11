@@ -210,16 +210,16 @@ export function ServiceDetail({
                 {service.title}
               </h1>
               <p className="mt-4 text-base leading-7 text-[#CBD5E1]">{service.intro}</p>
-              <div className="mt-7 flex flex-wrap gap-3">
+              <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <Link
                   href="/cotizacion"
-                  className="inline-flex h-11 items-center gap-2 rounded-xl bg-[#2563EB] px-5 text-sm font-bold text-white transition hover:bg-[#1D4ED8]"
+                  className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#2563EB] px-5 text-sm font-bold text-white transition hover:bg-[#1D4ED8] sm:w-auto"
                 >
                   Solicitar cotización <ArrowRight className="size-4" />
                 </Link>
                 <Link
                   href="/contacto"
-                  className="inline-flex h-11 items-center gap-2 rounded-xl border border-white/25 bg-white/5 px-5 text-sm font-bold text-white backdrop-blur transition hover:border-white/50 hover:bg-white/10"
+                  className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-white/25 bg-white/5 px-5 text-sm font-bold text-white backdrop-blur transition hover:border-white/50 hover:bg-white/10 sm:w-auto"
                 >
                   Hablar con un especialista
                 </Link>
@@ -262,22 +262,22 @@ export function ServiceDetail({
       ) : (
         <section className="relative overflow-hidden border-b border-[#E2E8F0] bg-gradient-to-br from-[#F8FAFC] via-white to-[#EDE9FE]">
         <div className="pointer-events-none absolute -right-32 -top-24 size-96 rounded-full bg-[#2563EB]/10 blur-3xl" />
-        <div className="relative mx-auto grid max-w-[1280px] gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:px-8 lg:py-16">
-          <div>
+        <div className="relative mx-auto grid max-w-[1280px] grid-cols-1 gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:px-8 lg:py-16">
+          <div className="min-w-0">
             <h1 className="max-w-2xl text-4xl font-bold tracking-[-0.045em] text-[#0F172A] sm:text-5xl">
               {service.title}
             </h1>
             <p className="mt-4 max-w-2xl text-base leading-7 text-[#475569]">{service.intro}</p>
-            <div className="mt-7 flex flex-wrap gap-3">
+            <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <Link
                 href="/cotizacion"
-                className="inline-flex h-11 items-center gap-2 rounded-xl bg-[#2563EB] px-5 text-sm font-bold text-white transition hover:bg-[#1D4ED8]"
+                className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#2563EB] px-5 text-sm font-bold text-white transition hover:bg-[#1D4ED8] sm:w-auto"
               >
                 Solicitar cotización <ArrowRight className="size-4" />
               </Link>
               <Link
                 href="/contacto"
-                className="inline-flex h-11 items-center gap-2 rounded-xl border border-[#E2E8F0] bg-white px-5 text-sm font-bold text-[#0F172A] transition hover:border-[#2563EB] hover:text-[#2563EB]"
+                className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-[#E2E8F0] bg-white px-5 text-sm font-bold text-[#0F172A] transition hover:border-[#2563EB] hover:text-[#2563EB] sm:w-auto"
               >
                 Hablar con un especialista
               </Link>
@@ -287,7 +287,7 @@ export function ServiceDetail({
             </p>
           </div>
 
-          <aside className="rounded-3xl border border-[#E2E8F0] bg-white/90 p-6 shadow-xl shadow-[#0F172A]/5 backdrop-blur">
+          <aside className="min-w-0 rounded-3xl border border-[#E2E8F0] bg-white/90 p-6 shadow-xl shadow-[#0F172A]/5 backdrop-blur">
             <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#64748B]">
               Datos del servicio
             </p>

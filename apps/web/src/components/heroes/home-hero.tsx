@@ -290,11 +290,23 @@ const SLIDE_DURATION_MS = 7000
 export function HomeHeroCarousel() {
   const [activeIndex, setActiveIndex] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
+  const [isInteracting, setIsInteracting] = useState(false)
+  const [isCompact, setIsCompact] = useState(false)
   const [progress, setProgress] = useState(0)
 
   // Referencias para control táctil (swipe)
   const touchStartXRef = useRef<number | null>(null)
   const touchEndXRef = useRef<number | null>(null)
+
+  // En pantallas pequeñas cada diapositiva tiene una altura distinta:
+  // el avance automático haría saltar el contenido. Allí navega el usuario.
+  useEffect(() => {
+    const query = window.matchMedia('(max-width: 639px)')
+    const sync = () => setIsCompact(query.matches)
+    sync()
+    query.addEventListener('change', sync)
+    return () => query.removeEventListener('change', sync)
+  }, [])
 
   const activeSlide = HERO_SLIDES[activeIndex]
 
@@ -311,9 +323,13 @@ export function HomeHeroCarousel() {
     goToSlide(activeIndex - 1)
   }, [activeIndex, goToSlide])
 
-  // Temporizador de avance automático con barra de progreso fluida
+  // Temporizador de avance automático con barra de progreso fluida.
+  // Se detiene mientras el visitante interactúa para que la diapositiva no cambie
+  // entre el mousedown y el click de un CTA.
+  const isAutoplayActive = !isPaused && !isInteracting && !isCompact
+
   useEffect(() => {
-    if (isPaused) return
+    if (!isAutoplayActive) return
 
     const intervalTime = 50 // ms
     const increment = (intervalTime / SLIDE_DURATION_MS) * 100
@@ -329,25 +345,31 @@ export function HomeHeroCarousel() {
     }, intervalTime)
 
     return () => clearInterval(timer)
-  }, [activeIndex, isPaused, goToSlide])
+  }, [activeIndex, isAutoplayActive, goToSlide])
 
-  // Navegación por teclado (Flechas izquierda / derecha)
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return
-      if (e.key === 'ArrowRight') {
-        nextSlide()
-      } else if (e.key === 'ArrowLeft') {
-        prevSlide()
-      }
+  // Navegación por teclado acotada al hero (solo cuando el foco está dentro)
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return
+    if (e.key === 'ArrowRight') {
+      e.preventDefault()
+      nextSlide()
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault()
+      prevSlide()
     }
+  }
 
-    window.addEventListener('keydown', handleKeyDown)
-    return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [nextSlide, prevSlide])
+  const handleFocus = () => setIsInteracting(true)
+
+  const handleBlur = (e: React.FocusEvent) => {
+    if (!e.currentTarget.contains(e.relatedTarget as Node | null)) {
+      setIsInteracting(false)
+    }
+  }
 
   // Soporte para gestos táctiles (Swipe)
   const handleTouchStart = (e: React.TouchEvent) => {
+    setIsInteracting(true)
     touchStartXRef.current = e.touches[0].clientX
   }
 
@@ -356,18 +378,20 @@ export function HomeHeroCarousel() {
   }
 
   const handleTouchEnd = () => {
-    if (touchStartXRef.current === null || touchEndXRef.current === null) return
-    const diff = touchStartXRef.current - touchEndXRef.current
-    const threshold = 50 // px
+    if (touchStartXRef.current !== null && touchEndXRef.current !== null) {
+      const diff = touchStartXRef.current - touchEndXRef.current
+      const threshold = 50 // px
 
-    if (diff > threshold) {
-      nextSlide()
-    } else if (diff < -threshold) {
-      prevSlide()
+      if (diff > threshold) {
+        nextSlide()
+      } else if (diff < -threshold) {
+        prevSlide()
+      }
     }
 
     touchStartXRef.current = null
     touchEndXRef.current = null
+    setIsInteracting(false)
   }
 
   return (
@@ -378,9 +402,15 @@ export function HomeHeroCarousel() {
     >
       <div
         className="flex flex-1 flex-col justify-between"
+        onMouseEnter={() => setIsInteracting(true)}
+        onMouseLeave={() => setIsInteracting(false)}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        onKeyDown={handleKeyDown}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
+        onTouchCancel={handleTouchEnd}
       >
         {/* ── Contenido Activo del Hero (con transición suave) ── */}
         <div
@@ -391,9 +421,9 @@ export function HomeHeroCarousel() {
           aria-label={activeSlide.tabLabel}
           className={`${HERO_CONTAINER} flex flex-1 items-center py-[clamp(1.75rem,4vh,3.75rem)] animate-in fade-in-50 duration-300`}
         >
-          <div className="grid w-full items-center gap-8 lg:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)] lg:gap-12 xl:gap-16">
+          <div className="grid w-full grid-cols-1 items-center gap-8 lg:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)] lg:gap-12 xl:gap-16">
             {/* Columna Izquierda: Información, Título y Acciones */}
-            <div className="order-2 max-w-[620px] lg:order-1">
+            <div className="min-w-0 max-w-[620px]">
               <HeroTitle size="lg">{activeSlide.title}</HeroTitle>
 
               <p className="hero-reveal hero-delay-1 mt-4 text-[clamp(0.98rem,0.92rem+0.35vw,1.15rem)] font-normal leading-[1.65] text-[#475569]">
@@ -413,7 +443,7 @@ export function HomeHeroCarousel() {
             </div>
 
             {/* Columna Derecha: Visual Interactiva */}
-            <div className="order-1 lg:order-2">
+            <div className="min-w-0">
               {activeSlide.visual}
             </div>
           </div>
@@ -424,8 +454,8 @@ export function HomeHeroCarousel() {
           <div className={`${HERO_CONTAINER}`}>
             <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#EEF2F7] pt-4">
               {/* Indicadores interactivos de diapositivas con barra de progreso */}
-              <div className="flex items-center gap-2 sm:gap-3">
-                <div className="flex items-center gap-1.5 sm:gap-2">
+              <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+                <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
                   {HERO_SLIDES.map((slide, index) => {
                     const isActive = index === activeIndex
                     return (
@@ -444,14 +474,14 @@ export function HomeHeroCarousel() {
                         {isActive && (
                           <span
                             className="block h-full bg-gradient-to-r from-[#3B82F6] to-[#1D4ED8] transition-all duration-75"
-                            style={{ width: `${progress}%` }}
+                            style={{ width: isCompact ? '100%' : `${progress}%` }}
                           />
                         )}
                       </button>
                     )
                   })}
                 </div>
-                <span className="text-xs font-bold text-[#0F172A] pl-1 sm:text-[13px]">
+                <span className="hidden truncate pl-1 text-xs font-bold text-[#0F172A] sm:inline sm:text-[13px]">
                   {activeSlide.tabLabel}
                 </span>
               </div>
@@ -461,7 +491,7 @@ export function HomeHeroCarousel() {
                 <button
                   type="button"
                   onClick={() => setIsPaused((prev) => !prev)}
-                  className="group grid size-8 place-items-center rounded-lg bg-transparent text-[#64748B] transition-colors hover:bg-slate-200/60 hover:text-[#0F172A]"
+                  className="group hidden size-8 place-items-center rounded-lg bg-transparent text-[#64748B] transition-colors hover:bg-slate-200/60 hover:text-[#0F172A] sm:grid"
                   aria-label={isPaused ? 'Reanudar pase automático' : 'Pausar pase automático'}
                   title={isPaused ? 'Reanudar pase automático' : 'Pausar pase automático'}
                 >

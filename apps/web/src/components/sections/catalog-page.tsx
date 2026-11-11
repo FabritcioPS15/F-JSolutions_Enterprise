@@ -261,7 +261,7 @@ function CategoryCard({
 
   // Generar imagen placeholder basada en la categoría
   const categoryImages: Record<string, string> = {
-    'PC y Servidores': 'https://images.unsplash.com/photo-1555629900-1f3e98f75c19?w=600&q=80',
+    'PC y Servidores': 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=600&q=80',
     'Laptops': 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&q=80',
     'Laptops y Portátiles': 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=600&q=80',
     'Componentes': 'https://images.unsplash.com/photo-1591488320449-011701bb6704?w=600&q=80',
@@ -271,14 +271,14 @@ function CategoryCard({
     'Almacenamiento': 'https://images.unsplash.com/photo-1593642702821-c8da6771f0c6?w=600&q=80',
     'Redes': 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=600&q=80',
     'Redes y Conectividad': 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=600&q=80',
-    'Impresoras y Escáneres': 'https://images.unsplash.com/photo-1562848297-1f456b0c8f3c?w=600&q=80',
-    'Impresoras': 'https://images.unsplash.com/photo-1562848297-1f456b0c8f3c?w=600&q=80',
+    'Impresoras y Escáneres': 'https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?w=600&q=80',
+    'Impresoras': 'https://images.unsplash.com/photo-1612815154858-60aa4c59eaa6?w=600&q=80',
     'Audio y Video': 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=600&q=80',
     'Gaming': 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600&q=80',
     'Accesorios': 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=600&q=80',
     'Software': 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&q=80',
     'Telefonía': 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&q=80',
-    'Hogar inteligente': 'https://images.unsplash.com/photo-1558002038-109070169f96?w=600&q=80',
+    'Hogar inteligente': 'https://images.unsplash.com/photo-1558089687-f282ffcbc126?w=600&q=80',
     'Cables y Energía': 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80',
   }
 

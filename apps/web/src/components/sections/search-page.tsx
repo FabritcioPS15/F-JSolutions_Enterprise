@@ -42,7 +42,7 @@ function ResultRow({ item }: { item: SiteSearchResult }) {
   return (
     <Link
       href={item.href}
-      className="group flex items-center gap-3 rounded-xl border border-[#E2E8F0] bg-white p-3.5 transition hover:border-[#2563EB]/40 hover:shadow-sm sm:gap-4"
+      className="group flex min-w-0 items-center gap-3 rounded-xl border border-[#E2E8F0] bg-white p-3.5 transition hover:border-[#2563EB]/40 hover:shadow-sm sm:gap-4"
     >
       {item.type === 'product' && item.image ? (
         <span className="flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-[#E2E8F0] bg-white">
@@ -260,7 +260,7 @@ export function SearchPage() {
                           {group.items.length}
                         </span>
                       </div>
-                      <div className="mt-3 grid gap-2.5">
+                      <div className="mt-3 grid grid-cols-1 gap-2.5">
                         {group.items.map((item) => (
                           <ResultRow key={item.id} item={item} />
                         ))}

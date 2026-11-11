@@ -47,8 +47,8 @@ export function DetailHero({
           {backLabel}
         </Link>
 
-        <div className="mt-5 grid items-center gap-10 lg:grid-cols-[minmax(0,1.02fr)_minmax(0,0.9fr)] lg:gap-12 xl:gap-16">
-          <div className="max-w-[620px]">
+        <div className="mt-5 grid grid-cols-1 items-center gap-10 lg:grid-cols-[minmax(0,1.02fr)_minmax(0,0.9fr)] lg:gap-12 xl:gap-16">
+          <div className="min-w-0 max-w-[620px]">
             <HeroTitle size="lg">{title}</HeroTitle>
 
             <HeroLead>{description}</HeroLead>
@@ -63,7 +63,7 @@ export function DetailHero({
             </HeroActions>
           </div>
 
-          {visual}
+          <div className="min-w-0">{visual}</div>
         </div>
       </div>
     </HeroSection>

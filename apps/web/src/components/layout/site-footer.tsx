@@ -211,6 +211,8 @@ export function SiteFooter() {
   const currentYear = new Date().getFullYear()
   const pathname = usePathname()
 
+  if (pathname === '/login' || pathname === '/registro') return null
+
   return (
     <footer
       className="border-t border-[#1E293B]/80 bg-gradient-to-b from-[#0B132B] via-[#0B1220] to-[#2E1065] text-[#94A3B8] selection:bg-[#7C3AED]/30 selection:text-white"

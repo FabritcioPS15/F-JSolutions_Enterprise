@@ -636,3 +636,113 @@ html {
     font-family: var(--font-mono);
   }
 }
+/* ─── Acceso de clientes: login ⇄ registro ─────────────────────────────────── */
+
+.auth-page {
+  min-height: 100svh;
+  overflow-x: clip;
+  background: #ffffff;
+}
+
+.auth-stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto minmax(0, 1fr);
+  min-height: 100svh;
+}
+
+@keyframes auth-content-in-left {
+  from {
+    opacity: 0;
+    transform: translate3d(-18px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes auth-content-in-right {
+  from {
+    opacity: 0;
+    transform: translate3d(18px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.auth-content {
+  animation: auth-content-in-left 480ms cubic-bezier(0.22, 1, 0.36, 1) 60ms both;
+}
+
+.auth-stage--register .auth-content {
+  animation-name: auth-content-in-right;
+}
+
+@media (min-width: 1024px) {
+  .auth-stage {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
+  }
+
+  .auth-content {
+    animation-duration: 640ms;
+    animation-delay: 120ms;
+  }
+
+  .auth-aside {
+    grid-area: 1 / 1;
+    z-index: 2;
+    will-change: transform;
+    backface-visibility: hidden;
+    box-shadow: 0 0 64px -32px rgba(15, 23, 42, 0.5);
+    transition: transform 880ms cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  .auth-panel {
+    grid-area: 1 / 2;
+    z-index: 1;
+    will-change: transform;
+    backface-visibility: hidden;
+    transition: transform 880ms cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  .auth-stage--register .auth-aside {
+    transform: translate3d(100%, 0, 0);
+  }
+
+  .auth-stage--register .auth-panel {
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+
+@media (max-width: 1023.98px) and (max-height: 700px) {
+  .auth-aside {
+    padding-block: 0.375rem;
+  }
+
+  .auth-aside img {
+    height: 2rem;
+  }
+
+  .auth-panel {
+    padding-block: 0.375rem;
+  }
+
+  .auth-panel > div {
+    padding-block: 0.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-aside,
+  .auth-panel {
+    transition: none !important;
+  }
+
+  .auth-content {
+    animation: none !important;
+  }
+}

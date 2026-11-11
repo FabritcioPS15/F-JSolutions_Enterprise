@@ -3,7 +3,16 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { AlertCircle, CheckCircle2, Eye, EyeOff, Loader2, MailCheck } from 'lucide-react'
+import {
+  AlertCircle,
+  CheckCircle2,
+  ChevronDown,
+  Eye,
+  EyeOff,
+  FlaskConical,
+  Loader2,
+  MailCheck,
+} from 'lucide-react'
 import { isEmail } from '@fj-solutions/contracts/domain'
 import { AuthDivider, OAuthButtons } from './oauth-buttons'
 
@@ -11,7 +20,7 @@ type Availability = { google: boolean; facebook: boolean }
 type Notice = { tone: 'success' | 'error'; title: string; message?: string }
 
 const fieldClass =
-  'mt-1.5 h-11 w-full rounded-xl border border-[#E2E8F0] bg-white px-3 text-sm font-normal text-[#0F172A] outline-none transition placeholder:text-[#94A3B8] focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 aria-[invalid=true]:border-[#EF4444]'
+  'mt-1 h-10 w-full rounded-xl border border-[#E2E8F0] bg-white px-3 text-sm font-normal text-[#0F172A] outline-none transition placeholder:text-[#94A3B8] focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 aria-[invalid=true]:border-[#EF4444]'
 
 const oauthErrorMessages: Record<string, string> = {
   cancelado: 'Cancelaste el acceso con el proveedor. Puedes intentarlo de nuevo.',
@@ -30,13 +39,18 @@ export function LoginForm({
   notice,
   availability,
   oauthError,
+  devAccess,
 }: {
   next: string
   initialEmail: string
   notice: Notice | null
   availability: Availability
   oauthError: string | null
+  devAccess: boolean
 }) {
+  const devHref = (kind: 'persona' | 'empresa') =>
+    `/api/customer/dev-login?as=${kind}&next=${encodeURIComponent(next)}`
+
   const router = useRouter()
   const [email, setEmail] = useState(initialEmail)
   const [password, setPassword] = useState('')
@@ -131,7 +145,7 @@ export function LoginForm({
       {noticeState && (
         <div
           role="alert"
-          className={`mb-5 flex items-start gap-2.5 rounded-2xl border px-4 py-3 text-sm ${
+          className={`mb-4 flex items-start gap-2.5 rounded-2xl border px-3.5 py-2.5 text-[13px] sm:text-sm ${
             noticeState.tone === 'success'
               ? 'border-[#BBF7D0] bg-[#F0FDF4] text-[#166534]'
               : 'border-[#FECACA] bg-[#FEF2F2] text-[#991B1B]'
@@ -152,7 +166,7 @@ export function LoginForm({
       <OAuthButtons availability={availability} next={next} />
       <AuthDivider />
 
-      <form onSubmit={handleSubmit} noValidate className="space-y-4">
+      <form onSubmit={handleSubmit} noValidate className="space-y-2.5 sm:space-y-3">
         <label className="block text-xs font-semibold text-[#0F172A]">
           Correo electrónico
           <input
@@ -168,7 +182,7 @@ export function LoginForm({
 
         <label className="block text-xs font-semibold text-[#0F172A]">
           Contraseña
-          <span className="relative mt-1.5 block">
+          <span className="relative mt-1 block">
             <input
               type={showPassword ? 'text' : 'password'}
               value={password}
@@ -192,15 +206,49 @@ export function LoginForm({
         <button
           type="submit"
           disabled={status === 'sending'}
-          className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#2563EB] text-sm font-bold text-white transition hover:bg-[#1D4ED8] disabled:opacity-60"
+          className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-[#2563EB] text-sm font-bold text-white transition hover:bg-[#1D4ED8] disabled:opacity-60"
         >
           {status === 'sending' && <Loader2 aria-hidden="true" className="size-4 animate-spin" />}
           {status === 'sending' ? 'Ingresando…' : 'Iniciar sesión'}
         </button>
       </form>
 
+      {devAccess && (
+        <details className="group mt-3 rounded-xl border border-dashed border-[#C4B5FD] bg-[#F5F3FF]/70 transition hover:border-[#A78BFA]">
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-3.5 py-2.5 text-[12px] font-bold text-[#5B21B6] [&::-webkit-details-marker]:hidden">
+            <span className="inline-flex items-center gap-1.5">
+              <FlaskConical aria-hidden="true" className="size-3.5" />
+              Accesos de desarrollo
+            </span>
+            <ChevronDown
+              aria-hidden="true"
+              className="size-3.5 transition-transform group-open:rotate-180"
+            />
+          </summary>
+          <div className="border-t border-dashed border-[#DDD6FE] px-3.5 py-3">
+            <p className="text-[11px] leading-4 text-[#6D28D9]">
+              Solo en entorno local. Entra con una cuenta de prueba ya confirmada.
+            </p>
+            <div className="mt-2.5 grid grid-cols-2 gap-2">
+              <a
+                href={devHref('persona')}
+                className="inline-flex h-9 items-center justify-center rounded-lg border border-[#C4B5FD] bg-white px-2 text-xs font-bold text-[#5B21B6] transition hover:border-[#7C3AED] hover:bg-[#EDE9FE]"
+              >
+                Persona natural
+              </a>
+              <a
+                href={devHref('empresa')}
+                className="inline-flex h-9 items-center justify-center rounded-lg border border-[#C4B5FD] bg-white px-2 text-xs font-bold text-[#5B21B6] transition hover:border-[#7C3AED] hover:bg-[#EDE9FE]"
+              >
+                Empresa
+              </a>
+            </div>
+          </div>
+        </details>
+      )}
+
       {unverified && (
-        <div className="mt-4 rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-4">
+        <div className="mt-3 rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-3.5">
           <p className="inline-flex items-center gap-2 text-xs font-semibold text-[#0F172A]">
             <MailCheck aria-hidden="true" className="size-4 text-[#2563EB]" />
             ¿No recibiste el correo de confirmación?
@@ -218,7 +266,7 @@ export function LoginForm({
       )}
 
       {resendInfo && (
-        <div className="mt-4 rounded-2xl border border-[#BBF7D0] bg-[#F0FDF4] px-4 py-3 text-[13px] text-[#166534]">
+        <div className="mt-3 rounded-2xl border border-[#BBF7D0] bg-[#F0FDF4] px-3.5 py-2.5 text-[13px] text-[#166534]">
           <p className="font-semibold">{resendInfo}</p>
           {devLink && (
             <p className="mt-1 break-all">
@@ -231,7 +279,7 @@ export function LoginForm({
         </div>
       )}
 
-      <p className="mt-6 text-center text-sm text-[#64748B]">
+      <p className="mt-2.5 text-center text-[13px] text-[#64748B] sm:mt-4 sm:text-sm">
         ¿Todavía no tienes cuenta?{' '}
         <Link href="/registro" className="font-semibold text-[#2563EB] hover:underline">
           Regístrate

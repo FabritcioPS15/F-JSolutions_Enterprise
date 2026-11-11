@@ -211,7 +211,7 @@ export function HeroVisual({ children, className }: { children: ReactNode; class
   return (
     <div
       className={cn(
-        'hero-reveal hero-delay-2 relative mx-auto w-full max-w-[560px] lg:max-w-none',
+        'hero-reveal hero-delay-2 relative mx-auto w-full min-w-0 max-w-[560px] lg:max-w-none',
         className,
       )}
     >

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
-import { AuthShell } from '@/components/auth/auth-shell'
 import { LoginForm } from '@/components/auth/login-form'
+import { devAccessEnabled } from '@/lib/customer/dev-access'
 import { safeNextPath } from '@/lib/customer/http'
 import { oauthAvailability } from '@/lib/customer/oauth'
 import { getCustomerSession } from '@/lib/customer/session'
@@ -44,6 +44,15 @@ function buildNotice(params: Record<string, string | string[] | undefined>): Not
     }
   }
 
+  const devAccess = readParam(params, 'acceso')
+  if (devAccess === 'error' || devAccess === 'invalido') {
+    return {
+      tone: 'error',
+      title: 'No pudimos abrir el acceso de prueba',
+      message: 'Revisa la consola del servidor e inténtalo otra vez.',
+    }
+  }
+
   return null
 }
 
@@ -61,18 +70,13 @@ export default async function LoginPage({
   if (session) redirect(next)
 
   return (
-    <AuthShell
-      eyebrow="Acceso de clientes"
-      title="Inicia sesión"
-      subtitle="Entra para ver tus cotizaciones, tus favoritos y el estado de tus solicitudes."
-    >
-      <LoginForm
-        next={next}
-        initialEmail={email}
-        notice={buildNotice(params)}
-        availability={oauthAvailability()}
-        oauthError={oauthError}
-      />
-    </AuthShell>
+    <LoginForm
+      next={next}
+      initialEmail={email}
+      notice={buildNotice(params)}
+      availability={oauthAvailability()}
+      oauthError={oauthError}
+      devAccess={devAccessEnabled()}
+    />
   )
 }

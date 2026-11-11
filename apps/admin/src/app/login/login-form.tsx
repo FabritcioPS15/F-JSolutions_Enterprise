@@ -472,10 +472,17 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
                   </dd>
                 </div>
               </dl>
+              <a
+                href="/api/auth/dev-login"
+                className="mt-2.5 inline-flex h-8 w-full items-center justify-center gap-1.5 rounded-lg bg-[#2E1065] px-3 text-[11.5px] font-semibold text-white transition hover:bg-[#3B0764]"
+              >
+                <LogIn className="size-3.5" aria-hidden="true" />
+                Entrar directamente
+              </a>
               <button
                 type="button"
                 onClick={applyDemoCredentials}
-                className="mt-2.5 inline-flex h-8 items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 text-[11.5px] font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
+                className="mt-1.5 inline-flex h-8 w-full items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 text-[11.5px] font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
               >
                 Usar credenciales
               </button>
