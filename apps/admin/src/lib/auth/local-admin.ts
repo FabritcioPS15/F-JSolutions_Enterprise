@@ -19,7 +19,9 @@ export function localAdminName() {
 export function localAdminPassword(): string | null {
   const configured = process.env.SEED_ADMIN_PASSWORD
   if (configured) return configured
-  return process.env.NODE_ENV === 'production' ? null : DEV_PASSWORD
+  // Acceso de demostración: la contraseña por defecto también vale en el sitio
+  // publicado para que el bloque público pueda iniciar sesión.
+  return DEV_PASSWORD
 }
 
 function safeEqual(a: string, b: string) {

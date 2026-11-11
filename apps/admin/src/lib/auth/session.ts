@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers'
-import type { NextResponse } from 'next/server'
+import type { NextRequest, NextResponse } from 'next/server'
 import { LOCAL_SESSION_MAX_AGE, readLocalSession } from './local-auth'
 import type { SessionUser } from './types'
 
@@ -48,13 +48,13 @@ export function applyTwoFactorCookie(response: NextResponse, challengeToken: str
   })
 }
 
-export function clearTwoFactorCookie(response: NextResponse) {
+export function clearTwoFactorCookie(response: NextResponse, secure?: boolean) {
   response.cookies.set({
     name: TWO_FACTOR_COOKIE,
     value: '',
     httpOnly: true,
     sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
+    secure: secure ?? process.env.NODE_ENV === 'production',
     path: '/',
     maxAge: 0,
   })
@@ -68,15 +68,28 @@ export async function getSessionUser(): Promise<SessionUser | null> {
   return readLocalSession(token)
 }
 
-export function applyLocalSessionCookie(response: NextResponse, token: string) {
-  clearTwoFactorCookie(response)
+// La cookie Secure solo se acepta por HTTPS; en despliegues con NODE_ENV=production
+// servidos por HTTP el navegador la descarta y la sesión nunca queda iniciada.
+export function isSecureRequest(request: NextRequest) {
+  const forwarded = request.headers.get('x-forwarded-proto')
+  if (forwarded) return forwarded.split(',')[0].trim() === 'https'
+  return request.nextUrl.protocol === 'https:'
+}
+
+export function applyLocalSessionCookie(
+  response: NextResponse,
+  token: string,
+  options: { secure?: boolean } = {},
+) {
+  const secure = options.secure ?? process.env.NODE_ENV === 'production'
+  clearTwoFactorCookie(response, secure)
 
   response.cookies.set({
     name: ACCESS_COOKIE,
     value: token,
     httpOnly: true,
     sameSite: 'lax',
-    secure: process.env.NODE_ENV === 'production',
+    secure,
     path: '/',
     maxAge: LOCAL_SESSION_MAX_AGE,
   })
@@ -108,14 +121,14 @@ export function applySessionCookies(response: NextResponse, tokens: AuthTokens) 
   })
 }
 
-export function clearSessionCookies(response: NextResponse) {
+export function clearSessionCookies(response: NextResponse, secure?: boolean) {
   for (const name of [ACCESS_COOKIE, REFRESH_COOKIE, TWO_FACTOR_COOKIE]) {
     response.cookies.set({
       name,
       value: '',
       httpOnly: true,
       sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
+      secure: secure ?? process.env.NODE_ENV === 'production',
       path: '/',
       maxAge: 0,
     })

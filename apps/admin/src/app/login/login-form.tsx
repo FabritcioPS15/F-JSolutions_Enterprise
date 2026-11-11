@@ -98,10 +98,10 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
     setPassword(demo.password ?? '')
     setError(null)
     setDemoOpen(false)
+    if (demo.password) void signIn(demo.email, demo.password)
   }
 
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
+  async function signIn(emailValue: string, passwordValue: string) {
     if (loading) return
 
     setLoading(true)
@@ -112,7 +112,7 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email.trim(), password }),
+        body: JSON.stringify({ email: emailValue.trim(), password: passwordValue }),
       })
 
       const body = (await response.json().catch(() => null)) as ApiResponse | null
@@ -141,6 +141,11 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
     } finally {
       setLoading(false)
     }
+  }
+
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    void signIn(email, password)
   }
 
   async function handleVerify(event: React.FormEvent<HTMLFormElement>) {
@@ -482,9 +487,10 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
               <button
                 type="button"
                 onClick={applyDemoCredentials}
-                className="mt-1.5 inline-flex h-8 w-full items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 text-[11.5px] font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50"
+                disabled={loading || !demo.password}
+                className="mt-1.5 inline-flex h-8 w-full items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 text-[11.5px] font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                Usar credenciales
+                Usar credenciales y entrar
               </button>
               <p className="mt-2 text-[10px] leading-relaxed text-slate-400">
                 Cualquiera con este enlace puede entrar al panel. No lo dejes visible si el entorno

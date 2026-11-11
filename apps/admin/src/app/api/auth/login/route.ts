@@ -1,7 +1,7 @@
 import { isEmail } from '@fj-solutions/contracts/domain'
 import { NextRequest, NextResponse } from 'next/server'
 import { authenticateLocalUser, createLocalSessionToken } from '@/lib/auth/local-auth'
-import { applyLocalSessionCookie } from '@/lib/auth/session'
+import { applyLocalSessionCookie, isSecureRequest } from '@/lib/auth/session'
 import { managedSessionUser, touchManagedUserLogin } from '@/lib/auth/user-store'
 
 function isCrossOrigin(request: NextRequest) {
@@ -9,7 +9,15 @@ function isCrossOrigin(request: NextRequest) {
   if (!origin) return false
 
   try {
-    return new URL(origin).host !== request.headers.get('host')
+    const originHost = new URL(origin).host
+    // Detrás de un proxy el Host puede reescribirse; x-forwarded-host conserva
+    // el nombre público con el que el navegador envió el formulario.
+    const hosts = [request.headers.get('host'), request.headers.get('x-forwarded-host')]
+      .flatMap((value) => value?.split(',') ?? [])
+      .map((value) => value.trim())
+      .filter(Boolean)
+
+    return hosts.length > 0 && !hosts.includes(originHost)
   } catch {
     return true
   }
@@ -75,6 +83,8 @@ export async function POST(request: NextRequest) {
     data: { user },
   })
 
-  applyLocalSessionCookie(response, createLocalSessionToken(userId))
+  applyLocalSessionCookie(response, createLocalSessionToken(userId), {
+    secure: isSecureRequest(request),
+  })
   return response
 }

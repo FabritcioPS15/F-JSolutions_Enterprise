@@ -28,8 +28,8 @@ export default async function LoginPage() {
   if (user) redirect('/')
 
   // Acceso de demostración: visible también en el sitio publicado para poder
-  // entrar al panel sin cuenta propia. La contraseña solo se muestra cuando la
-  // cuenta base la tiene configurada.
+  // entrar al panel sin cuenta propia. Usa las mismas credenciales que valida
+  // el servidor (variables de entorno o la contraseña por defecto).
   const demo = {
     email: localAdminEmail(),
     password: localAdminPassword(),

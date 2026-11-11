@@ -60,6 +60,14 @@ function withStore<T>(task: (store: StoreFile) => T | Promise<T>): Promise<T> {
   return run
 }
 
+// Lectura sin guardar: validar sesiones no debe depender de que el sistema de
+// archivos del despliegue permita escribir.
+function withRead<T>(task: (store: StoreFile) => T | Promise<T>): Promise<T> {
+  const run = queue.then(async () => task(await readStore()))
+  queue = run.catch(() => undefined)
+  return run
+}
+
 async function readStore(): Promise<StoreFile> {
   try {
     const raw = await readFile(STORE_PATH, 'utf8')
@@ -267,7 +275,7 @@ export function authenticateManagedUser(
   password: string
 ): Promise<LocalAuthResult> {
   const normalized = email.trim().toLowerCase()
-  return withStore<LocalAuthResult>((store) => {
+  return withRead<LocalAuthResult>((store) => {
     if (normalized === localAdminEmail()) {
       return verifySeededPassword(password)
         ? { ok: true, userId: SEEDED_ADMIN_ID }
@@ -291,11 +299,14 @@ export function touchManagedUserLogin(id: string) {
     user.updatedAt = now
     // La invitación queda aceptada en cuanto la persona ingresa por primera vez.
     if (user.status === 'invited') user.status = 'active'
+  }).catch((error) => {
+    // El registro del último ingreso es secundario: nunca debe impedir la sesión.
+    console.error('[auth] No se pudo registrar el último ingreso:', error)
   })
 }
 
 export function managedSessionUser(id: string): Promise<SessionUser | null> {
-  return withStore((store) => {
+  return withRead((store) => {
     const user = store.users.find((item) => item.id === id)
     if (!user || user.status === 'disabled') return null
     const role = ROLES.includes(user.role) ? user.role : 'consulta'
