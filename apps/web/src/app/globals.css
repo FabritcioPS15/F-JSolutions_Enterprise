@@ -681,6 +681,119 @@ html {
   animation-name: auth-content-in-right;
 }
 
+/* Títulos de las tarjetas de acceso: degradado de marca con barra de acento. */
+.auth-title {
+  position: relative;
+  width: fit-content;
+  background-image: linear-gradient(100deg, #0b1220 0%, #1d4ed8 52%, #7c3aed 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 8px 20px rgba(37, 99, 235, 0.16));
+}
+
+.auth-title__rule {
+  display: block;
+  margin-top: 0.4rem;
+  height: 3px;
+  width: 3rem;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, #2563eb 0%, #7c3aed 55%, rgba(124, 58, 237, 0) 100%);
+  box-shadow: 0 0 10px rgba(124, 58, 237, 0.28);
+}
+
+/* Fondo animado compartido por login y registro: el degradado se desplaza,
+   los orbes derivan lentamente y un brillo cruza el panel. Todo se mueve con
+   transform/background-position para no forzar repintados costosos. */
+.auth-aside {
+  background-size: 170% 170%;
+  animation: auth-aside-drift 26s ease-in-out infinite alternate;
+}
+
+@keyframes auth-aside-drift {
+  0% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 80% 55%;
+  }
+  100% {
+    background-position: 25% 100%;
+  }
+}
+
+.auth-sheen {
+  position: absolute;
+  inset: -45% -20%;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    112deg,
+    transparent 32%,
+    rgba(255, 255, 255, 0.06) 46%,
+    rgba(125, 211, 252, 0.1) 52%,
+    rgba(196, 181, 253, 0.07) 58%,
+    transparent 72%
+  );
+  animation: auth-sheen-sweep 18s ease-in-out infinite;
+}
+
+@keyframes auth-sheen-sweep {
+  0%,
+  100% {
+    transform: translate3d(-16%, -4%, 0);
+    opacity: 0.35;
+  }
+  50% {
+    transform: translate3d(16%, 4%, 0);
+    opacity: 0.9;
+  }
+}
+
+.auth-orb {
+  z-index: 0;
+  will-change: transform;
+}
+
+.auth-orb--a {
+  animation: auth-orb-a 19s ease-in-out infinite alternate;
+}
+
+.auth-orb--b {
+  animation: auth-orb-b 24s ease-in-out infinite alternate;
+}
+
+@keyframes auth-orb-a {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+    opacity: 0.75;
+  }
+  50% {
+    transform: translate3d(-34px, 30px, 0) scale(1.14);
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(18px, -22px, 0) scale(0.94);
+    opacity: 0.65;
+  }
+}
+
+@keyframes auth-orb-b {
+  0% {
+    transform: translate3d(0, 0, 0) scale(0.95);
+    opacity: 0.6;
+  }
+  60% {
+    transform: translate3d(40px, -34px, 0) scale(1.16);
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate3d(-20px, 16px, 0) scale(1);
+    opacity: 0.7;
+  }
+}
+
 @media (min-width: 1024px) {
   .auth-stage {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -742,6 +855,9 @@ html {
     transition: none !important;
   }
 
+  .auth-aside,
+  .auth-sheen,
+  .auth-orb,
   .auth-content {
     animation: none !important;
   }

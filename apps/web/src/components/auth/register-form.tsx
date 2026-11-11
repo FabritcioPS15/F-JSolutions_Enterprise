@@ -394,15 +394,15 @@ export function RegisterForm({ availability }: { availability: Availability }) {
           </label>
         </div>
 
-        <div className="rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-2.5 sm:p-3">
-          <div className="grid gap-2 sm:grid-cols-2 sm:gap-3">
-            <label className="flex items-start gap-2 text-[11px] leading-4 text-[#334155] sm:gap-2.5 sm:text-xs sm:leading-5">
+        <div className="rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-2 sm:p-2.5">
+          <div className="grid gap-1.5">
+            <label className="flex items-start gap-2 text-[11px] leading-4 text-[#334155]">
               <input
                 type="checkbox"
                 checked={draft.acceptTerms}
                 onChange={(event) => update('acceptTerms', event.target.checked)}
                 aria-invalid={Boolean(errors.terms)}
-                className="mt-0.5 size-4 shrink-0 rounded border-[#CBD5E1] text-[#2563EB] focus:ring-[#2563EB]/30"
+                className="mt-0.5 size-3.5 shrink-0 rounded border-[#CBD5E1] text-[#2563EB] focus:ring-[#2563EB]/30"
               />
               <span>
                 Acepto los{' '}
@@ -417,12 +417,12 @@ export function RegisterForm({ availability }: { availability: Availability }) {
               </span>
             </label>
 
-            <label className="flex items-start gap-2 text-[11px] leading-4 text-[#334155] sm:gap-2.5 sm:text-xs sm:leading-5">
+            <label className="flex items-start gap-2 text-[11px] leading-4 text-[#334155]">
               <input
                 type="checkbox"
                 checked={draft.marketingConsent}
                 onChange={(event) => update('marketingConsent', event.target.checked)}
-                className="mt-0.5 size-4 shrink-0 rounded border-[#CBD5E1] text-[#2563EB] focus:ring-[#2563EB]/30"
+                className="mt-0.5 size-3.5 shrink-0 rounded border-[#CBD5E1] text-[#2563EB] focus:ring-[#2563EB]/30"
               />
               <span>Quiero recibir novedades y promociones de F&amp;J Systems (opcional).</span>
             </label>
