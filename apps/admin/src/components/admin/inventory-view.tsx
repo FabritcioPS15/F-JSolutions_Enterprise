@@ -115,9 +115,9 @@ const columnLabels: Record<SortKey, string> = {
 }
 
 const typeStyles: Record<InventoryMovementType, string> = {
-  in: 'bg-emerald-50 text-emerald-700 ring-emerald-600/15',
-  out: 'bg-red-50 text-red-700 ring-red-600/15',
-  adjustment: 'bg-[#F5F3FF] text-[#5B21B6] ring-[#A78BFA]/40',
+  in: 'bg-emerald-500/10 text-success-ink ring-emerald-600/15',
+  out: 'bg-red-500/10 text-danger-ink ring-red-600/15',
+  adjustment: 'bg-tint-brand text-brand-ink ring-[#60A5FA]/40',
 }
 
 const typeIcons: Record<InventoryMovementType, LucideIcon> = {
@@ -147,10 +147,10 @@ function DeltaChip({ value }: { value: number }) {
       className={cn(
         'inline-flex min-w-9 items-center justify-center rounded-md px-1.5 py-0.5 text-[11px] font-bold tabular-nums',
         value > 0
-          ? 'bg-emerald-50 text-emerald-700'
+          ? 'bg-emerald-500/10 text-success-ink'
           : value < 0
-            ? 'bg-red-50 text-red-700'
-            : 'bg-slate-100 text-slate-500'
+            ? 'bg-red-500/10 text-danger-ink'
+            : 'bg-muted text-muted-foreground'
       )}
     >
       {value > 0 ? `+${value}` : value < 0 ? `−${Math.abs(value)}` : '0'}
@@ -362,14 +362,14 @@ export function InventoryView() {
       />
 
       {inventoryError ? (
-        <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-2.5 text-xs text-amber-900">
+        <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-2.5 text-xs text-warning-ink">
           <span>
             El historial de inventario no está sincronizado con la base de datos.{' '}
             {inventoryError}
           </span>
           <button
             type="button"
-            className="font-semibold underline underline-offset-2 hover:text-amber-950"
+            className="font-semibold underline underline-offset-2 hover:text-warning-ink"
             onClick={() => {
               void refreshInventory().catch(() => undefined)
             }}
@@ -408,9 +408,9 @@ export function InventoryView() {
         />
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xs">
-        <div className="flex flex-col gap-3 border-b border-slate-100 p-4 xl:flex-row xl:items-center xl:justify-between">
-          <div className="inline-flex w-full shrink-0 rounded-xl bg-slate-100 p-1 sm:w-auto">
+      <div className="overflow-hidden rounded-2xl border border-border/80 bg-card shadow-xs">
+        <div className="flex flex-col gap-3 border-b border-border p-4 xl:flex-row xl:items-center xl:justify-between">
+          <div className="inline-flex w-full shrink-0 rounded-xl bg-muted p-1 sm:w-auto">
             {tabs.map((item) => (
               <button
                 key={item.value}
@@ -420,8 +420,8 @@ export function InventoryView() {
                 className={cn(
                   'inline-flex flex-1 items-center justify-center gap-2 rounded-lg px-3 py-1.5 text-[13px] font-semibold transition sm:flex-none',
                   tab === item.value
-                    ? 'bg-white text-[#5B21B6] shadow-sm'
-                    : 'text-slate-500 hover:text-slate-800'
+                    ? 'bg-card text-brand-ink shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
                 )}
               >
                 {item.label}
@@ -429,8 +429,8 @@ export function InventoryView() {
                   className={cn(
                     'rounded-md px-1.5 py-0.5 text-[10px] font-bold',
                     tab === item.value
-                      ? 'bg-[#EDE9FE] text-[#5B21B6]'
-                      : 'bg-slate-200/70 text-slate-500'
+                      ? 'bg-brand-soft text-brand-ink'
+                      : 'bg-border/70 text-muted-foreground'
                   )}
                 >
                   {item.count}
@@ -441,7 +441,7 @@ export function InventoryView() {
 
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center xl:justify-end">
             <div className="relative w-full min-w-0 sm:w-72">
-              <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+              <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
               <input
                 value={query}
                 onChange={(event) => {
@@ -460,7 +460,7 @@ export function InventoryView() {
                 <button
                   type="button"
                   onClick={() => setQuery('')}
-                  className="absolute right-2.5 top-1/2 grid size-5 -translate-y-1/2 place-items-center rounded-md text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+                  className="absolute right-2.5 top-1/2 grid size-5 -translate-y-1/2 place-items-center rounded-md text-muted-foreground transition hover:bg-muted hover:text-foreground/80"
                   aria-label="Limpiar búsqueda"
                 >
                   <X className="size-3.5" />
@@ -571,11 +571,11 @@ export function InventoryView() {
                     <th className="px-5 py-3 text-right font-bold">Acciones</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-border">
                   {stockRows.map((product) => {
                     const last = lastMovementByProduct.get(product.id)
                     return (
-                      <tr key={product.id} className="transition hover:bg-slate-50/70">
+                      <tr key={product.id} className="transition hover:bg-muted/70">
                         <td className="px-5 py-3">
                           <div className="flex items-center gap-3">
                             <ProductThumb
@@ -584,29 +584,29 @@ export function InventoryView() {
                               className="size-10 shrink-0"
                             />
                             <div className="min-w-0">
-                              <p className="max-w-[260px] truncate font-semibold text-slate-900">
+                              <p className="max-w-[260px] truncate font-semibold text-foreground">
                                 {product.name}
                               </p>
-                              <p className="truncate text-[11px] text-slate-400">
+                              <p className="truncate text-[11px] text-muted-foreground">
                                 {product.sku || 'Sin SKU'}
                                 {product.brand ? ` · ${product.brand}` : ''}
                               </p>
                             </div>
                           </div>
                         </td>
-                        <td className="px-4 py-3 text-[12.5px] text-slate-600">
+                        <td className="px-4 py-3 text-[12.5px] text-muted-foreground">
                           {product.category || '—'}
                         </td>
                         <td className="px-4 py-3">
                           <StockBadge stock={product.stock} minStock={product.minStock} />
                         </td>
-                        <td className="px-4 py-3 text-right text-[12.5px] tabular-nums text-slate-500">
+                        <td className="px-4 py-3 text-right text-[12.5px] tabular-nums text-muted-foreground">
                           {formatNumber(product.minStock)}
                         </td>
-                        <td className="px-4 py-3 text-right text-[12.5px] tabular-nums text-slate-600">
+                        <td className="px-4 py-3 text-right text-[12.5px] tabular-nums text-muted-foreground">
                           {formatCurrency(product.cost ?? 0, settings.currency)}
                         </td>
-                        <td className="px-4 py-3 text-right text-[12.5px] font-semibold tabular-nums text-slate-800">
+                        <td className="px-4 py-3 text-right text-[12.5px] font-semibold tabular-nums text-foreground">
                           {formatCurrency(
                             Math.max(0, product.stock) * (product.cost ?? 0),
                             settings.currency
@@ -615,13 +615,13 @@ export function InventoryView() {
                         <td className="px-4 py-3">
                           {last ? (
                             <div className="space-y-1">
-                              <p className="text-[12px] text-slate-600">
+                              <p className="text-[12px] text-muted-foreground">
                                 {formatDateTime(last.createdAt)}
                               </p>
                               <MovementTypeBadge type={last.type} />
                             </div>
                           ) : (
-                            <span className="text-[12px] text-slate-400">Sin movimientos</span>
+                            <span className="text-[12px] text-muted-foreground">Sin movimientos</span>
                           )}
                         </td>
                         <td className="px-5 py-3 text-right">
@@ -682,17 +682,17 @@ export function InventoryView() {
                     <th className="px-5 py-3 font-bold">Nota</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-border">
                   {visibleMovements.map((movement) => (
-                    <tr key={movement.id} className="transition hover:bg-slate-50/70">
-                      <td className="whitespace-nowrap px-5 py-3 text-[12.5px] text-slate-500">
+                    <tr key={movement.id} className="transition hover:bg-muted/70">
+                      <td className="whitespace-nowrap px-5 py-3 text-[12.5px] text-muted-foreground">
                         {formatDateTime(movement.createdAt)}
                       </td>
                       <td className="px-4 py-3">
-                        <p className="max-w-[240px] truncate font-semibold text-slate-900">
+                        <p className="max-w-[240px] truncate font-semibold text-foreground">
                           {movement.productName}
                         </p>
-                        <p className="text-[11px] text-slate-400">{movement.sku || 'Sin SKU'}</p>
+                        <p className="text-[11px] text-muted-foreground">{movement.sku || 'Sin SKU'}</p>
                       </td>
                       <td className="px-4 py-3">
                         <MovementTypeBadge type={movement.type} />
@@ -700,24 +700,24 @@ export function InventoryView() {
                       <td className="px-4 py-3 text-right">
                         <DeltaChip value={movementDelta(movement)} />
                       </td>
-                      <td className="whitespace-nowrap px-4 py-3 text-center text-[12.5px] tabular-nums text-slate-600">
+                      <td className="whitespace-nowrap px-4 py-3 text-center text-[12.5px] tabular-nums text-muted-foreground">
                         {movement.previousStock}
-                        <span className="mx-1.5 text-slate-300">→</span>
-                        <strong className="text-slate-900">{movement.resultingStock}</strong>
+                        <span className="mx-1.5 text-muted-foreground/60">→</span>
+                        <strong className="text-foreground">{movement.resultingStock}</strong>
                       </td>
-                      <td className="px-4 py-3 text-[12.5px] text-slate-700">
+                      <td className="px-4 py-3 text-[12.5px] text-foreground/80">
                         {movement.reason}
                       </td>
                       <td className="px-5 py-3">
                         {movement.note ? (
                           <p
-                            className="max-w-[260px] truncate text-[11px] text-slate-500"
+                            className="max-w-[260px] truncate text-[11px] text-muted-foreground"
                             title={movement.note}
                           >
                             {movement.note}
                           </p>
                         ) : (
-                          <span className="text-[11px] text-slate-300">—</span>
+                          <span className="text-[11px] text-muted-foreground/60">—</span>
                         )}
                       </td>
                     </tr>
@@ -726,8 +726,8 @@ export function InventoryView() {
               </table>
             </div>
             {movementRows.length > visibleMovements.length && (
-              <div className="flex items-center justify-between gap-3 border-t border-slate-100 px-5 py-3">
-                <p className="text-[11.5px] text-slate-500">
+              <div className="flex items-center justify-between gap-3 border-t border-border px-5 py-3">
+                <p className="text-[11.5px] text-muted-foreground">
                   Mostrando {visibleMovements.length} de {movementRows.length} movimientos
                 </p>
                 <button
@@ -882,7 +882,7 @@ function MovementModal({
     >
       <form id="movement-form" onSubmit={handleSubmit} className="space-y-5">
         <div>
-          <p className="mb-2 text-xs font-semibold text-slate-700">Tipo de movimiento</p>
+          <p className="mb-2 text-xs font-semibold text-foreground/80">Tipo de movimiento</p>
           <div className="grid gap-2 sm:grid-cols-3">
             {(Object.keys(inventoryMovementLabels) as InventoryMovementType[]).map((value) => {
               const Icon = typeIcons[value]
@@ -896,20 +896,20 @@ function MovementModal({
                   className={cn(
                     'flex flex-col items-start gap-1 rounded-xl border p-3 text-left transition',
                     selected
-                      ? 'border-[#5B21B6] bg-[#F5F3FF] ring-4 ring-[#5B21B6]/10'
-                      : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50'
+                      ? 'border-[#2563EB] bg-tint-brand ring-4 ring-[#2563EB]/10'
+                      : 'border-border bg-card hover:border-input hover:bg-muted'
                   )}
                 >
                   <span
                     className={cn(
                       'inline-flex items-center gap-1.5 text-[13px] font-bold',
-                      selected ? 'text-[#5B21B6]' : 'text-slate-700'
+                      selected ? 'text-brand-ink' : 'text-foreground/80'
                     )}
                   >
                     <Icon className="size-4" aria-hidden="true" />
                     {inventoryMovementLabels[value]}
                   </span>
-                  <span className="text-[11px] leading-snug text-slate-500">
+                  <span className="text-[11px] leading-snug text-muted-foreground">
                     {inventoryMovementDescriptions[value]}
                   </span>
                 </button>
@@ -919,7 +919,7 @@ function MovementModal({
         </div>
 
         <div>
-          <label htmlFor="movement-product" className="mb-1.5 block text-xs font-semibold text-slate-700">
+          <label htmlFor="movement-product" className="mb-1.5 block text-xs font-semibold text-foreground/80">
             Producto
           </label>
           <Select
@@ -940,7 +940,7 @@ function MovementModal({
           <div>
             <label
               htmlFor="movement-quantity"
-              className="mb-1.5 block text-xs font-semibold text-slate-700"
+              className="mb-1.5 block text-xs font-semibold text-foreground/80"
             >
               {type === 'adjustment' ? 'Stock real contado' : 'Cantidad'}
             </label>
@@ -957,8 +957,8 @@ function MovementModal({
               }}
               className={inputClass}
             />
-            <p className="mt-1.5 text-[11px] text-slate-400">
-              Stock actual: <strong className="text-slate-600">{formatNumber(currentStock)}</strong>{' '}
+            <p className="mt-1.5 text-[11px] text-muted-foreground">
+              Stock actual: <strong className="text-muted-foreground">{formatNumber(currentStock)}</strong>{' '}
               unidades
             </p>
           </div>
@@ -966,7 +966,7 @@ function MovementModal({
           <div>
             <label
               htmlFor="movement-reason"
-              className="mb-1.5 block text-xs font-semibold text-slate-700"
+              className="mb-1.5 block text-xs font-semibold text-foreground/80"
             >
               Motivo
             </label>
@@ -987,9 +987,9 @@ function MovementModal({
         <div>
           <label
             htmlFor="movement-note"
-            className="mb-1.5 block text-xs font-semibold text-slate-700"
+            className="mb-1.5 block text-xs font-semibold text-foreground/80"
           >
-            Nota <span className="font-normal text-slate-400">(opcional)</span>
+            Nota <span className="font-normal text-muted-foreground">(opcional)</span>
           </label>
           <textarea
             id="movement-note"
@@ -1005,37 +1005,37 @@ function MovementModal({
           className={cn(
             'rounded-xl border p-3.5',
             delta > 0
-              ? 'border-emerald-200 bg-emerald-50/60'
+              ? 'border-emerald-500/30 bg-emerald-500/10'
               : delta < 0
-                ? 'border-red-200 bg-red-50/60'
-                : 'border-slate-200 bg-slate-50'
+                ? 'border-red-500/30 bg-red-500/10'
+                : 'border-border bg-muted'
           )}
         >
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-slate-500">
+            <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
               Vista previa del stock
             </p>
             <DeltaChip value={hasNumber ? delta : 0} />
           </div>
-          <p className="mt-1.5 font-heading text-lg font-bold text-slate-900">
+          <p className="mt-1.5 font-heading text-lg font-bold text-foreground">
             {formatNumber(currentStock)}
-            <span className="mx-2 text-slate-300">→</span>
+            <span className="mx-2 text-muted-foreground/60">→</span>
             {formatNumber(resulting)}
-            <span className="ml-2 text-xs font-medium text-slate-500">unidades</span>
+            <span className="ml-2 text-xs font-medium text-muted-foreground">unidades</span>
           </p>
-          <p className="mt-1 text-[11px] text-slate-500">
+          <p className="mt-1 text-[11px] text-muted-foreground">
             Valor del stock resultante:{' '}
             {formatCurrency(Math.max(0, resulting) * (product?.cost ?? 0), currency)}
           </p>
           {type === 'out' && hasNumber && parsed > currentStock && (
-            <p className="mt-1.5 text-[11px] font-semibold text-red-600">
+            <p className="mt-1.5 text-[11px] font-semibold text-danger-ink">
               No puedes retirar más de {formatNumber(currentStock)} unidades.
             </p>
           )}
         </div>
 
         {error && (
-          <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-xs font-medium text-red-700">
+          <p className="rounded-xl border border-red-500/30 bg-red-500/10 px-3 py-2 text-xs font-medium text-danger-ink">
             {error}
           </p>
         )}
@@ -1088,18 +1088,18 @@ function HistoryModal({
         />
       ) : (
         <div className="space-y-2.5">
-          <div className="flex flex-wrap items-center gap-4 rounded-xl bg-slate-50 px-4 py-3 text-[11.5px] text-slate-600">
+          <div className="flex flex-wrap items-center gap-4 rounded-xl bg-muted px-4 py-3 text-[11.5px] text-muted-foreground">
             <span>
               Stock actual:{' '}
-              <strong className="text-slate-900">{formatNumber(product.stock)}</strong> uds.
+              <strong className="text-foreground">{formatNumber(product.stock)}</strong> uds.
             </span>
             <span>
-              Mínimo: <strong className="text-slate-900">{formatNumber(product.minStock)}</strong>{' '}
+              Mínimo: <strong className="text-foreground">{formatNumber(product.minStock)}</strong>{' '}
               uds.
             </span>
             <span>
               Valor:{' '}
-              <strong className="text-slate-900">
+              <strong className="text-foreground">
                 {formatCurrency(Math.max(0, product.stock) * (product.cost ?? 0), currency)}
               </strong>
             </span>
@@ -1109,32 +1109,32 @@ function HistoryModal({
             {sorted.map((movement) => (
               <li
                 key={movement.id}
-                className="rounded-xl border border-slate-200 bg-white p-3.5"
+                className="rounded-xl border border-border bg-card p-3.5"
               >
                 <div className="flex flex-wrap items-start justify-between gap-2">
                   <div className="flex min-w-0 items-center gap-2">
                     <MovementTypeBadge type={movement.type} />
-                    <span className="text-[12.5px] font-semibold text-slate-800">
+                    <span className="text-[12.5px] font-semibold text-foreground">
                       {movement.reason}
                     </span>
                   </div>
-                  <span className="text-[11.5px] text-slate-400">
+                  <span className="text-[11.5px] text-muted-foreground">
                     {formatDateTime(movement.createdAt)}
                   </span>
                 </div>
-                <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[12px] text-slate-600">
+                <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[12px] text-muted-foreground">
                   <span className="inline-flex items-center gap-1.5">
                     Cantidad:
                     <DeltaChip value={movementDelta(movement)} />
                   </span>
                   <span className="tabular-nums">
                     {movement.previousStock}
-                    <span className="mx-1.5 text-slate-300">→</span>
-                    <strong className="text-slate-900">{movement.resultingStock}</strong> uds.
+                    <span className="mx-1.5 text-muted-foreground/60">→</span>
+                    <strong className="text-foreground">{movement.resultingStock}</strong> uds.
                   </span>
                 </div>
                 {movement.note && (
-                  <p className="mt-1.5 text-[11.5px] leading-relaxed text-slate-500">
+                  <p className="mt-1.5 text-[11.5px] leading-relaxed text-muted-foreground">
                     {movement.note}
                   </p>
                 )}

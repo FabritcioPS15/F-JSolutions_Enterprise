@@ -58,9 +58,9 @@ export function EditorialHero({
                 {meta.map((item) => (
                   <li
                     key={item}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-[#E2E8F0] bg-white/80 px-2.5 py-1 text-[10.5px] font-semibold text-[#475569] backdrop-blur"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/80 px-2.5 py-1 text-[10.5px] font-semibold text-muted-foreground backdrop-blur"
                   >
-                    <span aria-hidden="true" className="size-1 rounded-full bg-[#7C3AED]" />
+                    <span aria-hidden="true" className="size-1 rounded-full bg-[#2563EB]" />
                     {item}
                   </li>
                 ))}

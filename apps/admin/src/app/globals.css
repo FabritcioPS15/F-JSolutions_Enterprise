@@ -43,6 +43,20 @@ html {
   --color-card: var(--card);
   --color-foreground: var(--foreground);
   --color-background: var(--background);
+  --color-blue-ink: var(--blue-ink);
+  --color-brand-ink: var(--brand-ink);
+  --color-success: var(--success);
+  --color-success-ink: var(--success-ink);
+  --color-warning-ink: var(--warning-ink);
+  --color-danger-ink: var(--danger-ink);
+  --color-teal-ink: var(--teal-ink);
+  --color-sky-ink: var(--sky-ink);
+  --color-tint-blue: var(--tint-blue);
+  --color-tint-brand: var(--tint-brand);
+  --color-tint-green: var(--tint-green);
+  --color-tint-red: var(--tint-red);
+  --color-tint-amber: var(--tint-amber);
+  --color-brand-soft: var(--brand-soft);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -60,17 +74,32 @@ html {
   /* F&J Systems Color Palette */
   --midnight-navy: #0B1220;
   --tech-blue: #2563EB;
-  --brand-purple: #5B21B6;
-  --brand-purple-dark: #4C1D95;
-  --brand-purple-deep: #2E1065;
-  --brand-purple-soft: #F5F3FF;
-  --brand-purple-border: #DDD6FE;
+  --brand-blue: #2563EB;
+  --brand-blue-dark: #1D4ED8;
+  --brand-blue-deep: #172554;
+  --brand-blue-soft: #EFF6FF;
+  --brand-blue-border: #DBEAFE;
   --electric-cyan: #22D3EE;
   --teal-green: #14B8A6;
   --cloud-white: #F8FAFC;
   --pure-white: #FFFFFF;
   --slate-gray: #64748B;
   --border-gray: #E2E8F0;
+  /* Matices con contraparte oscura */
+  --blue-ink: #2563eb;
+  --brand-ink: #1d4ed8;
+  --success: #15803d;
+  --success-ink: #047857;
+  --warning-ink: #b45309;
+  --danger-ink: #b91c1c;
+  --teal-ink: #0f766e;
+  --sky-ink: #0369a1;
+  --tint-blue: #eff6ff;
+  --tint-brand: #eff6ff;
+  --tint-green: #f0fdf4;
+  --tint-red: #fef2f2;
+  --tint-amber: #fffbeb;
+  --brand-soft: #dbeafe;
   /* Theme Variables */
   --background: #f4f6fb;
   --foreground: var(--midnight-navy);
@@ -78,7 +107,7 @@ html {
   --card-foreground: var(--midnight-navy);
   --popover: var(--pure-white);
   --popover-foreground: var(--midnight-navy);
-  --primary: var(--brand-purple);
+  --primary: var(--brand-blue);
   --primary-foreground: var(--pure-white);
   --secondary: var(--cloud-white);
   --secondary-foreground: var(--midnight-navy);
@@ -90,8 +119,8 @@ html {
   --destructive-foreground: var(--pure-white);
   --border: var(--border-gray);
   --input: var(--border-gray);
-  --ring: var(--brand-purple);
-  --chart-1: var(--brand-purple);
+  --ring: var(--brand-blue);
+  --chart-1: var(--brand-blue);
   --chart-2: var(--teal-green);
   --chart-3: var(--electric-cyan);
   --chart-4: var(--slate-gray);
@@ -99,54 +128,84 @@ html {
   --radius: 0.625rem;
   --sidebar: var(--cloud-white);
   --sidebar-foreground: var(--midnight-navy);
-  --sidebar-primary: var(--brand-purple);
+  --sidebar-primary: var(--brand-blue);
   --sidebar-primary-foreground: var(--pure-white);
   --sidebar-accent: var(--cloud-white);
   --sidebar-accent-foreground: var(--midnight-navy);
   --sidebar-border: var(--border-gray);
-  --sidebar-ring: var(--brand-purple);
+  --sidebar-ring: var(--brand-blue);
 }
 
 .dark {
   color-scheme: dark;
-  --background: var(--midnight-navy);
-  --foreground: var(--cloud-white);
-  --card: #151E2E;
-  --card-foreground: var(--cloud-white);
-  --popover: #151E2E;
-  --popover-foreground: var(--cloud-white);
-  --primary: var(--electric-cyan);
-  --primary-foreground: var(--midnight-navy);
-  --secondary: #1E293B;
-  --secondary-foreground: var(--cloud-white);
-  --muted: #1E293B;
-  --muted-foreground: #94A3B8;
-  --accent: var(--teal-green);
-  --accent-foreground: var(--midnight-navy);
-  --destructive: #F87171;
-  --destructive-foreground: var(--midnight-navy);
-  --border: #334155;
-  --input: #334155;
-  --ring: var(--electric-cyan);
-  --chart-1: var(--electric-cyan);
-  --chart-2: var(--teal-green);
-  --chart-3: var(--tech-blue);
-  --chart-4: #94A3B8;
-  --sidebar: #151E2E;
-  --sidebar-foreground: var(--cloud-white);
-  --sidebar-primary: var(--electric-cyan);
-  --sidebar-primary-foreground: var(--midnight-navy);
-  --sidebar-accent: #1E293B;
-  --sidebar-accent-foreground: var(--cloud-white);
-  --sidebar-border: #334155;
-  --sidebar-ring: var(--electric-cyan);
+  --background: #0b1220;
+  --foreground: #e6ebf5;
+  --card: #131d2f;
+  --card-foreground: #e6ebf5;
+  --popover: #131d2f;
+  --popover-foreground: #e6ebf5;
+  --primary: #60a5fa;
+  --primary-foreground: #0b1220;
+  --secondary: #1b2638;
+  --secondary-foreground: #e6ebf5;
+  --muted: #182335;
+  --muted-foreground: #94a3b8;
+  --accent: #22d3ee;
+  --accent-foreground: #0b1220;
+  --destructive: #f87171;
+  --destructive-foreground: #0b1220;
+  --border: #26344a;
+  --input: #26344a;
+  --ring: #60a5fa;
+  --chart-1: #60a5fa;
+  --chart-2: #4ade80;
+  --chart-3: #22d3ee;
+  --chart-4: #94a3b8;
+  --chart-5: #e6ebf5;
+  --sidebar: #131d2f;
+  --sidebar-foreground: #e6ebf5;
+  --sidebar-primary: #60a5fa;
+  --sidebar-primary-foreground: #0b1220;
+  --sidebar-accent: #1b2638;
+  --sidebar-accent-foreground: #e6ebf5;
+  --sidebar-border: #26344a;
+  --sidebar-ring: #60a5fa;
+  --blue-ink: #60a5fa;
+  --brand-ink: #93c5fd;
+  --success: #4ade80;
+  --success-ink: #6ee7b7;
+  --warning-ink: #fcd34d;
+  --danger-ink: #fca5a5;
+  --teal-ink: #5eead4;
+  --sky-ink: #7dd3fc;
+  --tint-blue: #14243d;
+  --tint-brand: #172554;
+  --tint-green: #10261d;
+  --tint-red: #2a161b;
+  --tint-amber: #2a2114;
+  --brand-soft: #1e3a8a;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not(.light) {
-    /* El panel administrativo mantiene una interfaz clara para lectura de datos. */
-    color-scheme: light;
-  }
+/* La barra lateral y otras superficies de marca siguen oscuras en ambos
+   temas: redefinen sus tokens para no perder contraste en modo claro. */
+[data-surface='dark'] {
+  --background: #0b1220;
+  --foreground: #e6ebf5;
+  --card: #10203a;
+  --card-foreground: #e6ebf5;
+  --muted: #1b2638;
+  --muted-foreground: #94a3b8;
+  --border: #26344a;
+  --input: #26344a;
+  --primary: #60a5fa;
+  --blue-ink: #93c5fd;
+  --brand-ink: #93c5fd;
+  --tint-blue: #16283f;
+  --tint-brand: #172554;
+  --tint-green: #10261d;
+  --tint-red: #2a161b;
+  --tint-amber: #2a2114;
+  --brand-soft: #1e3a8a;
 }
 
 @layer base {
@@ -160,8 +219,8 @@ html {
   }
 
   ::selection {
-    background: rgb(91 33 182 / 0.16);
-    color: #3b0764;
+    background: rgb(37 99 235 / 0.18);
+    color: #172554;
   }
 
   html,
@@ -292,25 +351,25 @@ html {
 
 .fj-calendar .react-calendar__tile:enabled:hover,
 .fj-calendar .react-calendar__tile:enabled:focus {
-  background: #f5f3ff;
-  color: #4c1d95;
+  background: #EFF6FF;
+  color: #1D4ED8;
 }
 
 .fj-calendar .react-calendar__tile--now {
-  background: #ede9fe;
-  color: #5b21b6;
+  background: #DBEAFE;
+  color: #2563EB;
   font-weight: 700;
 }
 
 .fj-calendar .react-calendar__tile--now:enabled:hover,
 .fj-calendar .react-calendar__tile--now:enabled:focus {
-  background: #ddd6fe;
+  background: #BFDBFE;
 }
 
 .fj-calendar .react-calendar__tile--active,
 .fj-calendar .react-calendar__tile--active:enabled:hover,
 .fj-calendar .react-calendar__tile--active:enabled:focus {
-  background: #5b21b6;
+  background: #2563EB;
   color: #ffffff;
   font-weight: 600;
 }
@@ -330,12 +389,12 @@ html {
   will-change: transform;
 }
 
-.login-orb--purple {
+.login-orb--brand {
   top: -9rem;
   left: -8rem;
   width: 28rem;
   height: 28rem;
-  background: radial-gradient(circle at 35% 35%, #7c3aed 0%, rgba(124, 58, 237, 0) 70%);
+  background: radial-gradient(circle at 35% 35%, #3b82f6 0%, rgba(59, 130, 246, 0) 70%);
   animation: fj-login-orb-a 26s ease-in-out infinite alternate;
 }
 
@@ -364,7 +423,7 @@ html {
   background: conic-gradient(
     from 0deg,
     transparent 0deg,
-    rgba(91, 33, 182, 0.45) 70deg,
+    rgba(37, 99, 235, 0.45) 70deg,
     transparent 160deg,
     rgba(34, 211, 238, 0.16) 250deg,
     transparent 340deg
@@ -390,7 +449,7 @@ html {
 .login-ring {
   position: absolute;
   border-radius: 9999px;
-  border: 1px solid rgba(221, 214, 254, 0.16);
+  border: 1px solid rgba(191, 219, 254, 0.16);
   pointer-events: none;
   will-change: transform;
 }
@@ -420,12 +479,12 @@ html {
   will-change: transform;
 }
 
-.login-light-orb--purple {
+.login-light-orb--brand {
   top: -8rem;
   right: -7rem;
   width: 26rem;
   height: 26rem;
-  background: radial-gradient(circle, rgba(91, 33, 182, 0.22) 0%, rgba(91, 33, 182, 0) 70%);
+  background: radial-gradient(circle, rgba(37, 99, 235, 0.22) 0%, rgba(37, 99, 235, 0) 70%);
   animation: fj-login-orb-b 30s ease-in-out infinite alternate;
 }
 
@@ -441,7 +500,7 @@ html {
 .login-light-grid {
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(rgba(46, 16, 101, 0.09) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(23, 37, 84, 0.09) 1px, transparent 1px);
   background-size: 24px 24px;
   opacity: 0.55;
   pointer-events: none;
@@ -460,14 +519,14 @@ html {
   overflow: hidden;
   pointer-events: none;
   background:
-    radial-gradient(120% 110% at 18% 0%, rgba(124, 58, 237, 0.55) 0%, rgba(46, 16, 101, 0) 62%),
+    radial-gradient(120% 110% at 18% 0%, rgba(37, 99, 235, 0.55) 0%, rgba(23, 37, 84, 0) 62%),
     linear-gradient(
       180deg,
-      #2e1065 0%,
-      #3b0f82 38%,
-      rgba(76, 29, 149, 0.72) 62%,
-      rgba(76, 29, 149, 0.34) 82%,
-      rgba(76, 29, 149, 0) 100%
+      #172554 0%,
+      #1e3a8a 38%,
+      rgba(30, 58, 138, 0.72) 62%,
+      rgba(30, 58, 138, 0.34) 82%,
+      rgba(30, 58, 138, 0) 100%
     );
   -webkit-mask-image: linear-gradient(180deg, #000 72%, rgba(0, 0, 0, 0.6) 87%, transparent 100%);
   mask-image: linear-gradient(180deg, #000 72%, rgba(0, 0, 0, 0.6) 87%, transparent 100%);
@@ -479,7 +538,7 @@ html {
   background: conic-gradient(
     from 200deg,
     transparent 0deg,
-    rgba(91, 33, 182, 0.6) 70deg,
+    rgba(37, 99, 235, 0.6) 70deg,
     transparent 165deg,
     rgba(34, 211, 238, 0.2) 250deg,
     transparent 340deg
@@ -497,12 +556,12 @@ html {
   will-change: transform;
 }
 
-.login-mobile-orb--purple {
+.login-mobile-orb--brand {
   top: -6rem;
   left: -5rem;
   width: 18rem;
   height: 18rem;
-  background: radial-gradient(circle at 35% 35%, #7c3aed 0%, rgba(124, 58, 237, 0) 70%);
+  background: radial-gradient(circle at 35% 35%, #3b82f6 0%, rgba(59, 130, 246, 0) 70%);
   opacity: 0.6;
   animation: fj-login-orb-a 26s ease-in-out infinite alternate;
 }
@@ -580,7 +639,7 @@ html {
 }
 
 @media (max-width: 1023px) {
-  .login-light-orb--purple {
+  .login-light-orb--brand {
     top: auto;
     right: -8rem;
     bottom: -6rem;

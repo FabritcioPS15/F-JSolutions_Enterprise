@@ -28,9 +28,9 @@ export function AuthShell({ children }: { children: ReactNode }) {
   const content = isRegister ? copy.register : copy.login
 
   return (
-    <main className="auth-page text-[#0F172A]">
+    <main className="auth-page text-foreground">
       <div className={`auth-stage${isRegister ? ' auth-stage--register' : ''}`}>
-        <aside className="auth-aside relative flex flex-col overflow-hidden bg-gradient-to-br from-[#0B1220] via-[#0F172A] to-[#4C1D95] px-5 py-3 text-white sm:px-10 sm:py-7 lg:px-14 lg:py-9">
+        <aside data-surface="dark" className="auth-aside relative flex flex-col overflow-hidden bg-gradient-to-br from-[#0B1220] via-[#0F172A] to-[#1D4ED8] px-5 py-3 text-white sm:px-10 sm:py-7 lg:px-14 lg:py-9">
           <div aria-hidden="true" className="auth-sheen" />
           <div
             aria-hidden="true"
@@ -38,7 +38,7 @@ export function AuthShell({ children }: { children: ReactNode }) {
           />
           <div
             aria-hidden="true"
-            className="auth-orb auth-orb--b pointer-events-none absolute -bottom-28 left-1/4 size-72 rounded-full bg-[#7C3AED]/20 blur-3xl"
+            className="auth-orb auth-orb--b pointer-events-none absolute -bottom-28 left-1/4 size-72 rounded-full bg-[#2563EB]/20 blur-3xl"
           />
 
           <div className="relative flex items-center justify-between gap-4">
@@ -53,7 +53,7 @@ export function AuthShell({ children }: { children: ReactNode }) {
 
             <Link
               href="/"
-              className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-white/20 bg-white/5 px-2.5 py-1 text-[11px] font-semibold text-[#CBD5E1] backdrop-blur transition hover:border-white/40 hover:text-white sm:px-3 sm:py-1.5 sm:text-xs"
+              className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-white/20 bg-white/5 px-2.5 py-1 text-[11px] font-semibold text-muted-foreground/60 backdrop-blur transition hover:border-white/40 hover:text-white sm:px-3 sm:py-1.5 sm:text-xs"
             >
               <ArrowLeft aria-hidden="true" className="size-3.5" />
               Volver a la tienda
@@ -68,7 +68,7 @@ export function AuthShell({ children }: { children: ReactNode }) {
               <h2 className="mt-3 font-heading text-2xl font-bold tracking-tight sm:text-3xl">
                 Tu operación con F&amp;J Systems en un solo lugar
               </h2>
-              <p className="mt-3 text-sm leading-6 text-[#CBD5E1]">
+              <p className="mt-3 text-sm leading-6 text-muted-foreground/60">
                 Crea tu cuenta para guardar tus cotizaciones, tus equipos favoritos y el historial de
                 tus solicitudes.
               </p>
@@ -83,12 +83,12 @@ export function AuthShell({ children }: { children: ReactNode }) {
             </div>
           </div>
 
-          <p className="relative mt-8 hidden text-[11px] text-[#94A3B8] sm:block">
+          <p className="relative mt-8 hidden text-[11px] text-muted-foreground sm:block">
             © {new Date().getFullYear()} F&amp;J Systems. Todos los derechos reservados.
           </p>
         </aside>
 
-        <section className="auth-panel flex flex-col bg-white px-4 py-3 sm:px-10 sm:py-3">
+        <section className="auth-panel flex flex-col bg-card px-4 py-3 sm:px-10 sm:py-3">
           <div className="flex flex-1 items-center justify-center py-1.5">
             <div className="w-full max-w-[600px]">
               <div key={pathname} className="auth-content">
@@ -96,7 +96,7 @@ export function AuthShell({ children }: { children: ReactNode }) {
                   {content.title}
                 </h1>
                 <span aria-hidden="true" className="auth-title__rule" />
-                <p className="mt-2 hidden text-sm leading-6 text-[#64748B] sm:block">
+                <p className="mt-2 hidden text-sm leading-6 text-muted-foreground sm:block">
                   {content.subtitle}
                 </p>
                 <div className="mt-2 sm:mt-5">{children}</div>

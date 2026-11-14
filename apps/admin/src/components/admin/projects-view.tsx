@@ -65,18 +65,18 @@ const statusRank: Record<WebProjectStatus, number> = {
 }
 
 const statusStyles: Record<WebProjectStatus, string> = {
-  planning: 'bg-slate-100 text-slate-600 ring-slate-500/15',
-  development: 'bg-sky-50 text-sky-700 ring-sky-600/15',
-  staging: 'bg-amber-50 text-amber-700 ring-amber-600/15',
-  live: 'bg-emerald-50 text-emerald-700 ring-emerald-600/15',
+  planning: 'bg-muted text-muted-foreground ring-slate-500/15',
+  development: 'bg-sky-500/10 text-sky-ink ring-sky-600/15',
+  staging: 'bg-amber-500/10 text-warning-ink ring-amber-600/15',
+  live: 'bg-emerald-500/10 text-success-ink ring-emerald-600/15',
   paused: 'bg-orange-50 text-orange-700 ring-orange-600/15',
-  archived: 'bg-slate-100 text-slate-500 ring-slate-400/15',
+  archived: 'bg-muted text-muted-foreground ring-slate-400/15',
 }
 
 const environmentStyles: Record<DeploymentEnvironment, string> = {
-  production: 'bg-emerald-50 text-emerald-700 ring-emerald-600/15',
-  staging: 'bg-amber-50 text-amber-700 ring-amber-600/15',
-  preview: 'bg-sky-50 text-sky-700 ring-sky-600/15',
+  production: 'bg-emerald-500/10 text-success-ink ring-emerald-600/15',
+  staging: 'bg-amber-500/10 text-warning-ink ring-amber-600/15',
+  preview: 'bg-sky-500/10 text-sky-ink ring-sky-600/15',
 }
 
 function ProjectStatusBadge({ status }: { status: WebProjectStatus }) {
@@ -126,7 +126,7 @@ function UrlLink({
       target="_blank"
       rel="noreferrer noopener"
       title={href}
-      className="inline-flex items-center gap-1 rounded-md bg-slate-50 px-1.5 py-1 text-[10.5px] font-semibold text-slate-600 ring-1 ring-inset ring-slate-200 transition hover:bg-[#F5F3FF] hover:text-[#5B21B6] hover:ring-[#DDD6FE]"
+      className="inline-flex items-center gap-1 rounded-md bg-muted px-1.5 py-1 text-[10.5px] font-semibold text-muted-foreground ring-1 ring-inset ring-border transition hover:bg-tint-brand hover:text-brand-ink hover:ring-brand-ink/30"
     >
       <Icon className="size-3" aria-hidden="true" />
       {label}
@@ -136,23 +136,23 @@ function UrlLink({
 
 function RenewalCell({ value, today }: { value?: string; today: string | null }) {
   if (!value) {
-    return <span className="text-[11.5px] text-slate-300">—</span>
+    return <span className="text-[11.5px] text-muted-foreground/60">—</span>
   }
 
   const days = today ? daysBetweenDates(today, value) : null
 
   return (
     <div className="space-y-1">
-      <p className="whitespace-nowrap text-[12.5px] text-slate-600">{formatDate(value)}</p>
+      <p className="whitespace-nowrap text-[12.5px] text-muted-foreground">{formatDate(value)}</p>
       {days !== null && days <= 60 && (
         <span
           className={cn(
             'inline-flex whitespace-nowrap rounded-full px-2 py-0.5 text-[10px] font-semibold ring-1 ring-inset',
             days < 0
-              ? 'bg-red-50 text-red-700 ring-red-600/15'
+              ? 'bg-red-500/10 text-danger-ink ring-red-600/15'
               : days <= 30
-                ? 'bg-amber-50 text-amber-700 ring-amber-600/15'
-                : 'bg-[#F5F3FF] text-[#5B21B6] ring-[#A78BFA]/40'
+                ? 'bg-amber-500/10 text-warning-ink ring-amber-600/15'
+                : 'bg-tint-brand text-brand-ink ring-[#60A5FA]/40'
           )}
         >
           {days < 0
@@ -259,11 +259,11 @@ export function ProjectsView() {
       />
 
       {projectsError && (
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-warning-ink">
           <p>{projectsError}</p>
           <button
             type="button"
-            className="inline-flex items-center gap-2 rounded-lg border border-amber-300 bg-white px-3 py-1.5 text-xs font-semibold text-amber-800 transition hover:bg-amber-100"
+            className="inline-flex items-center gap-2 rounded-lg border border-amber-500/40 bg-card px-3 py-1.5 text-xs font-semibold text-warning-ink transition hover:bg-amber-500/15"
             onClick={() => void refreshProjects().catch(() => undefined)}
           >
             <RefreshCw className="size-3.5" aria-hidden="true" />
@@ -299,10 +299,10 @@ export function ProjectsView() {
         />
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xs">
-        <div className="flex flex-col gap-3 border-b border-slate-100 p-4 xl:flex-row xl:items-center xl:justify-between">
+      <div className="overflow-hidden rounded-2xl border border-border/80 bg-card shadow-xs">
+        <div className="flex flex-col gap-3 border-b border-border p-4 xl:flex-row xl:items-center xl:justify-between">
           <div className="relative w-full min-w-0 xl:flex-1">
-            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
@@ -314,7 +314,7 @@ export function ProjectsView() {
               <button
                 type="button"
                 onClick={() => setQuery('')}
-                className="absolute right-2.5 top-1/2 grid size-5 -translate-y-1/2 place-items-center rounded-md text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+                className="absolute right-2.5 top-1/2 grid size-5 -translate-y-1/2 place-items-center rounded-md text-muted-foreground transition hover:bg-muted hover:text-foreground/80"
                 aria-label="Limpiar búsqueda"
               >
                 <X className="size-3.5" />
@@ -396,21 +396,21 @@ export function ProjectsView() {
                   <th className="px-5 py-3 text-right font-bold">Acciones</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-border">
                 {filtered.map((project) => {
                   const last = latestDeployment(project)
                   return (
-                    <tr key={project.id} className="transition hover:bg-slate-50/70">
+                    <tr key={project.id} className="transition hover:bg-muted/70">
                       <td className="px-5 py-3">
-                        <p className="max-w-[260px] truncate font-semibold text-slate-900">
+                        <p className="max-w-[260px] truncate font-semibold text-foreground">
                           {project.name}
                         </p>
-                        <p className="max-w-[260px] truncate text-[11px] text-slate-400">
+                        <p className="max-w-[260px] truncate text-[11px] text-muted-foreground">
                           {project.clientName || 'Sin cliente'}
                           {project.domain ? ` · ${project.domain}` : ''}
                         </p>
                       </td>
-                      <td className="whitespace-nowrap px-4 py-3 text-[12.5px] text-slate-600">
+                      <td className="whitespace-nowrap px-4 py-3 text-[12.5px] text-muted-foreground">
                         {webProjectTypeLabels[project.type]}
                       </td>
                       <td className="px-4 py-3">
@@ -430,16 +430,16 @@ export function ProjectsView() {
                           {!project.productionUrl &&
                             !project.stagingUrl &&
                             !project.repoUrl && (
-                              <span className="text-[11.5px] text-slate-300">—</span>
+                              <span className="text-[11.5px] text-muted-foreground/60">—</span>
                             )}
                         </div>
                       </td>
                       <td className="px-4 py-3">
-                        <p className="max-w-[180px] truncate text-[12.5px] text-slate-600">
+                        <p className="max-w-[180px] truncate text-[12.5px] text-muted-foreground">
                           {project.hosting || '—'}
                         </p>
                       </td>
-                      <td className="px-4 py-3 text-[12.5px] text-slate-600">
+                      <td className="px-4 py-3 text-[12.5px] text-muted-foreground">
                         {project.responsible || '—'}
                       </td>
                       <td className="px-4 py-3">
@@ -448,20 +448,20 @@ export function ProjectsView() {
                       <td className="px-4 py-3">
                         {last ? (
                           <div className="space-y-1">
-                            <p className="whitespace-nowrap text-[12px] text-slate-600">
+                            <p className="whitespace-nowrap text-[12px] text-muted-foreground">
                               {formatDateTime(last.deployedAt)}
                             </p>
                             <div className="flex items-center gap-1.5">
                               <EnvironmentBadge environment={last.environment} />
                               {last.version && (
-                                <span className="font-mono text-[10px] text-slate-400">
+                                <span className="font-mono text-[10px] text-muted-foreground">
                                   {last.version}
                                 </span>
                               )}
                             </div>
                           </div>
                         ) : (
-                          <span className="text-[11.5px] text-slate-300">Sin despliegues</span>
+                          <span className="text-[11.5px] text-muted-foreground/60">Sin despliegues</span>
                         )}
                       </td>
                       <td className="px-5 py-3 text-right">
@@ -647,7 +647,7 @@ function ProjectFormModal({
     >
       <form id="project-form" onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-4">
-          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-slate-400">
+          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
             Información general
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
@@ -716,8 +716,8 @@ function ProjectFormModal({
           </div>
         </div>
 
-        <div className="space-y-4 border-t border-slate-100 pt-5">
-          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-slate-400">
+        <div className="space-y-4 border-t border-border pt-5">
+          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
             Enlaces e infraestructura
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
@@ -790,8 +790,8 @@ function ProjectFormModal({
           </div>
         </div>
 
-        <div className="space-y-4 border-t border-slate-100 pt-5">
-          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-slate-400">
+        <div className="space-y-4 border-t border-border pt-5">
+          <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
             Accesos y fechas
           </p>
           <div className="grid gap-4 sm:grid-cols-2">
@@ -951,7 +951,7 @@ function DeploymentsModal({
         <form
           id="deployment-form"
           onSubmit={handleSubmit}
-          className="space-y-4 rounded-xl border border-slate-200 bg-slate-50/70 p-4"
+          className="space-y-4 rounded-xl border border-border bg-muted/70 p-4"
         >
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="Entorno" htmlFor="deployment-environment">
@@ -1009,7 +1009,7 @@ function DeploymentsModal({
         </form>
 
         <div>
-          <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.14em] text-slate-400">
+          <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
             Historial · {deployments.length}{' '}
             {deployments.length === 1 ? 'despliegue' : 'despliegues'}
           </p>
@@ -1024,18 +1024,18 @@ function DeploymentsModal({
               {deployments.map((deployment) => (
                 <li
                   key={deployment.id}
-                  className="rounded-xl border border-slate-200 bg-white p-3.5"
+                  className="rounded-xl border border-border bg-card p-3.5"
                 >
                   <div className="flex flex-wrap items-start justify-between gap-2">
                     <div className="flex items-center gap-2">
                       <EnvironmentBadge environment={deployment.environment} />
                       {deployment.version && (
-                        <span className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[10.5px] text-slate-600">
+                        <span className="rounded bg-muted px-1.5 py-0.5 font-mono text-[10.5px] text-muted-foreground">
                           {deployment.version}
                         </span>
                       )}
                     </div>
-                    <span className="text-[11.5px] text-slate-400">
+                    <span className="text-[11.5px] text-muted-foreground">
                       {formatDateTime(deployment.deployedAt)}
                     </span>
                   </div>
@@ -1043,13 +1043,13 @@ function DeploymentsModal({
                     href={deployment.url}
                     target="_blank"
                     rel="noreferrer noopener"
-                    className="mt-1.5 inline-flex max-w-full items-center gap-1.5 truncate text-[12px] font-semibold text-[#5B21B6] hover:underline"
+                    className="mt-1.5 inline-flex max-w-full items-center gap-1.5 truncate text-[12px] font-semibold text-brand-ink hover:underline"
                   >
                     <ExternalLink className="size-3.5 shrink-0" aria-hidden="true" />
                     <span className="truncate">{deployment.url}</span>
                   </a>
                   {deployment.note && (
-                    <p className="mt-1 text-[11.5px] leading-relaxed text-slate-500">
+                    <p className="mt-1 text-[11.5px] leading-relaxed text-muted-foreground">
                       {deployment.note}
                     </p>
                   )}

@@ -41,7 +41,7 @@ export function DetailHero({
       <div className={`${HERO_CONTAINER} pb-10 pt-7 sm:pb-12 sm:pt-9 lg:pb-14 lg:pt-10`}>
         <Link
           href={backHref}
-          className="hero-reveal inline-flex items-center gap-1.5 rounded-md text-[11px] font-semibold text-[#64748B] transition hover:text-[#2563EB]"
+          className="hero-reveal inline-flex items-center gap-1.5 rounded-md text-[11px] font-semibold text-muted-foreground transition hover:text-blue-ink"
         >
           <ArrowLeft aria-hidden="true" className="size-3.5" />
           {backLabel}

@@ -34,7 +34,7 @@ const topics = [
 ]
 
 const fieldClass =
-  'mt-1.5 h-11 w-full rounded-xl border border-[#E2E8F0] bg-white px-3 text-sm font-normal text-[#0F172A] outline-none transition placeholder:text-[#94A3B8] focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15'
+  'mt-1.5 h-11 w-full rounded-xl border border-border bg-card px-3 text-sm font-normal text-foreground outline-none transition placeholder:text-muted-foreground focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15'
 
 export function ContactForm() {
   const [form, setForm] = useState<ContactFormData>(initialForm)
@@ -114,16 +114,16 @@ export function ContactForm() {
 
   if (status === 'success') {
     return (
-      <div className="rounded-3xl border border-[#BBF7D0] bg-white p-6 text-center shadow-[0_24px_60px_-46px_rgba(15,23,42,0.35)] sm:p-8">
-        <span className="mx-auto grid size-14 place-items-center rounded-full bg-[#F0FDF4] text-[#15803D]">
+      <div className="rounded-3xl border border-success/35 bg-card p-6 text-center shadow-[0_24px_60px_-46px_rgba(15,23,42,0.35)] sm:p-8">
+        <span className="mx-auto grid size-14 place-items-center rounded-full bg-tint-green text-success">
           <CheckCircle2 aria-hidden="true" className="size-7" />
         </span>
-        <h3 className="mt-4 font-heading text-xl font-bold tracking-[-0.03em] text-[#0F172A]">
+        <h3 className="mt-4 font-heading text-xl font-bold tracking-[-0.03em] text-foreground">
           Mensaje enviado
         </h3>
-        <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-[#475569]">
+        <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-muted-foreground">
           Gracias{form.name ? `, ${form.name.split(' ')[0]}` : ''}. Recibimos tu consulta y te
-          responderemos a <span className="font-semibold text-[#0F172A]">{form.email}</span> en
+          responderemos a <span className="font-semibold text-foreground">{form.email}</span> en
           menos de 24 horas hábiles.
         </p>
         <div className="mt-5 flex flex-col justify-center gap-2 sm:flex-row">
@@ -134,7 +134,7 @@ export function ContactForm() {
               setErrors({})
               setStatus('idle')
             }}
-            className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-[#E2E8F0] bg-white px-4 text-sm font-bold text-[#0F172A] transition hover:border-[#2563EB]/40 hover:text-[#1D4ED8]"
+            className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-border bg-card px-4 text-sm font-bold text-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink"
           >
             Enviar otro mensaje
           </button>
@@ -154,20 +154,20 @@ export function ContactForm() {
     <form
       onSubmit={handleSubmit}
       noValidate
-      className="rounded-3xl border border-[#E2E8F0] bg-white p-5 shadow-[0_24px_60px_-46px_rgba(15,23,42,0.35)] sm:p-7"
+      className="rounded-3xl border border-border bg-card p-5 shadow-[0_24px_60px_-46px_rgba(15,23,42,0.35)] sm:p-7"
     >
       <div>
-        <h2 className="font-heading text-lg font-bold tracking-[-0.03em] text-[#0F172A]">
+        <h2 className="font-heading text-lg font-bold tracking-[-0.03em] text-foreground">
           Cuéntanos qué necesitas
         </h2>
-        <p className="mt-1 text-xs leading-5 text-[#64748B]">
+        <p className="mt-1 text-xs leading-5 text-muted-foreground">
           Los campos con <span aria-hidden="true">*</span> son obligatorios.
         </p>
       </div>
 
       <fieldset disabled={status === 'sending'} className="mt-5 space-y-4">
         <div className="grid gap-4 sm:grid-cols-2">
-          <label className="block text-xs font-semibold text-[#0F172A]">
+          <label className="block text-xs font-semibold text-foreground">
             Nombre completo *
             <input
               value={form.name}
@@ -176,16 +176,16 @@ export function ContactForm() {
               autoComplete="name"
               aria-invalid={Boolean(errors.name)}
               aria-describedby={errors.name ? 'contact-name-error' : undefined}
-              className={`${fieldClass} ${errors.name ? 'border-[#EF4444] focus:border-[#EF4444] focus:ring-[#EF4444]/10' : ''}`}
+              className={`${fieldClass} ${errors.name ? 'border-destructive focus:border-destructive focus:ring-[#EF4444]/10' : ''}`}
             />
             {errors.name && (
-              <span id="contact-name-error" className="mt-1 block text-[10px] font-normal text-[#EF4444]">
+              <span id="contact-name-error" className="mt-1 block text-[10px] font-normal text-destructive">
                 {errors.name}
               </span>
             )}
           </label>
 
-          <label className="block text-xs font-semibold text-[#0F172A]">
+          <label className="block text-xs font-semibold text-foreground">
             Empresa
             <input
               value={form.company}
@@ -196,7 +196,7 @@ export function ContactForm() {
             />
           </label>
 
-          <label className="block text-xs font-semibold text-[#0F172A]">
+          <label className="block text-xs font-semibold text-foreground">
             Correo electrónico *
             <input
               type="email"
@@ -206,16 +206,16 @@ export function ContactForm() {
               autoComplete="email"
               aria-invalid={Boolean(errors.email)}
               aria-describedby={errors.email ? 'contact-email-error' : undefined}
-              className={`${fieldClass} ${errors.email ? 'border-[#EF4444] focus:border-[#EF4444] focus:ring-[#EF4444]/10' : ''}`}
+              className={`${fieldClass} ${errors.email ? 'border-destructive focus:border-destructive focus:ring-[#EF4444]/10' : ''}`}
             />
             {errors.email && (
-              <span id="contact-email-error" className="mt-1 block text-[10px] font-normal text-[#EF4444]">
+              <span id="contact-email-error" className="mt-1 block text-[10px] font-normal text-destructive">
                 {errors.email}
               </span>
             )}
           </label>
 
-          <label className="block text-xs font-semibold text-[#0F172A]">
+          <label className="block text-xs font-semibold text-foreground">
             Teléfono
             <input
               type="tel"
@@ -227,7 +227,7 @@ export function ContactForm() {
             />
           </label>
 
-          <label className="block text-xs font-semibold text-[#0F172A] sm:col-span-2">
+          <label className="block text-xs font-semibold text-foreground sm:col-span-2">
             ¿En qué podemos ayudarte?
             <select
               value={form.topic}
@@ -242,7 +242,7 @@ export function ContactForm() {
             </select>
           </label>
 
-          <label className="block text-xs font-semibold text-[#0F172A] sm:col-span-2">
+          <label className="block text-xs font-semibold text-foreground sm:col-span-2">
             Mensaje *
             <textarea
               value={form.message}
@@ -251,12 +251,12 @@ export function ContactForm() {
               rows={5}
               aria-invalid={Boolean(errors.message)}
               aria-describedby={errors.message ? 'contact-message-error' : undefined}
-              className={`mt-1.5 w-full resize-none rounded-xl border border-[#E2E8F0] bg-white px-3 py-2.5 text-sm font-normal text-[#0F172A] outline-none transition placeholder:text-[#94A3B8] focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 ${
-                errors.message ? 'border-[#EF4444] focus:border-[#EF4444] focus:ring-[#EF4444]/10' : ''
+              className={`mt-1.5 w-full resize-none rounded-xl border border-border bg-card px-3 py-2.5 text-sm font-normal text-foreground outline-none transition placeholder:text-muted-foreground focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 ${
+                errors.message ? 'border-destructive focus:border-destructive focus:ring-[#EF4444]/10' : ''
               }`}
             />
             {errors.message && (
-              <span id="contact-message-error" className="mt-1 block text-[10px] font-normal text-[#EF4444]">
+              <span id="contact-message-error" className="mt-1 block text-[10px] font-normal text-destructive">
                 {errors.message}
               </span>
             )}
@@ -266,7 +266,7 @@ export function ContactForm() {
         {status === 'error' && (
           <div
             role="alert"
-            className="flex items-start gap-2.5 rounded-xl border border-[#FECACA] bg-[#FEF2F2] p-3 text-[11px] leading-4 text-[#B91C1C]"
+            className="flex items-start gap-2.5 rounded-xl border border-destructive/35 bg-tint-red p-3 text-[11px] leading-4 text-destructive"
           >
             <AlertCircle aria-hidden="true" className="mt-0.5 size-3.5 shrink-0" />
             <span>
@@ -297,7 +297,7 @@ export function ContactForm() {
           )}
         </button>
 
-        <p className="text-[10px] leading-4 text-[#94A3B8]">
+        <p className="text-[10px] leading-4 text-muted-foreground">
           Usamos tus datos únicamente para responder tu solicitud. No compartimos tu información con
           terceros.
         </p>

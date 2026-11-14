@@ -79,9 +79,9 @@ const statusLabels: Record<SavedQuote['status'], string> = {
 }
 
 const statusClasses: Record<SavedQuote['status'], string> = {
-  enviada: 'border-[#BFDBFE] bg-[#EFF6FF] text-[#1D4ED8]',
-  revisada: 'border-[#FDE68A] bg-[#FFFBEB] text-[#B45309]',
-  respondida: 'border-[#BBF7D0] bg-[#F0FDF4] text-[#15803D]',
+  enviada: 'border-blue-ink/25 bg-tint-blue text-blue-ink',
+  revisada: 'border-amber-400/45 bg-tint-amber text-warning-ink',
+  respondida: 'border-success/35 bg-tint-green text-success',
 }
 
 const FOCUS_RING =
@@ -430,28 +430,28 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
   const fieldClass = (hasError = false) =>
     `mt-1.5 h-11 w-full rounded-xl border px-3 text-sm font-normal outline-none transition ${FOCUS_RING} ${
       hasError
-        ? 'border-[#EF4444] focus-visible:border-[#EF4444]'
-        : 'border-[#E2E8F0] focus-visible:border-[#2563EB]'
+        ? 'border-destructive focus-visible:border-destructive'
+        : 'border-border focus-visible:border-[#2563EB]'
     }`
 
   if (!isReady) {
     return (
-      <main className="min-h-screen bg-[#F8FAFC] text-[#0F172A]">
+      <main className="min-h-screen bg-muted text-foreground">
         <EnhancedHeader quoteCount={quote.count} />
-        <div className="border-b border-[#E2E8F0] bg-white">
-          <div className="mx-auto flex max-w-[1280px] items-center gap-2 px-4 py-3 text-xs text-[#475569] sm:px-6 lg:px-8">
-            <Link href="/" className="font-semibold hover:text-[#2563EB]">
+        <div className="border-b border-border bg-card">
+          <div className="mx-auto flex max-w-[1280px] items-center gap-2 px-4 py-3 text-xs text-muted-foreground sm:px-6 lg:px-8">
+            <Link href="/" className="font-semibold hover:text-blue-ink">
               Inicio
             </Link>
             <span>/</span>
-            <span className="font-semibold text-[#0F172A]">Mi cuenta</span>
+            <span className="font-semibold text-foreground">Mi cuenta</span>
           </div>
         </div>
         <div className="mx-auto max-w-[1280px] animate-pulse px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
-          <div className="h-56 rounded-3xl bg-[#E2E8F0]" />
+          <div className="h-56 rounded-3xl bg-border" />
           <div className="mt-8 grid gap-6 lg:grid-cols-[264px_minmax(0,1fr)]">
-            <div className="hidden h-64 rounded-2xl bg-[#E2E8F0] lg:block" />
-            <div className="h-96 rounded-2xl bg-[#E2E8F0]" />
+            <div className="hidden h-64 rounded-2xl bg-border lg:block" />
+            <div className="h-96 rounded-2xl bg-border" />
           </div>
         </div>
       </main>
@@ -459,34 +459,34 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
   }
 
   return (
-    <main className="min-h-screen bg-[#F8FAFC] text-[#0F172A]">
+    <main className="min-h-screen bg-muted text-foreground">
       <EnhancedHeader quoteCount={quote.count} />
 
-      <div className="border-b border-[#E2E8F0] bg-white">
-        <div className="mx-auto flex max-w-[1280px] items-center gap-2 px-4 py-3 text-xs text-[#475569] sm:px-6 lg:px-8">
-          <Link href="/" className="font-semibold hover:text-[#2563EB]">
+      <div className="border-b border-border bg-card">
+        <div className="mx-auto flex max-w-[1280px] items-center gap-2 px-4 py-3 text-xs text-muted-foreground sm:px-6 lg:px-8">
+          <Link href="/" className="font-semibold hover:text-blue-ink">
             Inicio
           </Link>
           <span>/</span>
-          <span className="font-semibold text-[#0F172A]">Mi cuenta</span>
+          <span className="font-semibold text-foreground">Mi cuenta</span>
         </div>
       </div>
 
       <div className="mx-auto max-w-[1280px] px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
         {/* Cabecera de cuenta */}
-        <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#0B1220] via-[#0F172A] to-[#4C1D95] p-6 text-white sm:p-8">
+        <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#0B1220] via-[#0F172A] to-[#1D4ED8] p-6 text-white sm:p-8">
           <div
             aria-hidden="true"
             className="pointer-events-none absolute -right-16 -top-24 size-64 rounded-full bg-[#3B82F6]/20 blur-3xl"
           />
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute -bottom-24 left-1/3 size-64 rounded-full bg-[#7C3AED]/15 blur-3xl"
+            className="pointer-events-none absolute -bottom-24 left-1/3 size-64 rounded-full bg-[#2563EB]/15 blur-3xl"
           />
 
           <div className="relative flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex items-center gap-4">
-              <span className="grid size-16 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-[#3B82F6] to-[#7C3AED] font-heading text-xl font-bold ring-1 ring-white/20">
+              <span className="grid size-16 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-[#3B82F6] to-[#2563EB] font-heading text-xl font-bold ring-1 ring-white/20">
                 {getInitials(form.name || account.profile?.name || '')}
               </span>
               <div className="min-w-0">
@@ -497,14 +497,14 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                   {profileComplete ? form.name : 'Completa tu perfil'}
                 </h1>
                 <p
-                  className={`mt-1 text-sm text-[#94A3B8] ${profileComplete ? 'truncate' : 'leading-5'}`}
+                  className={`mt-1 text-sm text-muted-foreground ${profileComplete ? 'truncate' : 'leading-5'}`}
                 >
                   {profileComplete
                     ? form.email
                     : 'Guarda tus datos para agilizar tus próximas cotizaciones.'}
                 </p>
                 {memberSince && (
-                  <p className="mt-2 inline-flex items-center gap-1.5 text-[11px] text-[#94A3B8]">
+                  <p className="mt-2 inline-flex items-center gap-1.5 text-[11px] text-muted-foreground">
                     <CalendarDays className="size-3.5" /> Miembro desde {memberSince}
                   </p>
                 )}
@@ -552,7 +552,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                 }`
                 const content = (
                   <>
-                    <span className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.12em] text-[#94A3B8]">
+                    <span className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
                       <Icon className="size-3" /> {item.label}
                     </span>
                     <span className="mt-1 block text-xl font-bold">{item.value}</span>
@@ -584,7 +584,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                 <ShieldCheck className="size-4 text-[#7DD3FC]" />
                 Perfil {completion.percent}% completo
               </p>
-              <p className="text-[11px] text-[#94A3B8]">
+              <p className="text-[11px] text-muted-foreground">
                 {completion.completed} de {completion.checks.length} datos clave
               </p>
             </div>
@@ -597,11 +597,11 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
               aria-label="Perfil completo"
             >
               <div
-                className="h-full rounded-full bg-gradient-to-r from-[#7C3AED] to-[#3B82F6] transition-[width] duration-500"
+                className="h-full rounded-full bg-gradient-to-r from-[#2563EB] to-[#3B82F6] transition-[width] duration-500"
                 style={{ width: `${completion.percent}%` }}
               />
             </div>
-            <p className="mt-2 text-[11px] text-[#94A3B8]">
+            <p className="mt-2 text-[11px] text-muted-foreground">
               {completion.missing.length === 0
                 ? 'Todo listo: tus cotizaciones llegarán con tus datos completos.'
                 : `Falta completar: ${completion.missing.join(', ')}.`}
@@ -619,7 +619,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
         <div className="mt-8 grid gap-6 lg:grid-cols-[264px_minmax(0,1fr)] lg:items-start">
           {/* Navegación lateral (escritorio) */}
           <aside className="hidden space-y-4 lg:sticky lg:top-24 lg:block">
-            <nav aria-label="Secciones de mi cuenta" className="rounded-2xl border border-[#E2E8F0] bg-white p-2">
+            <nav aria-label="Secciones de mi cuenta" className="rounded-2xl border border-border bg-card p-2">
               {tabs.map((item) => {
                 const Icon = item.icon
                 const active = tab === item.id
@@ -632,15 +632,15 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                     aria-current={active ? 'page' : undefined}
                     className={`group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition ${FOCUS_RING} ${
                       active
-                        ? 'bg-[#EFF6FF] text-[#2563EB]'
-                        : 'text-[#475569] hover:bg-[#F8FAFC] hover:text-[#0F172A]'
+                        ? 'bg-tint-blue text-blue-ink'
+                        : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                     }`}
                   >
                     <span
                       className={`grid size-8 place-items-center rounded-lg transition ${
                         active
                           ? 'bg-[#2563EB] text-white'
-                          : 'bg-[#F1F5F9] text-[#64748B] group-hover:bg-white'
+                          : 'bg-muted text-muted-foreground group-hover:bg-card'
                       }`}
                     >
                       <Icon className="size-4" />
@@ -649,7 +649,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                     {counts[item.id] > 0 && (
                       <span
                         className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
-                          active ? 'bg-[#2563EB]/10 text-[#2563EB]' : 'bg-[#F1F5F9] text-[#64748B]'
+                          active ? 'bg-[#2563EB]/10 text-blue-ink' : 'bg-muted text-muted-foreground'
                         }`}
                       >
                         {counts[item.id]}
@@ -659,27 +659,27 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                 )
               })}
 
-              <div className="mt-2 space-y-1 border-t border-[#F1F5F9] pt-2">
+              <div className="mt-2 space-y-1 border-t border-border pt-2">
                 <Link
                   href="/productos"
-                  className={`flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold text-[#475569] transition hover:bg-[#F8FAFC] hover:text-[#2563EB] ${FOCUS_RING}`}
+                  className={`flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold text-muted-foreground transition hover:bg-muted hover:text-blue-ink ${FOCUS_RING}`}
                 >
                   <ShoppingCart className="size-3.5" /> Ver catálogo
                 </Link>
                 <Link
                   href="/cotizacion"
-                  className={`flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold text-[#475569] transition hover:bg-[#F8FAFC] hover:text-[#2563EB] ${FOCUS_RING}`}
+                  className={`flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold text-muted-foreground transition hover:bg-muted hover:text-blue-ink ${FOCUS_RING}`}
                 >
                   <FileText className="size-3.5" /> Pedir cotización
                 </Link>
               </div>
             </nav>
 
-            <div className="rounded-2xl border border-[#DBEAFE] bg-[#EFF6FF] p-4">
-              <p className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.12em] text-[#1D4ED8]">
+            <div className="rounded-2xl border border-blue-ink/25 bg-tint-blue p-4">
+              <p className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.12em] text-blue-ink">
                 <ShieldCheck className="size-3.5" /> Tus datos
               </p>
-              <p className="mt-2 text-[11px] leading-5 text-[#1E40AF]">
+              <p className="mt-2 text-[11px] leading-5 text-blue-ink">
                 Se guardan solo en este navegador. Puedes descargarlos o eliminarlos cuando quieras
                 desde la pestaña Mi perfil.
               </p>
@@ -689,7 +689,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
           <div className="min-w-0">
             {/* Pestañas (móvil) */}
             <div
-              className="flex flex-wrap gap-2 border-b border-[#E2E8F0] pb-3 lg:hidden"
+              className="flex flex-wrap gap-2 border-b border-border pb-3 lg:hidden"
               role="tablist"
               aria-label="Secciones de mi cuenta"
             >
@@ -707,7 +707,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                     className={`inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition ${FOCUS_RING} ${
                       active
                         ? 'bg-[#2563EB] text-white shadow-sm shadow-[#2563EB]/30'
-                        : 'border border-[#E2E8F0] bg-white text-[#475569] hover:border-[#2563EB]/40 hover:text-[#2563EB]'
+                        : 'border border-border bg-card text-muted-foreground hover:border-[#2563EB]/40 hover:text-blue-ink'
                     }`}
                   >
                     <Icon className="size-4" />
@@ -715,7 +715,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                     {counts[item.id] > 0 && (
                       <span
                         className={`grid min-w-5 place-items-center rounded-full px-1.5 text-[10px] font-bold ${
-                          active ? 'bg-white/20 text-white' : 'bg-[#EFF6FF] text-[#2563EB]'
+                          active ? 'bg-white/20 text-white' : 'bg-tint-blue text-blue-ink'
                         }`}
                       >
                         {counts[item.id]}
@@ -734,26 +734,26 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
               >
                 <form
                   onSubmit={handleSaveProfile}
-                  className="rounded-2xl border border-[#E2E8F0] bg-white p-6 sm:p-8"
+                  className="rounded-2xl border border-border bg-card p-6 sm:p-8"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="grid size-10 place-items-center rounded-xl bg-[#EFF6FF] text-[#2563EB]">
+                    <span className="grid size-10 place-items-center rounded-xl bg-tint-blue text-blue-ink">
                       <UserRound className="size-5" />
                     </span>
                     <div>
                       <h2 className="text-lg font-bold">Datos personales</h2>
-                      <p className="text-xs text-[#64748B]">
+                      <p className="text-xs text-muted-foreground">
                         Se usarán para completar automáticamente tus cotizaciones.
                       </p>
                     </div>
                   </div>
 
                   <fieldset className="mt-6 border-0 p-0">
-                    <legend className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#64748B]">
+                    <legend className="text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
                       Contacto
                     </legend>
                     <div className="mt-3 grid gap-4 sm:grid-cols-2">
-                      <label className="block text-xs font-semibold text-[#0F172A]">
+                      <label className="block text-xs font-semibold text-foreground">
                         Nombre completo *
                         <input
                           value={form.name}
@@ -764,13 +764,13 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                           className={fieldClass(Boolean(errors.name))}
                         />
                         {errors.name && (
-                          <span className="mt-1 block text-[10px] font-normal text-[#EF4444]">
+                          <span className="mt-1 block text-[10px] font-normal text-destructive">
                             {errors.name}
                           </span>
                         )}
                       </label>
 
-                      <label className="block text-xs font-semibold text-[#0F172A]">
+                      <label className="block text-xs font-semibold text-foreground">
                         Correo electrónico *
                         <input
                           type="email"
@@ -782,13 +782,13 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                           className={fieldClass(Boolean(errors.email))}
                         />
                         {errors.email && (
-                          <span className="mt-1 block text-[10px] font-normal text-[#EF4444]">
+                          <span className="mt-1 block text-[10px] font-normal text-destructive">
                             {errors.email}
                           </span>
                         )}
                       </label>
 
-                      <label className="block text-xs font-semibold text-[#0F172A]">
+                      <label className="block text-xs font-semibold text-foreground">
                         Teléfono
                         <input
                           type="tel"
@@ -800,14 +800,14 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                         />
                       </label>
 
-                      <label className="block text-xs font-semibold text-[#0F172A]">
+                      <label className="block text-xs font-semibold text-foreground">
                         Preferencia de contacto
                         <select
                           value={form.contactPreference}
                           onChange={(event) =>
                             updateField('contactPreference', event.target.value as ContactPreference)
                           }
-                          className={`${fieldClass()} bg-white`}
+                          className={`${fieldClass()} bg-card`}
                         >
                           <option value="email">Email</option>
                           <option value="phone">Teléfono</option>
@@ -817,15 +817,15 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                     </div>
                   </fieldset>
 
-                  <fieldset className="mt-6 border-0 border-t border-[#F1F5F9] p-0 pt-6">
-                    <legend className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#64748B]">
+                  <fieldset className="mt-6 border-0 border-t border-border p-0 pt-6">
+                    <legend className="text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
                       Empresa y facturación
                     </legend>
-                    <p className="mt-1 text-[11px] text-[#94A3B8]">
+                    <p className="mt-1 text-[11px] text-muted-foreground">
                       Opcional, pero agiliza la emisión de tu cotización y comprobantes.
                     </p>
                     <div className="mt-3 grid gap-4 sm:grid-cols-2">
-                      <label className="block text-xs font-semibold text-[#0F172A] sm:col-span-2">
+                      <label className="block text-xs font-semibold text-foreground sm:col-span-2">
                         Empresa
                         <input
                           value={form.company}
@@ -836,21 +836,21 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                         />
                       </label>
 
-                      <label className="block text-xs font-semibold text-[#0F172A]">
+                      <label className="block text-xs font-semibold text-foreground">
                         Tipo de documento
                         <select
                           value={form.documentType}
                           onChange={(event) =>
                             updateField('documentType', event.target.value as DocumentType)
                           }
-                          className={`${fieldClass()} bg-white`}
+                          className={`${fieldClass()} bg-card`}
                         >
                           <option value="ruc">RUC (empresa)</option>
                           <option value="dni">DNI (persona natural)</option>
                         </select>
                       </label>
 
-                      <label className="block text-xs font-semibold text-[#0F172A]">
+                      <label className="block text-xs font-semibold text-foreground">
                         Número de documento
                         <input
                           inputMode="numeric"
@@ -864,11 +864,11 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                           className={fieldClass(Boolean(errors.documentNumber))}
                         />
                         {errors.documentNumber ? (
-                          <span className="mt-1 block text-[10px] font-normal text-[#EF4444]">
+                          <span className="mt-1 block text-[10px] font-normal text-destructive">
                             {errors.documentNumber}
                           </span>
                         ) : (
-                          <span className="mt-1 block text-[10px] font-normal text-[#94A3B8]">
+                          <span className="mt-1 block text-[10px] font-normal text-muted-foreground">
                             {form.documentType === 'dni' ? '8 dígitos' : '11 dígitos'}
                           </span>
                         )}
@@ -876,7 +876,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                     </div>
                   </fieldset>
 
-                  <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-[#F1F5F9] pt-6">
+                  <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-border pt-6">
                     <button
                       type="submit"
                       disabled={!isDirty}
@@ -891,48 +891,48 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                     </button>
 
                     {isDirty && !saved && (
-                      <span className="inline-flex items-center gap-1.5 rounded-full border border-[#FDE68A] bg-[#FFFBEB] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.1em] text-[#B45309]">
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/45 bg-tint-amber px-3 py-1 text-[10px] font-bold uppercase tracking-[0.1em] text-warning-ink">
                         Cambios sin guardar
                       </span>
                     )}
 
-                    <p className="text-[11px] text-[#64748B]">
+                    <p className="text-[11px] text-muted-foreground">
                       Tus datos se guardan solo en este navegador.
                     </p>
                   </div>
                 </form>
 
                 <aside className="space-y-4">
-                  <div className="rounded-2xl border border-[#E2E8F0] bg-white p-5">
+                  <div className="rounded-2xl border border-border bg-card p-5">
                     <h3 className="flex items-center gap-2 text-sm font-bold">
-                      <Building2 className="size-4 text-[#2563EB]" /> Estado del perfil
+                      <Building2 className="size-4 text-blue-ink" /> Estado del perfil
                     </h3>
                     <ul className="mt-4 space-y-2.5">
                       {completion.checks.map((item) => (
                         <li key={item.label} className="flex items-center justify-between gap-3 text-xs">
-                          <span className="text-[#475569]">{item.label}</span>
+                          <span className="text-muted-foreground">{item.label}</span>
                           {item.done ? (
-                            <span className="inline-flex items-center gap-1 font-semibold text-[#15803D]">
+                            <span className="inline-flex items-center gap-1 font-semibold text-success">
                               <Check className="size-3.5" /> Listo
                             </span>
                           ) : (
-                            <span className="inline-flex items-center gap-1 font-semibold text-[#94A3B8]">
+                            <span className="inline-flex items-center gap-1 font-semibold text-muted-foreground">
                               <X className="size-3.5" /> Pendiente
                             </span>
                           )}
                         </li>
                       ))}
                     </ul>
-                    <p className="mt-4 border-t border-[#F1F5F9] pt-3 text-[11px] text-[#64748B]">
+                    <p className="mt-4 border-t border-border pt-3 text-[11px] text-muted-foreground">
                       Última actualización: {formatShortDate(account.profile?.updatedAt)}
                     </p>
                   </div>
 
-                  <div className="rounded-2xl border border-[#E2E8F0] bg-white p-5">
+                  <div className="rounded-2xl border border-border bg-card p-5">
                     <h3 className="flex items-center gap-2 text-sm font-bold">
-                      <ShieldCheck className="size-4 text-[#2563EB]" /> Tus datos
+                      <ShieldCheck className="size-4 text-blue-ink" /> Tus datos
                     </h3>
-                    <p className="mt-2 text-xs leading-5 text-[#64748B]">
+                    <p className="mt-2 text-xs leading-5 text-muted-foreground">
                       Tu perfil, favoritos e historial viven en este navegador. Descárgalos o bórralos
                       cuando quieras.
                     </p>
@@ -940,14 +940,14 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                       <button
                         type="button"
                         onClick={exportData}
-                        className={`flex h-10 w-full items-center justify-center gap-2 rounded-xl border border-[#E2E8F0] text-xs font-bold text-[#475569] transition hover:border-[#2563EB]/40 hover:text-[#2563EB] ${FOCUS_RING}`}
+                        className={`flex h-10 w-full items-center justify-center gap-2 rounded-xl border border-border text-xs font-bold text-muted-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink ${FOCUS_RING}`}
                       >
                         <Download className="size-3.5" /> Exportar mis datos
                       </button>
 
                       {confirmWipe ? (
-                        <div className="rounded-xl border border-[#FECACA] bg-[#FEF2F2] p-3">
-                          <p className="text-[11px] leading-5 text-[#991B1B]">
+                        <div className="rounded-xl border border-destructive/35 bg-tint-red p-3">
+                          <p className="text-[11px] leading-5 text-destructive">
                             Se borrarán tu perfil, favoritos, cotizaciones e historial de este navegador.
                             Esta acción no se puede deshacer.
                           </p>
@@ -962,7 +962,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                             <button
                               type="button"
                               onClick={() => setConfirmWipe(false)}
-                              className={`flex-1 rounded-lg border border-[#E2E8F0] bg-white px-3 py-2 text-[11px] font-bold text-[#475569] transition hover:border-[#CBD5E1] ${FOCUS_RING}`}
+                              className={`flex-1 rounded-lg border border-border bg-card px-3 py-2 text-[11px] font-bold text-muted-foreground transition hover:border-input ${FOCUS_RING}`}
                             >
                               Cancelar
                             </button>
@@ -972,7 +972,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                         <button
                           type="button"
                           onClick={() => setConfirmWipe(true)}
-                          className={`flex h-10 w-full items-center justify-center gap-2 rounded-xl border border-[#E2E8F0] text-xs font-bold text-[#475569] transition hover:border-[#EF4444]/40 hover:text-[#EF4444] ${FOCUS_RING}`}
+                          className={`flex h-10 w-full items-center justify-center gap-2 rounded-xl border border-border text-xs font-bold text-muted-foreground transition hover:border-destructive/40 hover:text-destructive ${FOCUS_RING}`}
                         >
                           <Trash2 className="size-3.5" /> Eliminar mis datos
                         </button>
@@ -980,16 +980,16 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                     </div>
                   </div>
 
-                  <div className="rounded-2xl border border-[#E2E8F0] bg-white p-5">
+                  <div className="rounded-2xl border border-border bg-card p-5">
                     <h3 className="flex items-center gap-2 text-sm font-bold">
-                      <MessageCircle className="size-4 text-[#2563EB]" /> ¿Necesitas ayuda?
+                      <MessageCircle className="size-4 text-blue-ink" /> ¿Necesitas ayuda?
                     </h3>
-                    <p className="mt-2 text-xs leading-5 text-[#64748B]">
+                    <p className="mt-2 text-xs leading-5 text-muted-foreground">
                       Escríbenos y un asesor revisará tus cotizaciones contigo.
                     </p>
                     <Link
                       href="/contacto"
-                      className={`mt-4 inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl border border-[#E2E8F0] text-xs font-bold text-[#475569] transition hover:border-[#2563EB]/40 hover:text-[#2563EB] ${FOCUS_RING}`}
+                      className={`mt-4 inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl border border-border text-xs font-bold text-muted-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink ${FOCUS_RING}`}
                     >
                       Contactar a ventas <ArrowRight className="size-3.5" />
                     </Link>
@@ -1004,13 +1004,13 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                 <div className="flex flex-wrap items-end justify-between gap-3">
                   <div>
                     <h2 className="text-xl font-bold">Productos favoritos</h2>
-                    <p className="mt-1 text-sm text-[#64748B]">
+                    <p className="mt-1 text-sm text-muted-foreground">
                       Los equipos que guardaste con el corazón desde el catálogo.
                     </p>
                   </div>
                   <Link
                     href="/productos"
-                    className={`inline-flex h-10 items-center gap-2 rounded-xl border border-[#E2E8F0] bg-white px-4 text-xs font-bold text-[#475569] transition hover:border-[#2563EB]/40 hover:text-[#2563EB] ${FOCUS_RING}`}
+                    className={`inline-flex h-10 items-center gap-2 rounded-xl border border-border bg-card px-4 text-xs font-bold text-muted-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink ${FOCUS_RING}`}
                   >
                     Explorar catálogo <ArrowRight className="size-3.5" />
                   </Link>
@@ -1027,22 +1027,22 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                     <div className="mt-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                       <label className="relative block w-full sm:max-w-xs">
                         <span className="sr-only">Buscar en favoritos</span>
-                        <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#94A3B8]" />
+                        <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                         <input
                           value={favoriteQuery}
                           onChange={(event) => setFavoriteQuery(event.target.value)}
                           placeholder="Buscar por nombre, marca o categoría"
-                          className={`h-10 w-full rounded-xl border border-[#E2E8F0] bg-white pl-9 pr-3 text-sm outline-none transition focus-visible:border-[#2563EB] ${FOCUS_RING}`}
+                          className={`h-10 w-full rounded-xl border border-border bg-card pl-9 pr-3 text-sm outline-none transition focus-visible:border-[#2563EB] ${FOCUS_RING}`}
                         />
                       </label>
 
                       <div className="flex flex-wrap items-center gap-2">
-                        <label className="flex items-center gap-2 text-[11px] font-semibold text-[#64748B]">
+                        <label className="flex items-center gap-2 text-[11px] font-semibold text-muted-foreground">
                           Ordenar
                           <select
                             value={favoriteSort}
                             onChange={(event) => setFavoriteSort(event.target.value as FavoriteSort)}
-                            className={`h-10 rounded-xl border border-[#E2E8F0] bg-white px-3 text-xs font-semibold text-[#475569] outline-none transition focus-visible:border-[#2563EB] ${FOCUS_RING}`}
+                            className={`h-10 rounded-xl border border-border bg-card px-3 text-xs font-semibold text-muted-foreground outline-none transition focus-visible:border-[#2563EB] ${FOCUS_RING}`}
                           >
                             <option value="name">Nombre (A-Z)</option>
                             <option value="brand">Marca</option>
@@ -1050,7 +1050,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                         </label>
 
                         {confirmClearFavorites ? (
-                          <div className="flex items-center gap-2 rounded-xl border border-[#FECACA] bg-[#FEF2F2] px-3 py-1.5 text-[11px] font-semibold text-[#991B1B]">
+                          <div className="flex items-center gap-2 rounded-xl border border-destructive/35 bg-tint-red px-3 py-1.5 text-[11px] font-semibold text-destructive">
                             ¿Quitar todos?
                             <button
                               type="button"
@@ -1062,7 +1062,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                             <button
                               type="button"
                               onClick={() => setConfirmClearFavorites(false)}
-                              className={`rounded-lg bg-white px-2 py-1 text-[11px] font-bold text-[#475569] ${FOCUS_RING}`}
+                              className={`rounded-lg bg-card px-2 py-1 text-[11px] font-bold text-muted-foreground ${FOCUS_RING}`}
                             >
                               No
                             </button>
@@ -1071,7 +1071,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                           <button
                             type="button"
                             onClick={() => setConfirmClearFavorites(true)}
-                            className={`inline-flex h-10 items-center gap-2 rounded-xl border border-[#E2E8F0] bg-white px-4 text-xs font-bold text-[#475569] transition hover:border-[#EF4444]/40 hover:text-[#EF4444] ${FOCUS_RING}`}
+                            className={`inline-flex h-10 items-center gap-2 rounded-xl border border-border bg-card px-4 text-xs font-bold text-muted-foreground transition hover:border-destructive/40 hover:text-destructive ${FOCUS_RING}`}
                           >
                             <Trash2 className="size-3.5" /> Quitar todos
                           </button>
@@ -1080,35 +1080,35 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                     </div>
 
                     {filteredFavorites.length === 0 ? (
-                      <div className="mt-6 flex flex-col items-center rounded-2xl border border-dashed border-[#CBD5E1] bg-white px-6 py-12 text-center">
-                        <span className="grid size-12 place-items-center rounded-2xl bg-[#F1F5F9] text-[#64748B]">
+                      <div className="mt-6 flex flex-col items-center rounded-2xl border border-dashed border-input bg-card px-6 py-12 text-center">
+                        <span className="grid size-12 place-items-center rounded-2xl bg-muted text-muted-foreground">
                           <Search className="size-5" />
                         </span>
                         <p className="mt-4 text-sm font-bold">Sin coincidencias</p>
-                        <p className="mt-1 max-w-md text-xs leading-5 text-[#64748B]">
+                        <p className="mt-1 max-w-md text-xs leading-5 text-muted-foreground">
                           No encontramos favoritos para “{favoriteQuery}”. Prueba con otra marca o
                           categoría.
                         </p>
                         <button
                           type="button"
                           onClick={() => setFavoriteQuery('')}
-                          className={`mt-4 inline-flex h-9 items-center gap-2 rounded-xl border border-[#E2E8F0] bg-white px-4 text-xs font-bold text-[#475569] transition hover:border-[#2563EB]/40 hover:text-[#2563EB] ${FOCUS_RING}`}
+                          className={`mt-4 inline-flex h-9 items-center gap-2 rounded-xl border border-border bg-card px-4 text-xs font-bold text-muted-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink ${FOCUS_RING}`}
                         >
                           Limpiar búsqueda
                         </button>
                       </div>
                     ) : (
                       <>
-                        <p className="mt-4 text-[11px] font-semibold uppercase tracking-[0.12em] text-[#94A3B8]">
+                        <p className="mt-4 text-[11px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
                           {filteredFavorites.length} de {favoriteProducts.length} favoritos
                         </p>
                         <div className="mt-3 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                           {filteredFavorites.map((product) => (
                             <article
                               key={product.id}
-                              className="flex flex-col overflow-hidden rounded-2xl border border-[#E2E8F0] bg-white transition hover:border-[#2563EB]/30 hover:shadow-lg hover:shadow-black/5"
+                              className="flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition hover:border-[#2563EB]/30 hover:shadow-lg hover:shadow-black/5"
                             >
-                              <Link href={`/productos/${product.slug}`} className="block bg-[#F1F5F9] p-4">
+                              <Link href={`/productos/${product.slug}`} className="block bg-muted p-4">
                                 <img
                                   src={product.image}
                                   alt={product.name}
@@ -1117,17 +1117,17 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                                 />
                               </Link>
                               <div className="flex flex-1 flex-col p-4">
-                                <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-[#5B21B6]">
+                                <p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-brand-ink">
                                   {product.brand} / {product.category}
                                 </p>
                                 <Link
                                   href={`/productos/${product.slug}`}
-                                  className={`mt-1.5 line-clamp-2 text-sm font-bold leading-5 hover:text-[#2563EB] ${FOCUS_RING}`}
+                                  className={`mt-1.5 line-clamp-2 text-sm font-bold leading-5 hover:text-blue-ink ${FOCUS_RING}`}
                                 >
                                   {product.name}
                                 </Link>
                                 {(product.model || product.sku) && (
-                                  <p className="mt-1 font-mono text-[10px] text-[#64748B]">
+                                  <p className="mt-1 font-mono text-[10px] text-muted-foreground">
                                     {product.model || product.sku}
                                   </p>
                                 )}
@@ -1144,7 +1144,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                                     type="button"
                                     onClick={() => favorites.toggleFavorite(product.id)}
                                     aria-label={`Quitar ${product.name} de favoritos`}
-                                    className={`grid size-9 place-items-center rounded-lg border border-[#E2E8F0] text-[#475569] transition hover:border-[#EF4444]/40 hover:text-[#EF4444] ${FOCUS_RING}`}
+                                    className={`grid size-9 place-items-center rounded-lg border border-border text-muted-foreground transition hover:border-destructive/40 hover:text-destructive ${FOCUS_RING}`}
                                   >
                                     <Trash2 className="size-4" />
                                   </button>
@@ -1166,7 +1166,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                 <div className="flex flex-wrap items-end justify-between gap-3">
                   <div>
                     <h2 className="text-xl font-bold">Historial de cotizaciones</h2>
-                    <p className="mt-1 text-sm text-[#64748B]">
+                    <p className="mt-1 text-sm text-muted-foreground">
                       Solicitudes enviadas desde este navegador.
                     </p>
                   </div>
@@ -1174,7 +1174,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                     {account.quotes.length > 0 && (
                       <>
                         {confirmClearQuotes ? (
-                          <div className="flex items-center gap-2 rounded-xl border border-[#FECACA] bg-[#FEF2F2] px-3 py-1.5 text-[11px] font-semibold text-[#991B1B]">
+                          <div className="flex items-center gap-2 rounded-xl border border-destructive/35 bg-tint-red px-3 py-1.5 text-[11px] font-semibold text-destructive">
                             ¿Borrar historial?
                             <button
                               type="button"
@@ -1186,7 +1186,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                             <button
                               type="button"
                               onClick={() => setConfirmClearQuotes(false)}
-                              className={`rounded-lg bg-white px-2 py-1 text-[11px] font-bold text-[#475569] ${FOCUS_RING}`}
+                              className={`rounded-lg bg-card px-2 py-1 text-[11px] font-bold text-muted-foreground ${FOCUS_RING}`}
                             >
                               No
                             </button>
@@ -1195,7 +1195,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                           <button
                             type="button"
                             onClick={() => setConfirmClearQuotes(true)}
-                            className={`inline-flex h-10 items-center gap-2 rounded-xl border border-[#E2E8F0] bg-white px-4 text-xs font-bold text-[#475569] transition hover:border-[#EF4444]/40 hover:text-[#EF4444] ${FOCUS_RING}`}
+                            className={`inline-flex h-10 items-center gap-2 rounded-xl border border-border bg-card px-4 text-xs font-bold text-muted-foreground transition hover:border-destructive/40 hover:text-destructive ${FOCUS_RING}`}
                           >
                             <Trash2 className="size-3.5" /> Limpiar historial
                           </button>
@@ -1246,13 +1246,13 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                               className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[11px] font-bold transition ${FOCUS_RING} ${
                                 active
                                   ? 'border-[#2563EB] bg-[#2563EB] text-white'
-                                  : 'border-[#E2E8F0] bg-white text-[#475569] hover:border-[#2563EB]/40 hover:text-[#2563EB]'
+                                  : 'border-border bg-card text-muted-foreground hover:border-[#2563EB]/40 hover:text-blue-ink'
                               }`}
                             >
                               {filter.label}
                               <span
                                 className={`rounded-full px-1.5 text-[10px] ${
-                                  active ? 'bg-white/20' : 'bg-[#F1F5F9] text-[#64748B]'
+                                  active ? 'bg-white/20' : 'bg-muted text-muted-foreground'
                                 }`}
                               >
                                 {filter.count}
@@ -1265,7 +1265,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                       <div className="flex flex-wrap items-center gap-2">
                         <label className="relative block w-full sm:w-56">
                           <span className="sr-only">Buscar cotizaciones</span>
-                          <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#94A3B8]" />
+                          <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                           <input
                             value={quoteQuery}
                             onChange={(event) => {
@@ -1273,16 +1273,16 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                               setShowAllQuotes(false)
                             }}
                             placeholder="Código o producto"
-                            className={`h-10 w-full rounded-xl border border-[#E2E8F0] bg-white pl-9 pr-3 text-sm outline-none transition focus-visible:border-[#2563EB] ${FOCUS_RING}`}
+                            className={`h-10 w-full rounded-xl border border-border bg-card pl-9 pr-3 text-sm outline-none transition focus-visible:border-[#2563EB] ${FOCUS_RING}`}
                           />
                         </label>
 
-                        <label className="flex items-center gap-2 text-[11px] font-semibold text-[#64748B]">
+                        <label className="flex items-center gap-2 text-[11px] font-semibold text-muted-foreground">
                           <span className="sr-only">Ordenar cotizaciones</span>
                           <select
                             value={quoteSort}
                             onChange={(event) => setQuoteSort(event.target.value as QuoteSort)}
-                            className={`h-10 rounded-xl border border-[#E2E8F0] bg-white px-3 text-xs font-semibold text-[#475569] outline-none transition focus-visible:border-[#2563EB] ${FOCUS_RING}`}
+                            className={`h-10 rounded-xl border border-border bg-card px-3 text-xs font-semibold text-muted-foreground outline-none transition focus-visible:border-[#2563EB] ${FOCUS_RING}`}
                           >
                             <option value="recientes">Más recientes</option>
                             <option value="antiguas">Más antiguas</option>
@@ -1292,12 +1292,12 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                     </div>
 
                     {filteredQuotes.length === 0 ? (
-                      <div className="mt-6 flex flex-col items-center rounded-2xl border border-dashed border-[#CBD5E1] bg-white px-6 py-12 text-center">
-                        <span className="grid size-12 place-items-center rounded-2xl bg-[#F1F5F9] text-[#64748B]">
+                      <div className="mt-6 flex flex-col items-center rounded-2xl border border-dashed border-input bg-card px-6 py-12 text-center">
+                        <span className="grid size-12 place-items-center rounded-2xl bg-muted text-muted-foreground">
                           <Search className="size-5" />
                         </span>
                         <p className="mt-4 text-sm font-bold">No encontramos cotizaciones</p>
-                        <p className="mt-1 max-w-md text-xs leading-5 text-[#64748B]">
+                        <p className="mt-1 max-w-md text-xs leading-5 text-muted-foreground">
                           Ajusta el estado o la búsqueda para ver más resultados.
                         </p>
                         <button
@@ -1306,7 +1306,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                             setQuoteFilter('todas')
                             setQuoteQuery('')
                           }}
-                          className={`mt-4 inline-flex h-9 items-center gap-2 rounded-xl border border-[#E2E8F0] bg-white px-4 text-xs font-bold text-[#475569] transition hover:border-[#2563EB]/40 hover:text-[#2563EB] ${FOCUS_RING}`}
+                          className={`mt-4 inline-flex h-9 items-center gap-2 rounded-xl border border-border bg-card px-4 text-xs font-bold text-muted-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink ${FOCUS_RING}`}
                         >
                           Limpiar filtros
                         </button>
@@ -1323,19 +1323,19 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                           return (
                             <article
                               key={savedQuote.id}
-                              className="overflow-hidden rounded-2xl border border-[#E2E8F0] bg-white transition hover:border-[#2563EB]/30"
+                              className="overflow-hidden rounded-2xl border border-border bg-card transition hover:border-[#2563EB]/30"
                             >
                               <div className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
                                 <div className="min-w-0">
                                   <div className="flex flex-wrap items-center gap-2">
-                                    <span className="font-mono text-xs font-bold text-[#0F172A]">
+                                    <span className="font-mono text-xs font-bold text-foreground">
                                       {savedQuote.code}
                                     </span>
                                     <button
                                       type="button"
                                       onClick={() => copyQuoteCode(savedQuote.code)}
                                       aria-label={`Copiar código ${savedQuote.code}`}
-                                      className={`grid size-6 place-items-center rounded-md text-[#94A3B8] transition hover:bg-[#F1F5F9] hover:text-[#2563EB] ${FOCUS_RING}`}
+                                      className={`grid size-6 place-items-center rounded-md text-muted-foreground transition hover:bg-muted hover:text-blue-ink ${FOCUS_RING}`}
                                     >
                                       <Copy className="size-3.5" />
                                     </button>
@@ -1345,7 +1345,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                                       {statusLabels[savedQuote.status]}
                                     </span>
                                   </div>
-                                  <p className="mt-1 text-xs text-[#64748B]">
+                                  <p className="mt-1 text-xs text-muted-foreground">
                                     {formatQuoteDate(savedQuote.createdAt)} · {savedQuote.itemCount}{' '}
                                     producto(s) · {totalUnits} unidad(es)
                                   </p>
@@ -1356,12 +1356,12 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                                           key={item.productId}
                                           src={item.productImage}
                                           alt={item.productName}
-                                          className="size-9 rounded-lg border-2 border-white bg-[#F1F5F9] object-contain"
+                                          className="size-9 rounded-lg border-2 border-white bg-muted object-contain"
                                         />
                                       ))}
                                     </div>
                                     {savedQuote.items.length > 3 && (
-                                      <span className="text-[11px] font-semibold text-[#64748B]">
+                                      <span className="text-[11px] font-semibold text-muted-foreground">
                                         +{savedQuote.items.length - 3} más
                                       </span>
                                     )}
@@ -1373,7 +1373,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                                     type="button"
                                     onClick={() => setExpandedQuote(isExpanded ? null : savedQuote.id)}
                                     aria-expanded={isExpanded}
-                                    className={`inline-flex h-9 items-center gap-1.5 rounded-lg border border-[#E2E8F0] px-3 text-xs font-bold text-[#475569] transition hover:border-[#2563EB]/40 hover:text-[#2563EB] ${FOCUS_RING}`}
+                                    className={`inline-flex h-9 items-center gap-1.5 rounded-lg border border-border px-3 text-xs font-bold text-muted-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink ${FOCUS_RING}`}
                                   >
                                     {isExpanded ? 'Ocultar' : 'Ver detalle'}
                                     <ChevronDown
@@ -1384,7 +1384,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                                     href={buildQuoteWhatsAppUrl(savedQuote)}
                                     target="_blank"
                                     rel="noreferrer"
-                                    className={`inline-flex h-9 items-center gap-1.5 rounded-lg border border-[#BBF7D0] bg-[#F0FDF4] px-3 text-xs font-bold text-[#15803D] transition hover:bg-[#DCFCE7] ${FOCUS_RING}`}
+                                    className={`inline-flex h-9 items-center gap-1.5 rounded-lg border border-success/35 bg-tint-green px-3 text-xs font-bold text-success transition hover:bg-success/15 ${FOCUS_RING}`}
                                   >
                                     <MessageCircle className="size-3.5" /> WhatsApp
                                   </a>
@@ -1392,7 +1392,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                                     type="button"
                                     onClick={() => handleDownloadPdf(savedQuote)}
                                     disabled={downloadingId === savedQuote.id}
-                                    className={`inline-flex h-9 items-center gap-1.5 rounded-lg border border-[#E2E8F0] px-3 text-xs font-bold text-[#475569] transition hover:border-[#2563EB]/40 hover:text-[#2563EB] disabled:cursor-not-allowed disabled:opacity-60 ${FOCUS_RING}`}
+                                    className={`inline-flex h-9 items-center gap-1.5 rounded-lg border border-border px-3 text-xs font-bold text-muted-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink disabled:cursor-not-allowed disabled:opacity-60 ${FOCUS_RING}`}
                                   >
                                     {downloadingId === savedQuote.id ? (
                                       <Loader2 className="size-3.5 animate-spin" />
@@ -1416,7 +1416,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                                       setNotice('Cotización eliminada')
                                     }}
                                     aria-label={`Eliminar cotización ${savedQuote.code}`}
-                                    className={`grid size-9 place-items-center rounded-lg text-[#64748B] transition hover:bg-[#FEF2F2] hover:text-[#EF4444] ${FOCUS_RING}`}
+                                    className={`grid size-9 place-items-center rounded-lg text-muted-foreground transition hover:bg-tint-red hover:text-destructive ${FOCUS_RING}`}
                                   >
                                     <Trash2 className="size-4" />
                                   </button>
@@ -1424,33 +1424,33 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                               </div>
 
                               {isExpanded && (
-                                <div className="border-t border-[#E2E8F0] bg-[#F8FAFC] p-5">
+                                <div className="border-t border-border bg-muted p-5">
                                   <div className="grid gap-4 lg:grid-cols-[1fr_280px]">
                                     <ul className="space-y-2">
                                       {savedQuote.items.map((item) => (
                                         <li
                                           key={item.productId}
-                                          className="flex items-center gap-3 rounded-xl border border-[#E2E8F0] bg-white p-3"
+                                          className="flex items-center gap-3 rounded-xl border border-border bg-card p-3"
                                         >
                                           <img
                                             src={item.productImage}
                                             alt={item.productName}
-                                            className="size-12 shrink-0 rounded-lg bg-[#F1F5F9] object-contain"
+                                            className="size-12 shrink-0 rounded-lg bg-muted object-contain"
                                           />
                                           <div className="min-w-0 flex-1">
                                             <p className="line-clamp-1 text-xs font-bold">
                                               {item.productName}
                                             </p>
-                                            <p className="text-[10px] text-[#64748B]">
+                                            <p className="text-[10px] text-muted-foreground">
                                               {item.productModel || item.productSku || 'Producto'}
                                             </p>
                                             {item.notes && (
-                                              <p className="mt-0.5 line-clamp-1 text-[10px] italic text-[#64748B]">
+                                              <p className="mt-0.5 line-clamp-1 text-[10px] italic text-muted-foreground">
                                                 Nota: {item.notes}
                                               </p>
                                             )}
                                           </div>
-                                          <span className="rounded-lg bg-[#EFF6FF] px-2 py-1 text-xs font-bold text-[#2563EB]">
+                                          <span className="rounded-lg bg-tint-blue px-2 py-1 text-xs font-bold text-blue-ink">
                                             x{item.quantity}
                                           </span>
                                         </li>
@@ -1458,24 +1458,24 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                                     </ul>
 
                                     <div className="space-y-3 text-xs">
-                                      <div className="rounded-xl border border-[#E2E8F0] bg-white p-4">
-                                        <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#5B21B6]">
+                                      <div className="rounded-xl border border-border bg-card p-4">
+                                        <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-brand-ink">
                                           Contacto
                                         </p>
                                         <p className="mt-2 font-semibold">{savedQuote.contactName}</p>
-                                        <p className="mt-1 flex items-center gap-1.5 text-[#64748B]">
+                                        <p className="mt-1 flex items-center gap-1.5 text-muted-foreground">
                                           <Mail className="size-3" /> {savedQuote.contactEmail}
                                         </p>
-                                        <p className="mt-1 flex items-center gap-1.5 text-[#64748B]">
+                                        <p className="mt-1 flex items-center gap-1.5 text-muted-foreground">
                                           <Phone className="size-3" /> {savedQuote.contactPhone}
                                         </p>
                                         {savedQuote.companyName && (
-                                          <p className="mt-1 flex items-center gap-1.5 text-[#64748B]">
+                                          <p className="mt-1 flex items-center gap-1.5 text-muted-foreground">
                                             <Building2 className="size-3" /> {savedQuote.companyName}
                                           </p>
                                         )}
                                         {savedQuote.documentNumber && (
-                                          <p className="mt-1 flex items-center gap-1.5 text-[#64748B]">
+                                          <p className="mt-1 flex items-center gap-1.5 text-muted-foreground">
                                             <FileText className="size-3" />{' '}
                                             {documentLabel(savedQuote.documentType)}:{' '}
                                             {savedQuote.documentNumber}
@@ -1484,11 +1484,11 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                                       </div>
 
                                       {savedQuote.generalNotes && (
-                                        <div className="rounded-xl border border-[#E2E8F0] bg-white p-4">
-                                          <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#5B21B6]">
+                                        <div className="rounded-xl border border-border bg-card p-4">
+                                          <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-brand-ink">
                                             Comentarios
                                           </p>
-                                          <p className="mt-2 leading-5 text-[#475569]">
+                                          <p className="mt-2 leading-5 text-muted-foreground">
                                             {savedQuote.generalNotes}
                                           </p>
                                         </div>
@@ -1505,7 +1505,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                           <button
                             type="button"
                             onClick={() => setShowAllQuotes((value) => !value)}
-                            className={`mx-auto flex h-10 items-center gap-2 rounded-xl border border-[#E2E8F0] bg-white px-4 text-xs font-bold text-[#475569] transition hover:border-[#2563EB]/40 hover:text-[#2563EB] ${FOCUS_RING}`}
+                            className={`mx-auto flex h-10 items-center gap-2 rounded-xl border border-border bg-card px-4 text-xs font-bold text-muted-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink ${FOCUS_RING}`}
                           >
                             {showAllQuotes
                               ? 'Ver menos'
@@ -1538,12 +1538,12 @@ function EmptyState({
   description: string
 }) {
   return (
-    <div className="mt-6 flex flex-col items-center rounded-2xl border border-dashed border-[#CBD5E1] bg-white px-6 py-14 text-center">
-      <span className="grid size-16 place-items-center rounded-2xl bg-[#EFF6FF] text-[#2563EB]">
+    <div className="mt-6 flex flex-col items-center rounded-2xl border border-dashed border-input bg-card px-6 py-14 text-center">
+      <span className="grid size-16 place-items-center rounded-2xl bg-tint-blue text-blue-ink">
         {icon}
       </span>
       <p className="mt-5 text-base font-bold">{title}</p>
-      <p className="mt-2 max-w-md text-sm leading-6 text-[#64748B]">{description}</p>
+      <p className="mt-2 max-w-md text-sm leading-6 text-muted-foreground">{description}</p>
       <Link
         href="/productos"
         className="mt-6 inline-flex h-10 items-center gap-2 rounded-xl bg-[#2563EB] px-5 text-xs font-bold text-white transition hover:bg-[#1D4ED8]"

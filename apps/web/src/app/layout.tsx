@@ -2,6 +2,7 @@ import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Inter, Space_Grotesk } from 'next/font/google'
 import { SiteFooter } from '@/components/layout/site-footer'
+import { ThemeScript } from '@/components/theme-script'
 import { SITE_URL } from '@/lib/site'
 import './globals.css'
 
@@ -10,6 +11,10 @@ const inter = Inter({
   variable: '--font-inter',
   display: 'swap',
 })
+
+// Se ejecuta antes del primer pintado para que el tema elegido (o el del
+// sistema) quede aplicado sin destello claro.
+const themeScript = `(function(){try{var t=localStorage.getItem('fj-theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;var r=document.documentElement;r.classList.toggle('dark',d);r.classList.toggle('light',!d);r.style.colorScheme=d?'dark':'light';}catch(e){}})()`
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
@@ -59,9 +64,11 @@ export default function RootLayout({
   return (
     <html
       lang="es"
+      suppressHydrationWarning
       className={`${inter.variable} ${spaceGrotesk.variable}`}
     >
       <body className="antialiased">
+        <ThemeScript script={themeScript} />
         {children}
         <SiteFooter />
         {process.env.NODE_ENV === 'production' && <Analytics />}

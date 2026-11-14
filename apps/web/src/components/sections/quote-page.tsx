@@ -238,49 +238,49 @@ export function QuotePage() {
 
   if (successQuote) {
     return (
-      <main className="min-h-screen bg-[#F8FAFC] text-[#0F172A]">
+      <main className="min-h-screen bg-muted text-foreground">
         <EnhancedHeader quoteCount={quote.count} />
 
-        <div className="border-b border-[#E2E8F0] bg-white">
-          <div className="mx-auto flex max-w-[1280px] items-center gap-2 px-4 py-3 text-xs text-[#475569] sm:px-6 lg:px-8">
-            <Link href="/" className="font-semibold hover:text-[#2563EB]">
+        <div className="border-b border-border bg-card">
+          <div className="mx-auto flex max-w-[1280px] items-center gap-2 px-4 py-3 text-xs text-muted-foreground sm:px-6 lg:px-8">
+            <Link href="/" className="font-semibold hover:text-blue-ink">
               Inicio
             </Link>
             <span>/</span>
-            <span className="font-semibold text-[#0F172A]">Cotización</span>
+            <span className="font-semibold text-foreground">Cotización</span>
           </div>
         </div>
 
         <section className="mx-auto max-w-3xl px-4 py-14 sm:px-6 lg:px-8">
-          <div className="rounded-3xl border border-[#E2E8F0] bg-white p-6 text-center sm:p-10">
-            <span className="mx-auto grid size-20 place-items-center rounded-full bg-[#F0FDF4] text-[#15803D]">
+          <div className="rounded-3xl border border-border bg-card p-6 text-center sm:p-10">
+            <span className="mx-auto grid size-20 place-items-center rounded-full bg-tint-green text-success">
               <Check className="size-10" />
             </span>
-            <p className="mt-6 text-xs font-bold uppercase tracking-[0.16em] text-[#5B21B6]">
+            <p className="mt-6 text-xs font-bold uppercase tracking-[0.16em] text-brand-ink">
               Solicitud registrada
             </p>
             <h1 className="mt-2 text-3xl font-bold tracking-tight">¡Gracias por tu solicitud!</h1>
-            <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-[#475569]">
+            <p className="mx-auto mt-3 max-w-xl text-sm leading-6 text-muted-foreground">
               Un asesor revisará tu cotización y se pondrá en contacto contigo en menos de 24 horas
               hábiles. Guarda tu código para dar seguimiento.
             </p>
 
-            <div className="mx-auto mt-6 w-fit rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] px-6 py-4">
-              <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#64748B]">
+            <div className="mx-auto mt-6 w-fit rounded-xl border border-border bg-muted px-6 py-4">
+              <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
                 Código de cotización
               </p>
-              <p className="mt-1 font-mono text-lg font-bold text-[#0F172A]">{successQuote.code}</p>
-              <p className="mt-1 text-[11px] text-[#64748B]">
+              <p className="mt-1 font-mono text-lg font-bold text-foreground">{successQuote.code}</p>
+              <p className="mt-1 text-[11px] text-muted-foreground">
                 {formatQuoteDate(successQuote.createdAt)}
               </p>
             </div>
 
-            <div className="mt-8 rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-5 text-left">
+            <div className="mt-8 rounded-2xl border border-border bg-muted p-5 text-left">
               <div className="flex items-center justify-between gap-3">
                 <h2 className="flex items-center gap-2 text-sm font-bold">
-                  <ShoppingCart className="size-4 text-[#2563EB]" /> Resumen
+                  <ShoppingCart className="size-4 text-blue-ink" /> Resumen
                 </h2>
-                <span className="text-xs font-semibold text-[#64748B]">
+                <span className="text-xs font-semibold text-muted-foreground">
                   {successQuote.itemCount} producto(s)
                 </span>
               </div>
@@ -288,42 +288,42 @@ export function QuotePage() {
                 {successQuote.items.map((item) => (
                   <li
                     key={item.productId}
-                    className="flex items-center gap-3 rounded-xl border border-[#E2E8F0] bg-white p-2.5"
+                    className="flex items-center gap-3 rounded-xl border border-border bg-card p-2.5"
                   >
                     <img
                       src={item.productImage}
                       alt={item.productName}
-                      className="size-11 shrink-0 rounded-lg bg-[#F1F5F9] object-contain"
+                      className="size-11 shrink-0 rounded-lg bg-muted object-contain"
                     />
                     <div className="min-w-0 flex-1">
                       <p className="line-clamp-1 text-xs font-bold">{item.productName}</p>
-                      <p className="text-[10px] text-[#64748B]">Cantidad: {item.quantity}</p>
+                      <p className="text-[10px] text-muted-foreground">Cantidad: {item.quantity}</p>
                     </div>
                   </li>
                 ))}
               </ul>
-              <dl className="mt-4 space-y-1.5 border-t border-[#E2E8F0] pt-4 text-xs">
+              <dl className="mt-4 space-y-1.5 border-t border-border pt-4 text-xs">
                 <div className="flex justify-between gap-3">
-                  <dt className="text-[#64748B]">Contacto</dt>
+                  <dt className="text-muted-foreground">Contacto</dt>
                   <dd className="font-semibold">{successQuote.contactName}</dd>
                 </div>
                 <div className="flex justify-between gap-3">
-                  <dt className="text-[#64748B]">Email</dt>
+                  <dt className="text-muted-foreground">Email</dt>
                   <dd className="truncate font-semibold">{successQuote.contactEmail}</dd>
                 </div>
                 <div className="flex justify-between gap-3">
-                  <dt className="text-[#64748B]">Teléfono</dt>
+                  <dt className="text-muted-foreground">Teléfono</dt>
                   <dd className="font-semibold">{successQuote.contactPhone}</dd>
                 </div>
                 {successQuote.documentNumber && (
                   <div className="flex justify-between gap-3">
-                    <dt className="text-[#64748B]">{documentLabel(successQuote.documentType)}</dt>
+                    <dt className="text-muted-foreground">{documentLabel(successQuote.documentType)}</dt>
                     <dd className="font-semibold">{successQuote.documentNumber}</dd>
                   </div>
                 )}
                 {successQuote.companyName && (
                   <div className="flex justify-between gap-3">
-                    <dt className="text-[#64748B]">Empresa</dt>
+                    <dt className="text-muted-foreground">Empresa</dt>
                     <dd className="truncate font-semibold">{successQuote.companyName}</dd>
                   </div>
                 )}
@@ -335,7 +335,7 @@ export function QuotePage() {
                 href={buildQuoteWhatsAppUrl(successQuote)}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-[#BBF7D0] bg-[#F0FDF4] px-5 text-sm font-bold text-[#15803D] transition hover:bg-[#DCFCE7]"
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-success/35 bg-tint-green px-5 text-sm font-bold text-success transition hover:bg-success/15"
               >
                 <MessageCircle className="size-4" /> Enviar por WhatsApp
               </a>
@@ -343,7 +343,7 @@ export function QuotePage() {
                 type="button"
                 onClick={() => handleDownloadPdf(successQuote)}
                 disabled={isDownloading}
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-[#E2E8F0] bg-white px-5 text-sm font-bold text-[#475569] transition hover:border-[#2563EB]/40 hover:text-[#2563EB] disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-border bg-card px-5 text-sm font-bold text-muted-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {isDownloading ? (
                   <Loader2 className="size-4 animate-spin" />
@@ -360,11 +360,11 @@ export function QuotePage() {
               </Link>
             </div>
 
-            <div className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs font-semibold text-[#64748B]">
-              <button type="button" onClick={resetQuote} className="hover:text-[#2563EB]">
+            <div className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs font-semibold text-muted-foreground">
+              <button type="button" onClick={resetQuote} className="hover:text-blue-ink">
                 Nueva cotización
               </button>
-              <Link href="/productos" className="hover:text-[#2563EB]">
+              <Link href="/productos" className="hover:text-blue-ink">
                 Seguir explorando
               </Link>
             </div>
@@ -375,16 +375,16 @@ export function QuotePage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#F8FAFC] text-[#0F172A]">
+    <main className="min-h-screen bg-muted text-foreground">
       <EnhancedHeader quoteCount={quote.count} onQuoteClick={() => setShowQuote(true)} />
 
-      <div className="border-b border-[#E2E8F0] bg-white">
-        <div className="mx-auto flex max-w-[1280px] items-center gap-2 px-4 py-3 text-xs text-[#475569] sm:px-6 lg:px-8">
-          <Link href="/" className="font-semibold hover:text-[#2563EB]">
+      <div className="border-b border-border bg-card">
+        <div className="mx-auto flex max-w-[1280px] items-center gap-2 px-4 py-3 text-xs text-muted-foreground sm:px-6 lg:px-8">
+          <Link href="/" className="font-semibold hover:text-blue-ink">
             Inicio
           </Link>
           <span>/</span>
-          <span className="font-semibold text-[#0F172A]">Cotización</span>
+          <span className="font-semibold text-foreground">Cotización</span>
         </div>
       </div>
 
@@ -402,8 +402,8 @@ export function QuotePage() {
                 key={step.id}
                 className={`flex items-center gap-3 rounded-2xl border px-4 py-3 ${
                   active
-                    ? 'border-[#2563EB] bg-white shadow-sm shadow-[#2563EB]/10'
-                    : 'border-[#E2E8F0] bg-white/60'
+                    ? 'border-[#2563EB] bg-card shadow-sm shadow-[#2563EB]/10'
+                    : 'border-border bg-card/60'
                 }`}
               >
                 <span
@@ -411,17 +411,17 @@ export function QuotePage() {
                     completed
                       ? 'bg-[#2563EB] text-white'
                       : active
-                        ? 'bg-[#EFF6FF] text-[#2563EB]'
-                        : 'bg-[#F1F5F9] text-[#94A3B8]'
+                        ? 'bg-tint-blue text-blue-ink'
+                        : 'bg-muted text-muted-foreground'
                   }`}
                 >
                   {completed ? <Check className="size-4" /> : step.id}
                 </span>
                 <div>
-                  <p className={`text-xs font-bold ${active || completed ? 'text-[#0F172A]' : 'text-[#64748B]'}`}>
+                  <p className={`text-xs font-bold ${active || completed ? 'text-foreground' : 'text-muted-foreground'}`}>
                     {step.label}
                   </p>
-                  <p className="text-[10px] text-[#94A3B8]">{step.description}</p>
+                  <p className="text-[10px] text-muted-foreground">{step.description}</p>
                 </div>
               </li>
             )
@@ -440,14 +440,14 @@ export function QuotePage() {
               Formulario de cotización
             </span>
             <fieldset disabled={isSubmitting} className="space-y-5">
-              <section className="rounded-2xl border border-[#E2E8F0] bg-white p-5 sm:p-6">
+              <section className="rounded-2xl border border-border bg-card p-5 sm:p-6">
                 <div className="flex items-center gap-3">
-                  <span className="grid size-9 place-items-center rounded-xl bg-[#EFF6FF] text-[#2563EB]">
+                  <span className="grid size-9 place-items-center rounded-xl bg-tint-blue text-blue-ink">
                     <UserRound className="size-4.5" />
                   </span>
                   <div>
                     <h2 className="text-sm font-bold">Datos de contacto</h2>
-                    <p className="text-[11px] text-[#64748B]">
+                    <p className="text-[11px] text-muted-foreground">
                       {account.profile
                         ? 'Prellenamos tus datos guardados. Puedes editarlos.'
                         : 'Los usaremos para enviarte la propuesta.'}
@@ -456,7 +456,7 @@ export function QuotePage() {
                 </div>
 
                 <div className="mt-5 grid gap-4 sm:grid-cols-2">
-                  <label className="block text-xs font-semibold text-[#0F172A]">
+                  <label className="block text-xs font-semibold text-foreground">
                     Nombre completo *
                     <input
                       id="quote-contactName"
@@ -466,18 +466,18 @@ export function QuotePage() {
                       autoComplete="name"
                       className={`mt-1.5 h-11 w-full rounded-xl border px-3 text-sm font-normal outline-none transition ${
                         errors.contactName
-                          ? 'border-[#EF4444] focus:border-[#EF4444]'
-                          : 'border-[#E2E8F0] focus:border-[#2563EB]'
+                          ? 'border-destructive focus:border-destructive'
+                          : 'border-border focus:border-[#2563EB]'
                       }`}
                     />
                     {errors.contactName && (
-                      <span className="mt-1 block text-[10px] font-normal text-[#EF4444]">
+                      <span className="mt-1 block text-[10px] font-normal text-destructive">
                         {errors.contactName}
                       </span>
                     )}
                   </label>
 
-                  <label className="block text-xs font-semibold text-[#0F172A]">
+                  <label className="block text-xs font-semibold text-foreground">
                     Teléfono *
                     <input
                       id="quote-contactPhone"
@@ -488,18 +488,18 @@ export function QuotePage() {
                       autoComplete="tel"
                       className={`mt-1.5 h-11 w-full rounded-xl border px-3 text-sm font-normal outline-none transition ${
                         errors.contactPhone
-                          ? 'border-[#EF4444] focus:border-[#EF4444]'
-                          : 'border-[#E2E8F0] focus:border-[#2563EB]'
+                          ? 'border-destructive focus:border-destructive'
+                          : 'border-border focus:border-[#2563EB]'
                       }`}
                     />
                     {errors.contactPhone && (
-                      <span className="mt-1 block text-[10px] font-normal text-[#EF4444]">
+                      <span className="mt-1 block text-[10px] font-normal text-destructive">
                         {errors.contactPhone}
                       </span>
                     )}
                   </label>
 
-                  <label className="block text-xs font-semibold text-[#0F172A] sm:col-span-2">
+                  <label className="block text-xs font-semibold text-foreground sm:col-span-2">
                     Correo electrónico *
                     <input
                       id="quote-contactEmail"
@@ -510,25 +510,25 @@ export function QuotePage() {
                       autoComplete="email"
                       className={`mt-1.5 h-11 w-full rounded-xl border px-3 text-sm font-normal outline-none transition ${
                         errors.contactEmail
-                          ? 'border-[#EF4444] focus:border-[#EF4444]'
-                          : 'border-[#E2E8F0] focus:border-[#2563EB]'
+                          ? 'border-destructive focus:border-destructive'
+                          : 'border-border focus:border-[#2563EB]'
                       }`}
                     />
                     {errors.contactEmail && (
-                      <span className="mt-1 block text-[10px] font-normal text-[#EF4444]">
+                      <span className="mt-1 block text-[10px] font-normal text-destructive">
                         {errors.contactEmail}
                       </span>
                     )}
                   </label>
 
-                  <label className="block text-xs font-semibold text-[#0F172A] sm:col-span-2">
+                  <label className="block text-xs font-semibold text-foreground sm:col-span-2">
                     ¿Cómo prefieres que te contactemos?
                     <select
                       value={formData.contactPreference}
                       onChange={(event) =>
                         updateField('contactPreference', event.target.value as ContactPreference)
                       }
-                      className="mt-1.5 h-11 w-full rounded-xl border border-[#E2E8F0] bg-white px-3 text-sm font-normal outline-none transition focus:border-[#2563EB]"
+                      className="mt-1.5 h-11 w-full rounded-xl border border-border bg-card px-3 text-sm font-normal outline-none transition focus:border-[#2563EB]"
                     >
                       <option value="email">Email</option>
                       <option value="phone">Llamada telefónica</option>
@@ -538,47 +538,47 @@ export function QuotePage() {
                 </div>
               </section>
 
-              <section className="rounded-2xl border border-[#E2E8F0] bg-white p-5 sm:p-6">
+              <section className="rounded-2xl border border-border bg-card p-5 sm:p-6">
                 <div className="flex items-center gap-3">
-                  <span className="grid size-9 place-items-center rounded-xl bg-[#EFF6FF] text-[#2563EB]">
+                  <span className="grid size-9 place-items-center rounded-xl bg-tint-blue text-blue-ink">
                     <Building2 className="size-4.5" />
                   </span>
                   <div>
                     <h2 className="text-sm font-bold">
-                      Empresa y documento <span className="font-normal text-[#94A3B8]">(opcional)</span>
+                      Empresa y documento <span className="font-normal text-muted-foreground">(opcional)</span>
                     </h2>
-                    <p className="text-[11px] text-[#64748B]">
+                    <p className="text-[11px] text-muted-foreground">
                       Para cotizaciones corporativas o si necesitas factura. Si eres persona natural, usa DNI.
                     </p>
                   </div>
                 </div>
 
                 <div className="mt-5 grid gap-4 sm:grid-cols-2">
-                  <label className="block text-xs font-semibold text-[#0F172A] sm:col-span-2">
-                    Empresa <span className="font-normal text-[#94A3B8]">(opcional)</span>
+                  <label className="block text-xs font-semibold text-foreground sm:col-span-2">
+                    Empresa <span className="font-normal text-muted-foreground">(opcional)</span>
                     <input
                       value={formData.companyName}
                       onChange={(event) => updateField('companyName', event.target.value)}
                       placeholder="Nombre de tu empresa"
                       autoComplete="organization"
-                      className="mt-1.5 h-11 w-full rounded-xl border border-[#E2E8F0] px-3 text-sm font-normal outline-none transition focus:border-[#2563EB]"
+                      className="mt-1.5 h-11 w-full rounded-xl border border-border px-3 text-sm font-normal outline-none transition focus:border-[#2563EB]"
                     />
                   </label>
 
-                  <label className="block text-xs font-semibold text-[#0F172A]">
+                  <label className="block text-xs font-semibold text-foreground">
                     Tipo de documento
                     <select
                       value={formData.documentType}
                       onChange={(event) => updateField('documentType', event.target.value as DocumentType)}
-                      className="mt-1.5 h-11 w-full rounded-xl border border-[#E2E8F0] bg-white px-3 text-sm font-normal outline-none transition focus:border-[#2563EB]"
+                      className="mt-1.5 h-11 w-full rounded-xl border border-border bg-card px-3 text-sm font-normal outline-none transition focus:border-[#2563EB]"
                     >
                       <option value="ruc">RUC (empresa)</option>
                       <option value="dni">DNI (persona natural)</option>
                     </select>
                   </label>
 
-                  <label className="block text-xs font-semibold text-[#0F172A]">
-                    Número de documento <span className="font-normal text-[#94A3B8]">(opcional)</span>
+                  <label className="block text-xs font-semibold text-foreground">
+                    Número de documento <span className="font-normal text-muted-foreground">(opcional)</span>
                     <input
                       id="quote-documentNumber"
                       inputMode="numeric"
@@ -588,12 +588,12 @@ export function QuotePage() {
                       placeholder={formData.documentType === 'dni' ? '12345678' : '20123456789'}
                       className={`mt-1.5 h-11 w-full rounded-xl border px-3 text-sm font-normal outline-none transition ${
                         errors.documentNumber
-                          ? 'border-[#EF4444] focus:border-[#EF4444]'
-                          : 'border-[#E2E8F0] focus:border-[#2563EB]'
+                          ? 'border-destructive focus:border-destructive'
+                          : 'border-border focus:border-[#2563EB]'
                       }`}
                     />
                     {errors.documentNumber && (
-                      <span className="mt-1 block text-[10px] font-normal text-[#EF4444]">
+                      <span className="mt-1 block text-[10px] font-normal text-destructive">
                         {errors.documentNumber}
                       </span>
                     )}
@@ -601,32 +601,32 @@ export function QuotePage() {
                 </div>
               </section>
 
-              <section className="rounded-2xl border border-[#E2E8F0] bg-white p-5 sm:p-6">
+              <section className="rounded-2xl border border-border bg-card p-5 sm:p-6">
                 <div className="flex items-center gap-3">
-                  <span className="grid size-9 place-items-center rounded-xl bg-[#EFF6FF] text-[#2563EB]">
+                  <span className="grid size-9 place-items-center rounded-xl bg-tint-blue text-blue-ink">
                     <ClipboardList className="size-4.5" />
                   </span>
                   <div>
                     <h2 className="text-sm font-bold">Detalles del proyecto</h2>
-                    <p className="text-[11px] text-[#64748B]">Ayúdanos a preparar una mejor propuesta.</p>
+                    <p className="text-[11px] text-muted-foreground">Ayúdanos a preparar una mejor propuesta.</p>
                   </div>
                 </div>
 
-                <label className="mt-5 block text-xs font-semibold text-[#0F172A]">
+                <label className="mt-5 block text-xs font-semibold text-foreground">
                   Comentarios
                   <textarea
                     value={formData.generalNotes}
                     onChange={(event) => updateField('generalNotes', event.target.value.slice(0, 500))}
                     rows={4}
                     placeholder="Presupuesto estimado, fecha requerida, uso de los equipos, etc."
-                    className="mt-1.5 w-full resize-none rounded-xl border border-[#E2E8F0] px-3 py-2.5 text-sm font-normal outline-none transition focus:border-[#2563EB]"
+                    className="mt-1.5 w-full resize-none rounded-xl border border-border px-3 py-2.5 text-sm font-normal outline-none transition focus:border-[#2563EB]"
                   />
                 </label>
-                <p className="mt-1 text-right text-[10px] text-[#94A3B8]">{totalNotesLength}/500</p>
+                <p className="mt-1 text-right text-[10px] text-muted-foreground">{totalNotesLength}/500</p>
               </section>
             </fieldset>
 
-            <p className="text-[10px] leading-5 text-[#64748B]">
+            <p className="text-[10px] leading-5 text-muted-foreground">
               * Campos obligatorios. Al enviar esta solicitud aceptas que te contactemos para
               proporcionar más información sobre los productos cotizados.
             </p>
@@ -634,25 +634,25 @@ export function QuotePage() {
 
           {/* Resumen */}
           <aside className="lg:sticky lg:top-24">
-            <div className="rounded-2xl border border-[#E2E8F0] bg-white p-5">
+            <div className="rounded-2xl border border-border bg-card p-5">
               <div className="flex items-center justify-between gap-3">
                 <h2 className="flex items-center gap-2 text-sm font-bold">
-                  <ShoppingCart className="size-4 text-[#2563EB]" /> Resumen de cotización
+                  <ShoppingCart className="size-4 text-blue-ink" /> Resumen de cotización
                 </h2>
                 {quote.count > 0 && (
-                  <span className="rounded-full bg-[#EFF6FF] px-2.5 py-1 text-[10px] font-bold text-[#2563EB]">
+                  <span className="rounded-full bg-tint-blue px-2.5 py-1 text-[10px] font-bold text-blue-ink">
                     {quote.count} producto(s)
                   </span>
                 )}
               </div>
 
               {summaryItems.length === 0 ? (
-                <div className="mt-5 rounded-xl border border-dashed border-[#CBD5E1] px-4 py-8 text-center">
-                  <span className="mx-auto grid size-12 place-items-center rounded-xl bg-[#EFF6FF] text-[#2563EB]">
+                <div className="mt-5 rounded-xl border border-dashed border-input px-4 py-8 text-center">
+                  <span className="mx-auto grid size-12 place-items-center rounded-xl bg-tint-blue text-blue-ink">
                     <ShoppingCart className="size-5" />
                   </span>
                   <p className="mt-3 text-sm font-bold">Tu cotización está vacía</p>
-                  <p className="mt-1 text-xs leading-5 text-[#64748B]">
+                  <p className="mt-1 text-xs leading-5 text-muted-foreground">
                     Explora el catálogo y agrega los equipos que necesitas.
                   </p>
                   <Link
@@ -666,18 +666,18 @@ export function QuotePage() {
                 <>
                   <ul className="mt-5 space-y-3">
                     {summaryItems.map((item) => (
-                      <li key={item.productId} className="rounded-xl border border-[#E2E8F0] p-3">
+                      <li key={item.productId} className="rounded-xl border border-border p-3">
                         <div className="flex gap-3">
                           <img
                             src={item.productImage}
                             alt={item.productName}
-                            className="size-14 shrink-0 rounded-lg bg-[#F1F5F9] object-contain"
+                            className="size-14 shrink-0 rounded-lg bg-muted object-contain"
                           />
                           <div className="min-w-0 flex-1">
                             <p className="line-clamp-2 text-xs font-bold leading-4">
                               {item.productName}
                             </p>
-                            <p className="mt-0.5 text-[10px] text-[#64748B]">
+                            <p className="mt-0.5 text-[10px] text-muted-foreground">
                               {item.productModel || item.productSku || 'Producto'}
                             </p>
                           </div>
@@ -686,20 +686,20 @@ export function QuotePage() {
                             onClick={() => quote.removeItem(item.productId)}
                             disabled={isSubmitting}
                             aria-label={`Eliminar ${item.productName}`}
-                            className="self-start text-[#94A3B8] transition hover:text-[#EF4444] disabled:cursor-not-allowed disabled:opacity-40"
+                            className="self-start text-muted-foreground transition hover:text-destructive disabled:cursor-not-allowed disabled:opacity-40"
                           >
                             <Trash2 className="size-3.5" />
                           </button>
                         </div>
 
                         <div className="mt-2.5 flex items-center justify-between gap-2">
-                          <div className="flex items-center gap-1 rounded-lg border border-[#E2E8F0]">
+                          <div className="flex items-center gap-1 rounded-lg border border-border">
                             <button
                               type="button"
                               onClick={() => quote.updateItemQuantity(item.productId, item.quantity - 1)}
                               disabled={isSubmitting}
                               aria-label={`Quitar una unidad de ${item.productName}`}
-                              className="grid size-7 place-items-center text-[#475569] transition hover:text-[#2563EB] disabled:cursor-not-allowed disabled:opacity-40"
+                              className="grid size-7 place-items-center text-muted-foreground transition hover:text-blue-ink disabled:cursor-not-allowed disabled:opacity-40"
                             >
                               <Minus className="size-3" />
                             </button>
@@ -708,14 +708,14 @@ export function QuotePage() {
                               onChange={(qty) => quote.updateItemQuantity(item.productId, qty)}
                               ariaLabel={`Cantidad de ${item.productName}`}
                               disabled={isSubmitting}
-                              className="h-7 w-10 rounded-md text-xs font-bold text-[#0F172A] focus:bg-[#EFF6FF]"
+                              className="h-7 w-10 rounded-md text-xs font-bold text-foreground focus:bg-tint-blue"
                             />
                             <button
                               type="button"
                               onClick={() => quote.updateItemQuantity(item.productId, item.quantity + 1)}
                               disabled={isSubmitting}
                               aria-label={`Agregar una unidad de ${item.productName}`}
-                              className="grid size-7 place-items-center text-[#475569] transition hover:text-[#2563EB] disabled:cursor-not-allowed disabled:opacity-40"
+                              className="grid size-7 place-items-center text-muted-foreground transition hover:text-blue-ink disabled:cursor-not-allowed disabled:opacity-40"
                             >
                               <Plus className="size-3" />
                             </button>
@@ -724,7 +724,7 @@ export function QuotePage() {
                             type="button"
                             onClick={() => quote.updateItemQuantity(item.productId, 0)}
                             disabled={isSubmitting}
-                            className="text-[10px] font-semibold text-[#64748B] hover:text-[#EF4444] disabled:cursor-not-allowed disabled:opacity-40"
+                            className="text-[10px] font-semibold text-muted-foreground hover:text-destructive disabled:cursor-not-allowed disabled:opacity-40"
                           >
                             Quitar
                           </button>
@@ -735,18 +735,18 @@ export function QuotePage() {
                           onChange={(event) => quote.updateItemNotes(item.productId, event.target.value)}
                           disabled={isSubmitting}
                           placeholder="Nota para este producto (opcional)"
-                          className="mt-2.5 h-8 w-full rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] px-2.5 text-[11px] outline-none transition placeholder:text-[#94A3B8] focus:border-[#2563EB] focus:bg-white disabled:cursor-not-allowed disabled:opacity-60"
+                          className="mt-2.5 h-8 w-full rounded-lg border border-border bg-muted px-2.5 text-[11px] outline-none transition placeholder:text-muted-foreground focus:border-[#2563EB] focus:bg-card disabled:cursor-not-allowed disabled:opacity-60"
                         />
                       </li>
                     ))}
                   </ul>
 
-                  <div className="mt-4 space-y-2 border-t border-[#E2E8F0] pt-4 text-xs">
+                  <div className="mt-4 space-y-2 border-t border-border pt-4 text-xs">
                     <div className="flex items-center justify-between">
-                      <span className="text-[#64748B]">Total de productos</span>
+                      <span className="text-muted-foreground">Total de productos</span>
                       <span className="font-bold">{quote.count}</span>
                     </div>
-                    <p className="rounded-lg bg-[#F8FAFC] px-3 py-2 text-[10px] leading-4 text-[#64748B]">
+                    <p className="rounded-lg bg-muted px-3 py-2 text-[10px] leading-4 text-muted-foreground">
                       Los precios y la disponibilidad se confirman en la propuesta del asesor.
                     </p>
                   </div>
@@ -754,7 +754,7 @@ export function QuotePage() {
                   {submitError ? (
                     <p
                       role="alert"
-                      className="mt-3 rounded-lg border border-[#FECACA] bg-[#FEF2F2] px-3 py-2 text-[11px] leading-4 text-[#B91C1C]"
+                      className="mt-3 rounded-lg border border-destructive/35 bg-tint-red px-3 py-2 text-[11px] leading-4 text-destructive"
                     >
                       {submitError}
                     </p>
@@ -775,13 +775,13 @@ export function QuotePage() {
                       type="button"
                       onClick={() => quote.clearQuote()}
                       disabled={isSubmitting}
-                      className="inline-flex h-8 items-center gap-1.5 rounded-lg px-2 text-[10px] font-bold text-[#64748B] transition hover:bg-[#FEF2F2] hover:text-[#EF4444] disabled:cursor-not-allowed disabled:opacity-40"
+                      className="inline-flex h-8 items-center gap-1.5 rounded-lg px-2 text-[10px] font-bold text-muted-foreground transition hover:bg-tint-red hover:text-destructive disabled:cursor-not-allowed disabled:opacity-40"
                     >
                       <Trash2 className="size-3" /> Vaciar
                     </button>
                     <Link
                       href="/productos"
-                      className="inline-flex h-8 items-center gap-1.5 rounded-lg px-2 text-[10px] font-bold text-[#2563EB] transition hover:bg-[#EFF6FF]"
+                      className="inline-flex h-8 items-center gap-1.5 rounded-lg px-2 text-[10px] font-bold text-blue-ink transition hover:bg-tint-blue"
                     >
                       <ChevronLeft className="size-3" /> Agregar más
                     </Link>
@@ -790,24 +790,24 @@ export function QuotePage() {
               )}
             </div>
 
-            <div className="mt-4 flex items-start gap-3 rounded-2xl border border-[#E2E8F0] bg-white p-4">
-              <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-[#F0FDF4] text-[#15803D]">
+            <div className="mt-4 flex items-start gap-3 rounded-2xl border border-border bg-card p-4">
+              <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-tint-green text-success">
                 <Mail className="size-4" />
               </span>
               <div>
                 <p className="text-xs font-bold">Respuesta en menos de 24 horas</p>
-                <p className="mt-0.5 text-[11px] leading-4 text-[#64748B]">
+                <p className="mt-0.5 text-[11px] leading-4 text-muted-foreground">
                   También puedes escribirnos a ventas@fjsolutions.pe o llamarnos al +51 999 888 777.
                 </p>
               </div>
             </div>
 
-            <div className="mt-3 grid grid-cols-2 gap-3 text-[11px] font-semibold text-[#475569]">
-              <div className="flex items-center gap-2 rounded-xl border border-[#E2E8F0] bg-white px-3 py-2.5">
-                <Phone className="size-3.5 text-[#2563EB]" /> Asesoría real
+            <div className="mt-3 grid grid-cols-2 gap-3 text-[11px] font-semibold text-muted-foreground">
+              <div className="flex items-center gap-2 rounded-xl border border-border bg-card px-3 py-2.5">
+                <Phone className="size-3.5 text-blue-ink" /> Asesoría real
               </div>
-              <div className="flex items-center gap-2 rounded-xl border border-[#E2E8F0] bg-white px-3 py-2.5">
-                <Check className="size-3.5 text-[#2563EB]" /> Sin compromiso
+              <div className="flex items-center gap-2 rounded-xl border border-border bg-card px-3 py-2.5">
+                <Check className="size-3.5 text-blue-ink" /> Sin compromiso
               </div>
             </div>
           </aside>

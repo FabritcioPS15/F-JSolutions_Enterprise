@@ -36,9 +36,9 @@ const icons = {
 }
 
 const styles = {
-  success: 'border-emerald-200 bg-white text-emerald-600',
-  error: 'border-red-200 bg-white text-red-600',
-  info: 'border-[#DDD6FE] bg-white text-[#5B21B6]',
+  success: 'border-emerald-500/30 bg-card text-success-ink',
+  error: 'border-red-500/30 bg-card text-danger-ink',
+  info: 'border-brand-ink/30 bg-card text-brand-ink',
 }
 
 export function ToastProvider({ children }: { children: ReactNode }) {
@@ -96,9 +96,9 @@ export function ToastProvider({ children }: { children: ReactNode }) {
                 <Icon className="size-5" aria-hidden="true" />
               </span>
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-semibold text-slate-900">{toast.title}</p>
+                <p className="text-sm font-semibold text-foreground">{toast.title}</p>
                 {toast.description && (
-                  <p className="mt-0.5 text-xs leading-relaxed text-slate-500">
+                  <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">
                     {toast.description}
                   </p>
                 )}
@@ -106,7 +106,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               <button
                 type="button"
                 onClick={() => dismiss(toast.id)}
-                className="shrink-0 rounded-md p-0.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
+                className="shrink-0 rounded-md p-0.5 text-muted-foreground transition hover:bg-muted hover:text-muted-foreground"
                 aria-label="Cerrar notificación"
               >
                 <X className="size-4" />

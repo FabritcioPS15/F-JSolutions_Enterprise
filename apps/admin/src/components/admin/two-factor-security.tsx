@@ -247,17 +247,17 @@ export function TwoFactorSecurityCard() {
       >
         <div className="space-y-3">
           {loading ? (
-            <div className="flex items-center gap-2 py-2 text-[11.5px] text-slate-500">
-              <Loader2 className="size-4 animate-spin text-slate-400" aria-hidden="true" />
+            <div className="flex items-center gap-2 py-2 text-[11.5px] text-muted-foreground">
+              <Loader2 className="size-4 animate-spin text-muted-foreground" aria-hidden="true" />
               Consultando estado de seguridad…
             </div>
           ) : loadError ? (
-            <div className="rounded-xl border border-amber-200 bg-amber-50 px-3 py-2.5 text-[11px] leading-relaxed text-amber-900">
+            <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2.5 text-[11px] leading-relaxed text-warning-ink">
               <p>{loadError}</p>
               <button
                 type="button"
                 onClick={() => void loadStatus()}
-                className="mt-1.5 font-semibold underline underline-offset-2 hover:text-amber-950"
+                className="mt-1.5 font-semibold underline underline-offset-2 hover:text-warning-ink"
               >
                 Reintentar
               </button>
@@ -265,31 +265,31 @@ export function TwoFactorSecurityCard() {
           ) : enabled ? (
             <div className="space-y-3">
               <div>
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-2 py-0.5 text-[9.5px] font-bold uppercase tracking-wide text-emerald-700">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2 py-0.5 text-[9.5px] font-bold uppercase tracking-wide text-success-ink">
                   <span className="size-1.5 rounded-full bg-emerald-500" />
                   Activa
                 </span>
                 <dl className="mt-2.5 space-y-1.5 text-[11px]">
                   <div className="flex items-center justify-between gap-2">
-                    <dt className="text-slate-500">Método</dt>
-                    <dd className="text-right font-semibold text-slate-800">
+                    <dt className="text-muted-foreground">Método</dt>
+                    <dd className="text-right font-semibold text-foreground">
                       {status?.method ? METHOD_LABELS[status.method] : '—'}
                     </dd>
                   </div>
                   <div className="flex items-center justify-between gap-2">
-                    <dt className="text-slate-500">Activada</dt>
-                    <dd className="text-right font-medium text-slate-700">
+                    <dt className="text-muted-foreground">Activada</dt>
+                    <dd className="text-right font-medium text-foreground/80">
                       {formatDate(status?.confirmedAt ?? null)}
                     </dd>
                   </div>
                   <div className="flex items-center justify-between gap-2">
-                    <dt className="text-slate-500">Códigos de recuperación</dt>
+                    <dt className="text-muted-foreground">Códigos de recuperación</dt>
                     <dd
                       className={cn(
                         'text-right font-semibold',
                         (status?.recoveryCodesRemaining ?? 0) === 0
-                          ? 'text-red-600'
-                          : 'text-slate-800'
+                          ? 'text-danger-ink'
+                          : 'text-foreground'
                       )}
                     >
                       {status?.recoveryCodesRemaining ?? 0} disponibles
@@ -304,15 +304,15 @@ export function TwoFactorSecurityCard() {
                   className={cn(btnSecondary, 'w-full justify-start')}
                   onClick={() => openPasswordAction('regenerate')}
                 >
-                  <RefreshCw className="size-4 text-slate-500" aria-hidden="true" />
+                  <RefreshCw className="size-4 text-muted-foreground" aria-hidden="true" />
                   Regenerar códigos
                 </button>
                 <button
                   type="button"
                   className={cn(
                     btnDanger,
-                    'w-full justify-start bg-white text-red-600 shadow-none hover:bg-red-50',
-                    'border border-red-200'
+                    'w-full justify-start bg-card text-danger-ink shadow-none hover:bg-red-500/10',
+                    'border border-red-500/30'
                   )}
                   onClick={() => openPasswordAction('disable')}
                 >
@@ -322,7 +322,7 @@ export function TwoFactorSecurityCard() {
               </div>
 
               {(status?.recoveryCodesRemaining ?? 0) <= 2 && (
-                <p className="flex gap-1.5 text-[10px] leading-relaxed text-amber-700">
+                <p className="flex gap-1.5 text-[10px] leading-relaxed text-warning-ink">
                   <AlertTriangle className="mt-0.5 size-3 shrink-0" aria-hidden="true" />
                   Te quedan pocos códigos de recuperación. Regenera una nueva lista.
                 </p>
@@ -330,10 +330,10 @@ export function TwoFactorSecurityCard() {
             </div>
           ) : (
             <div className="space-y-3">
-              <span className="inline-flex rounded-full border border-slate-200 bg-slate-50 px-2 py-0.5 text-[9.5px] font-bold uppercase tracking-wide text-slate-500">
+              <span className="inline-flex rounded-full border border-border bg-muted px-2 py-0.5 text-[9.5px] font-bold uppercase tracking-wide text-muted-foreground">
                 Inactiva
               </span>
-              <p className="text-[10.5px] leading-relaxed text-slate-500">
+              <p className="text-[10.5px] leading-relaxed text-muted-foreground">
                 Actívala para pedir un código adicional en cada inicio de sesión, incluso si la
                 contraseña se ve comprometida.
               </p>
@@ -351,7 +351,7 @@ export function TwoFactorSecurityCard() {
             </div>
           )}
 
-          <p className="border-t border-slate-100 pt-3 text-[10px] leading-relaxed text-slate-400">
+          <p className="border-t border-border pt-3 text-[10px] leading-relaxed text-muted-foreground">
             La API valida el token en cada solicitud y aplica permisos por rol. Los secretos TOTP se
             guardan cifrados y nunca se envían al navegador después del enrolamiento.
           </p>
@@ -390,14 +390,14 @@ export function TwoFactorSecurityCard() {
         }
       >
         {actionError && (
-          <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-3 py-2.5 text-[11.5px] leading-relaxed text-red-700">
+          <div className="mb-4 rounded-xl border border-red-500/30 bg-red-500/10 px-3 py-2.5 text-[11.5px] leading-relaxed text-danger-ink">
             {actionError}
           </div>
         )}
 
         {recoveryCodes ? (
           <div className="space-y-3">
-            <p className="text-[12px] leading-relaxed text-slate-600">
+            <p className="text-[12px] leading-relaxed text-muted-foreground">
               Cada código sirve una sola vez si pierdes acceso a tu método principal. No se volverán
               a mostrar.
             </p>
@@ -405,7 +405,7 @@ export function TwoFactorSecurityCard() {
               {recoveryCodes.map((item) => (
                 <span
                   key={item}
-                  className="rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-center font-mono text-[12px] tracking-wide text-slate-800"
+                  className="rounded-lg border border-border bg-muted px-2.5 py-1.5 text-center font-mono text-[12px] tracking-wide text-foreground"
                 >
                   {item}
                 </span>
@@ -413,7 +413,7 @@ export function TwoFactorSecurityCard() {
             </div>
             <button type="button" className={btnSecondary} onClick={() => void copyCodes()}>
               {copied ? (
-                <Check className="size-4 text-emerald-600" aria-hidden="true" />
+                <Check className="size-4 text-success-ink" aria-hidden="true" />
               ) : (
                 <Copy className="size-4" aria-hidden="true" />
               )}
@@ -426,16 +426,16 @@ export function TwoFactorSecurityCard() {
               type="button"
               onClick={() => void startSetup('TOTP')}
               disabled={busy}
-              className="flex w-full items-start gap-3 rounded-xl border border-slate-200 p-3.5 text-left transition hover:border-[#C4B5FD] hover:bg-[#F5F3FF]/50 disabled:opacity-60"
+              className="flex w-full items-start gap-3 rounded-xl border border-border p-3.5 text-left transition hover:border-brand-ink/40 hover:bg-tint-brand/50 disabled:opacity-60"
             >
-              <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-slate-50 text-[#5B21B6] ring-1 ring-slate-200">
+              <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-muted text-brand-ink ring-1 ring-border">
                 <KeyRound className="size-4" aria-hidden="true" />
               </span>
               <span className="min-w-0">
-                <span className="block text-[13px] font-semibold text-slate-900">
+                <span className="block text-[13px] font-semibold text-foreground">
                   Aplicación de autenticación
                 </span>
-                <span className="mt-0.5 block text-[11px] leading-relaxed text-slate-500">
+                <span className="mt-0.5 block text-[11px] leading-relaxed text-muted-foreground">
                   Escanea un código QR con Google Authenticator, Microsoft Authenticator o similar.
                 </span>
               </span>
@@ -445,23 +445,23 @@ export function TwoFactorSecurityCard() {
               type="button"
               onClick={() => void startSetup('EMAIL')}
               disabled={busy}
-              className="flex w-full items-start gap-3 rounded-xl border border-slate-200 p-3.5 text-left transition hover:border-[#C4B5FD] hover:bg-[#F5F3FF]/50 disabled:opacity-60"
+              className="flex w-full items-start gap-3 rounded-xl border border-border p-3.5 text-left transition hover:border-brand-ink/40 hover:bg-tint-brand/50 disabled:opacity-60"
             >
-              <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-slate-50 text-[#5B21B6] ring-1 ring-slate-200">
+              <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-muted text-brand-ink ring-1 ring-border">
                 <Mail className="size-4" aria-hidden="true" />
               </span>
               <span className="min-w-0">
-                <span className="block text-[13px] font-semibold text-slate-900">
+                <span className="block text-[13px] font-semibold text-foreground">
                   Código por correo
                 </span>
-                <span className="mt-0.5 block text-[11px] leading-relaxed text-slate-500">
+                <span className="mt-0.5 block text-[11px] leading-relaxed text-muted-foreground">
                   Recibe un código de 6 dígitos en el correo registrado de tu cuenta.
                 </span>
               </span>
             </button>
 
             {busy && (
-              <p className="flex items-center gap-2 pt-1 text-[11px] text-slate-500">
+              <p className="flex items-center gap-2 pt-1 text-[11px] text-muted-foreground">
                 <Loader2 className="size-3.5 animate-spin" aria-hidden="true" />
                 Preparando la configuración…
               </p>
@@ -469,25 +469,25 @@ export function TwoFactorSecurityCard() {
           </div>
         ) : setupMethod === 'TOTP' ? (
           <form id="two-factor-enable-form" onSubmit={confirmEnable} className="space-y-4">
-            <div className="flex flex-col items-center gap-3 rounded-xl border border-slate-200 bg-slate-50/70 p-4">
+            <div className="flex flex-col items-center gap-3 rounded-xl border border-border bg-muted/70 p-4">
               {setup?.qrDataUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={setup.qrDataUrl}
                   alt="Código QR para configurar la aplicación de autenticación"
-                  className="size-44 rounded-lg bg-white p-1.5 ring-1 ring-slate-200"
+                  className="size-44 rounded-lg bg-card p-1.5 ring-1 ring-border"
                 />
               ) : null}
               <div className="w-full text-center">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-400">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
                   Clave manual
                 </p>
-                <p className="mt-1 select-all break-all font-mono text-[11.5px] text-slate-700">
+                <p className="mt-1 select-all break-all font-mono text-[11.5px] text-foreground/80">
                   {setup?.secret ?? '—'}
                 </p>
               </div>
             </div>
-            <p className="text-[11px] leading-relaxed text-slate-500">
+            <p className="text-[11px] leading-relaxed text-muted-foreground">
               Escanea el QR o ingresa la clave manual en tu aplicación y escribe el código de 6
               dígitos que muestra.
             </p>
@@ -509,16 +509,16 @@ export function TwoFactorSecurityCard() {
           </form>
         ) : (
           <form id="two-factor-enable-form" onSubmit={confirmEnable} className="space-y-4">
-            <div className="rounded-xl border border-slate-200 bg-slate-50/70 p-4">
-              <p className="flex items-center gap-2 text-[12px] font-semibold text-slate-800">
-                <Mail className="size-4 text-[#5B21B6]" aria-hidden="true" />
+            <div className="rounded-xl border border-border bg-muted/70 p-4">
+              <p className="flex items-center gap-2 text-[12px] font-semibold text-foreground">
+                <Mail className="size-4 text-brand-ink" aria-hidden="true" />
                 Código enviado a {setup?.email ?? 'tu correo'}
               </p>
-              <p className="mt-1 text-[11px] leading-relaxed text-slate-500">
+              <p className="mt-1 text-[11px] leading-relaxed text-muted-foreground">
                 Revisa tu bandeja de entrada y la carpeta de spam. El código vence en 10 minutos.
               </p>
               {setup?.delivered === false && (
-                <p className="mt-2 flex gap-1.5 text-[10.5px] leading-relaxed text-amber-700">
+                <p className="mt-2 flex gap-1.5 text-[10.5px] leading-relaxed text-warning-ink">
                   <AlertTriangle className="mt-0.5 size-3 shrink-0" aria-hidden="true" />
                   El envío no pudo confirmarse. En desarrollo revisa la consola de la API; en
                   producción configura SMTP.
@@ -579,7 +579,7 @@ export function TwoFactorSecurityCard() {
         }
       >
         {actionError && (
-          <div className="mb-4 rounded-xl border border-red-200 bg-red-50 px-3 py-2.5 text-[11.5px] leading-relaxed text-red-700">
+          <div className="mb-4 rounded-xl border border-red-500/30 bg-red-500/10 px-3 py-2.5 text-[11.5px] leading-relaxed text-danger-ink">
             {actionError}
           </div>
         )}
@@ -617,7 +617,7 @@ export function TwoFactorSecurityCard() {
             {(recoveryCodes ?? []).map((item) => (
               <span
                 key={item}
-                className="rounded-lg border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-center font-mono text-[12px] tracking-wide text-slate-800"
+                className="rounded-lg border border-border bg-muted px-2.5 py-1.5 text-center font-mono text-[12px] tracking-wide text-foreground"
               >
                 {item}
               </span>
@@ -625,7 +625,7 @@ export function TwoFactorSecurityCard() {
           </div>
           <button type="button" className={btnSecondary} onClick={() => void copyCodes()}>
             {copied ? (
-              <Check className="size-4 text-emerald-600" aria-hidden="true" />
+              <Check className="size-4 text-success-ink" aria-hidden="true" />
             ) : (
               <Copy className="size-4" aria-hidden="true" />
             )}

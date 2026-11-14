@@ -31,32 +31,32 @@ import { getStockState, statusLabels, stockLabels } from '@/lib/admin/format'
 import type { ProductStatus, StockState } from '@/lib/admin/types'
 
 export const inputClass =
-  'h-10 w-full rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900 shadow-xs outline-none transition placeholder:text-slate-400 focus:border-[#5B21B6] focus:ring-4 focus:ring-[#5B21B6]/10 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400'
+  'h-10 w-full rounded-xl border border-border bg-card px-3 text-sm text-foreground shadow-xs outline-none transition placeholder:text-muted-foreground focus:border-[#2563EB] focus:ring-4 focus:ring-[#2563EB]/10 disabled:cursor-not-allowed disabled:bg-muted disabled:text-muted-foreground'
 
 export const textareaClass =
-  'min-h-28 w-full resize-y rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm leading-relaxed text-slate-900 shadow-xs outline-none transition placeholder:text-slate-400 focus:border-[#5B21B6] focus:ring-4 focus:ring-[#5B21B6]/10'
+  'min-h-28 w-full resize-y rounded-xl border border-border bg-card px-3 py-2.5 text-sm leading-relaxed text-foreground shadow-xs outline-none transition placeholder:text-muted-foreground focus:border-[#2563EB] focus:ring-4 focus:ring-[#2563EB]/10'
 
 export const btnPrimary =
-  'inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-[#5B21B6] px-4 text-sm font-semibold text-white shadow-sm shadow-[#5B21B6]/20 transition hover:bg-[#4C1D95] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#5B21B6]/25 disabled:pointer-events-none disabled:opacity-50'
+  'inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-[#2563EB] px-4 text-sm font-semibold text-white shadow-sm shadow-[#2563EB]/20 transition hover:bg-[#1D4ED8] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#2563EB]/25 disabled:pointer-events-none disabled:opacity-50'
 
 export const btnSecondary =
-  'inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 shadow-xs transition hover:border-slate-300 hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-slate-300/30 disabled:pointer-events-none disabled:opacity-50'
+  'inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-border bg-card px-4 text-sm font-semibold text-foreground/80 shadow-xs transition hover:border-input hover:bg-muted focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-slate-300/30 disabled:pointer-events-none disabled:opacity-50'
 
 export const btnGhost =
-  'inline-flex h-9 items-center justify-center gap-2 rounded-lg px-3 text-sm font-medium text-slate-500 transition hover:bg-slate-100 hover:text-slate-900'
+  'inline-flex h-9 items-center justify-center gap-2 rounded-lg px-3 text-sm font-medium text-muted-foreground transition hover:bg-muted hover:text-foreground'
 
 export const btnDanger =
   'inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-red-600 px-4 text-sm font-semibold text-white shadow-sm shadow-red-600/20 transition hover:bg-red-700 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-red-500/25 disabled:pointer-events-none disabled:opacity-50'
 
 export const iconButton =
-  'inline-flex size-8 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5B21B6]/30'
+  'inline-flex size-8 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-muted hover:text-foreground/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/30'
 
 // Medida común de los listados: todas las tablas del panel comparten ancho,
 // tipografía base y encabezado para que se vean del mismo tamaño.
 export const tableClass = 'w-full min-w-[1200px] text-left text-[12.5px]'
 
 export const tableHeadRowClass =
-  'border-b border-slate-100 bg-slate-50/70 text-[10.5px] font-bold uppercase tracking-[0.12em] text-slate-500'
+  'border-b border-border bg-muted/70 text-[10.5px] font-bold uppercase tracking-[0.12em] text-muted-foreground'
 
 export function PageHeader({
   eyebrow,
@@ -73,15 +73,15 @@ export function PageHeader({
     <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
       <div className="min-w-0">
         {eyebrow && (
-          <p className="mb-1 text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">
+          <p className="mb-1 text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
             {eyebrow}
           </p>
         )}
-        <h1 className="font-heading text-2xl font-bold tracking-tight text-slate-900 sm:text-[28px]">
+        <h1 className="font-heading text-2xl font-bold tracking-tight text-foreground sm:text-[28px]">
           {title}
         </h1>
         {description && (
-          <p className="mt-1 text-sm leading-relaxed text-slate-500">{description}</p>
+          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{description}</p>
         )}
       </div>
       {actions && <div className="flex shrink-0 flex-wrap items-center gap-2">{actions}</div>}
@@ -105,26 +105,26 @@ export function StatCard({
   const content = (
     <>
       <div className="flex items-start justify-between gap-3">
-        <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-slate-500">{label}</p>
-        <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-slate-50 text-slate-500 ring-1 ring-slate-200/70">
+        <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground">{label}</p>
+        <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-muted text-muted-foreground ring-1 ring-border/70">
           <Icon className="size-[18px]" aria-hidden="true" />
         </span>
       </div>
-      <p className="mt-3 font-heading text-[26px] font-bold leading-none tracking-tight text-slate-900">
+      <p className="mt-3 font-heading text-[26px] font-bold leading-none tracking-tight text-foreground">
         {value}
       </p>
-      {helper && <p className="mt-2 text-xs text-slate-500">{helper}</p>}
+      {helper && <p className="mt-2 text-xs text-muted-foreground">{helper}</p>}
     </>
   )
 
   const className =
-    'group rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs transition'
+    'group rounded-2xl border border-border/80 bg-card p-5 shadow-xs transition'
 
   if (href) {
     return (
       <Link
         href={href}
-        className={cn(className, 'hover:-translate-y-0.5 hover:border-[#DDD6FE] hover:shadow-md')}
+        className={cn(className, 'hover:-translate-y-0.5 hover:border-brand-ink/30 hover:shadow-md')}
       >
         {content}
       </Link>
@@ -157,23 +157,23 @@ export function SectionCard({
     <section
       id={id}
       className={cn(
-        'scroll-mt-32 overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xs',
+        'scroll-mt-32 overflow-hidden rounded-2xl border border-border/80 bg-card shadow-xs',
         className
       )}
     >
-      <header className="flex flex-wrap items-start justify-between gap-3 border-b border-slate-100 px-5 py-4 sm:px-6">
+      <header className="flex flex-wrap items-start justify-between gap-3 border-b border-border px-5 py-4 sm:px-6">
         <div className="flex min-w-0 items-start gap-3">
           {Icon && (
-            <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-slate-50 text-slate-500 ring-1 ring-slate-100">
+            <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-muted text-muted-foreground ring-1 ring-border">
               <Icon className="size-[18px]" aria-hidden="true" />
             </span>
           )}
           <div className="min-w-0">
-            <h2 className="font-heading text-[15px] font-bold tracking-tight text-slate-900">
+            <h2 className="font-heading text-[15px] font-bold tracking-tight text-foreground">
               {title}
             </h2>
             {description && (
-              <p className="mt-0.5 text-xs leading-relaxed text-slate-500">{description}</p>
+              <p className="mt-0.5 text-xs leading-relaxed text-muted-foreground">{description}</p>
             )}
           </div>
         </div>
@@ -205,16 +205,16 @@ export function Field({
     <div className={cn('space-y-1.5', className)}>
       <label
         htmlFor={htmlFor}
-        className="flex items-center gap-1 text-xs font-semibold text-slate-700"
+        className="flex items-center gap-1 text-xs font-semibold text-foreground/80"
       >
         {label}
         {required && <span className="text-red-500">*</span>}
       </label>
       {children}
       {error ? (
-        <p className="text-[11px] font-medium text-red-600">{error}</p>
+        <p className="text-[11px] font-medium text-danger-ink">{error}</p>
       ) : hint ? (
-        <p className="text-[11px] leading-relaxed text-slate-400">{hint}</p>
+        <p className="text-[11px] leading-relaxed text-muted-foreground">{hint}</p>
       ) : null}
     </div>
   )
@@ -472,20 +472,20 @@ export function Select({
           inputClass,
           'relative flex cursor-pointer items-center justify-between gap-2 pr-9 text-left',
           Icon && 'pl-9',
-          open && 'border-[#5B21B6] ring-4 ring-[#5B21B6]/10',
+          open && 'border-[#2563EB] ring-4 ring-[#2563EB]/10',
           className
         )}
       >
         {Icon && (
           <Icon
-            className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400"
+            className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
             aria-hidden="true"
           />
         )}
         <span className="min-w-0 truncate">{selected?.label ?? '—'}</span>
         <ChevronDown
           className={cn(
-            'pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-slate-400 transition-transform duration-200',
+            'pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground transition-transform duration-200',
             open && 'rotate-180'
           )}
           aria-hidden="true"
@@ -511,12 +511,12 @@ export function Select({
             )}
           >
             <div
-              className="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white p-1.5 shadow-xl shadow-slate-900/10 animate-in fade-in-0 zoom-in-95 duration-150"
+              className="flex flex-col overflow-hidden rounded-2xl border border-border bg-card p-1.5 shadow-xl shadow-slate-900/10 animate-in fade-in-0 zoom-in-95 duration-150"
               style={{ maxHeight: panelPosition.maxHeight }}
             >
               <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain py-0.5 scrollbar-light">
                 {options.length === 0 ? (
-                  <p className="px-3 py-6 text-center text-xs text-slate-400">Sin opciones</p>
+                  <p className="px-3 py-6 text-center text-xs text-muted-foreground">Sin opciones</p>
                 ) : (
                   options.map((option, index) => {
                     const isSelected = option.value === currentValue
@@ -536,15 +536,15 @@ export function Select({
                           'flex w-full items-center justify-between gap-2 rounded-lg px-2.5 py-2 text-left text-[13px] transition-colors',
                           option.disabled && 'cursor-not-allowed opacity-50',
                           isSelected
-                            ? 'bg-[#F5F3FF] font-semibold text-[#5B21B6]'
+                            ? 'bg-tint-brand font-semibold text-brand-ink'
                             : index === highlight
-                              ? 'bg-slate-100 text-slate-900'
-                              : 'text-slate-700'
+                              ? 'bg-muted text-foreground'
+                              : 'text-foreground/80'
                         )}
                       >
                         <span className="min-w-0 flex-1 truncate">{option.label}</span>
                         {isSelected && (
-                          <Check className="size-4 shrink-0 text-[#5B21B6]" aria-hidden="true" />
+                          <Check className="size-4 shrink-0 text-brand-ink" aria-hidden="true" />
                         )}
                       </button>
                     )
@@ -713,11 +713,11 @@ export function FilterSelect({
         aria-expanded={open}
         aria-label={ariaLabel ?? label}
         className={cn(
-          'flex h-10 w-full items-center justify-between gap-2 rounded-xl border px-3 text-left text-sm shadow-xs transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#5B21B6]/15',
+          'flex h-10 w-full items-center justify-between gap-2 rounded-xl border px-3 text-left text-sm shadow-xs transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#2563EB]/15',
           isActive
-            ? 'border-[#C4B5FD] bg-[#F5F3FF]/70 text-[#5B21B6]'
-            : 'border-slate-200 bg-white text-slate-800 hover:border-slate-300 hover:bg-slate-50',
-          open && 'border-[#5B21B6] ring-4 ring-[#5B21B6]/10'
+            ? 'border-brand-ink/40 bg-tint-brand/70 text-brand-ink'
+            : 'border-border bg-card text-foreground hover:border-input hover:bg-muted',
+          open && 'border-[#2563EB] ring-4 ring-[#2563EB]/10'
         )}
       >
         <span className="flex min-w-0 items-center gap-1.5">
@@ -725,7 +725,7 @@ export function FilterSelect({
             <Icon
               className={cn(
                 'size-4 shrink-0',
-                isActive || open ? 'text-[#5B21B6]' : 'text-slate-400'
+                isActive || open ? 'text-brand-ink' : 'text-muted-foreground'
               )}
               aria-hidden="true"
             />
@@ -733,7 +733,7 @@ export function FilterSelect({
           <span
             className={cn(
               'shrink-0 text-xs font-medium',
-              isActive || open ? 'text-[#5B21B6]/80' : 'text-slate-500'
+              isActive || open ? 'text-brand-ink/80' : 'text-muted-foreground'
             )}
           >
             {label}:
@@ -743,7 +743,7 @@ export function FilterSelect({
         <ChevronDown
           className={cn(
             'size-4 shrink-0 transition-transform duration-200',
-            isActive || open ? 'text-[#5B21B6]' : 'text-slate-400',
+            isActive || open ? 'text-brand-ink' : 'text-muted-foreground',
             open && 'rotate-180'
           )}
           aria-hidden="true"
@@ -769,14 +769,14 @@ export function FilterSelect({
             )}
           >
             <div
-              className="flex flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white p-1.5 shadow-xl shadow-slate-900/10 animate-in fade-in-0 zoom-in-95 duration-150"
+              className="flex flex-col overflow-hidden rounded-2xl border border-border bg-card p-1.5 shadow-xl shadow-slate-900/10 animate-in fade-in-0 zoom-in-95 duration-150"
               style={{ maxHeight: panelPosition.maxHeight }}
             >
               {searchable && (
-                <div className="border-b border-slate-100 p-1 pb-2">
+                <div className="border-b border-border p-1 pb-2">
                   <div className="relative">
                     <Search
-                      className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-slate-400"
+                      className="pointer-events-none absolute left-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
                       aria-hidden="true"
                     />
                     <input
@@ -787,7 +787,7 @@ export function FilterSelect({
                         setHighlight(0)
                       }}
                       placeholder={searchPlaceholder}
-                      className="h-9 w-full rounded-lg border border-slate-200 bg-slate-50 pl-8 pr-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-[#5B21B6] focus:bg-white focus:ring-2 focus:ring-[#5B21B6]/10"
+                      className="h-9 w-full rounded-lg border border-border bg-muted pl-8 pr-2.5 text-sm text-foreground outline-none transition placeholder:text-muted-foreground focus:border-[#2563EB] focus:bg-card focus:ring-2 focus:ring-[#2563EB]/10"
                     />
                   </div>
                 </div>
@@ -795,7 +795,7 @@ export function FilterSelect({
 
               <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain py-0.5 scrollbar-light">
                 {filtered.length === 0 ? (
-                  <p className="px-3 py-6 text-center text-xs text-slate-400">{emptyLabel}</p>
+                  <p className="px-3 py-6 text-center text-xs text-muted-foreground">{emptyLabel}</p>
                 ) : (
                   filtered.map((option, index) => {
                     const isSelected = option.value === value
@@ -812,10 +812,10 @@ export function FilterSelect({
                         className={cn(
                           'flex w-full items-center justify-between gap-2 rounded-lg px-2.5 py-2 text-left text-[13px] transition-colors',
                           isSelected
-                            ? 'bg-[#F5F3FF] font-semibold text-[#5B21B6]'
+                            ? 'bg-tint-brand font-semibold text-brand-ink'
                             : index === highlight
-                              ? 'bg-slate-100 text-slate-900'
-                              : 'text-slate-700'
+                              ? 'bg-muted text-foreground'
+                              : 'text-foreground/80'
                         )}
                       >
                         <span className="flex min-w-0 items-center gap-2">
@@ -823,7 +823,7 @@ export function FilterSelect({
                             <OptionIcon
                               className={cn(
                                 'size-4 shrink-0',
-                                isSelected ? 'text-[#5B21B6]' : 'text-slate-400'
+                                isSelected ? 'text-brand-ink' : 'text-muted-foreground'
                               )}
                               aria-hidden="true"
                             />
@@ -836,15 +836,15 @@ export function FilterSelect({
                               className={cn(
                                 'rounded-md px-1.5 py-0.5 text-[10px] font-semibold',
                                 isSelected
-                                  ? 'bg-[#EDE9FE] text-[#5B21B6]'
-                                  : 'bg-slate-100 text-slate-500'
+                                  ? 'bg-brand-soft text-brand-ink'
+                                  : 'bg-muted text-muted-foreground'
                               )}
                             >
                               {option.count}
                             </span>
                           )}
                           {isSelected && (
-                            <Check className="size-4 text-[#5B21B6]" aria-hidden="true" />
+                            <Check className="size-4 text-brand-ink" aria-hidden="true" />
                           )}
                         </span>
                       </button>
@@ -862,15 +862,15 @@ export function FilterSelect({
 
 const statusStyles: Record<ProductStatus, { chip: string; dot: string }> = {
   active: {
-    chip: 'bg-emerald-50 text-emerald-700 ring-emerald-600/15',
+    chip: 'bg-emerald-500/10 text-success-ink ring-emerald-600/15',
     dot: 'bg-emerald-500',
   },
   draft: {
-    chip: 'bg-slate-100 text-slate-600 ring-slate-500/15',
+    chip: 'bg-muted text-muted-foreground ring-slate-500/15',
     dot: 'bg-slate-400',
   },
   archived: {
-    chip: 'bg-amber-50 text-amber-700 ring-amber-600/15',
+    chip: 'bg-amber-500/10 text-warning-ink ring-amber-600/15',
     dot: 'bg-amber-500',
   },
 }
@@ -890,10 +890,10 @@ export function StatusBadge({ status }: { status: ProductStatus }) {
 }
 
 const stockStyles: Record<StockState, string> = {
-  ok: 'bg-emerald-50 text-emerald-700 ring-emerald-600/15',
-  low: 'bg-amber-50 text-amber-700 ring-amber-600/15',
-  out: 'bg-red-50 text-red-700 ring-red-600/15',
-  over: 'bg-sky-50 text-sky-700 ring-sky-600/15',
+  ok: 'bg-emerald-500/10 text-success-ink ring-emerald-600/15',
+  low: 'bg-amber-500/10 text-warning-ink ring-amber-600/15',
+  out: 'bg-red-500/10 text-danger-ink ring-red-600/15',
+  over: 'bg-sky-500/10 text-sky-ink ring-sky-600/15',
 }
 
 const stockDots: Record<StockState, string> = {
@@ -945,13 +945,13 @@ export function StatusToggle({
       aria-label={label}
       onClick={onToggle}
       className={cn(
-        'relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#5B21B6]/20',
-        active ? 'bg-emerald-500' : 'bg-slate-300'
+        'relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#2563EB]/20',
+        active ? 'bg-emerald-500' : 'bg-border'
       )}
     >
       <span
         className={cn(
-          'inline-block size-3.5 rounded-full bg-white shadow-sm transition-transform',
+          'inline-block size-3.5 rounded-full bg-card shadow-sm transition-transform',
           active ? 'translate-x-[18px]' : 'translate-x-[3px]'
         )}
       />
@@ -971,12 +971,12 @@ export function EmptyState({
   action?: ReactNode
 }) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-300 bg-slate-50/60 px-6 py-14 text-center">
-      <span className="grid size-14 place-items-center rounded-2xl bg-white text-slate-400 shadow-xs ring-1 ring-slate-200">
+    <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-input bg-muted/60 px-6 py-14 text-center">
+      <span className="grid size-14 place-items-center rounded-2xl bg-card text-muted-foreground shadow-xs ring-1 ring-border">
         <Icon className="size-6" aria-hidden="true" />
       </span>
-      <h3 className="mt-4 font-heading text-base font-bold text-slate-900">{title}</h3>
-      <p className="mt-1 max-w-sm text-xs leading-relaxed text-slate-500">{description}</p>
+      <h3 className="mt-4 font-heading text-base font-bold text-foreground">{title}</h3>
+      <p className="mt-1 max-w-sm text-xs leading-relaxed text-muted-foreground">{description}</p>
       {action && <div className="mt-5">{action}</div>}
     </div>
   )
@@ -984,7 +984,7 @@ export function EmptyState({
 
 export function LoadingState({ label = 'Cargando catálogo…' }: { label?: string }) {
   return (
-    <div className="flex min-h-[50vh] flex-col items-center justify-center gap-3 text-slate-400">
+    <div className="flex min-h-[50vh] flex-col items-center justify-center gap-3 text-muted-foreground">
       <Loader2 className="size-6 animate-spin" aria-hidden="true" />
       <p className="text-xs font-medium">{label}</p>
     </div>

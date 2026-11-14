@@ -22,6 +22,7 @@ const staticRoutes: { path: string; priority: number; changeFrequency: MetadataR
   { path: '/terminos-y-condiciones', priority: 0.3, changeFrequency: 'yearly' },
   { path: '/politica-de-privacidad', priority: 0.3, changeFrequency: 'yearly' },
   { path: '/informacion-legal', priority: 0.3, changeFrequency: 'yearly' },
+  { path: '/libro-de-reclamaciones', priority: 0.4, changeFrequency: 'yearly' },
 ]
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

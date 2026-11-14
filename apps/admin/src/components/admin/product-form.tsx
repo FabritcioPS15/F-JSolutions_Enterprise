@@ -786,13 +786,13 @@ export function ProductForm({
 
   return (
     <div className="space-y-5">
-      <nav aria-label="Migas de pan" className="flex items-center gap-1.5 text-xs text-slate-400">
-        <Link href="/productos" className="inline-flex items-center gap-1.5 font-semibold text-slate-500 transition hover:text-[#5B21B6]">
+      <nav aria-label="Migas de pan" className="flex items-center gap-1.5 text-xs text-muted-foreground">
+        <Link href="/productos" className="inline-flex items-center gap-1.5 font-semibold text-muted-foreground transition hover:text-brand-ink">
           <ArrowLeft className="size-3.5" aria-hidden="true" />
           Productos
         </Link>
-        <ChevronRight className="size-3.5 text-slate-300" aria-hidden="true" />
-        <span className="font-semibold text-slate-900">{isEdit ? 'Editar producto' : 'Nuevo producto'}</span>
+        <ChevronRight className="size-3.5 text-muted-foreground/60" aria-hidden="true" />
+        <span className="font-semibold text-foreground">{isEdit ? 'Editar producto' : 'Nuevo producto'}</span>
       </nav>
 
       <PageHeader
@@ -814,7 +814,7 @@ export function ProductForm({
                 {submitting ? 'Guardando…' : 'Guardar cambios'}
               </button>
             ) : (
-              <span className="inline-flex h-9 items-center rounded-xl border border-slate-200 bg-white px-3 text-[11px] font-semibold text-slate-600 shadow-xs">
+              <span className="inline-flex h-9 items-center rounded-xl border border-border bg-card px-3 text-[11px] font-semibold text-muted-foreground shadow-xs">
                 Paso {step + 1} de {wizardSteps.length}
               </span>
             )}
@@ -825,7 +825,7 @@ export function ProductForm({
       {isWizard ? (
         <nav
           aria-label="Pasos para crear el producto"
-          className="sticky top-16 z-20 -mx-1 overflow-x-auto rounded-xl border border-slate-200/80 bg-white p-2 shadow-xs"
+          className="sticky top-16 z-20 -mx-1 overflow-x-auto rounded-xl border border-border/80 bg-card p-2 shadow-xs"
         >
           <ol className="flex min-w-max items-center gap-1">
             {wizardSteps.map((wizardStep, index) => {
@@ -841,20 +841,20 @@ export function ProductForm({
                     className={cn(
                       'inline-flex h-9 items-center gap-2 rounded-lg px-2.5 text-[11px] font-semibold transition',
                       active
-                        ? 'bg-[#F5F3FF] text-[#5B21B6] ring-1 ring-inset ring-[#5B21B6]/15'
+                        ? 'bg-tint-brand text-brand-ink ring-1 ring-inset ring-[#2563EB]/15'
                         : done
-                          ? 'text-slate-600 hover:bg-slate-100'
-                          : 'text-slate-400'
+                          ? 'text-muted-foreground hover:bg-muted'
+                          : 'text-muted-foreground'
                     )}
                   >
                     <span
                       className={cn(
                         'grid size-5 shrink-0 place-items-center rounded-full text-[10px] font-bold ring-1',
                         active
-                          ? 'bg-[#5B21B6] text-white ring-[#5B21B6]'
+                          ? 'bg-[#2563EB] text-white ring-[#2563EB]'
                           : done
                             ? 'bg-slate-900 text-white ring-slate-900'
-                            : 'bg-slate-50 text-slate-400 ring-slate-200'
+                            : 'bg-muted text-muted-foreground ring-border'
                       )}
                     >
                       {done ? <Check className="size-3" aria-hidden="true" /> : index + 1}
@@ -862,7 +862,7 @@ export function ProductForm({
                     {wizardStep.label}
                   </button>
                   {index < wizardSteps.length - 1 && (
-                    <span className="h-px w-3 bg-slate-200 sm:w-5" aria-hidden="true" />
+                    <span className="h-px w-3 bg-border sm:w-5" aria-hidden="true" />
                   )}
                 </li>
               )
@@ -872,7 +872,7 @@ export function ProductForm({
       ) : (
         <nav
           aria-label="Secciones del formulario"
-          className="sticky top-16 z-20 -mx-1 overflow-x-auto rounded-xl border border-slate-200/80 bg-white p-1.5 shadow-xs"
+          className="sticky top-16 z-20 -mx-1 overflow-x-auto rounded-xl border border-border/80 bg-card p-1.5 shadow-xs"
         >
           <div className="flex min-w-max gap-0.5">
             {formSections.map((section) => {
@@ -882,9 +882,9 @@ export function ProductForm({
                   key={section.id}
                   type="button"
                   onClick={() => scrollToSection(section.id)}
-                  className="inline-flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-[11px] font-semibold text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
+                  className="inline-flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-[11px] font-semibold text-muted-foreground transition hover:bg-muted hover:text-foreground"
                 >
-                  <Icon className="size-3.5 text-slate-400" aria-hidden="true" />
+                  <Icon className="size-3.5 text-muted-foreground" aria-hidden="true" />
                   {section.label}
                 </button>
               )
@@ -959,7 +959,7 @@ export function ProductForm({
               <div className="grid gap-4 sm:col-span-2 sm:grid-cols-3">
                 <Field label="SKU" htmlFor="product-sku" required error={errors.sku}>
                   <div className="relative">
-                    <Barcode className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+                    <Barcode className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                     <input
                       id="product-sku"
                       value={draft.sku}
@@ -1172,13 +1172,13 @@ export function ProductForm({
                 </div>
               </Field>
 
-              <div className="rounded-xl border border-slate-200 bg-slate-50 p-3 sm:col-span-2">
-                <p className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-700">
-                  <FolderTree className="size-3.5 text-slate-400" aria-hidden="true" />
+              <div className="rounded-xl border border-border bg-muted p-3 sm:col-span-2">
+                <p className="flex items-center gap-1.5 text-[11px] font-semibold text-foreground/80">
+                  <FolderTree className="size-3.5 text-muted-foreground" aria-hidden="true" />
                   Crea la taxonomía sin salir del formulario
                 </p>
-                <p className="mt-1 text-[10.5px] leading-relaxed text-slate-500">
-                  Usa el botón <span className="font-semibold text-slate-700">+</span> junto a
+                <p className="mt-1 text-[10.5px] leading-relaxed text-muted-foreground">
+                  Usa el botón <span className="font-semibold text-foreground/80">+</span> junto a
                   categoría, marca, subcategoría o tipo para agregarlos al instante y quedarán
                   seleccionados. También puedes administrarlos desde{' '}
                   <Link href="/categorias" target="_blank" className="font-semibold underline underline-offset-2">
@@ -1210,7 +1210,7 @@ export function ProductForm({
                 hint="Opcional. Déjalo vacío o en 0 si el producto se cotiza."
               >
                 <div className="relative">
-                  <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-400">
+                  <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-muted-foreground">
                     {settings.currency === 'PEN' ? 'S/' : '$'}
                   </span>
                   <input
@@ -1233,7 +1233,7 @@ export function ProductForm({
                 hint="Opcional. Solo visible en el panel."
               >
                 <div className="relative">
-                  <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-slate-400">
+                  <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-xs font-semibold text-muted-foreground">
                     {settings.currency === 'PEN' ? 'S/' : '$'}
                   </span>
                   <input
@@ -1249,18 +1249,18 @@ export function ProductForm({
                 </div>
               </Field>
 
-              <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-slate-200 bg-slate-50/60 p-4 transition hover:border-slate-300 sm:col-span-2">
+              <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-border bg-muted/60 p-4 transition hover:border-input sm:col-span-2">
                 <input
                   type="checkbox"
                   checked={draft.showPrice}
                   onChange={(event) => setField('showPrice', event.target.checked)}
-                  className="mt-0.5 size-4 rounded border-slate-300 accent-[#5B21B6]"
+                  className="mt-0.5 size-4 rounded border-input accent-[#2563EB]"
                 />
                 <span>
-                  <span className="block text-xs font-bold text-slate-900">
+                  <span className="block text-xs font-bold text-foreground">
                     Mostrar precio en el catálogo público
                   </span>
-                  <span className="mt-0.5 block text-[10.5px] leading-relaxed text-slate-500">
+                  <span className="mt-0.5 block text-[10.5px] leading-relaxed text-muted-foreground">
                     Si lo desactivas, la tienda mostrará “A cotizar” y el botón para solicitar una
                     cotización, sin exponer el precio referencial.
                   </span>
@@ -1340,10 +1340,10 @@ export function ProductForm({
               </Field>
 
               {margin !== null && (
-                <div className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-slate-50/70 px-4 py-3 sm:col-span-2">
+                <div className="flex items-center justify-between gap-3 rounded-xl border border-border bg-muted/70 px-4 py-3 sm:col-span-2">
                   <div>
-                    <p className="text-[11px] font-semibold text-slate-600">Margen estimado</p>
-                    <p className="mt-0.5 text-[10.5px] text-slate-400">
+                    <p className="text-[11px] font-semibold text-muted-foreground">Margen estimado</p>
+                    <p className="mt-0.5 text-[10.5px] text-muted-foreground">
                       {formatCurrency(priceNumber - (costNumber ?? 0), settings.currency)} de utilidad por unidad
                     </p>
                   </div>
@@ -1351,8 +1351,8 @@ export function ProductForm({
                     className={cn(
                       'rounded-lg px-2.5 py-1 text-sm font-bold tabular-nums',
                       margin >= 20
-                        ? 'bg-emerald-50 text-emerald-700'
-                        : 'bg-amber-50 text-amber-700'
+                        ? 'bg-emerald-500/10 text-success-ink'
+                        : 'bg-amber-500/10 text-warning-ink'
                     )}
                   >
                     {margin.toFixed(1)}%
@@ -1379,7 +1379,7 @@ export function ProductForm({
             <div className="space-y-2.5">
               {draft.specs.map((spec, index) => (
                 <div key={index} className="flex items-center gap-2">
-                  <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-slate-50 text-[10px] font-bold text-slate-400 ring-1 ring-slate-100">
+                  <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-muted text-[10px] font-bold text-muted-foreground ring-1 ring-border">
                     {index + 1}
                   </span>
                   <input
@@ -1393,7 +1393,7 @@ export function ProductForm({
                       type="button"
                       onClick={() => moveSpec(index, -1)}
                       disabled={index === 0}
-                      className="grid size-7 place-items-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 disabled:opacity-30"
+                      className="grid size-7 place-items-center rounded-lg text-muted-foreground transition hover:bg-muted hover:text-foreground/80 disabled:opacity-30"
                       aria-label={`Mover especificación ${index + 1} hacia arriba`}
                     >
                       <ChevronUp className="size-3.5" />
@@ -1402,7 +1402,7 @@ export function ProductForm({
                       type="button"
                       onClick={() => moveSpec(index, 1)}
                       disabled={index === draft.specs.length - 1}
-                      className="grid size-7 place-items-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700 disabled:opacity-30"
+                      className="grid size-7 place-items-center rounded-lg text-muted-foreground transition hover:bg-muted hover:text-foreground/80 disabled:opacity-30"
                       aria-label={`Mover especificación ${index + 1} hacia abajo`}
                     >
                       <ChevronDown className="size-3.5" />
@@ -1410,7 +1410,7 @@ export function ProductForm({
                     <button
                       type="button"
                       onClick={() => removeSpec(index)}
-                      className="grid size-8 shrink-0 place-items-center rounded-lg text-slate-400 transition hover:bg-red-50 hover:text-red-600"
+                      className="grid size-8 shrink-0 place-items-center rounded-lg text-muted-foreground transition hover:bg-red-500/10 hover:text-danger-ink"
                       aria-label={`Eliminar especificación ${index + 1}`}
                     >
                       <Trash2 className="size-3.5" />
@@ -1418,7 +1418,7 @@ export function ProductForm({
                   </div>
                 </div>
               ))}
-              <p className="text-[10.5px] leading-relaxed text-slate-400">
+              <p className="text-[10.5px] leading-relaxed text-muted-foreground">
                 Consejo: usa viñetas cortas, por ejemplo “AMD Ryzen 5 7520U” o “16 GB RAM · 512 GB SSD”.
               </p>
             </div>
@@ -1437,8 +1437,8 @@ export function ProductForm({
                 className={cn(
                   'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-semibold ring-1 ring-inset',
                   storedImageBytes > 2_000_000
-                    ? 'bg-amber-50 text-amber-700 ring-amber-600/20'
-                    : 'bg-slate-50 text-slate-500 ring-slate-200'
+                    ? 'bg-amber-500/10 text-warning-ink ring-amber-600/20'
+                    : 'bg-muted text-muted-foreground ring-border'
                 )}
                 title="Peso aproximado de las imágenes guardadas en este navegador"
               >
@@ -1463,10 +1463,10 @@ export function ProductForm({
                   className={cn(
                     'group relative aspect-[4/3] overflow-hidden rounded-2xl border-2 border-dashed transition',
                     draggingImage
-                      ? 'border-[#A78BFA] bg-[#F5F3FF]/60'
+                      ? 'border-brand-ink/50 bg-tint-brand/60'
                       : draft.image
-                        ? 'border-transparent bg-slate-50 ring-1 ring-inset ring-slate-200'
-                        : 'border-slate-200 bg-slate-50/60 hover:border-[#C4B5FD] hover:bg-[#F5F3FF]/30'
+                        ? 'border-transparent bg-muted ring-1 ring-inset ring-border'
+                        : 'border-border bg-muted/60 hover:border-brand-ink/40 hover:bg-tint-brand/30'
                   )}
                 >
                   {draft.image ? (
@@ -1476,13 +1476,13 @@ export function ProductForm({
                         alt={draft.imageAlt || draft.name || 'Producto'}
                         className="size-full rounded-none object-contain ring-0"
                       />
-                      <span className="absolute left-3 top-3 rounded-md bg-white/90 px-1.5 py-0.5 text-[9.5px] font-bold uppercase tracking-[0.12em] text-slate-500 shadow-sm">
+                      <span className="absolute left-3 top-3 rounded-md bg-card/90 px-1.5 py-0.5 text-[9.5px] font-bold uppercase tracking-[0.12em] text-muted-foreground shadow-sm">
                         Portada
                       </span>
                       <button
                         type="button"
                         onClick={() => setDraft((prev) => ({ ...prev, image: '' }))}
-                        className="absolute right-2.5 top-2.5 grid size-7 place-items-center rounded-lg bg-white/90 text-slate-500 shadow-sm transition hover:text-red-600"
+                        className="absolute right-2.5 top-2.5 grid size-7 place-items-center rounded-lg bg-card/90 text-muted-foreground shadow-sm transition hover:text-danger-ink"
                         aria-label="Quitar imagen principal"
                       >
                         <X className="size-3.5" />
@@ -1490,7 +1490,7 @@ export function ProductForm({
                       <button
                         type="button"
                         onClick={() => requestCrop(draft.image, { kind: 'main' })}
-                        className="absolute inset-x-3 bottom-3 inline-flex h-9 items-center justify-center gap-2 rounded-xl bg-white/95 text-[11px] font-semibold text-slate-800 shadow-lg backdrop-blur transition hover:bg-white"
+                        className="absolute inset-x-3 bottom-3 inline-flex h-9 items-center justify-center gap-2 rounded-xl bg-card/95 text-[11px] font-semibold text-foreground shadow-lg backdrop-blur transition hover:bg-card"
                       >
                         <Crop className="size-3.5" aria-hidden="true" />
                         Ajustar encuadre
@@ -1498,13 +1498,13 @@ export function ProductForm({
                     </>
                   ) : (
                     <label className="flex size-full cursor-pointer flex-col items-center justify-center gap-2 px-6 text-center">
-                      <span className="grid size-12 place-items-center rounded-2xl bg-white text-slate-400 shadow-xs ring-1 ring-slate-200">
+                      <span className="grid size-12 place-items-center rounded-2xl bg-card text-muted-foreground shadow-xs ring-1 ring-border">
                         <ImagePlus className="size-5" aria-hidden="true" />
                       </span>
-                      <span className="text-xs font-semibold text-slate-700">
+                      <span className="text-xs font-semibold text-foreground/80">
                         Arrastra la imagen principal
                       </span>
-                      <span className="max-w-[240px] text-[10.5px] leading-relaxed text-slate-400">
+                      <span className="max-w-[240px] text-[10.5px] leading-relaxed text-muted-foreground">
                         o haz clic para seleccionar un archivo JPG, PNG o WebP
                       </span>
                       <input
@@ -1521,8 +1521,8 @@ export function ProductForm({
                   )}
 
                   {draggingImage && (
-                    <div className="pointer-events-none absolute inset-0 grid place-items-center bg-[#5B21B6]/10 ring-2 ring-inset ring-[#5B21B6]">
-                      <span className="rounded-xl bg-white px-3 py-2 text-xs font-semibold text-[#5B21B6] shadow-lg">
+                    <div className="pointer-events-none absolute inset-0 grid place-items-center bg-[#2563EB]/10 ring-2 ring-inset ring-[#2563EB]">
+                      <span className="rounded-xl bg-card px-3 py-2 text-xs font-semibold text-brand-ink shadow-lg">
                         Suelta para {draft.image ? 'reemplazar la portada' : 'subir la imagen'}
                       </span>
                     </div>
@@ -1557,7 +1557,7 @@ export function ProductForm({
                       <button
                         type="button"
                         onClick={() => setDraft((prev) => ({ ...prev, image: '' }))}
-                        className="inline-flex h-9 items-center gap-1.5 rounded-xl px-2.5 text-xs font-semibold text-slate-500 transition hover:bg-red-50 hover:text-red-600"
+                        className="inline-flex h-9 items-center gap-1.5 rounded-xl px-2.5 text-xs font-semibold text-muted-foreground transition hover:bg-red-500/10 hover:text-danger-ink"
                       >
                         <X className="size-3.5" aria-hidden="true" />
                         Quitar
@@ -1566,7 +1566,7 @@ export function ProductForm({
                   )}
                 </div>
 
-                <p className="mt-2 text-[10px] leading-relaxed text-slate-400">
+                <p className="mt-2 text-[10px] leading-relaxed text-muted-foreground">
                   {draft.image.startsWith('data:')
                     ? 'Imagen optimizada y guardada en este navegador.'
                     : draft.image
@@ -1582,7 +1582,7 @@ export function ProductForm({
                   hint="Alternativa a la subida. Se usa tal cual, sin optimizar."
                 >
                   <div className="relative">
-                    <Link2 className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+                    <Link2 className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                     <input
                       id="product-image"
                       value={draft.image.startsWith('data:') ? '' : draft.image}
@@ -1609,9 +1609,9 @@ export function ProductForm({
                   />
                 </Field>
 
-                <div className="flex items-start gap-2.5 rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-3">
-                  <Info className="mt-0.5 size-3.5 shrink-0 text-slate-400" aria-hidden="true" />
-                  <p className="text-[10.5px] leading-relaxed text-slate-500">
+                <div className="flex items-start gap-2.5 rounded-xl border border-border bg-muted px-3.5 py-3">
+                  <Info className="mt-0.5 size-3.5 shrink-0 text-muted-foreground" aria-hidden="true" />
+                  <p className="text-[10.5px] leading-relaxed text-muted-foreground">
                     Al subir un archivo se optimiza automáticamente en 4:3 y queda listo. Si
                     quieres, usa “Encuadrar” para moverlo o acercarlo. El panel guarda las
                     imágenes en este navegador, así que evita acumular fotos pesadas.
@@ -1620,13 +1620,13 @@ export function ProductForm({
               </div>
             </div>
 
-            <div className="border-t border-slate-100 pt-5">
+            <div className="border-t border-border pt-5">
               <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
                 <div>
-                  <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-slate-500">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
                     Galería · {draft.images.length}
                   </p>
-                  <p className="mt-0.5 text-[10.5px] text-slate-400">
+                  <p className="mt-0.5 text-[10.5px] text-muted-foreground">
                     Usa la estrella para convertir una imagen en la portada del producto.
                   </p>
                 </div>
@@ -1651,7 +1651,7 @@ export function ProductForm({
                 {draft.images.map((image, index) => (
                   <div
                     key={`${image.slice(0, 24)}-${index}`}
-                    className="group relative aspect-square overflow-hidden rounded-xl border border-slate-200 bg-slate-50"
+                    className="group relative aspect-square overflow-hidden rounded-xl border border-border bg-muted"
                   >
                     <ProductThumb
                       src={image}
@@ -1661,7 +1661,7 @@ export function ProductForm({
                     <button
                       type="button"
                       onClick={() => requestCrop(image, { kind: 'gallery', index })}
-                      className="absolute left-1.5 top-1.5 grid size-6 place-items-center rounded-md bg-white/90 text-slate-500 shadow-sm transition hover:text-[#5B21B6]"
+                      className="absolute left-1.5 top-1.5 grid size-6 place-items-center rounded-md bg-card/90 text-muted-foreground shadow-sm transition hover:text-brand-ink"
                       aria-label={`Ajustar encuadre de la imagen ${index + 1}`}
                     >
                       <Crop className="size-3" />
@@ -1669,7 +1669,7 @@ export function ProductForm({
                     <button
                       type="button"
                       onClick={() => removeGalleryImage(index)}
-                      className="absolute right-1.5 top-1.5 grid size-6 place-items-center rounded-md bg-white/90 text-slate-500 shadow-sm transition hover:text-red-600"
+                      className="absolute right-1.5 top-1.5 grid size-6 place-items-center rounded-md bg-card/90 text-muted-foreground shadow-sm transition hover:text-danger-ink"
                       aria-label={`Quitar imagen ${index + 1}`}
                     >
                       <X className="size-3" />
@@ -1678,7 +1678,7 @@ export function ProductForm({
                       <button
                         type="button"
                         onClick={() => useAsCover(index)}
-                        className="grid size-6 place-items-center rounded-md bg-white/90 text-slate-500 shadow-sm transition hover:text-amber-500"
+                        className="grid size-6 place-items-center rounded-md bg-card/90 text-muted-foreground shadow-sm transition hover:text-amber-500"
                         aria-label={`Usar la imagen ${index + 1} como portada`}
                         title="Usar como portada"
                       >
@@ -1689,7 +1689,7 @@ export function ProductForm({
                           type="button"
                           onClick={() => moveGalleryImage(index, -1)}
                           disabled={index === 0}
-                          className="grid size-6 place-items-center rounded-md bg-white/90 text-slate-500 shadow-sm transition hover:text-slate-900 disabled:opacity-40"
+                          className="grid size-6 place-items-center rounded-md bg-card/90 text-muted-foreground shadow-sm transition hover:text-foreground disabled:opacity-40"
                           aria-label={`Mover imagen ${index + 1} a la izquierda`}
                         >
                           <ChevronLeft className="size-3" />
@@ -1698,7 +1698,7 @@ export function ProductForm({
                           type="button"
                           onClick={() => moveGalleryImage(index, 1)}
                           disabled={index === draft.images.length - 1}
-                          className="grid size-6 place-items-center rounded-md bg-white/90 text-slate-500 shadow-sm transition hover:text-slate-900 disabled:opacity-40"
+                          className="grid size-6 place-items-center rounded-md bg-card/90 text-muted-foreground shadow-sm transition hover:text-foreground disabled:opacity-40"
                           aria-label={`Mover imagen ${index + 1} a la derecha`}
                         >
                           <ChevronRight className="size-3" />
@@ -1708,7 +1708,7 @@ export function ProductForm({
                   </div>
                 ))}
 
-                <label className="flex aspect-square cursor-pointer flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-slate-200 bg-slate-50/60 text-slate-400 transition hover:border-[#C4B5FD] hover:bg-[#F5F3FF]/40 hover:text-[#6D28D9]">
+                <label className="flex aspect-square cursor-pointer flex-col items-center justify-center gap-1.5 rounded-xl border-2 border-dashed border-border bg-muted/60 text-muted-foreground transition hover:border-brand-ink/40 hover:bg-tint-brand/40 hover:text-brand-ink">
                   <ImagePlus className="size-5" aria-hidden="true" />
                   <span className="text-[10px] font-semibold">Añadir</span>
                   <input
@@ -1750,7 +1750,7 @@ export function ProductForm({
               </div>
 
               {storedImageBytes > 2_000_000 && (
-                <p className="mt-2 text-[10px] font-medium leading-relaxed text-amber-600">
+                <p className="mt-2 text-[10px] font-medium leading-relaxed text-warning-ink">
                   Las imágenes ocupan {formatBytes(storedImageBytes)} y se acercan al límite del
                   almacenamiento local. Considera usar URLs externas o reducir la galería.
                 </p>
@@ -1801,17 +1801,17 @@ export function ProductForm({
                 />
               </Field>
 
-              <div className="rounded-xl border border-slate-200 bg-white p-4 sm:col-span-2">
-                <p className="text-[9.5px] font-bold uppercase tracking-[0.16em] text-slate-400">
+              <div className="rounded-xl border border-border bg-card p-4 sm:col-span-2">
+                <p className="text-[9.5px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
                   Vista previa en buscadores
                 </p>
-                <p className="mt-2.5 truncate text-[11px] text-emerald-700">
+                <p className="mt-2.5 truncate text-[11px] text-success-ink">
                   fjsystems.pe › productos › {draft.slug || 'slug-del-producto'}
                 </p>
-                <p className="mt-1 line-clamp-2 text-[15px] font-medium leading-snug text-[#5B21B6]">
+                <p className="mt-1 line-clamp-2 text-[15px] font-medium leading-snug text-brand-ink">
                   {draft.seoTitle || draft.name || 'Título SEO del producto'}
                 </p>
-                <p className="mt-1 line-clamp-2 text-[11px] leading-relaxed text-slate-500">
+                <p className="mt-1 line-clamp-2 text-[11px] leading-relaxed text-muted-foreground">
                   {draft.seoDescription ||
                     draft.shortDescription ||
                     draft.description ||
@@ -1819,7 +1819,7 @@ export function ProductForm({
                 </p>
               </div>
 
-              <p className="flex items-start gap-1.5 text-[10px] leading-relaxed text-slate-400 sm:col-span-2">
+              <p className="flex items-start gap-1.5 text-[10px] leading-relaxed text-muted-foreground sm:col-span-2">
                 <Info className="mt-0.5 size-3.5 shrink-0" aria-hidden="true" />
                 El slug se edita en la sección Información general. La tienda pública usa este
                 contenido para la ficha del producto.
@@ -1871,9 +1871,9 @@ export function ProductForm({
                       'flex items-start gap-3 rounded-xl border p-4 text-left transition',
                       selected
                         ? archived
-                          ? 'border-amber-500 bg-amber-50/60 ring-2 ring-amber-500/15'
-                          : 'border-[#5B21B6] bg-[#F5F3FF]/60 ring-2 ring-[#5B21B6]/15'
-                        : 'border-slate-200 bg-white hover:border-slate-300'
+                          ? 'border-amber-500 bg-amber-500/10 ring-2 ring-amber-500/15'
+                          : 'border-[#2563EB] bg-tint-brand/60 ring-2 ring-[#2563EB]/15'
+                        : 'border-border bg-card hover:border-input'
                     )}
                   >
                     <span
@@ -1882,26 +1882,26 @@ export function ProductForm({
                         selected
                           ? archived
                             ? 'bg-amber-500 text-white ring-amber-500'
-                            : 'bg-[#5B21B6] text-white ring-[#5B21B6]'
-                          : 'bg-slate-50 text-slate-500 ring-slate-200'
+                            : 'bg-[#2563EB] text-white ring-[#2563EB]'
+                          : 'bg-muted text-muted-foreground ring-border'
                       )}
                     >
                       <Icon className="size-4" aria-hidden="true" />
                     </span>
                     <span className="min-w-0">
-                      <span className="flex items-center gap-2 text-xs font-bold text-slate-900">
+                      <span className="flex items-center gap-2 text-xs font-bold text-foreground">
                         {option.title}
                         {selected && (
                           <Check
                             className={cn(
                               'size-3.5',
-                              archived ? 'text-amber-600' : 'text-[#5B21B6]'
+                              archived ? 'text-warning-ink' : 'text-brand-ink'
                             )}
                             aria-hidden="true"
                           />
                         )}
                       </span>
-                      <span className="mt-1 block text-[10.5px] leading-relaxed text-slate-500">
+                      <span className="mt-1 block text-[10.5px] leading-relaxed text-muted-foreground">
                         {option.text}
                       </span>
                     </span>
@@ -1910,19 +1910,19 @@ export function ProductForm({
               })}
             </div>
 
-            <label className="mt-3 flex cursor-pointer items-start gap-3 rounded-xl border border-slate-200 bg-white p-4 transition hover:border-slate-300">
+            <label className="mt-3 flex cursor-pointer items-start gap-3 rounded-xl border border-border bg-card p-4 transition hover:border-input">
               <input
                 type="checkbox"
                 checked={draft.featured}
                 onChange={(event) => setField('featured', event.target.checked)}
-                className="mt-0.5 size-4 rounded border-slate-300 accent-[#5B21B6]"
+                className="mt-0.5 size-4 rounded border-input accent-[#2563EB]"
               />
               <span>
-                <span className="flex items-center gap-1.5 text-xs font-bold text-slate-900">
-                  <Star className="size-3.5 text-slate-400" aria-hidden="true" />
+                <span className="flex items-center gap-1.5 text-xs font-bold text-foreground">
+                  <Star className="size-3.5 text-muted-foreground" aria-hidden="true" />
                   Producto destacado
                 </span>
-                <span className="mt-0.5 block text-[10.5px] leading-relaxed text-slate-500">
+                <span className="mt-0.5 block text-[10.5px] leading-relaxed text-muted-foreground">
                   Resalta este producto en el catálogo y en el panel.
                 </span>
               </span>
@@ -1931,7 +1931,7 @@ export function ProductForm({
           )}
 
           {isWizard ? (
-            <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs">
+            <div className="rounded-2xl border border-border/80 bg-card p-4 shadow-xs">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <button
                   type="button"
@@ -1943,10 +1943,10 @@ export function ProductForm({
                   Anterior
                 </button>
                 <div className="order-first text-center sm:order-none sm:text-right">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
                     Paso {step + 1} de {wizardSteps.length}
                   </p>
-                  <p className="text-[11px] font-semibold text-slate-700">
+                  <p className="text-[11px] font-semibold text-foreground/80">
                     {currentWizardStep.label} · {currentWizardStep.description}
                   </p>
                 </div>
@@ -1973,10 +1973,10 @@ export function ProductForm({
               </div>
             </div>
           ) : (
-            <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs">
-              <p className="text-xs text-slate-500">
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-xs">
+              <p className="text-xs text-muted-foreground">
                 {dirty ? (
-                  <span className="font-semibold text-amber-600">Cambios sin guardar.</span>
+                  <span className="font-semibold text-warning-ink">Cambios sin guardar.</span>
                 ) : (
                   'Todos los cambios están guardados.'
                 )}
@@ -1995,16 +1995,16 @@ export function ProductForm({
         </div>
 
         <aside className="space-y-4 xl:sticky xl:top-28">
-          <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xs">
-            <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3">
-              <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-slate-500">
+          <div className="overflow-hidden rounded-2xl border border-border/80 bg-card shadow-xs">
+            <div className="flex items-center justify-between border-b border-border px-4 py-3">
+              <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
                 Vista previa
               </p>
               <StatusBadge status={draft.status} />
             </div>
 
             <div className="p-4">
-              <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-slate-50 ring-1 ring-inset ring-slate-200/70">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-muted ring-1 ring-inset ring-border/70">
                 <ProductThumb
                   src={draft.image}
                   alt={draft.name || 'Producto'}
@@ -2016,38 +2016,38 @@ export function ProductForm({
               </div>
 
               <div className="mt-3 flex items-center gap-1.5">
-                <span className="rounded-md bg-slate-100 px-1.5 py-0.5 text-[9.5px] font-bold uppercase tracking-wider text-slate-600">
+                <span className="rounded-md bg-muted px-1.5 py-0.5 text-[9.5px] font-bold uppercase tracking-wider text-muted-foreground">
                   {draft.brand || 'Marca'}
                 </span>
-                <span className="truncate text-[10.5px] font-medium text-slate-500">
+                <span className="truncate text-[10.5px] font-medium text-muted-foreground">
                   {draft.category || 'Categoría'}
                 </span>
               </div>
 
-              <h3 className="mt-2 line-clamp-2 min-h-[38px] font-heading text-sm font-bold leading-snug text-slate-900">
+              <h3 className="mt-2 line-clamp-2 min-h-[38px] font-heading text-sm font-bold leading-snug text-foreground">
                 {draft.name || 'Nombre del producto'}
               </h3>
-              <p className="mt-1 line-clamp-2 text-[10.5px] leading-relaxed text-slate-400">
+              <p className="mt-1 line-clamp-2 text-[10.5px] leading-relaxed text-muted-foreground">
                 {draft.shortDescription ||
                   draft.description ||
                   'El resumen del producto aparecerá aquí.'}
               </p>
 
               <div className="mt-3 flex items-end justify-between gap-2">
-                <p className="font-heading text-lg font-bold text-slate-900">
+                <p className="font-heading text-lg font-bold text-foreground">
                   {draft.showPrice && priceNumber > 0
                     ? formatCurrency(priceNumber, settings.currency)
                     : 'A cotizar'}
                 </p>
                 {priceNumber > 0 && !draft.showPrice ? (
-                  <span className="rounded-md bg-amber-50 px-1.5 py-0.5 text-[9.5px] font-semibold text-amber-700">
+                  <span className="rounded-md bg-amber-500/10 px-1.5 py-0.5 text-[9.5px] font-semibold text-warning-ink">
                     Precio no visible
                   </span>
                 ) : margin !== null ? (
                   <span
                     className={cn(
                       'text-[10px] font-semibold',
-                      margin >= 20 ? 'text-emerald-600' : 'text-amber-600'
+                      margin >= 20 ? 'text-success-ink' : 'text-warning-ink'
                     )}
                   >
                     {margin.toFixed(0)}% margen
@@ -2056,12 +2056,12 @@ export function ProductForm({
               </div>
 
               {draft.specs.filter(Boolean).length > 0 && (
-                <ul className="mt-3 space-y-1.5 border-t border-slate-100 pt-3">
+                <ul className="mt-3 space-y-1.5 border-t border-border pt-3">
                   {draft.specs
                     .filter((spec) => spec.trim())
                     .slice(0, 3)
                     .map((spec, index) => (
-                      <li key={`${spec}-${index}`} className="flex items-start gap-2 text-[10.5px] text-slate-500">
+                      <li key={`${spec}-${index}`} className="flex items-start gap-2 text-[10.5px] text-muted-foreground">
                         <span className="mt-1.5 size-1 shrink-0 rounded-full bg-slate-400" />
                         <span className="line-clamp-1">{spec}</span>
                       </li>
@@ -2069,23 +2069,23 @@ export function ProductForm({
                 </ul>
               )}
 
-              <div className="mt-3 flex items-center gap-1.5 rounded-lg bg-slate-50 px-2.5 py-2 text-[10px] text-slate-500">
+              <div className="mt-3 flex items-center gap-1.5 rounded-lg bg-muted px-2.5 py-2 text-[10px] text-muted-foreground">
                 <span className="size-1.5 rounded-full bg-slate-400" />
                 {availabilityLabels[draft.availability]} · {availabilityDescriptions[draft.availability]}
               </div>
             </div>
           </div>
 
-          <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs">
+          <div className="rounded-2xl border border-border/80 bg-card p-4 shadow-xs">
             <div className="flex items-center justify-between">
-              <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-slate-500">
+              <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
                 Calidad del registro
               </p>
-              <span className="text-xs font-bold tabular-nums text-slate-900">
+              <span className="text-xs font-bold tabular-nums text-foreground">
                 {completeness.percent}%
               </span>
             </div>
-            <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-slate-100">
+            <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-muted">
               <div
                 className={cn(
                   'h-full rounded-full transition-all duration-300',
@@ -2104,7 +2104,7 @@ export function ProductForm({
                   key={check.label}
                   className={cn(
                     'flex items-center gap-1.5 text-[10px]',
-                    check.done ? 'text-emerald-600' : 'text-slate-400'
+                    check.done ? 'text-success-ink' : 'text-muted-foreground'
                   )}
                 >
                   {check.done ? (
@@ -2119,35 +2119,35 @@ export function ProductForm({
           </div>
 
           {isEdit && product && (
-            <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs">
-              <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-slate-500">
+            <div className="rounded-2xl border border-border/80 bg-card p-4 shadow-xs">
+              <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
                 Registro
               </p>
               <dl className="mt-2.5 space-y-2 text-[10.5px]">
                 <div className="flex items-center justify-between gap-2">
-                  <dt className="text-slate-400">ID</dt>
-                  <dd className="truncate font-mono text-slate-600">{product.id}</dd>
+                  <dt className="text-muted-foreground">ID</dt>
+                  <dd className="truncate font-mono text-muted-foreground">{product.id}</dd>
                 </div>
                 <div className="flex items-center justify-between gap-2">
-                  <dt className="text-slate-400">Creado</dt>
-                  <dd className="text-slate-600">{formatDateTime(product.createdAt)}</dd>
+                  <dt className="text-muted-foreground">Creado</dt>
+                  <dd className="text-muted-foreground">{formatDateTime(product.createdAt)}</dd>
                 </div>
                 <div className="flex items-center justify-between gap-2">
-                  <dt className="text-slate-400">Actualizado</dt>
-                  <dd className="text-slate-600">{formatDateTime(product.updatedAt)}</dd>
+                  <dt className="text-muted-foreground">Actualizado</dt>
+                  <dd className="text-muted-foreground">{formatDateTime(product.updatedAt)}</dd>
                 </div>
               </dl>
             </div>
           )}
 
-          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+          <div className="rounded-2xl border border-border bg-muted p-4">
             <div className="flex items-start gap-2.5">
-              <CategoryGlyph label={draft.category || 'Catálogo'} className="mt-0.5 size-4 text-slate-400" />
+              <CategoryGlyph label={draft.category || 'Catálogo'} className="mt-0.5 size-4 text-muted-foreground" />
               <div>
-                <p className="text-[11px] font-bold text-slate-700">
+                <p className="text-[11px] font-bold text-foreground/80">
                   {catalogSource === 'api' ? 'Sincronizado con la API' : 'Guardado local'}
                 </p>
-                <p className="mt-0.5 text-[10.5px] leading-relaxed text-slate-500">
+                <p className="mt-0.5 text-[10.5px] leading-relaxed text-muted-foreground">
                   {catalogSource === 'api'
                     ? 'Los cambios de este producto se guardan en la base de datos del catálogo.'
                     : 'Este producto se almacena en este navegador mientras la API no esté disponible.'}
@@ -2184,7 +2184,7 @@ export function ProductForm({
         }
       >
         <label className="block space-y-1.5">
-          <span className="text-xs font-semibold text-slate-700">Nombre</span>
+          <span className="text-xs font-semibold text-foreground/80">Nombre</span>
           <input
             value={quickName}
             onChange={(event) => setQuickName(event.target.value)}

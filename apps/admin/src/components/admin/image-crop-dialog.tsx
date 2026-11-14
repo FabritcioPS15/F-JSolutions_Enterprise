@@ -253,7 +253,7 @@ export function ImageCropDialog({
       }
     >
       <div className="space-y-4">
-        <div className="relative overflow-hidden rounded-2xl bg-slate-100 ring-1 ring-inset ring-slate-200">
+        <div className="relative overflow-hidden rounded-2xl bg-muted ring-1 ring-inset ring-border">
           <canvas
             ref={canvasRef}
             width={OUTPUT_WIDTH}
@@ -289,8 +289,8 @@ export function ImageCropDialog({
           )}
 
           {status === 'loading' && (
-            <div className="absolute inset-0 grid place-items-center bg-slate-100">
-              <div className="flex flex-col items-center gap-2 text-slate-400">
+            <div className="absolute inset-0 grid place-items-center bg-muted">
+              <div className="flex flex-col items-center gap-2 text-muted-foreground">
                 <Loader2 className="size-6 animate-spin" aria-hidden="true" />
                 <p className="text-[11px] font-medium">Cargando imagen…</p>
               </div>
@@ -298,10 +298,10 @@ export function ImageCropDialog({
           )}
 
           {status === 'error' && (
-            <div className="absolute inset-0 grid place-items-center bg-slate-100 px-6">
-              <div className="flex max-w-sm flex-col items-center gap-2 text-center text-slate-500">
+            <div className="absolute inset-0 grid place-items-center bg-muted px-6">
+              <div className="flex max-w-sm flex-col items-center gap-2 text-center text-muted-foreground">
                 <AlertTriangle className="size-6 text-amber-500" aria-hidden="true" />
-                <p className="text-xs font-semibold text-slate-700">No se pudo cargar la imagen</p>
+                <p className="text-xs font-semibold text-foreground/80">No se pudo cargar la imagen</p>
                 <p className="text-[11px] leading-relaxed">
                   Revisa que la URL sea accesible o descarga el archivo y súbelo desde el panel.
                 </p>
@@ -311,7 +311,7 @@ export function ImageCropDialog({
         </div>
 
         {locked && (
-          <div className="flex items-start gap-2.5 rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-3 text-[11px] leading-relaxed text-amber-800">
+          <div className="flex items-start gap-2.5 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3.5 py-3 text-[11px] leading-relaxed text-warning-ink">
             <AlertTriangle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
             <p>
               Esta imagen está alojada en otro sitio y no permite procesarse en el navegador.
@@ -320,13 +320,13 @@ export function ImageCropDialog({
           </div>
         )}
 
-        <div className="flex flex-wrap items-center gap-3 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5">
+        <div className="flex flex-wrap items-center gap-3 rounded-xl border border-border bg-muted px-3 py-2.5">
           <div className="flex items-center gap-1">
             <button
               type="button"
               onClick={() => rotate(-1)}
               disabled={status !== 'ready' || locked}
-              className="grid size-8 place-items-center rounded-lg text-slate-500 transition hover:bg-white hover:text-slate-900 hover:shadow-xs disabled:opacity-30"
+              className="grid size-8 place-items-center rounded-lg text-muted-foreground transition hover:bg-card hover:text-foreground hover:shadow-xs disabled:opacity-30"
               aria-label="Rotar 90 grados a la izquierda"
             >
               <RotateCcw className="size-4" />
@@ -335,21 +335,21 @@ export function ImageCropDialog({
               type="button"
               onClick={() => rotate(1)}
               disabled={status !== 'ready' || locked}
-              className="grid size-8 place-items-center rounded-lg text-slate-500 transition hover:bg-white hover:text-slate-900 hover:shadow-xs disabled:opacity-30"
+              className="grid size-8 place-items-center rounded-lg text-muted-foreground transition hover:bg-card hover:text-foreground hover:shadow-xs disabled:opacity-30"
               aria-label="Rotar 90 grados a la derecha"
             >
               <RotateCw className="size-4" />
             </button>
           </div>
 
-          <span className="hidden h-5 w-px bg-slate-200 sm:block" aria-hidden="true" />
+          <span className="hidden h-5 w-px bg-border sm:block" aria-hidden="true" />
 
           <div className="flex min-w-[190px] flex-1 items-center gap-2">
             <button
               type="button"
               onClick={() => updateZoom(zoom - 0.1)}
               disabled={status !== 'ready' || locked || zoom <= MIN_ZOOM}
-              className="grid size-7 place-items-center rounded-lg text-slate-500 transition hover:bg-white hover:text-slate-900 disabled:opacity-30"
+              className="grid size-7 place-items-center rounded-lg text-muted-foreground transition hover:bg-card hover:text-foreground disabled:opacity-30"
               aria-label="Reducir zoom"
             >
               <Minus className="size-3.5" />
@@ -362,19 +362,19 @@ export function ImageCropDialog({
               value={zoom}
               onChange={(event) => updateZoom(Number(event.target.value))}
               disabled={status !== 'ready' || locked}
-              className="h-1.5 flex-1 cursor-pointer accent-[#5B21B6] disabled:opacity-40"
+              className="h-1.5 flex-1 cursor-pointer accent-[#2563EB] disabled:opacity-40"
               aria-label="Zoom de la imagen"
             />
             <button
               type="button"
               onClick={() => updateZoom(zoom + 0.1)}
               disabled={status !== 'ready' || locked || zoom >= MAX_ZOOM}
-              className="grid size-7 place-items-center rounded-lg text-slate-500 transition hover:bg-white hover:text-slate-900 disabled:opacity-30"
+              className="grid size-7 place-items-center rounded-lg text-muted-foreground transition hover:bg-card hover:text-foreground disabled:opacity-30"
               aria-label="Aumentar zoom"
             >
               <Plus className="size-3.5" />
             </button>
-            <span className="w-10 text-right text-[11px] font-semibold tabular-nums text-slate-500">
+            <span className="w-10 text-right text-[11px] font-semibold tabular-nums text-muted-foreground">
               {Math.round(zoom * 100)}%
             </span>
           </div>
@@ -383,7 +383,7 @@ export function ImageCropDialog({
             type="button"
             onClick={reset}
             disabled={status !== 'ready' || locked}
-            className="inline-flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-[11px] font-semibold text-slate-500 transition hover:bg-white hover:text-slate-900 hover:shadow-xs disabled:opacity-30"
+            className="inline-flex h-8 items-center gap-1.5 rounded-lg px-2.5 text-[11px] font-semibold text-muted-foreground transition hover:bg-card hover:text-foreground hover:shadow-xs disabled:opacity-30"
           >
             <RefreshCw className="size-3.5" aria-hidden="true" />
             Restablecer

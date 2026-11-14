@@ -53,6 +53,7 @@ export const moduleByHref: Record<string, string> = {
   '/cotizaciones': 'quotes',
   '/pedidos': 'orders',
   '/solicitudes': 'requests',
+  '/reclamaciones': 'complaints',
   '/servicios': 'services',
   '/proyectos': 'projects',
   '/usuarios': 'users',

@@ -231,8 +231,8 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
 
     return (
       <div className="mt-6 space-y-4">
-        <div className="flex items-start gap-2.5 rounded-xl border border-slate-200 bg-slate-50/80 px-3.5 py-3">
-          <span className="mt-0.5 grid size-7 shrink-0 place-items-center rounded-lg bg-white text-[#5B21B6] ring-1 ring-slate-200">
+        <div className="flex items-start gap-2.5 rounded-xl border border-border bg-muted/80 px-3.5 py-3">
+          <span className="mt-0.5 grid size-7 shrink-0 place-items-center rounded-lg bg-card text-brand-ink ring-1 ring-border">
             {challenge.method === 'TOTP' ? (
               <KeyRound className="size-4" aria-hidden="true" />
             ) : (
@@ -240,17 +240,17 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
             )}
           </span>
           <div className="min-w-0">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-500">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
               Verificación en dos pasos
             </p>
-            <p className="mt-1 text-[12px] leading-relaxed text-slate-600">{methodLabel}</p>
+            <p className="mt-1 text-[12px] leading-relaxed text-muted-foreground">{methodLabel}</p>
           </div>
         </div>
 
         {error && (
           <div
             role="alert"
-            className="flex items-start gap-2.5 rounded-xl border border-red-200 bg-red-50 px-3.5 py-3 text-[12px] leading-relaxed text-red-700"
+            className="flex items-start gap-2.5 rounded-xl border border-red-500/30 bg-red-500/10 px-3.5 py-3 text-[12px] leading-relaxed text-danger-ink"
           >
             <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
             <p>{error}</p>
@@ -258,7 +258,7 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
         )}
 
         {info && (
-          <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-3.5 py-3 text-[12px] leading-relaxed text-emerald-800">
+          <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-3 text-[12px] leading-relaxed text-success-ink">
             {info}
           </div>
         )}
@@ -267,7 +267,7 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
           <div className="space-y-1.5">
             <label
               htmlFor="code"
-              className="block text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-500"
+              className="block text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground"
             >
               {useRecoveryCode ? 'Código de recuperación' : 'Código de verificación'}
             </label>
@@ -284,14 +284,14 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
               autoFocus
               maxLength={useRecoveryCode ? 20 : 6}
               placeholder={useRecoveryCode ? 'XXXX-XXXX' : '000000'}
-              className="h-12 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-center font-mono text-lg tracking-[0.4em] text-slate-900 outline-none transition placeholder:text-slate-300 focus:border-[#5B21B6] focus:ring-4 focus:ring-[#5B21B6]/10"
+              className="h-12 w-full rounded-xl border border-border bg-card px-3.5 text-center font-mono text-lg tracking-[0.4em] text-foreground outline-none transition placeholder:text-muted-foreground/60 focus:border-[#2563EB] focus:ring-4 focus:ring-[#2563EB]/10"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#2E1065] text-[13px] font-semibold text-white transition hover:bg-[#3B0764] focus:outline-none focus:ring-4 focus:ring-[#5B21B6]/25 disabled:cursor-not-allowed disabled:opacity-60 sm:h-10"
+            className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#172554] text-[13px] font-semibold text-white transition hover:bg-[#172554] focus:outline-none focus:ring-4 focus:ring-[#2563EB]/25 disabled:cursor-not-allowed disabled:opacity-60 sm:h-10"
           >
             {loading ? (
               <>
@@ -312,7 +312,7 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
             type="button"
             onClick={resetToCredentials}
             disabled={loading}
-            className="inline-flex items-center gap-1.5 font-medium text-slate-500 transition hover:text-slate-800 disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 font-medium text-muted-foreground transition hover:text-foreground disabled:opacity-50"
           >
             <ArrowLeft className="size-3.5" aria-hidden="true" />
             Volver
@@ -324,7 +324,7 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
                 type="button"
                 onClick={() => void handleResend()}
                 disabled={loading || resendIn > 0}
-                className="inline-flex items-center gap-1.5 font-semibold text-[#5B21B6] transition hover:text-[#4C1D95] disabled:cursor-not-allowed disabled:text-slate-400"
+                className="inline-flex items-center gap-1.5 font-semibold text-brand-ink transition hover:text-brand-ink disabled:cursor-not-allowed disabled:text-muted-foreground"
               >
                 <RefreshCw className="size-3.5" aria-hidden="true" />
                 {resendIn > 0 ? `Reenviar en ${resendIn} s` : 'Reenviar código'}
@@ -338,7 +338,7 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
                 setError(null)
                 setInfo(null)
               }}
-              className="font-medium text-slate-500 underline-offset-2 transition hover:text-slate-800 hover:underline"
+              className="font-medium text-muted-foreground underline-offset-2 transition hover:text-foreground hover:underline"
             >
               {useRecoveryCode ? 'Usar código de la app' : 'Usar código de recuperación'}
             </button>
@@ -353,7 +353,7 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
       {error && (
         <div
           role="alert"
-          className="flex items-start gap-2.5 rounded-xl border border-red-200 bg-red-50 px-3.5 py-3 text-[12px] leading-relaxed text-red-700"
+          className="flex items-start gap-2.5 rounded-xl border border-red-500/30 bg-red-500/10 px-3.5 py-3 text-[12px] leading-relaxed text-danger-ink"
         >
           <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
           <p>{error}</p>
@@ -361,7 +361,7 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
       )}
 
       <div className="space-y-1.5">
-        <label htmlFor="email" className="block text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-500">
+        <label htmlFor="email" className="block text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
           Correo electrónico
         </label>
         <input
@@ -373,12 +373,12 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           placeholder="nombre@fjsolutions.pe"
-          className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3.5 text-[16px] text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-[#5B21B6] focus:ring-4 focus:ring-[#5B21B6]/10 sm:h-10 sm:text-[13px]"
+          className="h-11 w-full rounded-xl border border-border bg-card px-3.5 text-[16px] text-foreground outline-none transition placeholder:text-muted-foreground focus:border-[#2563EB] focus:ring-4 focus:ring-[#2563EB]/10 sm:h-10 sm:text-[13px]"
         />
       </div>
 
       <div className="space-y-1.5">
-        <label htmlFor="password" className="block text-[11px] font-semibold uppercase tracking-[0.08em] text-slate-500">
+        <label htmlFor="password" className="block text-[11px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">
           Contraseña
         </label>
         <div className="relative">
@@ -391,13 +391,13 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
             value={password}
             onChange={(event) => setPassword(event.target.value)}
             placeholder="Tu contraseña"
-            className="h-11 w-full rounded-xl border border-slate-200 bg-white pl-3.5 pr-10 text-[16px] text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-[#5B21B6] focus:ring-4 focus:ring-[#5B21B6]/10 sm:h-10 sm:text-[13px]"
+            className="h-11 w-full rounded-xl border border-border bg-card pl-3.5 pr-10 text-[16px] text-foreground outline-none transition placeholder:text-muted-foreground focus:border-[#2563EB] focus:ring-4 focus:ring-[#2563EB]/10 sm:h-10 sm:text-[13px]"
           />
           <button
             type="button"
             onClick={() => setShowPassword((prev) => !prev)}
             aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
-            className="absolute right-1.5 top-1/2 grid size-8 -translate-y-1/2 place-items-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
+            className="absolute right-1.5 top-1/2 grid size-8 -translate-y-1/2 place-items-center rounded-lg text-muted-foreground transition hover:bg-muted hover:text-muted-foreground"
           >
             {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
           </button>
@@ -407,7 +407,7 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
       <button
         type="submit"
         disabled={loading}
-        className="mt-2 inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#2E1065] text-[13px] font-semibold text-white transition hover:bg-[#3B0764] focus:outline-none focus:ring-4 focus:ring-[#5B21B6]/25 disabled:cursor-not-allowed disabled:opacity-60 sm:h-10"
+        className="mt-2 inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#172554] text-[13px] font-semibold text-white transition hover:bg-[#172554] focus:outline-none focus:ring-4 focus:ring-[#2563EB]/25 disabled:cursor-not-allowed disabled:opacity-60 sm:h-10"
       >
         {loading ? (
           <>
@@ -429,18 +429,18 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
             onClick={() => setDemoOpen((value) => !value)}
             aria-expanded={demoOpen}
             aria-controls="login-dev-panel"
-            className="flex w-full items-center justify-between gap-2 rounded-xl border border-dashed border-slate-300 bg-slate-50/70 px-3 py-2 text-left transition hover:border-slate-400 hover:bg-slate-50 focus:outline-none focus-visible:ring-4 focus-visible:ring-[#5B21B6]/15"
+            className="flex w-full items-center justify-between gap-2 rounded-xl border border-dashed border-input bg-muted/70 px-3 py-2 text-left transition hover:border-slate-400 hover:bg-muted focus:outline-none focus-visible:ring-4 focus-visible:ring-[#2563EB]/15"
           >
-            <span className="inline-flex items-center gap-1.5 whitespace-nowrap text-[9px] font-bold uppercase tracking-[0.12em] text-slate-400 min-[380px]:text-[10px] min-[380px]:tracking-[0.16em]">
+            <span className="inline-flex items-center gap-1.5 whitespace-nowrap text-[9px] font-bold uppercase tracking-[0.12em] text-muted-foreground min-[380px]:text-[10px] min-[380px]:tracking-[0.16em]">
               <KeyRound className="size-3.5 shrink-0" aria-hidden="true" />
               Acceso de desarrollo
             </span>
             <span className="inline-flex shrink-0 items-center gap-1.5">
-              <span className="whitespace-nowrap rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-amber-700">
+              <span className="whitespace-nowrap rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-warning-ink">
                 Demo público
               </span>
               <ChevronUp
-                className={`size-4 text-slate-400 transition-transform duration-200 ${
+                className={`size-4 text-muted-foreground transition-transform duration-200 ${
                   demoOpen ? 'rotate-180' : ''
                 }`}
                 aria-hidden="true"
@@ -453,33 +453,33 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
               id="login-dev-panel"
               role="region"
               aria-label="Acceso de demostración"
-              className="absolute inset-x-0 bottom-[calc(100%+0.5rem)] z-30 rounded-xl border border-slate-200 bg-white p-3.5 shadow-[0_20px_45px_-20px_rgba(15,23,42,0.35)]"
+              className="absolute inset-x-0 bottom-[calc(100%+0.5rem)] z-30 rounded-xl border border-border bg-card p-3.5 shadow-[0_20px_45px_-20px_rgba(15,23,42,0.35)]"
             >
               <div className="flex items-center justify-between gap-2">
-                <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">
+                <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
                   Acceso de demostración
                 </p>
-                <span className="rounded-full border border-amber-200 bg-amber-50 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-amber-700">
+                <span className="rounded-full border border-amber-500/30 bg-amber-500/10 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-warning-ink">
                   Demo público
                 </span>
               </div>
               <dl className="mt-2 space-y-1 text-[11.5px]">
                 <div className="flex items-start justify-between gap-3">
-                  <dt className="shrink-0 text-slate-500">Correo</dt>
-                  <dd className="min-w-0 break-all text-right font-mono text-slate-800">
+                  <dt className="shrink-0 text-muted-foreground">Correo</dt>
+                  <dd className="min-w-0 break-all text-right font-mono text-foreground">
                     {demo.email}
                   </dd>
                 </div>
                 <div className="flex items-start justify-between gap-3">
-                  <dt className="shrink-0 text-slate-500">Contraseña</dt>
-                  <dd className="min-w-0 break-all text-right font-mono text-slate-800">
+                  <dt className="shrink-0 text-muted-foreground">Contraseña</dt>
+                  <dd className="min-w-0 break-all text-right font-mono text-foreground">
                     {demo.password ?? 'Usa la entrada directa'}
                   </dd>
                 </div>
               </dl>
               <a
                 href="/api/auth/dev-login"
-                className="mt-2.5 inline-flex h-8 w-full items-center justify-center gap-1.5 rounded-lg bg-[#2E1065] px-3 text-[11.5px] font-semibold text-white transition hover:bg-[#3B0764]"
+                className="mt-2.5 inline-flex h-8 w-full items-center justify-center gap-1.5 rounded-lg bg-[#172554] px-3 text-[11.5px] font-semibold text-white transition hover:bg-[#172554]"
               >
                 <LogIn className="size-3.5" aria-hidden="true" />
                 Entrar directamente
@@ -488,11 +488,11 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
                 type="button"
                 onClick={applyDemoCredentials}
                 disabled={loading || !demo.password}
-                className="mt-1.5 inline-flex h-8 w-full items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 text-[11.5px] font-semibold text-slate-700 transition hover:border-slate-300 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-60"
+                className="mt-1.5 inline-flex h-8 w-full items-center justify-center gap-1.5 rounded-lg border border-border bg-card px-3 text-[11.5px] font-semibold text-foreground/80 transition hover:border-input hover:bg-muted disabled:cursor-not-allowed disabled:opacity-60"
               >
                 Usar credenciales y entrar
               </button>
-              <p className="mt-2 text-[10px] leading-relaxed text-slate-400">
+              <p className="mt-2 text-[10px] leading-relaxed text-muted-foreground">
                 Cualquiera con este enlace puede entrar al panel. No lo dejes visible si el entorno
                 tiene datos reales.
               </p>

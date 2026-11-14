@@ -78,18 +78,18 @@ function ProductTile({
   return (
     <div
       className={cn(
-        'group flex flex-col overflow-hidden rounded-2xl border border-[#E2E8F0] bg-white transition duration-300 hover:border-[#2563EB]/30 hover:shadow-[0_18px_40px_-28px_rgba(15,23,42,0.35)]',
+        'group flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition duration-300 hover:border-[#2563EB]/30 hover:shadow-[0_18px_40px_-28px_rgba(15,23,42,0.35)]',
         large ? 'col-span-2' : '',
       )}
     >
       <div
         className={cn(
-          'relative m-2.5 mb-0 overflow-hidden rounded-xl border border-[#EEF2F7] bg-[#F8FAFC]',
+          'relative m-2.5 mb-0 overflow-hidden rounded-xl border border-border bg-muted',
           large ? 'aspect-[16/8.5]' : 'aspect-[4/3]',
         )}
       >
         {imageFailed ? (
-          <div className="flex size-full items-center justify-center text-[#2563EB]">
+          <div className="flex size-full items-center justify-center text-blue-ink">
             <Package aria-hidden="true" className="size-7" strokeWidth={1.4} />
           </div>
         ) : (
@@ -105,17 +105,17 @@ function ProductTile({
             )}
           />
         )}
-        <span className="absolute left-2 top-2 inline-flex items-center gap-1 rounded-md border border-[#E2E8F0] bg-white/90 px-1.5 py-0.5 text-[7.5px] font-bold uppercase tracking-wider text-[#475569] backdrop-blur">
+        <span className="absolute left-2 top-2 inline-flex items-center gap-1 rounded-md border border-border bg-card/90 px-1.5 py-0.5 text-[7.5px] font-bold uppercase tracking-wider text-muted-foreground backdrop-blur">
           {product.category}
         </span>
       </div>
       <div className={cn('px-3 pb-3 pt-2', large ? 'sm:px-3.5' : '')}>
-        <p className="line-clamp-1 text-[10px] font-bold text-[#0F172A] sm:text-[11px]">
+        <p className="line-clamp-1 text-[10px] font-bold text-foreground sm:text-[11px]">
           {product.name}
         </p>
         <div className="mt-1 flex items-center justify-between gap-2">
-          <p className="truncate text-[8.5px] text-[#64748B]">{product.brand}</p>
-          <span className="inline-flex shrink-0 items-center gap-1 text-[8px] font-semibold text-[#475569]">
+          <p className="truncate text-[8.5px] text-muted-foreground">{product.brand}</p>
+          <span className="inline-flex shrink-0 items-center gap-1 text-[8px] font-semibold text-muted-foreground">
             <span
               aria-hidden="true"
               className={cn(
@@ -204,17 +204,17 @@ export function CatalogHero({
           <div className="hero-reveal hero-delay-2 relative mx-auto w-full min-w-0 max-w-[560px] lg:max-w-none">
             <div
               aria-hidden="true"
-              className="absolute inset-x-8 inset-y-10 -z-10 rounded-[40px] bg-gradient-to-br from-[#2563EB]/10 to-[#7C3AED]/10 blur-3xl"
+              className="absolute inset-x-8 inset-y-10 -z-10 rounded-[40px] bg-gradient-to-br from-[#2563EB]/10 to-[#2563EB]/10 blur-3xl"
             />
-            <div className="hero-float-soft relative rounded-[24px] border border-[#E2E8F0] bg-white p-3 shadow-[0_42px_100px_-52px_rgba(15,23,42,0.5)] sm:p-3.5">
+            <div className="hero-float-soft relative rounded-[24px] border border-border bg-card p-3 shadow-[0_42px_100px_-52px_rgba(15,23,42,0.5)] sm:p-3.5">
               <div className="flex items-center justify-between gap-3 px-1.5 pb-2.5 pt-0.5">
                 <div className="flex items-center gap-2">
-                  <span className="grid size-7 place-items-center rounded-lg bg-[#EFF6FF] text-[#2563EB]">
+                  <span className="grid size-7 place-items-center rounded-lg bg-tint-blue text-blue-ink">
                     <Boxes aria-hidden="true" className="size-3.5" />
                   </span>
                   <div>
-                    <p className="text-[10.5px] font-bold text-[#0F172A]">Selección corporativa</p>
-                    <p className="text-[8.5px] text-[#64748B]">Equipos para empresas y oficinas</p>
+                    <p className="text-[10.5px] font-bold text-foreground">Selección corporativa</p>
+                    <p className="text-[8.5px] text-muted-foreground">Equipos para empresas y oficinas</p>
                   </div>
                 </div>
                 <a
@@ -223,7 +223,7 @@ export function CatalogHero({
                     e.preventDefault()
                     scrollToCatalog()
                   }}
-                  className="inline-flex shrink-0 items-center gap-1 rounded-md px-1.5 py-1 text-[9px] font-bold text-[#1D4ED8] transition hover:bg-[#EFF6FF]"
+                  className="inline-flex shrink-0 items-center gap-1 rounded-md px-1.5 py-1 text-[9px] font-bold text-blue-ink transition hover:bg-tint-blue"
                 >
                   Ver todo <ArrowRight aria-hidden="true" className="size-3" />
                 </a>
@@ -236,27 +236,27 @@ export function CatalogHero({
                 ))}
               </div>
 
-              <div className="mt-2.5 flex items-center justify-between gap-2 rounded-xl border border-[#EEF2F7] bg-[#F8FAFC] px-2.5 py-2">
-                <span className="inline-flex items-center gap-1.5 text-[8.5px] font-semibold text-[#475569]">
-                  <Truck aria-hidden="true" className="size-3 text-[#2563EB]" />
+              <div className="mt-2.5 flex items-center justify-between gap-2 rounded-xl border border-border bg-muted px-2.5 py-2">
+                <span className="inline-flex items-center gap-1.5 text-[8.5px] font-semibold text-muted-foreground">
+                  <Truck aria-hidden="true" className="size-3 text-blue-ink" />
                   Entrega coordinada a nivel nacional
                 </span>
-                <span className="inline-flex items-center gap-1 text-[8px] font-bold text-[#15803D]">
+                <span className="inline-flex items-center gap-1 text-[8px] font-bold text-success">
                   <CheckCircle2 aria-hidden="true" className="size-3" />
                   Asesoría incluida
                 </span>
               </div>
             </div>
 
-            <div className="hero-float absolute -bottom-5 -left-2 hidden items-center gap-2 rounded-xl border border-[#E2E8F0] bg-white/95 px-3 py-2.5 shadow-[0_18px_40px_-22px_rgba(15,23,42,0.4)] backdrop-blur sm:flex">
-              <span className="grid size-7 place-items-center rounded-lg bg-[#EFF6FF] text-[#2563EB]">
+            <div className="hero-float absolute -bottom-5 -left-2 hidden items-center gap-2 rounded-xl border border-border bg-card/95 px-3 py-2.5 shadow-[0_18px_40px_-22px_rgba(15,23,42,0.4)] backdrop-blur sm:flex">
+              <span className="grid size-7 place-items-center rounded-lg bg-tint-blue text-blue-ink">
                 <Network aria-hidden="true" className="size-3.5" />
               </span>
               <span>
-                <span className="block text-[10px] font-bold leading-4 text-[#0F172A]">
+                <span className="block text-[10px] font-bold leading-4 text-foreground">
                   {totalProducts}+ referencias
                 </span>
-                <span className="block text-[8.5px] leading-4 text-[#64748B]">Catálogo en crecimiento</span>
+                <span className="block text-[8.5px] leading-4 text-muted-foreground">Catálogo en crecimiento</span>
               </span>
             </div>
           </div>

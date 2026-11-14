@@ -21,7 +21,7 @@ export function ClientAvatar({
   return (
     <span
       className={cn(
-        'grid size-10 shrink-0 place-items-center rounded-xl bg-slate-50 text-[11px] font-bold text-slate-600 ring-1 ring-inset ring-slate-200/80',
+        'grid size-10 shrink-0 place-items-center rounded-xl bg-muted text-[11px] font-bold text-muted-foreground ring-1 ring-inset ring-border/80',
         className
       )}
       aria-hidden="true"
@@ -32,8 +32,8 @@ export function ClientAvatar({
 }
 
 const clientStyles: Record<ClientStatus, string> = {
-  active: 'bg-emerald-50 text-emerald-700 ring-emerald-600/15',
-  inactive: 'bg-slate-100 text-slate-600 ring-slate-500/15',
+  active: 'bg-emerald-500/10 text-success-ink ring-emerald-600/15',
+  inactive: 'bg-muted text-muted-foreground ring-slate-500/15',
 }
 
 export function ClientStatusBadge({ status }: { status: ClientStatus }) {
@@ -56,13 +56,13 @@ export function ClientStatusBadge({ status }: { status: ClientStatus }) {
 }
 
 const quoteStyles: Record<QuoteStatus, string> = {
-  draft: 'bg-slate-100 text-slate-600 ring-slate-500/15',
-  new: 'bg-[#F5F3FF] text-[#5B21B6] ring-[#5B21B6]/15',
-  review: 'bg-amber-50 text-amber-700 ring-amber-600/15',
-  sent: 'bg-[#F5F3FF] text-[#5B21B6] ring-[#5B21B6]/15',
-  approved: 'bg-emerald-50 text-emerald-700 ring-emerald-600/15',
-  rejected: 'bg-red-50 text-red-700 ring-red-600/15',
-  expired: 'bg-slate-900 text-white ring-slate-900/10',
+  draft: 'bg-muted text-muted-foreground ring-slate-500/15',
+  new: 'bg-tint-brand text-brand-ink ring-[#2563EB]/15',
+  review: 'bg-amber-500/10 text-warning-ink ring-amber-600/15',
+  sent: 'bg-tint-brand text-brand-ink ring-[#2563EB]/15',
+  approved: 'bg-emerald-500/10 text-success-ink ring-emerald-600/15',
+  rejected: 'bg-red-500/10 text-danger-ink ring-red-600/15',
+  expired: 'bg-slate-500/15 text-muted-foreground ring-slate-500/20',
 }
 
 export function QuoteStatusBadge({ status }: { status: QuoteStatus }) {
@@ -77,12 +77,12 @@ export function QuoteStatusBadge({ status }: { status: QuoteStatus }) {
         className={cn(
           'size-1.5 rounded-full',
           status === 'draft' && 'bg-slate-400',
-          status === 'new' && 'bg-[#6D28D9]',
+          status === 'new' && 'bg-[#1D4ED8]',
           status === 'review' && 'bg-amber-500',
-          status === 'sent' && 'bg-[#6D28D9]',
+          status === 'sent' && 'bg-[#1D4ED8]',
           status === 'approved' && 'bg-emerald-500',
           status === 'rejected' && 'bg-red-500',
-          status === 'expired' && 'bg-white/70'
+          status === 'expired' && 'bg-card/70'
         )}
       />
       {quoteStatusLabels[status]}
@@ -91,10 +91,10 @@ export function QuoteStatusBadge({ status }: { status: QuoteStatus }) {
 }
 
 const requestStyles: Record<RequestStatus, string> = {
-  new: 'bg-[#F5F3FF] text-[#5B21B6] ring-[#5B21B6]/15',
-  review: 'bg-amber-50 text-amber-700 ring-amber-600/15',
-  attended: 'bg-emerald-50 text-emerald-700 ring-emerald-600/15',
-  discarded: 'bg-slate-100 text-slate-500 ring-slate-500/15',
+  new: 'bg-tint-brand text-brand-ink ring-[#2563EB]/15',
+  review: 'bg-amber-500/10 text-warning-ink ring-amber-600/15',
+  attended: 'bg-emerald-500/10 text-success-ink ring-emerald-600/15',
+  discarded: 'bg-muted text-muted-foreground ring-slate-500/15',
 }
 
 export function RequestStatusBadge({ status }: { status: RequestStatus }) {
@@ -108,7 +108,7 @@ export function RequestStatusBadge({ status }: { status: RequestStatus }) {
       <span
         className={cn(
           'size-1.5 rounded-full',
-          status === 'new' && 'bg-[#6D28D9]',
+          status === 'new' && 'bg-[#1D4ED8]',
           status === 'review' && 'bg-amber-500',
           status === 'attended' && 'bg-emerald-500',
           status === 'discarded' && 'bg-slate-400'

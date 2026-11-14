@@ -36,11 +36,11 @@ export default async function LoginPage() {
   }
 
   return (
-    <main className="relative min-h-dvh bg-[#F4F6FB] lg:grid lg:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)]">
+    <main className="relative min-h-dvh bg-background lg:grid lg:grid-cols-[minmax(0,1.04fr)_minmax(0,0.96fr)]">
       {/* Panel de marca */}
-      <section className="login-brand relative hidden overflow-hidden bg-[#2E1065] px-10 py-10 text-white lg:flex lg:flex-col lg:justify-between xl:px-16">
+      <section className="login-brand relative hidden overflow-hidden bg-[#172554] px-10 py-10 text-white lg:flex lg:flex-col lg:justify-between xl:px-16">
         <div aria-hidden="true" className="login-sheen" />
-        <div aria-hidden="true" className="login-orb login-orb--purple" />
+        <div aria-hidden="true" className="login-orb login-orb--brand" />
         <div aria-hidden="true" className="login-orb login-orb--blue" />
         <div aria-hidden="true" className="login-orb login-orb--cyan" />
         <div aria-hidden="true" className="login-grid" />
@@ -67,7 +67,7 @@ export default async function LoginPage() {
         <div className="login-brand-copy relative z-10 max-w-[30rem] py-10 xl:py-12">
           <h2 className="login-brand-heading mt-6 text-[clamp(2rem,3.2vw,3rem)] font-semibold leading-[1.06] tracking-tight">
             Toda tu operación,
-            <span className="mt-1 block bg-gradient-to-r from-white via-[#DDD6FE] to-[#22D3EE] bg-clip-text text-transparent">
+            <span className="mt-1 block bg-gradient-to-r from-white via-[#BFDBFE] to-[#22D3EE] bg-clip-text text-transparent">
               en un solo lugar.
             </span>
           </h2>
@@ -117,11 +117,11 @@ export default async function LoginPage() {
         <div aria-hidden="true" className="pointer-events-none absolute inset-0">
           <div className="login-mobile-bg lg:hidden">
             <div className="login-mobile-sheen" />
-            <div className="login-mobile-orb login-mobile-orb--purple" />
+            <div className="login-mobile-orb login-mobile-orb--brand" />
             <div className="login-mobile-orb login-mobile-orb--cyan" />
             <div className="login-mobile-grid" />
           </div>
-          <div className="login-light-orb login-light-orb--purple" />
+          <div className="login-light-orb login-light-orb--brand" />
           <div className="login-light-orb login-light-orb--cyan" />
           <div className="login-light-grid hidden lg:block" />
         </div>
@@ -157,24 +157,24 @@ export default async function LoginPage() {
             </ul>
           </div>
 
-          <div className="login-card rounded-2xl border border-slate-200/80 bg-white/95 p-5 shadow-[0_30px_80px_-40px_rgba(46,16,101,0.45)] backdrop-blur-sm min-[400px]:p-6 sm:p-8">
-            <h1 className="text-xl font-semibold tracking-tight text-slate-900">Inicia sesión</h1>
-            <p className="mt-1.5 text-[13px] leading-relaxed text-slate-500">
+          <div className="login-card rounded-2xl border border-border/80 bg-card/95 p-5 shadow-[0_30px_80px_-40px_rgba(23,37,84,0.45)] backdrop-blur-sm min-[400px]:p-6 sm:p-8">
+            <h1 className="text-xl font-semibold tracking-tight text-foreground">Inicia sesión</h1>
+            <p className="mt-1.5 text-[13px] leading-relaxed text-muted-foreground">
               Ingresa con tu cuenta corporativa para acceder al panel.
             </p>
 
             <LoginForm demo={demo} />
           </div>
 
-          <div className="login-aside-note mt-5 flex items-start gap-2.5 rounded-xl border border-slate-200/70 bg-white/70 px-3.5 py-3 text-[11px] leading-relaxed text-slate-500 backdrop-blur-sm">
-            <ShieldCheck className="mt-0.5 size-3.5 shrink-0 text-slate-400" aria-hidden="true" />
+          <div className="login-aside-note mt-5 flex items-start gap-2.5 rounded-xl border border-border/70 bg-card/70 px-3.5 py-3 text-[11px] leading-relaxed text-muted-foreground backdrop-blur-sm">
+            <ShieldCheck className="mt-0.5 size-3.5 shrink-0 text-muted-foreground" aria-hidden="true" />
             <p>
               No hay registro público: el superadministrador crea cada cuenta y su contraseña se
               valida en el servidor, nunca en el navegador.
             </p>
           </div>
 
-          <p className="mt-6 text-center text-[10.5px] text-slate-400 lg:hidden">
+          <p className="mt-6 text-center text-[10.5px] text-muted-foreground lg:hidden">
             © 2026 F&J Systems · Uso interno
           </p>
         </div>

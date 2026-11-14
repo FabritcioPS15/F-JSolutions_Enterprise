@@ -104,7 +104,7 @@ export function ServicePage({
     infrastructureFromApi ?? getServicesByCategory('Infraestructura TI')
 
   return (
-    <main className="min-h-screen bg-white text-[#0F172A]">
+    <main className="min-h-screen bg-card text-foreground">
       <EnhancedHeader />
 
       {kind === 'sistemas' && (
@@ -112,7 +112,7 @@ export function ServicePage({
           title={
             <>
               Convertimos tus procesos en{' '}
-              <span className="text-[#2563EB]">soluciones digitales</span>.
+              <span className="text-blue-ink">soluciones digitales</span>.
             </>
           }
           description={item.description}
@@ -122,16 +122,16 @@ export function ServicePage({
       )}
 
       {kind === 'sistemas' && (
-        <section className="border-b border-[#E5EAF0] bg-white">
+        <section className="border-b border-border bg-card">
           <div className="mx-auto max-w-[1180px] px-4 py-12 sm:px-6 lg:px-8 lg:py-14">
             <div className="max-w-2xl">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#5B21B6]">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-brand-ink">
                 Servicios de desarrollo
               </p>
               <h2 className="mt-2 text-3xl font-bold tracking-[-0.04em] sm:text-4xl">
                 ¿Qué sistema necesitas construir?
               </h2>
-              <p className="mt-3 text-sm leading-6 text-[#475569]">
+              <p className="mt-3 text-sm leading-6 text-muted-foreground">
                 Cada servicio tiene su propio alcance y forma de trabajo. Elige uno para ver qué
                 incluye y cómo lo implementamos.
               </p>
@@ -141,14 +141,14 @@ export function ServicePage({
                 <Link
                   key={service.slug}
                   href={`/sistemas/${service.slug}`}
-                  className="group flex flex-col rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-5 transition hover:border-[#2563EB]/30 hover:bg-white hover:shadow-lg hover:shadow-black/5"
+                  className="group flex flex-col rounded-2xl border border-border bg-muted p-5 transition hover:border-[#2563EB]/30 hover:bg-card hover:shadow-lg hover:shadow-black/5"
                 >
-                  <span className="grid size-9 place-items-center rounded-xl bg-white text-[#2563EB] shadow-sm transition group-hover:bg-[#2563EB] group-hover:text-white">
+                  <span className="grid size-9 place-items-center rounded-xl bg-card text-blue-ink shadow-sm transition group-hover:bg-[#2563EB] group-hover:text-white">
                     <Code2 className="size-4" />
                   </span>
-                  <h3 className="mt-3 text-sm font-bold text-[#0F172A]">{service.title}</h3>
-                  <p className="mt-1.5 flex-1 text-xs leading-5 text-[#475569]">{service.summary}</p>
-                  <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-[#2563EB]">
+                  <h3 className="mt-3 text-sm font-bold text-foreground">{service.title}</h3>
+                  <p className="mt-1.5 flex-1 text-xs leading-5 text-muted-foreground">{service.summary}</p>
+                  <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-blue-ink">
                     Conocer el servicio <ArrowRight className="size-3.5" />
                   </span>
                 </Link>
@@ -163,7 +163,7 @@ export function ServicePage({
           eyebrow={item.eyebrow}
           title={
             <>
-              Tu operación <span className="text-[#2563EB]">no puede detenerse</span>.
+              Tu operación <span className="text-blue-ink">no puede detenerse</span>.
             </>
           }
           description={item.description}
@@ -186,7 +186,7 @@ export function ServicePage({
             eyebrow={item.eyebrow}
             title={
               <>
-                Infraestructura TI que <span className="text-[#2563EB]">sostiene tu operación</span>.
+                Infraestructura TI que <span className="text-blue-ink">sostiene tu operación</span>.
               </>
             }
             description={item.description}
@@ -196,16 +196,16 @@ export function ServicePage({
             visual={<InfrastructureVisual />}
           />
 
-          <section className="border-b border-[#E5EAF0] bg-white">
+          <section className="border-b border-border bg-card">
             <div className="mx-auto max-w-[1180px] px-4 py-12 sm:px-6 lg:px-8 lg:py-14">
               <div className="max-w-2xl">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#5B21B6]">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-brand-ink">
                   Servicios de infraestructura
                 </p>
                 <h2 className="mt-2 text-3xl font-bold tracking-[-0.04em] sm:text-4xl">
                   ¿Qué infraestructura necesitas implementar?
                 </h2>
-                <p className="mt-3 text-sm leading-6 text-[#475569]">
+                <p className="mt-3 text-sm leading-6 text-muted-foreground">
                   Cada servicio tiene su propio alcance y forma de trabajo. Elige uno para ver qué
                   incluye y cómo lo implementamos.
                 </p>
@@ -215,14 +215,14 @@ export function ServicePage({
                   <Link
                     key={service.slug}
                     href={`/servicios/${service.slug}`}
-                    className="group flex flex-col rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-5 transition hover:border-[#2563EB]/30 hover:bg-white hover:shadow-lg hover:shadow-black/5"
+                    className="group flex flex-col rounded-2xl border border-border bg-muted p-5 transition hover:border-[#2563EB]/30 hover:bg-card hover:shadow-lg hover:shadow-black/5"
                   >
-                    <span className="grid size-9 place-items-center rounded-xl bg-white text-[#2563EB] shadow-sm transition group-hover:bg-[#2563EB] group-hover:text-white">
+                    <span className="grid size-9 place-items-center rounded-xl bg-card text-blue-ink shadow-sm transition group-hover:bg-[#2563EB] group-hover:text-white">
                       <Network className="size-4" />
                     </span>
-                    <h3 className="mt-3 text-sm font-bold text-[#0F172A]">{service.title}</h3>
-                    <p className="mt-1.5 flex-1 text-xs leading-5 text-[#475569]">{service.summary}</p>
-                    <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-[#2563EB]">
+                    <h3 className="mt-3 text-sm font-bold text-foreground">{service.title}</h3>
+                    <p className="mt-1.5 flex-1 text-xs leading-5 text-muted-foreground">{service.summary}</p>
+                    <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-blue-ink">
                       Conocer el servicio <ArrowRight className="size-3.5" />
                     </span>
                   </Link>
@@ -238,7 +238,7 @@ export function ServicePage({
           eyebrow={item.eyebrow}
           title={
             <>
-              Tu próxima configuración, <span className="text-[#2563EB]">bien pensada</span>.
+              Tu próxima configuración, <span className="text-blue-ink">bien pensada</span>.
             </>
           }
           description={item.description}
@@ -255,13 +255,13 @@ export function ServicePage({
       >
         <div className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-start lg:gap-12">
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#5B21B6]">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-brand-ink">
               Cuéntanos tu necesidad
             </p>
             <h2 className="mt-2 max-w-lg text-3xl font-bold leading-tight tracking-[-0.04em] sm:text-4xl">
               ¿En qué podemos ayudarte?
             </h2>
-            <p className="mt-3 max-w-md text-sm leading-6 text-[#475569]">
+            <p className="mt-3 max-w-md text-sm leading-6 text-muted-foreground">
               Selecciona un punto de partida y un asesor se pondrá en contacto contigo para revisar
               el alcance, las alternativas y el siguiente paso.
             </p>
@@ -273,12 +273,12 @@ export function ServicePage({
                 { icon: Wrench, title: 'Acompañamiento', copy: 'Seguimos contigo después de la entrega.' },
               ].map((benefit) => (
                 <li key={benefit.title} className="flex gap-3">
-                  <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-[#EFF6FF] text-[#2563EB]">
+                  <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-tint-blue text-blue-ink">
                     <benefit.icon aria-hidden="true" className="size-4" />
                   </span>
                   <span>
-                    <span className="block font-heading text-sm font-bold text-[#0F172A]">{benefit.title}</span>
-                    <span className="mt-0.5 block text-xs leading-5 text-[#64748B]">{benefit.copy}</span>
+                    <span className="block font-heading text-sm font-bold text-foreground">{benefit.title}</span>
+                    <span className="mt-0.5 block text-xs leading-5 text-muted-foreground">{benefit.copy}</span>
                   </span>
                 </li>
               ))}
@@ -287,27 +287,27 @@ export function ServicePage({
             <div className="mt-6 flex flex-wrap gap-2">
               <a
                 href="tel:+51999888777"
-                className="inline-flex h-10 items-center gap-2 rounded-lg border border-[#E2E8F0] bg-white px-3.5 text-xs font-bold text-[#475569] transition hover:border-[#2563EB]/40 hover:text-[#2563EB]"
+                className="inline-flex h-10 items-center gap-2 rounded-lg border border-border bg-card px-3.5 text-xs font-bold text-muted-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink"
               >
                 <Phone aria-hidden="true" className="size-3.5" /> +51 999 888 777
               </a>
               <a
                 href="mailto:ventas@fjsolutions.pe"
-                className="inline-flex h-10 items-center gap-2 rounded-lg border border-[#E2E8F0] bg-white px-3.5 text-xs font-bold text-[#475569] transition hover:border-[#2563EB]/40 hover:text-[#2563EB]"
+                className="inline-flex h-10 items-center gap-2 rounded-lg border border-border bg-card px-3.5 text-xs font-bold text-muted-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink"
               >
                 <Mail aria-hidden="true" className="size-3.5" /> ventas@fjsolutions.pe
               </a>
             </div>
           </div>
 
-          <div className="rounded-3xl border border-[#E2E8F0] bg-white p-5 shadow-[0_24px_60px_-40px_rgba(15,23,42,0.35)] sm:p-7">
+          <div className="rounded-3xl border border-border bg-card p-5 shadow-[0_24px_60px_-40px_rgba(15,23,42,0.35)] sm:p-7">
             <div className="flex items-center gap-3">
-              <span className="grid size-10 place-items-center rounded-xl bg-[#EFF6FF] text-[#2563EB]">
+              <span className="grid size-10 place-items-center rounded-xl bg-tint-blue text-blue-ink">
                 <Icon aria-hidden="true" className="size-5" />
               </span>
               <div>
-                <p className="font-heading text-sm font-bold text-[#0F172A]">{item.cta}</p>
-                <p className="text-[11px] text-[#64748B]">Respuesta en menos de 24 horas hábiles.</p>
+                <p className="font-heading text-sm font-bold text-foreground">{item.cta}</p>
+                <p className="text-[11px] text-muted-foreground">Respuesta en menos de 24 horas hábiles.</p>
               </div>
             </div>
 
@@ -315,7 +315,7 @@ export function ServicePage({
               {item.options.map((option) => (
                 <label
                   key={option}
-                  className="flex cursor-pointer items-center gap-3 rounded-xl border border-[#E2E8F0] bg-white p-3.5 text-xs font-semibold text-[#334155] transition hover:border-[#9DBBF5] hover:bg-[#FBFDFF]"
+                  className="flex cursor-pointer items-center gap-3 rounded-xl border border-border bg-card p-3.5 text-xs font-semibold text-foreground/85 transition hover:border-blue-ink/30 hover:bg-muted"
                 >
                   <input type="checkbox" className="size-4 accent-[#2563EB]" />
                   {option}
@@ -323,11 +323,11 @@ export function ServicePage({
               ))}
             </div>
 
-            <label className="mt-4 block text-xs font-semibold text-[#0F172A]">
+            <label className="mt-4 block text-xs font-semibold text-foreground">
               Cuéntanos brevemente
-              <span className="ml-1 font-normal text-[#94A3B8]">(opcional)</span>
+              <span className="ml-1 font-normal text-muted-foreground">(opcional)</span>
               <textarea
-                className="mt-2 min-h-24 w-full resize-none rounded-xl border border-[#E2E8F0] px-3 py-2.5 text-sm font-normal outline-none transition placeholder:text-[#94A3B8] focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15"
+                className="mt-2 min-h-24 w-full resize-none rounded-xl border border-border px-3 py-2.5 text-sm font-normal outline-none transition placeholder:text-muted-foreground focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15"
                 placeholder="Describe tu necesidad, cantidades o fecha requerida..."
               />
             </label>
@@ -342,7 +342,7 @@ export function ServicePage({
               </Link>
               <Link
                 href="/contacto"
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-[#E2E8F0] bg-white px-4 text-sm font-bold text-[#0F172A] transition hover:border-[#2563EB]/40 hover:text-[#2563EB]"
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-border bg-card px-4 text-sm font-bold text-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink"
               >
                 <Check aria-hidden="true" className="size-4" />
                 Hablar con un asesor
@@ -352,7 +352,7 @@ export function ServicePage({
         </div>
       </section>
 
-      <section className="border-y border-[#E5EAF0] bg-[#F8FAFC]">
+      <section className="border-y border-border bg-muted">
         <div className="mx-auto grid max-w-[1180px] gap-6 px-4 py-9 sm:grid-cols-3 sm:px-6">
           {[
             { icon: ShieldCheck, title: 'Asesoría real', copy: 'Te orientamos según tu contexto.' },
@@ -360,12 +360,12 @@ export function ServicePage({
             { icon: Wrench, title: 'Acompañamiento', copy: 'Seguimos contigo después de la entrega.' },
           ].map((trust) => (
             <div key={trust.title} className="flex gap-3">
-              <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-white text-[#2563EB] shadow-sm">
+              <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-card text-blue-ink shadow-sm">
                 <trust.icon aria-hidden="true" className="size-4" />
               </span>
               <div>
                 <p className="font-heading text-sm font-bold">{trust.title}</p>
-                <p className="mt-1 text-sm text-[#64748B]">{trust.copy}</p>
+                <p className="mt-1 text-sm text-muted-foreground">{trust.copy}</p>
               </div>
             </div>
           ))}

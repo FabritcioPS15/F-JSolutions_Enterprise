@@ -90,26 +90,26 @@ export function Modal({
         aria-labelledby="modal-title"
         tabIndex={-1}
         className={cn(
-          'relative flex max-h-[92vh] w-full flex-col overflow-hidden rounded-t-3xl bg-white shadow-2xl ring-1 ring-slate-900/5 animate-in slide-in-from-bottom-4 fade-in-0 duration-200 sm:rounded-2xl sm:zoom-in-95',
+          'relative flex max-h-[92vh] w-full flex-col overflow-hidden rounded-t-3xl bg-card shadow-2xl ring-1 ring-slate-900/5 animate-in slide-in-from-bottom-4 fade-in-0 duration-200 sm:rounded-2xl sm:zoom-in-95',
           size === 'sm' && 'sm:max-w-md',
           size === 'md' && 'sm:max-w-lg',
           size === 'lg' && 'sm:max-w-2xl',
           size === 'xl' && 'sm:max-w-4xl'
         )}
       >
-        <div className="flex items-start justify-between gap-4 border-b border-slate-100 px-6 py-5">
+        <div className="flex items-start justify-between gap-4 border-b border-border px-6 py-5">
           <div>
-            <h2 id="modal-title" className="font-heading text-lg font-bold tracking-tight text-slate-900">
+            <h2 id="modal-title" className="font-heading text-lg font-bold tracking-tight text-foreground">
               {title}
             </h2>
             {description && (
-              <p className="mt-1 text-xs leading-relaxed text-slate-500">{description}</p>
+              <p className="mt-1 text-xs leading-relaxed text-muted-foreground">{description}</p>
             )}
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="grid size-8 shrink-0 place-items-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+            className="grid size-8 shrink-0 place-items-center rounded-lg text-muted-foreground transition hover:bg-muted hover:text-foreground/80"
             aria-label="Cerrar"
           >
             <X className="size-4" />
@@ -119,7 +119,7 @@ export function Modal({
         <div className="overflow-y-auto px-6 py-5">{children}</div>
 
         {footer && (
-          <div className="flex flex-wrap items-center justify-end gap-2 border-t border-slate-100 bg-slate-50/60 px-6 py-4">
+          <div className="flex flex-wrap items-center justify-end gap-2 border-t border-border bg-muted/60 px-6 py-4">
             {footer}
           </div>
         )}

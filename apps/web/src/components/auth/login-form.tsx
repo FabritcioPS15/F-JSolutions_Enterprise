@@ -20,7 +20,7 @@ type Availability = { google: boolean; facebook: boolean }
 type Notice = { tone: 'success' | 'error'; title: string; message?: string }
 
 const fieldClass =
-  'mt-1 h-10 w-full rounded-xl border border-[#E2E8F0] bg-white px-3 text-sm font-normal text-[#0F172A] outline-none transition placeholder:text-[#94A3B8] focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 aria-[invalid=true]:border-[#EF4444]'
+  'mt-1 h-10 w-full rounded-xl border border-border bg-card px-3 text-sm font-normal text-foreground outline-none transition placeholder:text-muted-foreground focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 aria-[invalid=true]:border-destructive'
 
 const oauthErrorMessages: Record<string, string> = {
   cancelado: 'Cancelaste el acceso con el proveedor. Puedes intentarlo de nuevo.',
@@ -147,8 +147,8 @@ export function LoginForm({
           role="alert"
           className={`mb-4 flex items-start gap-2.5 rounded-2xl border px-3.5 py-2.5 text-[13px] sm:text-sm ${
             noticeState.tone === 'success'
-              ? 'border-[#BBF7D0] bg-[#F0FDF4] text-[#166534]'
-              : 'border-[#FECACA] bg-[#FEF2F2] text-[#991B1B]'
+              ? 'border-success/35 bg-tint-green text-success'
+              : 'border-destructive/35 bg-tint-red text-destructive'
           }`}
         >
           {noticeState.tone === 'success' ? (
@@ -167,7 +167,7 @@ export function LoginForm({
       <AuthDivider />
 
       <form onSubmit={handleSubmit} noValidate className="space-y-2.5 sm:space-y-3">
-        <label className="block text-xs font-semibold text-[#0F172A]">
+        <label className="block text-xs font-semibold text-foreground">
           Correo electrónico
           <input
             type="email"
@@ -180,7 +180,7 @@ export function LoginForm({
           />
         </label>
 
-        <label className="block text-xs font-semibold text-[#0F172A]">
+        <label className="block text-xs font-semibold text-foreground">
           Contraseña
           <span className="relative mt-1 block">
             <input
@@ -196,7 +196,7 @@ export function LoginForm({
               type="button"
               onClick={() => setShowPassword((value) => !value)}
               aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
-              className="absolute right-1.5 top-1/2 grid size-8 -translate-y-1/2 place-items-center rounded-lg text-[#94A3B8] transition hover:bg-[#F1F5F9] hover:text-[#475569]"
+              className="absolute right-1.5 top-1/2 grid size-8 -translate-y-1/2 place-items-center rounded-lg text-muted-foreground transition hover:bg-muted hover:text-muted-foreground"
             >
               {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
             </button>
@@ -214,8 +214,8 @@ export function LoginForm({
       </form>
 
       {devAccess && (
-        <details className="group mt-3 rounded-xl border border-dashed border-[#C4B5FD] bg-[#F5F3FF]/70 transition hover:border-[#A78BFA]">
-          <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-3.5 py-2.5 text-[12px] font-bold text-[#5B21B6] [&::-webkit-details-marker]:hidden">
+        <details className="group mt-3 rounded-xl border border-dashed border-brand-ink/40 bg-tint-brand/70 transition hover:border-brand-ink/50">
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-3.5 py-2.5 text-[12px] font-bold text-brand-ink [&::-webkit-details-marker]:hidden">
             <span className="inline-flex items-center gap-1.5">
               <FlaskConical aria-hidden="true" className="size-3.5" />
               Accesos de desarrollo
@@ -225,20 +225,20 @@ export function LoginForm({
               className="size-3.5 transition-transform group-open:rotate-180"
             />
           </summary>
-          <div className="border-t border-dashed border-[#DDD6FE] px-3.5 py-3">
-            <p className="text-[11px] leading-4 text-[#6D28D9]">
+          <div className="border-t border-dashed border-brand-ink/30 px-3.5 py-3">
+            <p className="text-[11px] leading-4 text-brand-ink">
               Solo en entorno local. Entra con una cuenta de prueba ya confirmada.
             </p>
             <div className="mt-2.5 grid grid-cols-2 gap-2">
               <a
                 href={devHref('persona')}
-                className="inline-flex h-9 items-center justify-center rounded-lg border border-[#C4B5FD] bg-white px-2 text-xs font-bold text-[#5B21B6] transition hover:border-[#7C3AED] hover:bg-[#EDE9FE]"
+                className="inline-flex h-9 items-center justify-center rounded-lg border border-brand-ink/40 bg-card px-2 text-xs font-bold text-brand-ink transition hover:border-[#2563EB] hover:bg-brand-soft"
               >
                 Persona natural
               </a>
               <a
                 href={devHref('empresa')}
-                className="inline-flex h-9 items-center justify-center rounded-lg border border-[#C4B5FD] bg-white px-2 text-xs font-bold text-[#5B21B6] transition hover:border-[#7C3AED] hover:bg-[#EDE9FE]"
+                className="inline-flex h-9 items-center justify-center rounded-lg border border-brand-ink/40 bg-card px-2 text-xs font-bold text-brand-ink transition hover:border-[#2563EB] hover:bg-brand-soft"
               >
                 Empresa
               </a>
@@ -248,16 +248,16 @@ export function LoginForm({
       )}
 
       {unverified && (
-        <div className="mt-3 rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-3.5">
-          <p className="inline-flex items-center gap-2 text-xs font-semibold text-[#0F172A]">
-            <MailCheck aria-hidden="true" className="size-4 text-[#2563EB]" />
+        <div className="mt-3 rounded-2xl border border-border bg-muted p-3.5">
+          <p className="inline-flex items-center gap-2 text-xs font-semibold text-foreground">
+            <MailCheck aria-hidden="true" className="size-4 text-blue-ink" />
             ¿No recibiste el correo de confirmación?
           </p>
           <button
             type="button"
             onClick={handleResend}
             disabled={status === 'resending'}
-            className="mt-2 inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-[#E2E8F0] bg-white px-3 text-xs font-bold text-[#0F172A] transition hover:border-[#2563EB]/40 hover:text-[#1D4ED8] disabled:opacity-60"
+            className="mt-2 inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-border bg-card px-3 text-xs font-bold text-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink disabled:opacity-60"
           >
             {status === 'resending' && <Loader2 aria-hidden="true" className="size-3.5 animate-spin" />}
             Reenviar enlace de confirmación
@@ -266,7 +266,7 @@ export function LoginForm({
       )}
 
       {resendInfo && (
-        <div className="mt-3 rounded-2xl border border-[#BBF7D0] bg-[#F0FDF4] px-3.5 py-2.5 text-[13px] text-[#166534]">
+        <div className="mt-3 rounded-2xl border border-success/35 bg-tint-green px-3.5 py-2.5 text-[13px] text-success">
           <p className="font-semibold">{resendInfo}</p>
           {devLink && (
             <p className="mt-1 break-all">
@@ -279,9 +279,9 @@ export function LoginForm({
         </div>
       )}
 
-      <p className="mt-2.5 text-center text-[13px] text-[#64748B] sm:mt-4 sm:text-sm">
+      <p className="mt-2.5 text-center text-[13px] text-muted-foreground sm:mt-4 sm:text-sm">
         ¿Todavía no tienes cuenta?{' '}
-        <Link href="/registro" className="font-semibold text-[#2563EB] hover:underline">
+        <Link href="/registro" className="font-semibold text-blue-ink hover:underline">
           Regístrate
         </Link>
       </p>

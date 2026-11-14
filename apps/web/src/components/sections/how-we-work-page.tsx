@@ -177,7 +177,7 @@ const engagementModels = [
 
 export function HowWeWorkPage() {
   return (
-    <div className="min-h-screen bg-white text-[#0F172A] selection:bg-[#2563EB]/15 selection:text-[#2563EB]">
+    <div className="min-h-screen bg-card text-foreground selection:bg-[#2563EB]/15 selection:text-blue-ink">
       <EnhancedHeader />
 
       <main>
@@ -186,7 +186,7 @@ export function HowWeWorkPage() {
           id="hero-como-trabajamos"
           title={
             <>
-              Procesos claros, <span className="text-[#2563EB]">entregas a tiempo</span> y sin sorpresas
+              Procesos claros, <span className="text-blue-ink">entregas a tiempo</span> y sin sorpresas
             </>
           }
           description="Desde la primera llamada de diagnóstico hasta el soporte continuo, seguimos una metodología estructurada que garantiza transparencia, calidad técnica y control de costos."
@@ -210,14 +210,14 @@ export function HowWeWorkPage() {
         />
 
         {/* Pilares de trabajo */}
-        <section className="border-y border-[#E2E8F0] bg-[#F8FAFC] py-14 sm:py-20" aria-label="Nuestros pilares">
+        <section className="border-y border-border bg-muted py-14 sm:py-20" aria-label="Nuestros pilares">
           <div className={CONTAINER}>
             <div className="max-w-2xl">
-              <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#5B21B6]">Garantía de calidad</p>
-              <h2 className="mt-1 font-heading text-2xl font-bold tracking-tight text-[#0F172A] sm:text-3xl">
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-ink">Garantía de calidad</p>
+              <h2 className="mt-1 font-heading text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
                 Principios que guían cada proyecto
               </h2>
-              <p className="mt-2 text-sm text-[#64748B]">
+              <p className="mt-2 text-sm text-muted-foreground">
                 Creemos que la tecnología debe generar tranquilidad y rendimiento, no complicaciones adicionales.
               </p>
             </div>
@@ -228,13 +228,13 @@ export function HowWeWorkPage() {
                 return (
                   <div
                     key={idx}
-                    className="rounded-2xl border border-[#E2E8F0] bg-white p-6 shadow-xs transition duration-200 hover:border-[#2563EB]/30 hover:shadow-sm"
+                    className="rounded-2xl border border-border bg-card p-6 shadow-xs transition duration-200 hover:border-[#2563EB]/30 hover:shadow-sm"
                   >
-                    <span className="flex size-10 items-center justify-center rounded-xl bg-[#EFF6FF] text-[#2563EB]">
+                    <span className="flex size-10 items-center justify-center rounded-xl bg-tint-blue text-blue-ink">
                       <Icon className="size-5" />
                     </span>
-                    <h3 className="mt-4 font-heading text-base font-bold text-[#0F172A]">{pillar.title}</h3>
-                    <p className="mt-2 text-xs leading-relaxed text-[#64748B]">{pillar.copy}</p>
+                    <h3 className="mt-4 font-heading text-base font-bold text-foreground">{pillar.title}</h3>
+                    <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{pillar.copy}</p>
                   </div>
                 )
               })}
@@ -246,11 +246,11 @@ export function HowWeWorkPage() {
         <section className="py-16 sm:py-24" aria-label="Etapas del proceso">
           <div className={CONTAINER}>
             <div className="text-center max-w-2xl mx-auto">
-              <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#5B21B6]">Paso a paso</p>
-              <h2 className="mt-1 font-heading text-2xl font-bold tracking-tight text-[#0F172A] sm:text-3xl">
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-ink">Paso a paso</p>
+              <h2 className="mt-1 font-heading text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
                 De la necesidad a la solución implementada
               </h2>
-              <p className="mt-2 text-sm text-[#64748B]">
+              <p className="mt-2 text-sm text-muted-foreground">
                 Cada etapa tiene objetivos medibles, un responsable a cargo y entregables formales para tu tranquilidad.
               </p>
             </div>
@@ -261,15 +261,15 @@ export function HowWeWorkPage() {
                 return (
                   <div
                     key={idx}
-                    className="relative overflow-hidden rounded-2xl border border-[#E2E8F0] bg-white p-6 shadow-xs transition duration-200 hover:border-[#2563EB]/40 hover:shadow-md sm:p-8"
+                    className="relative overflow-hidden rounded-2xl border border-border bg-card p-6 shadow-xs transition duration-200 hover:border-[#2563EB]/40 hover:shadow-md sm:p-8"
                   >
                     <div className="grid gap-6 lg:grid-cols-[100px_1fr_320px] lg:items-center">
                       {/* Step number and badge */}
                       <div className="flex items-center gap-3 lg:flex-col lg:items-start lg:gap-1">
-                        <span className="process-number font-heading text-4xl font-extrabold text-[#2563EB] sm:text-5xl">
+                        <span className="process-number font-heading text-4xl font-extrabold text-blue-ink sm:text-5xl">
                           {s.step}
                         </span>
-                        <span className="rounded-full bg-[#EFF6FF] px-2.5 py-0.5 text-[11px] font-bold text-[#2563EB]">
+                        <span className="rounded-full bg-tint-blue px-2.5 py-0.5 text-[11px] font-bold text-blue-ink">
                           {s.badge}
                         </span>
                       </div>
@@ -277,25 +277,25 @@ export function HowWeWorkPage() {
                       {/* Main description */}
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="flex size-7 items-center justify-center rounded-lg bg-[#F1F5F9] text-[#2563EB]">
+                          <span className="flex size-7 items-center justify-center rounded-lg bg-muted text-blue-ink">
                             <Icon className="size-4" />
                           </span>
-                          <h3 className="font-heading text-lg font-bold text-[#0F172A] sm:text-xl">{s.title}</h3>
+                          <h3 className="font-heading text-lg font-bold text-foreground sm:text-xl">{s.title}</h3>
                         </div>
-                        <p className="mt-2 text-sm font-medium text-[#2563EB]">{s.summary}</p>
-                        <p className="mt-2 text-xs leading-relaxed text-[#64748B]">{s.description}</p>
+                        <p className="mt-2 text-sm font-medium text-blue-ink">{s.summary}</p>
+                        <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{s.description}</p>
                       </div>
 
                       {/* Deliverables box */}
-                      <div className="rounded-xl border border-[#F1F5F9] bg-[#F8FAFC] p-4">
-                        <div className="flex items-center justify-between border-b border-[#E2E8F0] pb-2 text-[11px] font-bold uppercase tracking-wider text-[#0F172A]">
+                      <div className="rounded-xl border border-border bg-muted p-4">
+                        <div className="flex items-center justify-between border-b border-border pb-2 text-[11px] font-bold uppercase tracking-wider text-foreground">
                           <span>Entregables clave</span>
-                          <span className="text-[#2563EB] font-semibold lowercase">{s.timeframe}</span>
+                          <span className="text-blue-ink font-semibold lowercase">{s.timeframe}</span>
                         </div>
-                        <ul className="mt-2.5 space-y-2 text-xs text-[#475569]">
+                        <ul className="mt-2.5 space-y-2 text-xs text-muted-foreground">
                           {s.deliverables.map((item, dIdx) => (
                             <li key={dIdx} className="flex items-start gap-2">
-                              <CheckCircle2 className="mt-0.5 size-3.5 shrink-0 text-[#2563EB]" />
+                              <CheckCircle2 className="mt-0.5 size-3.5 shrink-0 text-blue-ink" />
                               <span>{item}</span>
                             </li>
                           ))}
@@ -310,14 +310,14 @@ export function HowWeWorkPage() {
         </section>
 
         {/* Modelos de contratación */}
-        <section className="border-t border-[#E2E8F0] bg-[#F8FAFC] py-16 sm:py-24" aria-label="Modelos de servicio">
+        <section className="border-t border-border bg-muted py-16 sm:py-24" aria-label="Modelos de servicio">
           <div className={CONTAINER}>
             <div className="text-center max-w-2xl mx-auto">
-              <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#5B21B6]">Modalidades flexibles</p>
-              <h2 className="mt-1 font-heading text-2xl font-bold tracking-tight text-[#0F172A] sm:text-3xl">
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-ink">Modalidades flexibles</p>
+              <h2 className="mt-1 font-heading text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
                 ¿Cómo podemos colaborar juntos?
               </h2>
-              <p className="mt-2 text-sm text-[#64748B]">
+              <p className="mt-2 text-sm text-muted-foreground">
                 Nos adaptamos al tamaño de tu empresa y la naturaleza de tus requerimientos tecnológicos.
               </p>
             </div>
@@ -326,23 +326,23 @@ export function HowWeWorkPage() {
               {engagementModels.map((model, idx) => (
                 <div
                   key={idx}
-                  className="flex flex-col justify-between rounded-2xl border border-[#E2E8F0] bg-white p-6 shadow-xs transition duration-200 hover:border-[#2563EB]/40 sm:p-8"
+                  className="flex flex-col justify-between rounded-2xl border border-border bg-card p-6 shadow-xs transition duration-200 hover:border-[#2563EB]/40 sm:p-8"
                 >
                   <div>
                     <div className="flex items-center justify-between">
-                      <span className="rounded-full bg-[#EFF6FF] px-3 py-1 text-[11px] font-bold text-[#2563EB]">
+                      <span className="rounded-full bg-tint-blue px-3 py-1 text-[11px] font-bold text-blue-ink">
                         {model.badge}
                       </span>
                     </div>
-                    <h3 className="mt-4 font-heading text-lg font-bold text-[#0F172A]">{model.title}</h3>
-                    <p className="mt-2 text-xs leading-relaxed text-[#64748B]">{model.desc}</p>
+                    <h3 className="mt-4 font-heading text-lg font-bold text-foreground">{model.title}</h3>
+                    <p className="mt-2 text-xs leading-relaxed text-muted-foreground">{model.desc}</p>
 
-                    <div className="mt-6 border-t border-[#F1F5F9] pt-4">
-                      <p className="text-xs font-bold uppercase tracking-wider text-[#0F172A]">Incluye:</p>
-                      <ul className="mt-3 space-y-2 text-xs text-[#475569]">
+                    <div className="mt-6 border-t border-border pt-4">
+                      <p className="text-xs font-bold uppercase tracking-wider text-foreground">Incluye:</p>
+                      <ul className="mt-3 space-y-2 text-xs text-muted-foreground">
                         {model.features.map((feat, fIdx) => (
                           <li key={fIdx} className="flex items-start gap-2">
-                            <CheckCircle2 className="mt-0.5 size-3.5 shrink-0 text-[#2563EB]" />
+                            <CheckCircle2 className="mt-0.5 size-3.5 shrink-0 text-blue-ink" />
                             <span>{feat}</span>
                           </li>
                         ))}
@@ -374,7 +374,7 @@ export function HowWeWorkPage() {
                 <h2 className="mt-2 font-heading text-2xl font-bold tracking-tight text-white sm:text-3xl">
                   Agenda una sesión de diagnóstico sin compromiso
                 </h2>
-                <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[#94A3B8]">
+                <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
                   Cuéntanos tu requerimiento o reto actual. Te responderemos en menos de 24 horas para coordinar
                   una llamada técnica o visita en sitio.
                 </p>

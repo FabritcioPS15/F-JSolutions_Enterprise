@@ -32,19 +32,19 @@ export function CartPanel({
       <aside
         onClick={(event) => event.stopPropagation()}
         aria-label="Carrito de compras"
-        className="absolute right-0 top-0 flex h-full w-full max-w-md flex-col bg-white shadow-2xl"
+        className="absolute right-0 top-0 flex h-full w-full max-w-md flex-col bg-card shadow-2xl"
       >
-        <div className="flex items-center justify-between border-b border-[#E2E8F0] px-6 py-5">
+        <div className="flex items-center justify-between border-b border-border px-6 py-5">
           <div>
-            <h2 className="text-lg font-semibold tracking-tight text-[#0F172A]">Tu carrito</h2>
-            <p className="text-xs text-[#475569]">
+            <h2 className="text-lg font-semibold tracking-tight text-foreground">Tu carrito</h2>
+            <p className="text-xs text-muted-foreground">
               {count === 0 ? 'Sin productos por ahora' : `${count} producto(s) seleccionado(s)`}
             </p>
           </div>
           <button
             onClick={onClose}
             aria-label="Cerrar carrito"
-            className="grid size-9 place-items-center rounded-full text-[#475569] transition hover:bg-[#F1F5F9] hover:text-[#0F172A]"
+            className="grid size-9 place-items-center rounded-full text-muted-foreground transition hover:bg-muted hover:text-foreground"
           >
             <X className="size-5" />
           </button>
@@ -52,11 +52,11 @@ export function CartPanel({
 
         {lines.length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center px-8 text-center">
-            <span className="grid size-16 place-items-center rounded-2xl bg-[#2563EB]/10 text-[#2563EB]">
+            <span className="grid size-16 place-items-center rounded-2xl bg-[#2563EB]/10 text-blue-ink">
               <ShoppingCart className="size-7" />
             </span>
-            <p className="mt-5 text-base font-bold text-[#0F172A]">Tu carrito está vacío</p>
-            <p className="mt-2 text-sm leading-6 text-[#475569]">
+            <p className="mt-5 text-base font-bold text-foreground">Tu carrito está vacío</p>
+            <p className="mt-2 text-sm leading-6 text-muted-foreground">
               Explora nuestro catálogo y agrega los equipos que necesitas para tu hogar u oficina.
             </p>
             <a
@@ -73,7 +73,7 @@ export function CartPanel({
               {lines.map(({ product, qty }) => (
                 <div
                   key={product.id}
-                  className="flex gap-3 rounded-xl border border-[#E2E8F0] p-3"
+                  className="flex gap-3 rounded-xl border border-border p-3"
                 >
                   <img
                     src={product.image}
@@ -81,18 +81,18 @@ export function CartPanel({
                     className="size-20 shrink-0 rounded-lg object-cover"
                   />
                   <div className="min-w-0 flex-1">
-                    <p className="text-[10px] font-medium uppercase tracking-wide text-[#2563EB]">
+                    <p className="text-[10px] font-medium uppercase tracking-wide text-blue-ink">
                       {product.brand}
                     </p>
-                    <p className="line-clamp-2 text-xs font-bold leading-4 text-[#0F172A]">
+                    <p className="line-clamp-2 text-xs font-bold leading-4 text-foreground">
                       {product.name}
                     </p>
                     <div className="mt-2 flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-1 rounded-lg border border-[#E2E8F0]">
+                      <div className="flex items-center gap-1 rounded-lg border border-border">
                         <button
                           onClick={() => onSetQty(product.id, qty - 1)}
                           aria-label={`Quitar una unidad de ${product.name}`}
-                          className="grid size-7 place-items-center text-[#475569] hover:text-[#2563EB]"
+                          className="grid size-7 place-items-center text-muted-foreground hover:text-blue-ink"
                         >
                           <Minus className="size-3" />
                         </button>
@@ -100,19 +100,19 @@ export function CartPanel({
                         <button
                           onClick={() => onAdd(product.id)}
                           aria-label={`Agregar una unidad de ${product.name}`}
-                          className="grid size-7 place-items-center text-[#475569] hover:text-[#2563EB]"
+                          className="grid size-7 place-items-center text-muted-foreground hover:text-blue-ink"
                         >
                           <Plus className="size-3" />
                         </button>
                       </div>
                       <div className="flex items-center gap-2">
-                        <p className="text-sm font-semibold text-[#0F172A]">
+                        <p className="text-sm font-semibold text-foreground">
                           {formatPrice((product.price ?? 0) * qty)}
                         </p>
                         <button
                           onClick={() => onRemove(product.id)}
                           aria-label={`Eliminar ${product.name}`}
-                          className="text-[#475569] transition hover:text-[#6D28D9]"
+                          className="text-muted-foreground transition hover:text-brand-ink"
                         >
                           <Trash2 className="size-4" />
                         </button>
@@ -123,18 +123,18 @@ export function CartPanel({
               ))}
             </div>
 
-            <div className="border-t border-[#E2E8F0] bg-[#F8FAFC] px-6 py-5">
-              <div className="flex items-center justify-between text-sm text-[#475569]">
+            <div className="border-t border-border bg-muted px-6 py-5">
+              <div className="flex items-center justify-between text-sm text-muted-foreground">
                 <span>Subtotal</span>
-                <span className="font-medium text-[#0F172A]">{formatPrice(subtotal)}</span>
+                <span className="font-medium text-foreground">{formatPrice(subtotal)}</span>
               </div>
-              <div className="mt-1 flex items-center justify-between text-sm text-[#475569]">
+              <div className="mt-1 flex items-center justify-between text-sm text-muted-foreground">
                 <span>Envío</span>
-                <span className="font-semibold text-[#5B21B6]">Calculado al cotizar</span>
+                <span className="font-semibold text-brand-ink">Calculado al cotizar</span>
               </div>
-              <div className="mt-3 flex items-center justify-between border-t border-[#E2E8F0] pt-3">
-                <span className="text-sm font-bold text-[#0F172A]">Total</span>
-                <span className="text-xl font-semibold text-[#0F172A]">{formatPrice(subtotal)}</span>
+              <div className="mt-3 flex items-center justify-between border-t border-border pt-3">
+                <span className="text-sm font-bold text-foreground">Total</span>
+                <span className="text-xl font-semibold text-foreground">{formatPrice(subtotal)}</span>
               </div>
               <a
                 href="/cotizador"
@@ -145,16 +145,16 @@ export function CartPanel({
               </a>
               <button
                 onClick={onClose}
-                className="mt-2 h-10 w-full rounded-lg text-xs font-bold text-[#475569] transition hover:bg-[#F1F5F9] hover:text-[#0F172A]"
+                className="mt-2 h-10 w-full rounded-lg text-xs font-bold text-muted-foreground transition hover:bg-muted hover:text-foreground"
               >
                 Seguir comprando
               </button>
-              <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-[10px] font-semibold text-[#475569]">
+              <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-[10px] font-semibold text-muted-foreground">
                 <span className="flex items-center gap-1">
-                  <ShieldCheck className="size-3.5 text-[#2563EB]" /> Compra segura
+                  <ShieldCheck className="size-3.5 text-blue-ink" /> Compra segura
                 </span>
                 <span className="flex items-center gap-1">
-                  <Truck className="size-3.5 text-[#2563EB]" /> Envío a todo el Perú
+                  <Truck className="size-3.5 text-blue-ink" /> Envío a todo el Perú
                 </span>
               </div>
             </div>

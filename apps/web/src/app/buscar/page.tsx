@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function BuscarPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#F8FAFC]" />}>
+    <Suspense fallback={<div className="min-h-screen bg-muted" />}>
       <SearchPage />
     </Suspense>
   )

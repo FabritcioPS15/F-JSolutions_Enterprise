@@ -141,16 +141,16 @@ export function ProductDetail({ id }: { id: string }) {
 
   return (
     <div className="space-y-5">
-      <nav aria-label="Migas de pan" className="flex items-center gap-1.5 text-xs text-slate-400">
+      <nav aria-label="Migas de pan" className="flex items-center gap-1.5 text-xs text-muted-foreground">
         <Link
           href="/productos"
-          className="inline-flex items-center gap-1.5 font-semibold text-slate-500 transition hover:text-[#5B21B6]"
+          className="inline-flex items-center gap-1.5 font-semibold text-muted-foreground transition hover:text-brand-ink"
         >
           <ArrowLeft className="size-3.5" aria-hidden="true" />
           Productos
         </Link>
-        <ChevronRight className="size-3.5 text-slate-300" aria-hidden="true" />
-        <span className="truncate font-semibold text-slate-900">{product.name}</span>
+        <ChevronRight className="size-3.5 text-muted-foreground/60" aria-hidden="true" />
+        <span className="truncate font-semibold text-foreground">{product.name}</span>
       </nav>
 
       <PageHeader
@@ -180,18 +180,18 @@ export function ProductDetail({ id }: { id: string }) {
             Destacado
           </span>
         )}
-        <span className="rounded-full bg-slate-100 px-2 py-0.5 font-mono text-[10px] font-semibold text-slate-500">
+        <span className="rounded-full bg-muted px-2 py-0.5 font-mono text-[10px] font-semibold text-muted-foreground">
           {product.sku}
         </span>
-        <span className="text-[11px] text-slate-400">
+        <span className="text-[11px] text-muted-foreground">
           Actualizado el {formatDate(product.updatedAt)}
         </span>
       </div>
 
       <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1fr)_360px]">
         <div className="space-y-5">
-          <div className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xs">
-            <div className="relative aspect-[4/3] bg-slate-50 p-6 sm:aspect-[16/10]">
+          <div className="overflow-hidden rounded-2xl border border-border/80 bg-card shadow-xs">
+            <div className="relative aspect-[4/3] bg-muted p-6 sm:aspect-[16/10]">
               <ProductThumb
                 src={gallery[activeImage] ?? ''}
                 alt={product.imageAlt || product.name}
@@ -202,7 +202,7 @@ export function ProductDetail({ id }: { id: string }) {
               </span>
             </div>
             {gallery.length > 1 && (
-              <div className="flex gap-2 overflow-x-auto border-t border-slate-100 p-3">
+              <div className="flex gap-2 overflow-x-auto border-t border-border p-3">
                 {gallery.map((image, index) => (
                   <button
                     key={`${image.slice(0, 24)}-${index}`}
@@ -211,10 +211,10 @@ export function ProductDetail({ id }: { id: string }) {
                     aria-label={`Ver imagen ${index + 1}`}
                     aria-pressed={activeImage === index}
                     className={cn(
-                      'size-16 shrink-0 overflow-hidden rounded-lg border bg-slate-50 p-1 transition',
+                      'size-16 shrink-0 overflow-hidden rounded-lg border bg-muted p-1 transition',
                       activeImage === index
-                        ? 'border-[#5B21B6] ring-2 ring-[#5B21B6]/20'
-                        : 'border-slate-200 hover:border-slate-300'
+                        ? 'border-[#2563EB] ring-2 ring-[#2563EB]/20'
+                        : 'border-border hover:border-input'
                     )}
                   >
                     <ProductThumb src={image} alt={`Imagen ${index + 1}`} className="size-full object-contain" />
@@ -228,11 +228,11 @@ export function ProductDetail({ id }: { id: string }) {
             <div className="space-y-4">
               {product.shortDescription &&
                 product.shortDescription.trim() !== product.description.trim() && (
-                  <p className="text-sm font-medium leading-relaxed text-slate-700">
+                  <p className="text-sm font-medium leading-relaxed text-foreground/80">
                     {product.shortDescription}
                   </p>
                 )}
-              <p className="whitespace-pre-line text-sm leading-relaxed text-slate-600">
+              <p className="whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
                 {product.description || 'Sin descripción completa registrada.'}
               </p>
             </div>
@@ -244,7 +244,7 @@ export function ProductDetail({ id }: { id: string }) {
             icon={Package}
           >
             {product.specs.length === 0 ? (
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-muted-foreground">
                 Este producto todavía no tiene especificaciones registradas.
               </p>
             ) : (
@@ -252,7 +252,7 @@ export function ProductDetail({ id }: { id: string }) {
                 {product.specs.map((spec, index) => (
                   <li
                     key={`${spec}-${index}`}
-                    className="flex items-start gap-2 rounded-xl bg-slate-50 px-3 py-2.5 text-[11.5px] leading-relaxed text-slate-600"
+                    className="flex items-start gap-2 rounded-xl bg-muted px-3 py-2.5 text-[11.5px] leading-relaxed text-muted-foreground"
                   >
                     <span className="mt-1.5 size-1 shrink-0 rounded-full bg-slate-400" />
                     {spec}
@@ -267,45 +267,45 @@ export function ProductDetail({ id }: { id: string }) {
             description="Metadatos registrados para la ficha pública."
             icon={Globe}
           >
-            <div className="rounded-xl border border-slate-200 bg-white p-4">
-              <p className="truncate text-[11px] text-emerald-700">
+            <div className="rounded-xl border border-border bg-card p-4">
+              <p className="truncate text-[11px] text-success-ink">
                 fjsystems.pe › productos › {product.slug}
               </p>
-              <p className="mt-1 line-clamp-2 text-[15px] font-medium leading-snug text-[#5B21B6]">
+              <p className="mt-1 line-clamp-2 text-[15px] font-medium leading-snug text-brand-ink">
                 {product.seoTitle || product.name}
               </p>
-              <p className="mt-1 line-clamp-2 text-[11px] leading-relaxed text-slate-500">
+              <p className="mt-1 line-clamp-2 text-[11px] leading-relaxed text-muted-foreground">
                 {product.seoDescription || product.shortDescription || product.description}
               </p>
             </div>
             <dl className="mt-4 grid gap-3 text-[11px] sm:grid-cols-2">
               <div>
-                <dt className="font-semibold text-slate-500">Título SEO</dt>
-                <dd className="mt-0.5 text-slate-700">{product.seoTitle || 'Sin definir (se usará el nombre)'}</dd>
+                <dt className="font-semibold text-muted-foreground">Título SEO</dt>
+                <dd className="mt-0.5 text-foreground/80">{product.seoTitle || 'Sin definir (se usará el nombre)'}</dd>
               </div>
               <div>
-                <dt className="font-semibold text-slate-500">Meta descripción</dt>
-                <dd className="mt-0.5 text-slate-700">
+                <dt className="font-semibold text-muted-foreground">Meta descripción</dt>
+                <dd className="mt-0.5 text-foreground/80">
                   {product.seoDescription || 'Sin definir (se usará el resumen)'}
                 </dd>
               </div>
               <div className="sm:col-span-2">
-                <dt className="font-semibold text-slate-500">Texto alternativo de la imagen</dt>
-                <dd className="mt-0.5 text-slate-700">{product.imageAlt || 'Sin definir'}</dd>
+                <dt className="font-semibold text-muted-foreground">Texto alternativo de la imagen</dt>
+                <dd className="mt-0.5 text-foreground/80">{product.imageAlt || 'Sin definir'}</dd>
               </div>
             </dl>
           </SectionCard>
         </div>
 
         <aside className="space-y-4 xl:sticky xl:top-24">
-          <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs">
-            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">
+          <div className="rounded-2xl border border-border/80 bg-card p-5 shadow-xs">
+            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
               Precio referencial
             </p>
-            <p className="mt-1.5 font-heading text-[26px] font-bold leading-none text-slate-900">
+            <p className="mt-1.5 font-heading text-[26px] font-bold leading-none text-foreground">
               {priceVisible ? formatCurrency(product.price, settings.currency) : 'A cotizar'}
             </p>
-            <p className="mt-2 text-[10.5px] text-slate-500">
+            <p className="mt-2 text-[10.5px] text-muted-foreground">
               {product.price <= 0
                 ? 'El producto se cotiza según la necesidad del cliente.'
                 : product.showPrice
@@ -313,31 +313,31 @@ export function ProductDetail({ id }: { id: string }) {
                   : 'Precio oculto en el catálogo público.'}
             </p>
             {product.commercialMessage && (
-              <p className="mt-3 rounded-lg bg-slate-50 px-3 py-2 text-[10.5px] leading-relaxed text-slate-600">
+              <p className="mt-3 rounded-lg bg-muted px-3 py-2 text-[10.5px] leading-relaxed text-muted-foreground">
                 {product.commercialMessage}
               </p>
             )}
             {margin !== null && (
-              <p className="mt-3 flex items-center justify-between border-t border-slate-100 pt-3 text-[10.5px] text-slate-500">
+              <p className="mt-3 flex items-center justify-between border-t border-border pt-3 text-[10.5px] text-muted-foreground">
                 Margen interno
-                <span className={cn('font-bold', margin >= 20 ? 'text-emerald-600' : 'text-amber-600')}>
+                <span className={cn('font-bold', margin >= 20 ? 'text-success-ink' : 'text-warning-ink')}>
                   {margin.toFixed(1)}%
                 </span>
               </p>
             )}
-            <div className="mt-3 flex items-center justify-between gap-2 border-t border-slate-100 pt-3">
+            <div className="mt-3 flex items-center justify-between gap-2 border-t border-border pt-3">
               <StockBadge stock={product.stock} minStock={product.minStock} />
-              <span className="text-[10.5px] text-slate-500">
+              <span className="text-[10.5px] text-muted-foreground">
                 {availabilityLabels[product.availability]}
               </span>
             </div>
-            <p className="mt-1.5 text-[10px] text-slate-400">
+            <p className="mt-1.5 text-[10px] text-muted-foreground">
               {availabilityDescriptions[product.availability]} · mínimo {product.minStock} uds.
             </p>
           </div>
 
-          <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs">
-            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">
+          <div className="rounded-2xl border border-border/80 bg-card p-5 shadow-xs">
+            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
               Clasificación
             </p>
             <dl className="mt-3 space-y-2.5 text-[11px]">
@@ -351,12 +351,12 @@ export function ProductDetail({ id }: { id: string }) {
                 { label: 'Tipo', value: product.subSubcategory },
               ].map((row) => (
                 <div key={row.label} className="flex items-start justify-between gap-3">
-                  <dt className="shrink-0 text-slate-400">{row.label}</dt>
+                  <dt className="shrink-0 text-muted-foreground">{row.label}</dt>
                   <dd
                     className={cn(
-                      'text-right text-slate-700',
+                      'text-right text-foreground/80',
                       row.mono && 'font-mono text-[10.5px]',
-                      !row.value && 'text-slate-300'
+                      !row.value && 'text-muted-foreground/60'
                     )}
                   >
                     {row.value || '—'}
@@ -366,14 +366,14 @@ export function ProductDetail({ id }: { id: string }) {
             </dl>
           </div>
 
-          <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs">
+          <div className="rounded-2xl border border-border/80 bg-card p-5 shadow-xs">
             <div className="flex items-center justify-between gap-2">
-              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">
+              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
                 Publicación
               </p>
               <StatusBadge status={product.status} />
             </div>
-            <p className="mt-2 text-[10.5px] leading-relaxed text-slate-500">
+            <p className="mt-2 text-[10.5px] leading-relaxed text-muted-foreground">
               {statusDescriptions[product.status]}
             </p>
 
@@ -382,21 +382,21 @@ export function ProductDetail({ id }: { id: string }) {
                 href={publicUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="mt-3 flex items-center justify-between gap-2 rounded-lg border border-slate-200 px-3 py-2 text-[11px] font-semibold text-slate-600 transition hover:bg-slate-50"
+                className="mt-3 flex items-center justify-between gap-2 rounded-lg border border-border px-3 py-2 text-[11px] font-semibold text-muted-foreground transition hover:bg-muted"
               >
                 Ver ficha pública
                 <ArrowUpRight className="size-3.5" aria-hidden="true" />
               </a>
             )}
 
-            <dl className="mt-3 space-y-1.5 border-t border-slate-100 pt-3 text-[10.5px]">
+            <dl className="mt-3 space-y-1.5 border-t border-border pt-3 text-[10.5px]">
               <div className="flex items-center justify-between gap-2">
-                <dt className="text-slate-400">Creado</dt>
-                <dd className="text-slate-600">{formatDateTime(product.createdAt)}</dd>
+                <dt className="text-muted-foreground">Creado</dt>
+                <dd className="text-muted-foreground">{formatDateTime(product.createdAt)}</dd>
               </div>
               <div className="flex items-center justify-between gap-2">
-                <dt className="text-slate-400">Actualizado</dt>
-                <dd className="text-slate-600">{formatDateTime(product.updatedAt)}</dd>
+                <dt className="text-muted-foreground">Actualizado</dt>
+                <dd className="text-muted-foreground">{formatDateTime(product.updatedAt)}</dd>
               </div>
             </dl>
 
@@ -408,9 +408,9 @@ export function ProductDetail({ id }: { id: string }) {
                   className={cn(btnSecondary, 'w-full justify-start')}
                 >
                   {product.status === 'active' ? (
-                    <EyeOff className="size-4 text-slate-500" aria-hidden="true" />
+                    <EyeOff className="size-4 text-muted-foreground" aria-hidden="true" />
                   ) : (
-                    <CheckCircle2 className="size-4 text-slate-500" aria-hidden="true" />
+                    <CheckCircle2 className="size-4 text-muted-foreground" aria-hidden="true" />
                   )}
                   {product.status === 'active' ? 'Retirar de publicación' : 'Publicar producto'}
                 </button>
@@ -421,7 +421,7 @@ export function ProductDetail({ id }: { id: string }) {
                   onClick={handleRestore}
                   className={cn(btnSecondary, 'w-full justify-start')}
                 >
-                  <ArchiveRestore className="size-4 text-slate-500" aria-hidden="true" />
+                  <ArchiveRestore className="size-4 text-muted-foreground" aria-hidden="true" />
                   Restaurar como borrador
                 </button>
               ) : (
@@ -430,7 +430,7 @@ export function ProductDetail({ id }: { id: string }) {
                   onClick={handleArchive}
                   className={cn(btnSecondary, 'w-full justify-start')}
                 >
-                  <Archive className="size-4 text-slate-500" aria-hidden="true" />
+                  <Archive className="size-4 text-muted-foreground" aria-hidden="true" />
                   Archivar producto
                 </button>
               )}
@@ -439,13 +439,13 @@ export function ProductDetail({ id }: { id: string }) {
                 onClick={handleDuplicate}
                 className={cn(btnSecondary, 'w-full justify-start')}
               >
-                <Copy className="size-4 text-slate-500" aria-hidden="true" />
+                <Copy className="size-4 text-muted-foreground" aria-hidden="true" />
                 Duplicar producto
               </button>
               <button
                 type="button"
                 onClick={() => setConfirmDelete(true)}
-                className="inline-flex h-10 w-full items-center justify-start gap-2 rounded-xl border border-red-200 bg-red-50 px-4 text-sm font-semibold text-red-600 transition hover:bg-red-100"
+                className="inline-flex h-10 w-full items-center justify-start gap-2 rounded-xl border border-red-500/30 bg-red-500/10 px-4 text-sm font-semibold text-danger-ink transition hover:bg-red-500/15"
               >
                 <Trash2 className="size-4" aria-hidden="true" />
                 Eliminar producto
@@ -453,7 +453,7 @@ export function ProductDetail({ id }: { id: string }) {
             </div>
           </div>
 
-          <p className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-[10px] leading-relaxed text-slate-500">
+          <p className="rounded-2xl border border-border bg-muted px-4 py-3 text-[10px] leading-relaxed text-muted-foreground">
             Esta ficha se guarda en el almacenamiento local del navegador. El enlace público apunta
             a la tienda configurada y estará disponible cuando el catálogo se sincronice.
           </p>

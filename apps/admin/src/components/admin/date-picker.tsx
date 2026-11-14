@@ -160,20 +160,20 @@ export function DatePicker({
         className={cn(
           inputClass,
           'relative flex cursor-pointer items-center justify-between gap-2 pl-9 pr-9 text-left',
-          open && 'border-[#5B21B6] ring-4 ring-[#5B21B6]/10',
+          open && 'border-[#2563EB] ring-4 ring-[#2563EB]/10',
           className
         )}
       >
         <CalendarDays
-          className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400"
+          className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
           aria-hidden="true"
         />
-        <span className={cn('min-w-0 truncate', !dateLabel && 'text-slate-400')}>
+        <span className={cn('min-w-0 truncate', !dateLabel && 'text-muted-foreground')}>
           {dateLabel ?? placeholder}
         </span>
         <ChevronDown
           className={cn(
-            'pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-slate-400 transition-transform duration-200',
+            'pointer-events-none absolute right-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground transition-transform duration-200',
             open && 'rotate-180'
           )}
           aria-hidden="true"
@@ -195,7 +195,7 @@ export function DatePicker({
               maxHeight: position.maxHeight,
             }}
             className={cn(
-              'fj-calendar fixed z-[95] overflow-y-auto overscroll-contain rounded-2xl border border-slate-200 bg-white p-2.5 shadow-xl shadow-slate-900/10 outline-none scrollbar-light animate-in fade-in-0 zoom-in-95 duration-150',
+              'fj-calendar fixed z-[95] overflow-y-auto overscroll-contain rounded-2xl border border-border bg-card p-2.5 shadow-xl shadow-slate-900/10 outline-none scrollbar-light animate-in fade-in-0 zoom-in-95 duration-150',
               position.placement === 'top' && '-translate-y-full'
             )}
           >
@@ -211,11 +211,11 @@ export function DatePicker({
               prev2Label={null}
               showNeighboringMonth={false}
             />
-            <div className="sticky bottom-0 -mx-2.5 -mb-2.5 mt-2 flex items-center justify-between gap-2 rounded-b-2xl border-t border-slate-100 bg-white px-3 py-2">
+            <div className="sticky bottom-0 -mx-2.5 -mb-2.5 mt-2 flex items-center justify-between gap-2 rounded-b-2xl border-t border-border bg-card px-3 py-2">
               <button
                 type="button"
                 onClick={() => commit(toIsoDate(new Date()))}
-                className="rounded-lg px-2.5 py-1.5 text-[11px] font-semibold text-[#5B21B6] transition hover:bg-[#F5F3FF]"
+                className="rounded-lg px-2.5 py-1.5 text-[11px] font-semibold text-brand-ink transition hover:bg-tint-brand"
               >
                 Hoy
               </button>
@@ -223,7 +223,7 @@ export function DatePicker({
                 <button
                   type="button"
                   onClick={() => commit('')}
-                  className="rounded-lg px-2.5 py-1.5 text-[11px] font-semibold text-slate-500 transition hover:bg-slate-100 hover:text-slate-700"
+                  className="rounded-lg px-2.5 py-1.5 text-[11px] font-semibold text-muted-foreground transition hover:bg-muted hover:text-foreground/80"
                 >
                   Limpiar
                 </button>

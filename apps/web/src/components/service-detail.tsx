@@ -4,7 +4,6 @@ import {
   ArrowRight,
   ArrowUpRight,
   Check,
-  ChevronRight,
   ClipboardCheck,
   Code2,
   Handshake,
@@ -16,6 +15,7 @@ import {
   Target,
 } from 'lucide-react'
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
+import { Breadcrumbs } from '@/components/layout/breadcrumbs'
 import { FaqAccordion } from '@/components/ui/faq-accordion'
 import { ProcessSequence } from '@/components/ui/process-sequence'
 import { EMPRESA } from '@/lib/constants'
@@ -59,23 +59,6 @@ const categoryIcons: Record<ServiceCategory, typeof Headset> = {
   'Desarrollo de software': Code2,
 }
 
-const quickFacts: Record<ServiceCategory, { label: string; value: string }[]> = {
-  'Soporte TI': [
-    { label: 'Cobertura', value: 'Remota a todo el Perú' },
-    { label: 'Atención', value: 'Remota y en sitio' },
-    { label: 'Diagnóstico', value: 'Sin costo' },
-  ],
-  'Infraestructura TI': [
-    { label: 'Cobertura', value: 'Lima y proyectos a nivel nacional' },
-    { label: 'Modalidad', value: 'En sitio y remota' },
-    { label: 'Inicio', value: 'Diagnóstico sin costo' },
-  ],
-  'Desarrollo de software': [
-    { label: 'Cobertura', value: 'Proyectos en todo el Perú' },
-    { label: 'Modalidad', value: 'Remota y en sitio' },
-    { label: 'Inicio', value: 'Diagnóstico sin costo' },
-  ],
-}
 
 type ServiceDetailProps = {
   service: ServiceDefinition
@@ -88,7 +71,6 @@ export function ServiceDetail({
   categoryCrumb,
   relatedServices,
 }: ServiceDetailProps) {
-  const facts = quickFacts[service.category]
   const related = relatedServices ?? []
   const path = getServicePathFor(service)
   const phoneHref = `tel:${EMPRESA.telefono.replace(/\s/g, '')}`
@@ -142,7 +124,7 @@ export function ServiceDetail({
   }
 
   return (
-    <main className="min-h-screen bg-white text-[#0F172A]">
+    <main className="min-h-screen bg-card text-foreground">
       <EnhancedHeader />
 
       <script
@@ -159,29 +141,13 @@ export function ServiceDetail({
       />
 
       {/* ─── Migas de pan ─── */}
-      <nav aria-label="Ruta de navegación" className="border-b border-[#E2E8F0] bg-[#F8FAFC]">
-        <ol className="mx-auto flex max-w-[1280px] flex-wrap items-center gap-1.5 px-4 py-3 text-[11px] text-[#475569] sm:px-6 lg:px-8">
-          <li>
-            <Link href="/" className="transition hover:text-[#2563EB]">
-              Inicio
-            </Link>
-          </li>
-          <li aria-hidden="true">
-            <ChevronRight className="size-3 text-[#94A3B8]" />
-          </li>
-          <li>
-            <Link href={categoryCrumb.href} className="transition hover:text-[#2563EB]">
-              {categoryCrumb.label}
-            </Link>
-          </li>
-          <li aria-hidden="true">
-            <ChevronRight className="size-3 text-[#94A3B8]" />
-          </li>
-          <li aria-current="page" className="font-semibold text-[#0F172A]">
-            {service.title}
-          </li>
-        </ol>
-      </nav>
+      <Breadcrumbs
+        items={[
+          { label: 'Inicio', href: '/' },
+          { label: categoryCrumb.label, href: categoryCrumb.href },
+          { label: service.title, current: true },
+        ]}
+      />
 
       {/* ─── Hero del servicio ─── */}
       {service.heroImage ? (
@@ -209,7 +175,7 @@ export function ServiceDetail({
               <h1 className="text-4xl font-bold tracking-[-0.045em] text-white sm:text-5xl">
                 {service.title}
               </h1>
-              <p className="mt-4 text-base leading-7 text-[#CBD5E1]">{service.intro}</p>
+              <p className="mt-4 text-base leading-7 text-muted-foreground/60">{service.intro}</p>
               <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <Link
                   href="/cotizacion"
@@ -224,35 +190,21 @@ export function ServiceDetail({
                   Hablar con un especialista
                 </Link>
               </div>
-              <p className="mt-4 text-[11px] text-[#94A3B8]">
+              <p className="mt-4 text-[11px] text-muted-foreground">
                 Respuesta a solicitudes en menos de 24 horas hábiles.
               </p>
             </div>
 
-            <dl className="mt-10 grid max-w-3xl gap-3 sm:grid-cols-3">
-              {facts.map((fact) => (
-                <div
-                  key={fact.label}
-                  className="rounded-2xl border border-white/10 bg-white/[0.06] p-4 backdrop-blur"
-                >
-                  <dt className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#94A3B8]">
-                    {fact.label}
-                  </dt>
-                  <dd className="mt-1 text-sm font-bold text-white">{fact.value}</dd>
-                </div>
-              ))}
-            </dl>
-
             <div className="mt-4 flex flex-wrap gap-3">
               <a
                 href={phoneHref}
-                className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.06] px-3 py-2 text-xs font-semibold text-[#CBD5E1] backdrop-blur transition hover:bg-white/10 hover:text-white"
+                className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.06] px-3 py-2 text-xs font-semibold text-muted-foreground/60 backdrop-blur transition hover:bg-white/10 hover:text-white"
               >
                 <Phone className="size-4 text-[#60A5FA]" /> {EMPRESA.telefono}
               </a>
               <a
                 href={`mailto:${EMPRESA.email}`}
-                className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.06] px-3 py-2 text-xs font-semibold text-[#CBD5E1] backdrop-blur transition hover:bg-white/10 hover:text-white"
+                className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.06] px-3 py-2 text-xs font-semibold text-muted-foreground/60 backdrop-blur transition hover:bg-white/10 hover:text-white"
               >
                 <Mail className="size-4 text-[#60A5FA]" /> {EMPRESA.email}
               </a>
@@ -260,75 +212,67 @@ export function ServiceDetail({
           </div>
         </section>
       ) : (
-        <section className="relative overflow-hidden border-b border-[#E2E8F0] bg-gradient-to-br from-[#F8FAFC] via-white to-[#EDE9FE]">
-        <div className="pointer-events-none absolute -right-32 -top-24 size-96 rounded-full bg-[#2563EB]/10 blur-3xl" />
-        <div className="relative mx-auto grid max-w-[1280px] grid-cols-1 gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:px-8 lg:py-16">
-          <div className="min-w-0">
-            <h1 className="max-w-2xl text-4xl font-bold tracking-[-0.045em] text-[#0F172A] sm:text-5xl">
-              {service.title}
-            </h1>
-            <p className="mt-4 max-w-2xl text-base leading-7 text-[#475569]">{service.intro}</p>
-            <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <Link
-                href="/cotizacion"
-                className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#2563EB] px-5 text-sm font-bold text-white transition hover:bg-[#1D4ED8] sm:w-auto"
-              >
-                Solicitar cotización <ArrowRight className="size-4" />
-              </Link>
-              <Link
-                href="/contacto"
-                className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-[#E2E8F0] bg-white px-5 text-sm font-bold text-[#0F172A] transition hover:border-[#2563EB] hover:text-[#2563EB] sm:w-auto"
-              >
-                Hablar con un especialista
-              </Link>
+        <section className="relative overflow-hidden border-b border-border bg-gradient-to-br from-muted via-white to-brand-soft">
+          <div className="pointer-events-none absolute -right-32 -top-24 size-96 rounded-full bg-[#2563EB]/10 blur-3xl" />
+          <div className="relative mx-auto grid max-w-[1280px] grid-cols-1 gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:px-8 lg:py-16">
+            <div className="min-w-0">
+              <h1 className="max-w-2xl text-4xl font-bold tracking-[-0.045em] text-foreground sm:text-5xl">
+                {service.title}
+              </h1>
+              <p className="mt-4 max-w-2xl text-base leading-7 text-muted-foreground">{service.intro}</p>
+              <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                <Link
+                  href="/cotizacion"
+                  className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#2563EB] px-5 text-sm font-bold text-white transition hover:bg-[#1D4ED8] sm:w-auto"
+                >
+                  Solicitar cotización <ArrowRight className="size-4" />
+                </Link>
+                <Link
+                  href="/contacto"
+                  className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-border bg-card px-5 text-sm font-bold text-foreground transition hover:border-[#2563EB] hover:text-blue-ink sm:w-auto"
+                >
+                  Hablar con un especialista
+                </Link>
+              </div>
+              <p className="mt-4 text-[11px] text-muted-foreground">
+                Respuesta a solicitudes en menos de 24 horas hábiles.
+              </p>
             </div>
-            <p className="mt-4 text-[11px] text-[#64748B]">
-              Respuesta a solicitudes en menos de 24 horas hábiles.
-            </p>
-          </div>
 
-          <aside className="min-w-0 rounded-3xl border border-[#E2E8F0] bg-white/90 p-6 shadow-xl shadow-[#0F172A]/5 backdrop-blur">
-            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#64748B]">
-              Datos del servicio
-            </p>
-            <dl className="mt-4 space-y-4">
-              {facts.map((fact) => (
-                <div key={fact.label} className="flex items-start justify-between gap-4 border-b border-[#F1F5F9] pb-3 last:border-0 last:pb-0">
-                  <dt className="text-xs font-semibold text-[#64748B]">{fact.label}</dt>
-                  <dd className="text-right text-xs font-bold text-[#0F172A]">{fact.value}</dd>
-                </div>
-              ))}
-            </dl>
-            <div className="mt-5 space-y-2">
-              <a
-                href={phoneHref}
-                className="flex items-center gap-2 rounded-xl bg-[#F8FAFC] px-3 py-2.5 text-xs font-semibold text-[#0F172A] transition hover:bg-[#EFF6FF]"
-              >
-                <Phone className="size-4 text-[#2563EB]" /> {EMPRESA.telefono}
-              </a>
-              <a
-                href={`mailto:${EMPRESA.email}`}
-                className="flex items-center gap-2 rounded-xl bg-[#F8FAFC] px-3 py-2.5 text-xs font-semibold text-[#0F172A] transition hover:bg-[#EFF6FF]"
-              >
-                <Mail className="size-4 text-[#2563EB]" /> {EMPRESA.email}
-              </a>
-            </div>
-          </aside>
-        </div>
+            <aside className="min-w-0 rounded-3xl border border-border bg-card/90 p-6 shadow-xl shadow-[#0F172A]/5 backdrop-blur">
+              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
+                Datos del servicio
+              </p>
+              <div className="mt-5 space-y-2">
+                <a
+                  href={phoneHref}
+                  className="flex items-center gap-2 rounded-xl bg-muted px-3 py-2.5 text-xs font-semibold text-foreground transition hover:bg-tint-blue"
+                >
+                  <Phone className="size-4 text-blue-ink" /> {EMPRESA.telefono}
+                </a>
+                <a
+                  href={`mailto:${EMPRESA.email}`}
+                  className="flex items-center gap-2 rounded-xl bg-muted px-3 py-2.5 text-xs font-semibold text-foreground transition hover:bg-tint-blue"
+                >
+                  <Mail className="size-4 text-blue-ink" /> {EMPRESA.email}
+                </a>
+              </div>
+            </aside>
+          </div>
         </section>
       )}
 
       {/* ─── Qué incluye ─── */}
-      <section className="border-b border-[#E2E8F0] bg-white">
+      <section className="border-b border-border bg-card">
         <div className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
           <div className="max-w-2xl">
-            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#5B21B6]">
+            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-brand-ink">
               Qué incluye
             </p>
-            <h2 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-[#0F172A] sm:text-4xl">
+            <h2 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-foreground sm:text-4xl">
               Todo lo que cubre este servicio
             </h2>
-            <p className="mt-3 text-sm leading-6 text-[#475569]">
+            <p className="mt-3 text-sm leading-6 text-muted-foreground">
               El alcance final se ajusta a tu empresa después del diagnóstico, sin sumar servicios
               que no necesitas.
             </p>
@@ -338,13 +282,13 @@ export function ServiceDetail({
             {service.includes.map((item) => (
               <div
                 key={item.title}
-                className="rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-5 transition hover:border-[#2563EB]/30 hover:bg-white hover:shadow-lg hover:shadow-black/5"
+                className="rounded-2xl border border-border bg-muted p-5 transition hover:border-[#2563EB]/30 hover:bg-card hover:shadow-lg hover:shadow-black/5"
               >
-                <span className="grid size-9 place-items-center rounded-xl bg-white text-[#2563EB] shadow-sm">
+                <span className="grid size-9 place-items-center rounded-xl bg-card text-blue-ink shadow-sm">
                   <Check className="size-4" />
                 </span>
-                <h3 className="mt-3 text-sm font-bold text-[#0F172A]">{item.title}</h3>
-                <p className="mt-1.5 text-xs leading-5 text-[#475569]">{item.copy}</p>
+                <h3 className="mt-3 text-sm font-bold text-foreground">{item.title}</h3>
+                <p className="mt-1.5 text-xs leading-5 text-muted-foreground">{item.copy}</p>
               </div>
             ))}
           </div>
@@ -352,18 +296,18 @@ export function ServiceDetail({
       </section>
 
       {/* ─── Cómo trabajamos ─── */}
-      <section className="border-b border-[#E2E8F0] bg-[#F7F9FC]">
+      <section className="border-b border-border bg-muted">
         <div className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#5B21B6]">
+              <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-brand-ink">
                 Cómo trabajamos
               </p>
-              <h2 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-[#0F172A] sm:text-4xl">
+              <h2 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-foreground sm:text-4xl">
                 Un proceso claro, sin sorpresas
               </h2>
             </div>
-            <p className="max-w-md text-sm leading-6 text-[#475569]">
+            <p className="max-w-md text-sm leading-6 text-muted-foreground">
               Cada etapa tiene responsables, entregables y fechas. Tú siempre sabes en qué punto
               está tu servicio.
             </p>
@@ -373,16 +317,16 @@ export function ServiceDetail({
             {process.map((item, index) => (
               <div
                 key={item.step}
-                className="relative rounded-2xl border border-[#E2E8F0] bg-white p-6"
+                className="relative rounded-2xl border border-border bg-card p-6"
               >
-                <span className="process-number text-4xl font-extrabold text-[#CBD5E1]">{item.step}</span>
-                <span className="absolute right-5 top-5 grid size-9 place-items-center rounded-lg bg-[#EFF6FF] text-[#2563EB]">
+                <span className="process-number text-4xl font-extrabold text-muted-foreground/60">{item.step}</span>
+                <span className="absolute right-5 top-5 grid size-9 place-items-center rounded-lg bg-tint-blue text-blue-ink">
                   <item.icon className="size-4" />
                 </span>
-                <h3 className="mt-2 text-sm font-bold text-[#0F172A]">{item.title}</h3>
-                <p className="mt-2 text-xs leading-5 text-[#475569]">{item.copy}</p>
+                <h3 className="mt-2 text-sm font-bold text-foreground">{item.title}</h3>
+                <p className="mt-2 text-xs leading-5 text-muted-foreground">{item.copy}</p>
                 {index < process.length - 1 && (
-                  <span className="process-arrow absolute -right-3 top-1/2 hidden -translate-y-1/2 text-[#94A3B8] lg:block">
+                  <span className="process-arrow absolute -right-3 top-1/2 hidden -translate-y-1/2 text-muted-foreground lg:block">
                     <ArrowRight className="size-5" />
                   </span>
                 )}
@@ -393,22 +337,22 @@ export function ServiceDetail({
       </section>
 
       {/* ─── Preguntas frecuentes ─── */}
-      <section id="faq" className="scroll-mt-24 border-b border-[#E2E8F0] bg-white">
+      <section id="faq" className="scroll-mt-24 border-b border-border bg-card">
         <div className="mx-auto grid max-w-[1280px] gap-8 px-4 py-12 sm:px-6 lg:grid-cols-[0.85fr_1.15fr] lg:px-8 lg:py-16">
           <div>
-            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#5B21B6]">
+            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-brand-ink">
               Preguntas frecuentes
             </p>
-            <h2 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-[#0F172A] sm:text-4xl">
+            <h2 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-foreground sm:text-4xl">
               Antes de empezar
             </h2>
-            <p className="mt-3 text-sm leading-6 text-[#475569]">
+            <p className="mt-3 text-sm leading-6 text-muted-foreground">
               Las dudas más comunes sobre {service.title.toLowerCase()}. Si la tuya no está aquí,
               escríbenos y la respondemos.
             </p>
             <Link
               href="/contacto"
-              className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-[#2563EB] hover:text-[#1D4ED8]"
+              className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-blue-ink hover:text-blue-ink"
             >
               Hacer otra consulta <ArrowRight className="size-4" />
             </Link>
@@ -421,20 +365,20 @@ export function ServiceDetail({
 
       {/* ─── Servicios relacionados ─── */}
       {related.length > 0 && (
-        <section className="border-b border-[#E2E8F0] bg-[#F8FAFC]">
+        <section className="border-b border-border bg-muted">
           <div className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
             <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#5B21B6]">
+                <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-brand-ink">
                   Servicios relacionados
                 </p>
-                <h2 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-[#0F172A] sm:text-4xl">
+                <h2 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-foreground sm:text-4xl">
                   Suele combinarse con
                 </h2>
               </div>
               <Link
                 href={categoryCrumb.href}
-                className="inline-flex items-center gap-1.5 text-sm font-bold text-[#2563EB] hover:text-[#1D4ED8]"
+                className="inline-flex items-center gap-1.5 text-sm font-bold text-blue-ink hover:text-blue-ink"
               >
                 Ver todos los servicios <ArrowUpRight className="size-4" />
               </Link>
@@ -447,14 +391,14 @@ export function ServiceDetail({
                   <Link
                     key={item.slug}
                     href={getServicePathFor(item)}
-                    className="group flex flex-col rounded-2xl border border-[#E2E8F0] bg-white p-6 transition hover:border-[#2563EB]/30 hover:shadow-lg hover:shadow-black/5"
+                    className="group flex flex-col rounded-2xl border border-border bg-card p-6 transition hover:border-[#2563EB]/30 hover:shadow-lg hover:shadow-black/5"
                   >
-                    <span className="grid size-10 place-items-center rounded-xl bg-[#EFF6FF] text-[#2563EB] transition group-hover:bg-[#2563EB] group-hover:text-white">
+                    <span className="grid size-10 place-items-center rounded-xl bg-tint-blue text-blue-ink transition group-hover:bg-[#2563EB] group-hover:text-white">
                       <Icon className="size-5" />
                     </span>
-                    <h3 className="mt-4 text-base font-bold text-[#0F172A]">{item.title}</h3>
-                    <p className="mt-2 flex-1 text-xs leading-5 text-[#475569]">{item.summary}</p>
-                    <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-[#2563EB]">
+                    <h3 className="mt-4 text-base font-bold text-foreground">{item.title}</h3>
+                    <p className="mt-2 flex-1 text-xs leading-5 text-muted-foreground">{item.summary}</p>
+                    <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-blue-ink">
                       Conocer el servicio <ArrowUpRight className="size-3.5" />
                     </span>
                   </Link>
@@ -467,18 +411,18 @@ export function ServiceDetail({
 
       {/* ─── CTA final ─── */}
       <section className="px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
-        <div className="relative mx-auto max-w-[1280px] overflow-hidden rounded-3xl border border-[#7C3AED]/25 bg-gradient-to-br from-[#EFF6FF] via-white to-[#EDE9FE] px-6 py-10 shadow-sm sm:px-10 lg:px-14 lg:py-14">
+        <div className="relative mx-auto max-w-[1280px] overflow-hidden rounded-3xl border border-[#2563EB]/25 bg-gradient-to-br from-tint-blue via-white to-brand-soft px-6 py-10 shadow-sm sm:px-10 lg:px-14 lg:py-14">
           <div className="pointer-events-none absolute -right-24 -top-24 size-80 rounded-full bg-[#2563EB]/10 blur-2xl" />
-          <div className="pointer-events-none absolute -bottom-32 left-1/3 size-80 rounded-full bg-[#7C3AED]/20 blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-32 left-1/3 size-80 rounded-full bg-[#2563EB]/20 blur-3xl" />
           <div className="relative grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
             <div>
-              <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#334155]">
+              <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-foreground/85">
                 Hablemos de tu proyecto
               </p>
               <h2 className="mt-3 text-3xl font-bold tracking-[-0.04em] sm:text-4xl">
                 ¿Necesitas {service.title.toLowerCase()} en tu empresa?
               </h2>
-              <p className="mt-3 max-w-xl text-sm leading-6 text-[#334155]">
+              <p className="mt-3 max-w-xl text-sm leading-6 text-foreground/85">
                 Cuéntanos tu caso y recibe una propuesta con alcance claro, tiempos y costos. El
                 diagnóstico inicial no tiene costo.
               </p>
@@ -491,29 +435,29 @@ export function ServiceDetail({
                 </Link>
                 <a
                   href={phoneHref}
-                  className="inline-flex h-11 items-center gap-2 rounded-xl border border-[#CBD5E1] bg-white px-5 text-sm font-bold text-[#0F172A] transition hover:border-[#2563EB] hover:text-[#2563EB]"
+                  className="inline-flex h-11 items-center gap-2 rounded-xl border border-input bg-card px-5 text-sm font-bold text-foreground transition hover:border-[#2563EB] hover:text-blue-ink"
                 >
                   <Phone className="size-4" /> {EMPRESA.telefono}
                 </a>
               </div>
             </div>
-            <div className="grid gap-3 rounded-2xl border border-[#E2E8F0] bg-[#F1F5F9] p-5">
+            <div className="grid gap-3 rounded-2xl border border-border bg-muted p-5">
               <a
                 href={`mailto:${EMPRESA.email}`}
                 className="flex items-center gap-3 text-sm font-semibold"
               >
-                <span className="grid size-9 place-items-center rounded-lg bg-white">
-                  <Mail className="size-4 text-[#2563EB]" />
+                <span className="grid size-9 place-items-center rounded-lg bg-card">
+                  <Mail className="size-4 text-blue-ink" />
                 </span>
                 {EMPRESA.email}
               </a>
               <div className="flex items-center gap-3 text-sm font-semibold">
-                <span className="grid size-9 place-items-center rounded-lg bg-white">
-                  <Headset className="size-4 text-[#2563EB]" />
+                <span className="grid size-9 place-items-center rounded-lg bg-card">
+                  <Headset className="size-4 text-blue-ink" />
                 </span>
                 {EMPRESA.horario}
               </div>
-              <div className="mt-1 rounded-lg bg-white px-3 py-2 text-[11px] text-[#334155]">
+              <div className="mt-1 rounded-lg bg-card px-3 py-2 text-[11px] text-foreground/85">
                 Atendemos empresas de todos los tamaños, en Lima y a nivel nacional.
               </div>
             </div>

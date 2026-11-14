@@ -20,11 +20,11 @@ export const orderStatusLabels: Record<OrderStatus, string> = {
 }
 
 export const orderStatusClasses: Record<OrderStatus, string> = {
-  pending: 'bg-slate-100 text-slate-700 ring-slate-200',
-  confirmed: 'bg-sky-50 text-sky-700 ring-sky-200',
-  processing: 'bg-amber-50 text-amber-700 ring-amber-200',
-  shipped: 'bg-indigo-50 text-indigo-700 ring-indigo-200',
-  delivered: 'bg-emerald-50 text-emerald-700 ring-emerald-200',
+  pending: 'bg-muted text-foreground/80 ring-border',
+  confirmed: 'bg-sky-500/10 text-sky-ink ring-sky-200',
+  processing: 'bg-amber-500/10 text-warning-ink ring-amber-200',
+  shipped: 'bg-blue-50 text-blue-700 ring-blue-200',
+  delivered: 'bg-emerald-500/10 text-success-ink ring-emerald-500/30',
   cancelled: 'bg-rose-50 text-rose-700 ring-rose-200',
 }
 
@@ -107,9 +107,9 @@ export const userStatusLabels: Record<AdminUserStatus, string> = {
 }
 
 export const userStatusClasses: Record<AdminUserStatus, string> = {
-  active: 'bg-emerald-50 text-emerald-700 ring-emerald-200',
-  invited: 'bg-sky-50 text-sky-700 ring-sky-200',
-  disabled: 'bg-slate-100 text-slate-600 ring-slate-200',
+  active: 'bg-emerald-500/10 text-success-ink ring-emerald-500/30',
+  invited: 'bg-sky-500/10 text-sky-ink ring-sky-200',
+  disabled: 'bg-muted text-muted-foreground ring-border',
 }
 
 export function userInitials(user: Pick<AdminUser, 'name' | 'email'>) {

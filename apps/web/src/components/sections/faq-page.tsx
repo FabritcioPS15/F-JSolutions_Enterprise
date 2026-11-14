@@ -175,7 +175,7 @@ export function FaqPage() {
   }, [selectedCategory, searchQuery])
 
   return (
-    <div className="min-h-screen bg-white text-[#0F172A] selection:bg-[#2563EB]/15 selection:text-[#2563EB]">
+    <div className="min-h-screen bg-card text-foreground selection:bg-[#2563EB]/15 selection:text-blue-ink">
       <EnhancedHeader />
 
       <main>
@@ -184,7 +184,7 @@ export function FaqPage() {
           id="hero-faq"
           title={
             <>
-              Preguntas frecuentes y <span className="text-[#2563EB]">respuestas claras</span>
+              Preguntas frecuentes y <span className="text-blue-ink">respuestas claras</span>
             </>
           }
           description="Resolvemos las dudas más comunes sobre nuestros servicios TI, metodología, condiciones comerciales, soporte técnico y garantías de suministro."
@@ -208,23 +208,23 @@ export function FaqPage() {
         />
 
         {/* Buscador de preguntas */}
-        <section className="border-y border-[#E2E8F0] bg-[#F8FAFC] py-8 sm:py-10" aria-label="Buscador de FAQs">
+        <section className="border-y border-border bg-muted py-8 sm:py-10" aria-label="Buscador de FAQs">
           <div className={CONTAINER}>
             <div className="mx-auto max-w-2xl text-center">
               <div className="relative">
-                <Search className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-[#94A3B8]" />
+                <Search className="pointer-events-none absolute left-4 top-1/2 size-5 -translate-y-1/2 text-muted-foreground" />
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Escribe lo que necesitas saber (ej. SLA, SUNAT, garantía, visitas)..."
-                  className="h-12 w-full rounded-2xl border border-[#CBD5E1] bg-white pl-12 pr-10 text-sm text-[#0F172A] shadow-xs outline-none transition placeholder:text-[#94A3B8] focus:border-[#2563EB] focus:ring-4 focus:ring-[#2563EB]/10"
+                  className="h-12 w-full rounded-2xl border border-input bg-card pl-12 pr-10 text-sm text-foreground shadow-xs outline-none transition placeholder:text-muted-foreground focus:border-[#2563EB] focus:ring-4 focus:ring-[#2563EB]/10"
                 />
                 {searchQuery && (
                   <button
                     type="button"
                     onClick={() => setSearchQuery('')}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 rounded-md p-1 text-[#94A3B8] hover:text-[#0F172A]"
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 rounded-md p-1 text-muted-foreground hover:text-foreground"
                     aria-label="Limpiar búsqueda"
                   >
                     <X className="size-4" />
@@ -233,7 +233,7 @@ export function FaqPage() {
               </div>
 
               {searchQuery && (
-                <p className="mt-2.5 text-xs text-[#64748B]">
+                <p className="mt-2.5 text-xs text-muted-foreground">
                   Mostrando {filteredFaqs.length} resultados para &quot;{searchQuery}&quot;
                 </p>
               )}
@@ -251,7 +251,7 @@ export function FaqPage() {
                     className={`rounded-xl px-4 py-2 text-xs font-semibold transition-all ${
                       active
                         ? 'bg-[#2563EB] text-white shadow-sm'
-                        : 'border border-[#E2E8F0] bg-white text-[#475569] hover:border-[#CBD5E1] hover:bg-white'
+                        : 'border border-border bg-card text-muted-foreground hover:border-input hover:bg-card'
                     }`}
                   >
                     {cat.label}
@@ -266,19 +266,19 @@ export function FaqPage() {
         <section className="py-12 sm:py-18" aria-label="Listado de preguntas frecuentes">
           <div className="mx-auto w-full max-w-3xl px-4 sm:px-6">
             {/* Control buttons */}
-            <div className="flex items-center justify-between gap-4 border-b border-[#E2E8F0] pb-4">
-              <span className="text-xs font-semibold text-[#64748B]">
+            <div className="flex items-center justify-between gap-4 border-b border-border pb-4">
+              <span className="text-xs font-semibold text-muted-foreground">
                 {filteredFaqs.length} {filteredFaqs.length === 1 ? 'pregunta encontrada' : 'preguntas disponibles'}
               </span>
-              <span className="text-xs font-medium text-[#94A3B8]">Una respuesta a la vez</span>
+              <span className="text-xs font-medium text-muted-foreground">Una respuesta a la vez</span>
             </div>
 
             {/* Empty state */}
             {filteredFaqs.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-[#CBD5E1] bg-[#F8FAFC] py-16 text-center mt-6">
-                <FileQuestion className="mx-auto size-10 text-[#94A3B8]" />
-                <h3 className="mt-3 text-base font-semibold text-[#0F172A]">No encontramos preguntas con ese término</h3>
-                <p className="mt-1 text-sm text-[#64748B]">Intenta con otra palabra clave o contáctanos directamente.</p>
+              <div className="rounded-2xl border border-dashed border-input bg-muted py-16 text-center mt-6">
+                <FileQuestion className="mx-auto size-10 text-muted-foreground" />
+                <h3 className="mt-3 text-base font-semibold text-foreground">No encontramos preguntas con ese término</h3>
+                <p className="mt-1 text-sm text-muted-foreground">Intenta con otra palabra clave o contáctanos directamente.</p>
                 <button
                   type="button"
                   onClick={() => {
@@ -305,19 +305,19 @@ export function FaqPage() {
         </section>
 
         {/* Tarjeta de ayuda directa */}
-        <section className="border-t border-[#E2E8F0] bg-[#F8FAFC] py-16" aria-label="Ayuda personalizada">
+        <section className="border-t border-border bg-muted py-16" aria-label="Ayuda personalizada">
           <div className="mx-auto w-full max-w-4xl px-4 sm:px-6">
-            <div className="rounded-3xl border border-[#DDD6FE] bg-gradient-to-br from-white to-[#EDE9FE] p-8 shadow-sm sm:p-10">
+            <div className="rounded-3xl border border-brand-ink/30 bg-gradient-to-br from-white to-brand-soft p-8 shadow-sm sm:p-10">
               <div className="grid gap-6 md:grid-cols-[1fr_auto] md:items-center">
                 <div>
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-[#2563EB]/10 px-3 py-1 text-xs font-bold text-[#2563EB]">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-[#2563EB]/10 px-3 py-1 text-xs font-bold text-blue-ink">
                     <Sparkles className="size-3.5" />
                     ¿Tu duda no está en la lista?
                   </span>
-                  <h2 className="mt-3 font-heading text-xl font-bold tracking-tight text-[#0F172A] sm:text-2xl">
+                  <h2 className="mt-3 font-heading text-xl font-bold tracking-tight text-foreground sm:text-2xl">
                     Habla directamente con nuestro equipo técnico
                   </h2>
-                  <p className="mt-2 text-xs sm:text-sm leading-relaxed text-[#64748B]">
+                  <p className="mt-2 text-xs sm:text-sm leading-relaxed text-muted-foreground">
                     Escríbenos por WhatsApp o déjanos un mensaje. Te respondemos en menos de 2 horas en horario laboral.
                   </p>
                 </div>
@@ -334,7 +334,7 @@ export function FaqPage() {
                   </Link>
                   <Link
                     href="/contacto"
-                    className="inline-flex h-11 items-center gap-2 rounded-xl border border-[#CBD5E1] bg-white px-5 text-sm font-semibold text-[#0F172A] transition hover:bg-[#F8FAFC]"
+                    className="inline-flex h-11 items-center gap-2 rounded-xl border border-input bg-card px-5 text-sm font-semibold text-foreground transition hover:bg-muted"
                   >
                     <Mail className="size-4" />
                     Formulario de contacto

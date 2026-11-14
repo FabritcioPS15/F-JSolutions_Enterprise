@@ -35,17 +35,17 @@ export function HeroSection({ id, children, className, overlay = true, fill = fa
     <section
       id={id}
       className={cn(
-        'relative isolate overflow-hidden bg-white',
+        'relative isolate overflow-hidden bg-card',
         fill && 'flex flex-1 flex-col',
         className,
       )}
     >
       {overlay && (
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,#FFFFFF_0%,#FCFDFE_52%,#F8FAFC_100%)]" />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,#FFFFFF_0%,#FCFDFE_52%,#F8FAFC_100%)] dark:bg-[linear-gradient(180deg,#0B1220_0%,#0E1626_52%,#0B1220_100%)]" />
           <div className="hero-grid absolute inset-x-0 top-0 h-[420px] opacity-60" />
           <div className="absolute -right-44 -top-52 size-[560px] rounded-full bg-[#2563EB]/[0.07] blur-[110px]" />
-          <div className="absolute -left-36 top-24 size-[380px] rounded-full bg-[#7C3AED]/[0.13] blur-[100px]" />
+          <div className="absolute -left-36 top-24 size-[380px] rounded-full bg-[#2563EB]/[0.13] blur-[100px]" />
         </div>
       )}
       {children}
@@ -63,14 +63,14 @@ export function HeroEyebrow({ children, icon, className }: HeroEyebrowProps) {
   return (
     <span
       className={cn(
-        'hero-reveal inline-flex items-center gap-2 rounded-full border border-[#DDD6FE] bg-white/85 px-3 py-1.5 text-[10.5px] font-semibold uppercase tracking-[0.16em] text-[#5B21B6] shadow-[0_1px_2px_rgba(15,23,42,0.04)] backdrop-blur',
+        'hero-reveal inline-flex items-center gap-2 rounded-full border border-brand-ink/30 bg-card/85 px-3 py-1.5 text-[10.5px] font-semibold uppercase tracking-[0.16em] text-brand-ink shadow-[0_1px_2px_rgba(15,23,42,0.04)] backdrop-blur',
         className,
       )}
     >
       {icon ?? (
         <span
           aria-hidden="true"
-          className="size-1.5 rounded-full bg-[#7C3AED] shadow-[0_0_0_3px_rgba(124,58,237,0.18)]"
+          className="size-1.5 rounded-full bg-[#2563EB] shadow-[0_0_0_3px_rgba(37,99,235,0.18)]"
         />
       )}
       {children}
@@ -89,7 +89,7 @@ export function HeroTitle({ children, className, size = 'xl', as: Tag = 'h1' }: 
   return (
     <Tag
       className={cn(
-        'hero-reveal hero-delay-1 mt-4 sm:mt-5 max-w-[20ch] text-balance font-heading font-bold leading-[1.08] sm:leading-[1.04] tracking-[-0.04em] text-[#0F172A]',
+        'hero-reveal hero-delay-1 mt-4 sm:mt-5 max-w-[20ch] text-balance font-heading font-bold leading-[1.08] sm:leading-[1.04] tracking-[-0.04em] text-foreground',
         HERO_TITLE_SIZE[size],
         className,
       )}
@@ -100,7 +100,7 @@ export function HeroTitle({ children, className, size = 'xl', as: Tag = 'h1' }: 
 }
 
 export function HeroAccent({ children }: { children: ReactNode }) {
-  return <span className="text-[#2563EB]">{children}</span>
+  return <span className="text-blue-ink">{children}</span>
 }
 
 type HeroLeadProps = {
@@ -112,7 +112,7 @@ export function HeroLead({ children, className }: HeroLeadProps) {
   return (
     <p
       className={cn(
-        'hero-reveal hero-delay-2 mt-4 sm:mt-5 max-w-[54ch] text-[0.95rem] leading-relaxed text-[#475569] sm:text-base',
+        'hero-reveal hero-delay-2 mt-4 sm:mt-5 max-w-[54ch] text-[0.95rem] leading-relaxed text-muted-foreground sm:text-base',
         className,
       )}
     >
@@ -147,9 +147,9 @@ const actionVariants = {
   primary:
     'bg-[#2563EB] text-white shadow-[0_12px_28px_-14px_rgba(37,99,235,0.75)] hover:-translate-y-0.5 hover:bg-[#1D4ED8] hover:shadow-[0_18px_34px_-16px_rgba(37,99,235,0.65)]',
   secondary:
-    'border border-[#DBE2EA] bg-white text-[#0F172A] shadow-[0_1px_2px_rgba(15,23,42,0.04)] hover:-translate-y-0.5 hover:border-[#2563EB]/45 hover:text-[#1D4ED8] hover:shadow-[0_10px_24px_-16px_rgba(15,23,42,0.35)]',
+    'border border-border bg-card text-foreground shadow-[0_1px_2px_rgba(15,23,42,0.04)] hover:-translate-y-0.5 hover:border-[#2563EB]/45 hover:text-blue-ink hover:shadow-[0_10px_24px_-16px_rgba(15,23,42,0.35)]',
   quiet:
-    'border border-transparent bg-transparent text-[#1D4ED8] hover:bg-[#EFF6FF] hover:text-[#1D4ED8]',
+    'border border-transparent bg-transparent text-blue-ink hover:bg-tint-blue hover:text-blue-ink',
 } as const
 
 export function HeroAction({
@@ -191,13 +191,13 @@ export function HeroProof({
   return (
     <ul
       className={cn(
-        'hero-reveal hero-delay-4 mt-7 flex flex-wrap items-center gap-x-5 gap-y-2.5 text-[12px] font-semibold text-[#475569]',
+        'hero-reveal hero-delay-4 mt-7 flex flex-wrap items-center gap-x-5 gap-y-2.5 text-[12px] font-semibold text-muted-foreground',
         className,
       )}
     >
       {items.map((item) => (
         <li key={item} className="flex items-center gap-1.5">
-          <span className="grid size-4 shrink-0 place-items-center rounded-full bg-[#EFF6FF] text-[#2563EB]">
+          <span className="grid size-4 shrink-0 place-items-center rounded-full bg-tint-blue text-blue-ink">
             <Check aria-hidden="true" className="size-2.5" strokeWidth={3} />
           </span>
           {item}
@@ -217,7 +217,7 @@ export function HeroVisual({ children, className }: { children: ReactNode; class
     >
       <div
         aria-hidden="true"
-        className="absolute inset-x-8 inset-y-10 -z-10 rounded-[40px] bg-gradient-to-br from-[#2563EB]/10 to-[#7C3AED]/10 blur-3xl"
+        className="absolute inset-x-8 inset-y-10 -z-10 rounded-[40px] bg-gradient-to-br from-[#2563EB]/10 to-[#2563EB]/10 blur-3xl"
       />
       {children}
     </div>
@@ -228,7 +228,7 @@ export function HeroPanel({ children, className }: { children: ReactNode; classN
   return (
     <div
       className={cn(
-        'relative overflow-hidden rounded-[24px] border border-[#E2E8F0] bg-white shadow-[0_42px_100px_-52px_rgba(15,23,42,0.5)]',
+        'relative overflow-hidden rounded-[24px] border border-border bg-card shadow-[0_42px_100px_-52px_rgba(15,23,42,0.5)]',
         className,
       )}
     >
@@ -256,27 +256,27 @@ export function HeroRelatedLinks({
   return (
     <div className={cn('hero-reveal hero-delay-5 mt-9', className)}>
       {title && (
-        <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-[#64748B]">{title}</p>
+        <p className="text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">{title}</p>
       )}
       <div className="mt-2.5 grid gap-2 sm:grid-cols-2">
         {items.map((item) => (
           <Link
             key={item.label}
             href={item.href}
-            className="group flex items-center gap-3 rounded-xl border border-[#E2E8F0] bg-white/75 px-3 py-2.5 text-left transition hover:border-[#2563EB]/35 hover:bg-white hover:shadow-[0_10px_24px_-20px_rgba(15,23,42,0.4)]"
+            className="group flex items-center gap-3 rounded-xl border border-border bg-card/75 px-3 py-2.5 text-left transition hover:border-[#2563EB]/35 hover:bg-card hover:shadow-[0_10px_24px_-20px_rgba(15,23,42,0.4)]"
           >
-            <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-[#EFF6FF] text-[#2563EB] transition group-hover:bg-[#2563EB] group-hover:text-white">
+            <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-tint-blue text-blue-ink transition group-hover:bg-[#2563EB] group-hover:text-white">
               {item.icon ?? <ArrowUpRight aria-hidden="true" className="size-3.5" />}
             </span>
             <span className="min-w-0 flex-1">
-              <span className="block truncate text-[12px] font-bold text-[#0F172A]">{item.label}</span>
+              <span className="block truncate text-[12px] font-bold text-foreground">{item.label}</span>
               {item.hint && (
-                <span className="mt-0.5 block truncate text-[10px] text-[#64748B]">{item.hint}</span>
+                <span className="mt-0.5 block truncate text-[10px] text-muted-foreground">{item.hint}</span>
               )}
             </span>
             <ArrowUpRight
               aria-hidden="true"
-              className="size-3.5 shrink-0 text-[#94A3B8] transition group-hover:translate-x-0.5 group-hover:text-[#2563EB]"
+              className="size-3.5 shrink-0 text-muted-foreground transition group-hover:translate-x-0.5 group-hover:text-blue-ink"
             />
           </Link>
         ))}
@@ -301,22 +301,22 @@ export function HeroFloatingNote({
   return (
     <div
       className={cn(
-        'hero-float absolute z-20 flex items-center gap-2.5 rounded-xl border border-[#E2E8F0] bg-white/95 px-3 py-2.5 shadow-[0_18px_40px_-22px_rgba(15,23,42,0.4)] backdrop-blur',
+        'hero-float absolute z-20 flex items-center gap-2.5 rounded-xl border border-border bg-card/95 px-3 py-2.5 shadow-[0_18px_40px_-22px_rgba(15,23,42,0.4)] backdrop-blur',
         className,
       )}
       style={{ animationDelay: `${delay}ms` }}
     >
-      <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-[#EFF6FF] text-[#2563EB]">
+      <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-tint-blue text-blue-ink">
         {icon}
       </span>
       <span>
-        <span className="block text-[11px] font-bold leading-4 text-[#0F172A]">{title}</span>
-        <span className="block text-[9px] leading-4 text-[#64748B]">{subtitle}</span>
+        <span className="block text-[11px] font-bold leading-4 text-foreground">{title}</span>
+        <span className="block text-[9px] leading-4 text-muted-foreground">{subtitle}</span>
       </span>
     </div>
   )
 }
 
 export function HeroDivider({ className }: { className?: string }) {
-  return <div aria-hidden="true" className={cn('h-px w-full bg-[#EEF2F7]', className)} />
+  return <div aria-hidden="true" className={cn('h-px w-full bg-muted', className)} />
 }

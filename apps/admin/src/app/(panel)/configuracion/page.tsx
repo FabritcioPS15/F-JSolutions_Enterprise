@@ -235,11 +235,11 @@ export default function ConfiguracionPage() {
       />
 
       {settingsError ? (
-        <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-2.5 text-xs text-amber-900">
+        <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-2.5 text-xs text-warning-ink">
           <span>La configuración no está sincronizada con la base de datos. {settingsError}</span>
           <button
             type="button"
-            className="font-semibold underline underline-offset-2 hover:text-amber-950"
+            className="font-semibold underline underline-offset-2 hover:text-warning-ink"
             onClick={() => {
               void refreshSettings().catch(() => undefined)
             }}
@@ -371,11 +371,11 @@ export default function ConfiguracionPage() {
             </div>
           </SectionCard>
 
-          <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs">
-            <p className="text-xs text-slate-500">
+          <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-xs">
+            <p className="text-xs text-muted-foreground">
               {dirty ? (
                 <>
-                  <span className="font-semibold text-amber-600">Cambios sin guardar.</span> Aplica
+                  <span className="font-semibold text-warning-ink">Cambios sin guardar.</span> Aplica
                   para actualizar el panel.
                 </>
               ) : (
@@ -409,14 +409,14 @@ export default function ConfiguracionPage() {
             <div className="space-y-4">
               <div>
                 <div className="flex items-baseline justify-between gap-2">
-                  <p className="font-heading text-2xl font-bold leading-none text-slate-900">
+                  <p className="font-heading text-2xl font-bold leading-none text-foreground">
                     {formatStorage(usageKb)}
                   </p>
-                  <p className="text-[10.5px] text-slate-400">de ~5 MB disponibles</p>
+                  <p className="text-[10.5px] text-muted-foreground">de ~5 MB disponibles</p>
                 </div>
-                <div className="mt-2.5 h-1.5 overflow-hidden rounded-full bg-slate-100">
+                <div className="mt-2.5 h-1.5 overflow-hidden rounded-full bg-muted">
                   <div
-                    className="h-full rounded-full bg-[#5B21B6]"
+                    className="h-full rounded-full bg-[#2563EB]"
                     style={{ width: `${usagePercent}%` }}
                   />
                 </div>
@@ -435,26 +435,26 @@ export default function ConfiguracionPage() {
                   { label: 'Atributos', value: attributes.length },
                   { label: 'Usuarios', value: users.length },
                 ].map((item) => (
-                  <div key={item.label} className="rounded-xl bg-slate-50 px-2 py-2.5">
-                    <dd className="font-heading text-sm font-bold text-slate-900">
+                  <div key={item.label} className="rounded-xl bg-muted px-2 py-2.5">
+                    <dd className="font-heading text-sm font-bold text-foreground">
                       {formatNumber(item.value)}
                     </dd>
-                    <dt className="mt-0.5 text-[9.5px] font-medium text-slate-500">{item.label}</dt>
+                    <dt className="mt-0.5 text-[9.5px] font-medium text-muted-foreground">{item.label}</dt>
                   </div>
                 ))}
               </dl>
 
-              <div className="rounded-xl border border-slate-100 bg-slate-50/70 px-3 py-2.5">
-                <p className="text-[9.5px] font-bold uppercase tracking-[0.12em] text-slate-400">
+              <div className="rounded-xl border border-border bg-muted/70 px-3 py-2.5">
+                <p className="text-[9.5px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
                   Clave de almacenamiento
                 </p>
-                <p className="mt-1 truncate font-mono text-[10.5px] text-slate-600">
+                <p className="mt-1 truncate font-mono text-[10.5px] text-muted-foreground">
                   {ADMIN_STORAGE_KEY}
                 </p>
               </div>
 
-              <p className="flex gap-2 text-[10.5px] leading-relaxed text-slate-500">
-                <ShieldCheck className="mt-0.5 size-3.5 shrink-0 text-slate-400" aria-hidden="true" />
+              <p className="flex gap-2 text-[10.5px] leading-relaxed text-muted-foreground">
+                <ShieldCheck className="mt-0.5 size-3.5 shrink-0 text-muted-foreground" aria-hidden="true" />
                 La información operativa se guarda en PostgreSQL a través de la API. Este navegador
                 mantiene una caché de respaldo por si la API no responde.
               </p>
@@ -499,7 +499,7 @@ export default function ConfiguracionPage() {
                 className={cn(btnSecondary, 'w-full justify-start')}
                 onClick={() => fileInputRef.current?.click()}
               >
-                <Upload className="size-4 text-slate-500" aria-hidden="true" />
+                <Upload className="size-4 text-muted-foreground" aria-hidden="true" />
                 Restaurar desde archivo
               </button>
               <input
@@ -511,20 +511,20 @@ export default function ConfiguracionPage() {
                 aria-hidden="true"
                 tabIndex={-1}
               />
-              <p className="pt-1 text-[10px] leading-relaxed text-slate-400">
+              <p className="pt-1 text-[10px] leading-relaxed text-muted-foreground">
                 Restaurar reemplaza el catálogo actual con el contenido del archivo.
               </p>
             </div>
           </SectionCard>
 
           <SectionCard title="Datos de demostración" icon={RotateCcw}>
-            <p className="text-[11px] leading-relaxed text-slate-500">
+            <p className="text-[11px] leading-relaxed text-muted-foreground">
               Vuelve al catálogo de ejemplo para probar el panel desde cero.
             </p>
             <button
               type="button"
               onClick={() => setConfirmReset(true)}
-              className="mt-3 inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl border border-red-200 bg-red-50 text-sm font-semibold text-red-600 transition hover:bg-red-100"
+              className="mt-3 inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl border border-red-500/30 bg-red-500/10 text-sm font-semibold text-danger-ink transition hover:bg-red-500/15"
             >
               <RotateCcw className="size-4" aria-hidden="true" />
               Restaurar catálogo demo
@@ -533,12 +533,12 @@ export default function ConfiguracionPage() {
 
           <TwoFactorSecurityCard />
 
-          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-            <p className="flex items-center gap-2 text-[11px] font-bold text-slate-700">
-              <Info className="size-3.5 text-slate-400" aria-hidden="true" />
+          <div className="rounded-2xl border border-border bg-muted p-4">
+            <p className="flex items-center gap-2 text-[11px] font-bold text-foreground/80">
+              <Info className="size-3.5 text-muted-foreground" aria-hidden="true" />
               Persistencia centralizada
             </p>
-            <p className="mt-1.5 text-[10.5px] leading-relaxed text-slate-500">
+            <p className="mt-1.5 text-[10.5px] leading-relaxed text-muted-foreground">
               Catálogo, clientes, cotizaciones, mesa de ayuda, servicios, proyectos, inventario y
               configuración se guardan en PostgreSQL a través de la API. El navegador conserva solo
               una caché de respaldo.

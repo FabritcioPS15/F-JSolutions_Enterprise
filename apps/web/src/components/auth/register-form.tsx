@@ -13,7 +13,7 @@ type FieldErrors = Partial<
 >
 
 const fieldClass =
-  'mt-1 h-10 w-full rounded-xl border border-[#E2E8F0] bg-white px-3 text-sm font-normal text-[#0F172A] outline-none transition placeholder:text-[#94A3B8] focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 aria-[invalid=true]:border-[#EF4444]'
+  'mt-1 h-10 w-full rounded-xl border border-border bg-card px-3 text-sm font-normal text-foreground outline-none transition placeholder:text-muted-foreground focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 aria-[invalid=true]:border-destructive'
 
 const initialDraft = {
   name: '',
@@ -158,23 +158,23 @@ export function RegisterForm({ availability }: { availability: Availability }) {
   if (created) {
     return (
       <div>
-        <div className="rounded-3xl border border-[#E2E8F0] bg-white p-6 text-center shadow-[0_24px_60px_-48px_rgba(15,23,42,0.35)]">
-          <span className="mx-auto grid size-14 place-items-center rounded-full bg-[#EFF6FF] text-[#2563EB]">
+        <div className="rounded-3xl border border-border bg-card p-6 text-center shadow-[0_24px_60px_-48px_rgba(15,23,42,0.35)]">
+          <span className="mx-auto grid size-14 place-items-center rounded-full bg-tint-blue text-blue-ink">
             <MailCheck aria-hidden="true" className="size-7" />
           </span>
-          <h2 className="mt-4 font-heading text-xl font-bold text-[#0F172A]">Revisa tu correo</h2>
-          <p className="mt-2 text-sm leading-6 text-[#64748B]">
+          <h2 className="mt-4 font-heading text-xl font-bold text-foreground">Revisa tu correo</h2>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">
             Enviamos un enlace de confirmación a{' '}
-            <span className="font-semibold text-[#0F172A]">{created.email}</span>. Abre ese enlace
+            <span className="font-semibold text-foreground">{created.email}</span>. Abre ese enlace
             desde tu bandeja para activar la cuenta; vence en 24 horas.
           </p>
-          <p className="mt-3 rounded-xl bg-[#F8FAFC] px-3 py-2 text-xs text-[#64748B]">
+          <p className="mt-3 rounded-xl bg-muted px-3 py-2 text-xs text-muted-foreground">
             Hasta confirmar el correo, la cuenta queda pendiente y no puede iniciar sesión.
           </p>
         </div>
 
         {created.verificationLink && (
-          <div className="mt-4 rounded-2xl border border-[#DBEAFE] bg-[#EFF6FF] px-4 py-3 text-[13px] text-[#1E3A8A]">
+          <div className="mt-4 rounded-2xl border border-blue-ink/25 bg-tint-blue px-4 py-3 text-[13px] text-foreground">
             <p className="font-semibold">Modo local (sin SMTP configurado)</p>
             <p className="mt-1">
               El correo quedó en la bandeja local del panel. Puedes abrir el enlace directamente:{' '}
@@ -186,7 +186,7 @@ export function RegisterForm({ availability }: { availability: Availability }) {
         )}
 
         {resendInfo && (
-          <p className="mt-4 rounded-2xl border border-[#BBF7D0] bg-[#F0FDF4] px-4 py-3 text-[13px] font-semibold text-[#166534]">
+          <p className="mt-4 rounded-2xl border border-success/35 bg-tint-green px-4 py-3 text-[13px] font-semibold text-success">
             {resendInfo}
             {devLink && (
               <>
@@ -199,7 +199,7 @@ export function RegisterForm({ availability }: { availability: Availability }) {
           </p>
         )}
         {serverError && (
-          <p className="mt-4 rounded-2xl border border-[#FECACA] bg-[#FEF2F2] px-4 py-3 text-[13px] font-semibold text-[#991B1B]">
+          <p className="mt-4 rounded-2xl border border-destructive/35 bg-tint-red px-4 py-3 text-[13px] font-semibold text-destructive">
             {serverError}
           </p>
         )}
@@ -209,7 +209,7 @@ export function RegisterForm({ availability }: { availability: Availability }) {
             type="button"
             onClick={handleResend}
             disabled={status === 'resending'}
-            className="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-xl border border-[#E2E8F0] bg-white px-4 text-sm font-bold text-[#0F172A] transition hover:border-[#2563EB]/40 hover:text-[#1D4ED8] disabled:opacity-60"
+            className="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-xl border border-border bg-card px-4 text-sm font-bold text-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink disabled:opacity-60"
           >
             {status === 'resending' && <Loader2 aria-hidden="true" className="size-4 animate-spin" />}
             Reenviar enlace
@@ -234,7 +234,7 @@ export function RegisterForm({ availability }: { availability: Availability }) {
       {serverError && (
         <div
           role="alert"
-          className="mb-3 flex items-start gap-2.5 rounded-2xl border border-[#FECACA] bg-[#FEF2F2] px-3.5 py-2.5 text-[13px] text-[#991B1B] sm:mb-4"
+          className="mb-3 flex items-start gap-2.5 rounded-2xl border border-destructive/35 bg-tint-red px-3.5 py-2.5 text-[13px] text-destructive sm:mb-4"
         >
           <AlertCircle aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
           <p className="font-semibold">{serverError}</p>
@@ -243,7 +243,7 @@ export function RegisterForm({ availability }: { availability: Availability }) {
 
       <form onSubmit={handleSubmit} noValidate className="space-y-2.5 sm:space-y-3">
         <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
-          <label className="col-span-2 block text-xs font-semibold text-[#0F172A] sm:col-span-1">
+          <label className="col-span-2 block text-xs font-semibold text-foreground sm:col-span-1">
             {isCompany ? 'Razón social *' : 'Nombre completo *'}
             <input
               value={draft.name}
@@ -253,10 +253,10 @@ export function RegisterForm({ availability }: { availability: Availability }) {
               aria-invalid={Boolean(errors.name)}
               className={fieldClass}
             />
-            {errors.name && <span className="mt-1 block text-[10px] font-normal text-[#EF4444]">{errors.name}</span>}
+            {errors.name && <span className="mt-1 block text-[10px] font-normal text-destructive">{errors.name}</span>}
           </label>
 
-          <label className="block text-xs font-semibold text-[#0F172A]">
+          <label className="block text-xs font-semibold text-foreground">
             Correo electrónico *
             <input
               type="email"
@@ -267,10 +267,10 @@ export function RegisterForm({ availability }: { availability: Availability }) {
               aria-invalid={Boolean(errors.email)}
               className={fieldClass}
             />
-            {errors.email && <span className="mt-1 block text-[10px] font-normal text-[#EF4444]">{errors.email}</span>}
+            {errors.email && <span className="mt-1 block text-[10px] font-normal text-destructive">{errors.email}</span>}
           </label>
 
-          <label className="block text-xs font-semibold text-[#0F172A]">
+          <label className="block text-xs font-semibold text-foreground">
             Teléfono
             <input
               type="tel"
@@ -284,13 +284,13 @@ export function RegisterForm({ availability }: { availability: Availability }) {
 
           <div className="col-span-2 sm:col-span-1">
             <div className="flex items-center justify-between gap-2">
-              <span className="block text-xs font-semibold text-[#0F172A]">Tipo de cuenta *</span>
+              <span className="block text-xs font-semibold text-foreground">Tipo de cuenta *</span>
               {isCompany && !showRuc && (
                 <button
                   type="button"
                   onClick={() => setShowRuc(true)}
                   aria-label="Agregar RUC (opcional)"
-                  className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#2563EB] transition hover:text-[#1D4ED8]"
+                  className="inline-flex items-center gap-1 text-[11px] font-semibold text-blue-ink transition hover:text-blue-ink"
                 >
                   <Plus aria-hidden="true" className="size-3" />
                   RUC
@@ -300,7 +300,7 @@ export function RegisterForm({ availability }: { availability: Availability }) {
             <div
               role="group"
               aria-label="Tipo de cuenta"
-              className="mt-1 grid h-10 grid-cols-2 gap-1 rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] p-1"
+              className="mt-1 grid h-10 grid-cols-2 gap-1 rounded-xl border border-border bg-muted p-1"
             >
               <button
                 type="button"
@@ -308,8 +308,8 @@ export function RegisterForm({ availability }: { availability: Availability }) {
                 onClick={() => selectAccountKind('dni')}
                 className={`rounded-lg text-[11px] font-semibold transition ${
                   !isCompany
-                    ? 'bg-white text-[#1D4ED8] shadow-sm'
-                    : 'text-[#64748B] hover:text-[#0F172A]'
+                    ? 'bg-card text-blue-ink shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
                 Persona natural
@@ -320,8 +320,8 @@ export function RegisterForm({ availability }: { availability: Availability }) {
                 onClick={() => selectAccountKind('ruc')}
                 className={`rounded-lg text-[11px] font-semibold transition ${
                   isCompany
-                    ? 'bg-white text-[#1D4ED8] shadow-sm'
-                    : 'text-[#64748B] hover:text-[#0F172A]'
+                    ? 'bg-card text-blue-ink shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
                 Empresa
@@ -330,7 +330,7 @@ export function RegisterForm({ availability }: { availability: Availability }) {
           </div>
 
           {isCompany && showRuc && (
-            <label className="col-span-2 block text-xs font-semibold text-[#0F172A]">
+            <label className="col-span-2 block text-xs font-semibold text-foreground">
               RUC (opcional)
               <input
                 inputMode="numeric"
@@ -342,12 +342,12 @@ export function RegisterForm({ availability }: { availability: Availability }) {
                 className={fieldClass}
               />
               {errors.documentNumber && (
-                <span className="mt-1 block text-[10px] font-normal text-[#EF4444]">{errors.documentNumber}</span>
+                <span className="mt-1 block text-[10px] font-normal text-destructive">{errors.documentNumber}</span>
               )}
             </label>
           )}
 
-          <label className="block text-xs font-semibold text-[#0F172A]">
+          <label className="block text-xs font-semibold text-foreground">
             Contraseña *
             <span className="relative mt-1 block">
               <input
@@ -363,21 +363,21 @@ export function RegisterForm({ availability }: { availability: Availability }) {
                 type="button"
                 onClick={() => setShowPassword((value) => !value)}
                 aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
-                className="absolute right-1.5 top-1/2 grid size-8 -translate-y-1/2 place-items-center rounded-lg text-[#94A3B8] transition hover:bg-[#F1F5F9] hover:text-[#475569]"
+                className="absolute right-1.5 top-1/2 grid size-8 -translate-y-1/2 place-items-center rounded-lg text-muted-foreground transition hover:bg-muted hover:text-muted-foreground"
               >
                 {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
               </button>
             </span>
             {errors.password ? (
-              <span className="mt-1 block text-[10px] font-normal text-[#EF4444]">{errors.password}</span>
+              <span className="mt-1 block text-[10px] font-normal text-destructive">{errors.password}</span>
             ) : (
-              <span className="mt-1 hidden text-[10px] font-normal leading-4 text-[#94A3B8] xl:block">
+              <span className="mt-1 hidden text-[10px] font-normal leading-4 text-muted-foreground xl:block">
                 {PASSWORD_HINT}
               </span>
             )}
           </label>
 
-          <label className="block text-xs font-semibold text-[#0F172A]">
+          <label className="block text-xs font-semibold text-foreground">
             Repite la contraseña *
             <input
               type={showPassword ? 'text' : 'password'}
@@ -389,45 +389,45 @@ export function RegisterForm({ availability }: { availability: Availability }) {
               className={fieldClass}
             />
             {errors.confirmPassword && (
-              <span className="mt-1 block text-[10px] font-normal text-[#EF4444]">{errors.confirmPassword}</span>
+              <span className="mt-1 block text-[10px] font-normal text-destructive">{errors.confirmPassword}</span>
             )}
           </label>
         </div>
 
-        <div className="rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-2 sm:p-2.5">
+        <div className="rounded-2xl border border-border bg-muted p-2 sm:p-2.5">
           <div className="grid gap-1.5">
-            <label className="flex items-start gap-2 text-[11px] leading-4 text-[#334155]">
+            <label className="flex items-start gap-2 text-[11px] leading-4 text-foreground/85">
               <input
                 type="checkbox"
                 checked={draft.acceptTerms}
                 onChange={(event) => update('acceptTerms', event.target.checked)}
                 aria-invalid={Boolean(errors.terms)}
-                className="mt-0.5 size-3.5 shrink-0 rounded border-[#CBD5E1] text-[#2563EB] focus:ring-[#2563EB]/30"
+                className="mt-0.5 size-3.5 shrink-0 rounded border-input text-blue-ink focus:ring-[#2563EB]/30"
               />
               <span>
                 Acepto los{' '}
-                <Link href="/terminos-y-condiciones" className="font-semibold text-[#2563EB] hover:underline">
+                <Link href="/terminos-y-condiciones" className="font-semibold text-blue-ink hover:underline">
                   términos y condiciones
                 </Link>{' '}
                 y la{' '}
-                <Link href="/politica-de-privacidad" className="font-semibold text-[#2563EB] hover:underline">
+                <Link href="/politica-de-privacidad" className="font-semibold text-blue-ink hover:underline">
                   política de privacidad
                 </Link>
                 . *
               </span>
             </label>
 
-            <label className="flex items-start gap-2 text-[11px] leading-4 text-[#334155]">
+            <label className="flex items-start gap-2 text-[11px] leading-4 text-foreground/85">
               <input
                 type="checkbox"
                 checked={draft.marketingConsent}
                 onChange={(event) => update('marketingConsent', event.target.checked)}
-                className="mt-0.5 size-3.5 shrink-0 rounded border-[#CBD5E1] text-[#2563EB] focus:ring-[#2563EB]/30"
+                className="mt-0.5 size-3.5 shrink-0 rounded border-input text-blue-ink focus:ring-[#2563EB]/30"
               />
               <span>Quiero recibir novedades y promociones de F&amp;J Systems (opcional).</span>
             </label>
           </div>
-          {errors.terms && <p className="mt-1 text-[10px] font-semibold text-[#EF4444]">{errors.terms}</p>}
+          {errors.terms && <p className="mt-1 text-[10px] font-semibold text-destructive">{errors.terms}</p>}
         </div>
 
         <button
@@ -444,9 +444,9 @@ export function RegisterForm({ availability }: { availability: Availability }) {
         </button>
       </form>
 
-      <p className="mt-2.5 text-center text-[13px] text-[#64748B] sm:mt-4 sm:text-sm">
+      <p className="mt-2.5 text-center text-[13px] text-muted-foreground sm:mt-4 sm:text-sm">
         ¿Ya tienes cuenta?{' '}
-        <Link href="/login" className="font-semibold text-[#2563EB] hover:underline">
+        <Link href="/login" className="font-semibold text-blue-ink hover:underline">
           Inicia sesión
         </Link>
       </p>

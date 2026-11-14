@@ -75,21 +75,21 @@ function EquipmentVisual() {
     <div className="relative pt-4">
       <HeroPanel className="hero-float-soft">
         {/* Cabecera del panel */}
-        <div className="flex items-center justify-between gap-3 border-b border-[#EEF2F7] px-4 py-3.5 sm:px-5">
+        <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-3.5 sm:px-5">
           <div className="flex min-w-0 items-center gap-2.5">
             <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-[#0F172A] text-white">
               <Boxes aria-hidden="true" className="size-4" />
             </span>
             <div className="min-w-0">
-              <p className="truncate text-[11px] font-bold text-[#0F172A]">
+              <p className="truncate text-[11px] font-bold text-foreground">
                 Suministro y Hardware
               </p>
-              <p className="truncate text-[9.5px] text-[#64748B]">
+              <p className="truncate text-[9.5px] text-muted-foreground">
                 Equipamiento corporativo con garantía oficial
               </p>
             </div>
           </div>
-          <span className="shrink-0 rounded-full border border-[#BBF7D0] bg-[#F0FDF4] px-2 py-1 text-[8px] font-bold uppercase tracking-wider text-[#15803D]">
+          <span className="shrink-0 rounded-full border border-success/35 bg-tint-green px-2 py-1 text-[8px] font-bold uppercase tracking-wider text-success">
             Stock y despacho
           </span>
         </div>
@@ -100,23 +100,23 @@ function EquipmentVisual() {
             {hardwareItems.map((item) => (
               <div
                 key={item.category}
-                className="flex items-center gap-3 rounded-xl border border-[#EEF2F7] bg-white p-2.5 transition-colors hover:border-[#2563EB]/30 hover:bg-[#F8FAFC]"
+                className="flex items-center gap-3 rounded-xl border border-border bg-card p-2.5 transition-colors hover:border-[#2563EB]/30 hover:bg-muted"
               >
-                <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-[#EFF6FF] text-[#2563EB]">
+                <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-tint-blue text-blue-ink">
                   <item.icon aria-hidden="true" className="size-4.5" />
                 </span>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <p className="truncate text-[10.5px] font-bold text-[#0F172A]">
+                    <p className="truncate text-[10.5px] font-bold text-foreground">
                       {item.category}
                     </p>
-                    <span className="hidden rounded bg-[#F1F5F9] px-1.5 py-0.5 text-[7.5px] font-semibold text-[#475569] sm:inline">
+                    <span className="hidden rounded bg-muted px-1.5 py-0.5 text-[7.5px] font-semibold text-muted-foreground sm:inline">
                       {item.badge}
                     </span>
                   </div>
-                  <p className="truncate text-[9px] text-[#64748B]">{item.detail}</p>
+                  <p className="truncate text-[9px] text-muted-foreground">{item.detail}</p>
                 </div>
-                <span className="shrink-0 rounded-md bg-[#EFF6FF] px-2 py-0.5 text-[8px] font-bold text-[#1D4ED8]">
+                <span className="shrink-0 rounded-md bg-tint-blue px-2 py-0.5 text-[8px] font-bold text-blue-ink">
                   {item.status}
                 </span>
               </div>
@@ -132,12 +132,12 @@ function EquipmentVisual() {
             ].map((stat) => (
               <div
                 key={stat.label}
-                className="rounded-xl border border-[#EEF2F7] bg-[#F8FAFC] px-2.5 py-2 text-center"
+                className="rounded-xl border border-border bg-muted px-2.5 py-2 text-center"
               >
-                <p className="font-heading text-xs font-bold text-[#0F172A] sm:text-sm">
+                <p className="font-heading text-xs font-bold text-foreground sm:text-sm">
                   {stat.value}
                 </p>
-                <p className="mt-0.5 truncate text-[8px] font-medium text-[#64748B]">
+                <p className="mt-0.5 truncate text-[8px] font-medium text-muted-foreground">
                   {stat.label}
                 </p>
               </div>
@@ -145,12 +145,12 @@ function EquipmentVisual() {
           </div>
 
           {/* Aviso de asesoría */}
-          <div className="mt-3 flex items-center justify-between gap-2 rounded-xl border border-[#EEF2F7] bg-[#F8FAFC] px-3 py-2 text-[8.5px]">
-            <span className="inline-flex items-center gap-1.5 font-semibold text-[#475569]">
-              <Truck aria-hidden="true" className="size-3.5 text-[#2563EB]" />
+          <div className="mt-3 flex items-center justify-between gap-2 rounded-xl border border-border bg-muted px-3 py-2 text-[8.5px]">
+            <span className="inline-flex items-center gap-1.5 font-semibold text-muted-foreground">
+              <Truck aria-hidden="true" className="size-3.5 text-blue-ink" />
               Envíos y coordinación a provincias
             </span>
-            <span className="inline-flex items-center gap-1 font-bold text-[#15803D]">
+            <span className="inline-flex items-center gap-1 font-bold text-success">
               <CheckCircle2 aria-hidden="true" className="size-3" />
               Asesoría técnica
             </span>
@@ -426,7 +426,7 @@ export function HomeHeroCarousel() {
             <div className="min-w-0 max-w-[620px]">
               <HeroTitle size="lg">{activeSlide.title}</HeroTitle>
 
-              <p className="hero-reveal hero-delay-1 mt-4 text-[clamp(0.98rem,0.92rem+0.35vw,1.15rem)] font-normal leading-[1.65] text-[#475569]">
+              <p className="hero-reveal hero-delay-1 mt-4 text-[clamp(0.98rem,0.92rem+0.35vw,1.15rem)] font-normal leading-[1.65] text-muted-foreground">
                 {activeSlide.description}
               </p>
 
@@ -452,7 +452,7 @@ export function HomeHeroCarousel() {
         {/* ── Controles y Contador de Diapositivas DENTRO del Hero (Rediseñado) ── */}
         <div className="relative pb-5 pt-1 sm:pb-7">
           <div className={`${HERO_CONTAINER}`}>
-            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#EEF2F7] pt-4">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
               {/* Indicadores interactivos de diapositivas con barra de progreso */}
               <div className="flex min-w-0 items-center gap-2 sm:gap-3">
                 <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
@@ -467,7 +467,7 @@ export function HomeHeroCarousel() {
                         className={cn(
                           'group relative h-2.5 rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/40',
                           isActive
-                            ? 'w-10 sm:w-16 overflow-hidden bg-[#DBEAFE] ring-1 ring-[#2563EB]/30'
+                            ? 'w-10 sm:w-16 overflow-hidden bg-blue-ink/15 ring-1 ring-[#2563EB]/30'
                             : 'w-2.5 bg-[#CBD5E1] hover:bg-[#94A3B8]',
                         )}
                       >
@@ -481,7 +481,7 @@ export function HomeHeroCarousel() {
                     )
                   })}
                 </div>
-                <span className="hidden truncate pl-1 text-xs font-bold text-[#0F172A] sm:inline sm:text-[13px]">
+                <span className="hidden truncate pl-1 text-xs font-bold text-foreground sm:inline sm:text-[13px]">
                   {activeSlide.tabLabel}
                 </span>
               </div>
@@ -491,12 +491,12 @@ export function HomeHeroCarousel() {
                 <button
                   type="button"
                   onClick={() => setIsPaused((prev) => !prev)}
-                  className="group hidden size-8 place-items-center rounded-lg bg-transparent text-[#64748B] transition-colors hover:bg-slate-200/60 hover:text-[#0F172A] sm:grid"
+                  className="group hidden size-8 place-items-center rounded-lg bg-transparent text-muted-foreground transition-colors hover:bg-border/60 hover:text-foreground sm:grid"
                   aria-label={isPaused ? 'Reanudar pase automático' : 'Pausar pase automático'}
                   title={isPaused ? 'Reanudar pase automático' : 'Pausar pase automático'}
                 >
                   {isPaused ? (
-                    <Play className="size-3.5 fill-current text-[#2563EB]" />
+                    <Play className="size-3.5 fill-current text-blue-ink" />
                   ) : (
                     <Pause className="size-3.5 fill-current" />
                   )}
@@ -506,7 +506,7 @@ export function HomeHeroCarousel() {
                   <button
                     type="button"
                     onClick={prevSlide}
-                    className="grid size-8 place-items-center rounded-lg bg-transparent text-[#64748B] transition-colors hover:bg-slate-200/60 hover:text-[#0F172A]"
+                    className="grid size-8 place-items-center rounded-lg bg-transparent text-muted-foreground transition-colors hover:bg-border/60 hover:text-foreground"
                     aria-label="Diapositiva anterior"
                   >
                     <ChevronLeft className="size-4" />
@@ -514,11 +514,11 @@ export function HomeHeroCarousel() {
 
                   {/* Contador numérico transparente sin fondo */}
                   <div className="flex items-center gap-1 px-1.5 py-0.5 select-none font-mono">
-                    <span className="text-[13px] font-bold text-[#1D4ED8]">
+                    <span className="text-[13px] font-bold text-blue-ink">
                       {String(activeIndex + 1).padStart(2, '0')}
                     </span>
-                    <span className="text-xs font-semibold text-[#94A3B8]">/</span>
-                    <span className="text-xs font-semibold text-[#64748B]">
+                    <span className="text-xs font-semibold text-muted-foreground">/</span>
+                    <span className="text-xs font-semibold text-muted-foreground">
                       {String(HERO_SLIDES.length).padStart(2, '0')}
                     </span>
                   </div>
@@ -526,7 +526,7 @@ export function HomeHeroCarousel() {
                   <button
                     type="button"
                     onClick={nextSlide}
-                    className="grid size-8 place-items-center rounded-lg bg-transparent text-[#64748B] transition-colors hover:bg-slate-200/60 hover:text-[#0F172A]"
+                    className="grid size-8 place-items-center rounded-lg bg-transparent text-muted-foreground transition-colors hover:bg-border/60 hover:text-foreground"
                     aria-label="Diapositiva siguiente"
                   >
                     <ChevronRight className="size-4" />

@@ -34,14 +34,14 @@ const activityMeta: Record<
   ActivityType,
   { label: string; icon: LucideIcon; chip: string }
 > = {
-  created: { label: 'Producto creado', icon: PackagePlus, chip: 'bg-slate-50 text-slate-500 ring-slate-200' },
-  updated: { label: 'Producto actualizado', icon: Pencil, chip: 'bg-slate-50 text-slate-500 ring-slate-200' },
-  published: { label: 'Producto publicado', icon: CheckCircle2, chip: 'bg-emerald-50 text-emerald-600 ring-emerald-100' },
-  unpublished: { label: 'Retirado de publicación', icon: EyeOff, chip: 'bg-slate-50 text-slate-500 ring-slate-200' },
-  archived: { label: 'Producto archivado', icon: Archive, chip: 'bg-amber-50 text-amber-600 ring-amber-100' },
-  restored: { label: 'Producto restaurado', icon: RotateCcw, chip: 'bg-emerald-50 text-emerald-600 ring-emerald-100' },
-  duplicated: { label: 'Producto duplicado', icon: Copy, chip: 'bg-slate-50 text-slate-500 ring-slate-200' },
-  deleted: { label: 'Producto eliminado', icon: Trash2, chip: 'bg-red-50 text-red-600 ring-red-100' },
+  created: { label: 'Producto creado', icon: PackagePlus, chip: 'bg-muted text-muted-foreground ring-border' },
+  updated: { label: 'Producto actualizado', icon: Pencil, chip: 'bg-muted text-muted-foreground ring-border' },
+  published: { label: 'Producto publicado', icon: CheckCircle2, chip: 'bg-emerald-500/10 text-success-ink ring-emerald-500/20' },
+  unpublished: { label: 'Retirado de publicación', icon: EyeOff, chip: 'bg-muted text-muted-foreground ring-border' },
+  archived: { label: 'Producto archivado', icon: Archive, chip: 'bg-amber-500/10 text-warning-ink ring-amber-100' },
+  restored: { label: 'Producto restaurado', icon: RotateCcw, chip: 'bg-emerald-500/10 text-success-ink ring-emerald-500/20' },
+  duplicated: { label: 'Producto duplicado', icon: Copy, chip: 'bg-muted text-muted-foreground ring-border' },
+  deleted: { label: 'Producto eliminado', icon: Trash2, chip: 'bg-red-500/10 text-danger-ink ring-red-500/20' },
 }
 
 const filterOptions: { value: 'all' | ActivityType; label: string }[] = [
@@ -90,9 +90,9 @@ export default function ActividadPage() {
         }
       />
 
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs">
-        <p className="text-[11px] font-medium text-slate-500">
-          <span className="font-bold text-slate-900">{filtered.length}</span>{' '}
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-xs">
+        <p className="text-[11px] font-medium text-muted-foreground">
+          <span className="font-bold text-foreground">{filtered.length}</span>{' '}
           {filtered.length === 1 ? 'evento registrado' : 'eventos registrados'}
           {type !== 'all' && ' con el filtro aplicado'}
         </p>
@@ -142,7 +142,7 @@ export default function ActividadPage() {
           icon={History}
           bodyClassName="p-0"
         >
-          <ul className="divide-y divide-slate-100">
+          <ul className="divide-y divide-border">
             {filtered.map((entry) => {
               const meta = activityMeta[entry.type]
               const Icon = meta.icon
@@ -163,24 +163,24 @@ export default function ActividadPage() {
                     {product ? (
                       <Link
                         href={`/productos/${product.id}`}
-                        className="line-clamp-1 text-xs font-semibold text-slate-900 transition hover:text-[#5B21B6]"
+                        className="line-clamp-1 text-xs font-semibold text-foreground transition hover:text-brand-ink"
                       >
                         {entry.productName}
                       </Link>
                     ) : (
-                      <p className="line-clamp-1 text-xs font-semibold text-slate-900">
+                      <p className="line-clamp-1 text-xs font-semibold text-foreground">
                         {entry.productName}
                       </p>
                     )}
-                    <p className="mt-0.5 text-[10.5px] text-slate-500">
+                    <p className="mt-0.5 text-[10.5px] text-muted-foreground">
                       {entry.detail ?? meta.label}
                     </p>
                   </div>
                   <div className="shrink-0 text-right">
-                    <p className="text-[10px] font-semibold uppercase tracking-wide text-slate-400">
+                    <p className="text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
                       {meta.label}
                     </p>
-                    <p className="mt-0.5 text-[10px] text-slate-500">{formatDateTime(entry.at)}</p>
+                    <p className="mt-0.5 text-[10px] text-muted-foreground">{formatDateTime(entry.at)}</p>
                   </div>
                 </li>
               )

@@ -23,7 +23,7 @@ export function ProductThumb({
     return (
       <div
         className={cn(
-          'grid place-items-center overflow-hidden rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 text-slate-400 ring-1 ring-inset ring-slate-200/80',
+          'grid place-items-center overflow-hidden rounded-xl bg-gradient-to-br from-muted to-border text-muted-foreground ring-1 ring-inset ring-border/80',
           className
         )}
         aria-label={alt}
@@ -41,7 +41,7 @@ export function ProductThumb({
       decoding="async"
       onError={() => setFailed(true)}
       className={cn(
-        'overflow-hidden rounded-xl bg-slate-50 object-contain ring-1 ring-inset ring-slate-200/70',
+        'overflow-hidden rounded-xl bg-muted object-contain ring-1 ring-inset ring-border/70',
         className
       )}
     />

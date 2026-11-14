@@ -11,7 +11,6 @@ import {
   Cable,
   Check,
   ChevronDown,
-  ChevronRight,
   Cpu,
   Filter,
   Gamepad2,
@@ -36,6 +35,7 @@ import {
 import { ProductCard } from '@/components/cards/product-card'
 import { QuotePanel } from '@/components/sections/quote-panel'
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
+import { Breadcrumbs } from '@/components/layout/breadcrumbs'
 import {
   categoryTaxonomy,
   getTaxonomyCategory,
@@ -140,43 +140,43 @@ function CustomFilterDropdown({
         aria-expanded={isOpen}
         className={`inline-flex h-10 items-center justify-between gap-2 rounded-xl border px-3 text-xs font-semibold transition-all ${
           isCustomSelected
-            ? 'border-[#2563EB] bg-[#EFF6FF] text-[#2563EB] shadow-xs ring-2 ring-[#2563EB]/15'
+            ? 'border-[#2563EB] bg-tint-blue text-blue-ink shadow-xs ring-2 ring-[#2563EB]/15'
             : isOpen
-            ? 'border-[#2563EB] bg-white text-[#0F172A] shadow-xs ring-2 ring-[#2563EB]/10'
-            : 'border-[#CBD5E1] bg-white text-[#0F172A] hover:border-[#94A3B8] hover:bg-[#F8FAFC]'
+            ? 'border-[#2563EB] bg-card text-foreground shadow-xs ring-2 ring-[#2563EB]/10'
+            : 'border-input bg-card text-foreground hover:border-[#94A3B8] hover:bg-muted'
         }`}
       >
         <div className="flex items-center gap-1.5 truncate">
           {Icon && (
             <Icon
-              className={`size-3.5 shrink-0 ${isCustomSelected ? 'text-[#2563EB]' : 'text-[#64748B]'}`}
+              className={`size-3.5 shrink-0 ${isCustomSelected ? 'text-blue-ink' : 'text-muted-foreground'}`}
             />
           )}
-          <span className="font-normal text-[#64748B]">{label}:</span>
+          <span className="font-normal text-muted-foreground">{label}:</span>
           <span className="max-w-[130px] truncate font-bold sm:max-w-[180px]">
             {displayValue}
           </span>
         </div>
         <ChevronDown
-          className={`size-3.5 shrink-0 text-[#64748B] transition-transform duration-200 ${
-            isOpen ? 'rotate-180 text-[#2563EB]' : ''
+          className={`size-3.5 shrink-0 text-muted-foreground transition-transform duration-200 ${
+            isOpen ? 'rotate-180 text-blue-ink' : ''
           }`}
         />
       </button>
 
       {/* Popover flotante con sombra y desenfoque */}
       {isOpen && (
-        <div className="absolute right-0 top-full z-50 mt-1.5 min-w-[230px] max-w-[320px] overflow-hidden rounded-2xl border border-[#E2E8F0] bg-white p-1.5 shadow-xl animate-in fade-in-50 zoom-in-95 duration-150">
+        <div className="absolute right-0 top-full z-50 mt-1.5 min-w-[230px] max-w-[320px] overflow-hidden rounded-2xl border border-border bg-card p-1.5 shadow-xl animate-in fade-in-50 zoom-in-95 duration-150">
           {searchable && (
-            <div className="border-b border-[#F1F5F9] p-1.5">
+            <div className="border-b border-border p-1.5">
               <div className="relative">
-                <Search className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-[#94A3B8]" />
+                <Search className="pointer-events-none absolute left-2.5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
                 <input
                   type="text"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder={searchPlaceholder}
-                  className="h-8 w-full rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] pl-8 pr-2 text-xs text-[#0F172A] outline-none transition focus:border-[#2563EB] focus:bg-white"
+                  className="h-8 w-full rounded-lg border border-border bg-muted pl-8 pr-2 text-xs text-foreground outline-none transition focus:border-[#2563EB] focus:bg-card"
                   autoFocus
                 />
               </div>
@@ -185,7 +185,7 @@ function CustomFilterDropdown({
 
           <div className="max-h-64 overflow-y-auto overscroll-contain py-1">
             {filteredOptions.length === 0 ? (
-              <p className="px-3 py-2 text-center text-xs text-[#94A3B8]">Sin opciones</p>
+              <p className="px-3 py-2 text-center text-xs text-muted-foreground">Sin opciones</p>
             ) : (
               filteredOptions.map((opt) => {
                 const isSelected = opt.value === value
@@ -201,15 +201,15 @@ function CustomFilterDropdown({
                     }}
                     className={`flex w-full items-center justify-between gap-2.5 rounded-lg px-2.5 py-2 text-left text-xs transition-colors ${
                       isSelected
-                        ? 'bg-[#EFF6FF] font-bold text-[#2563EB]'
-                        : 'text-[#0F172A] hover:bg-[#F8FAFC] hover:text-[#2563EB]'
+                        ? 'bg-tint-blue font-bold text-blue-ink'
+                        : 'text-foreground hover:bg-muted hover:text-blue-ink'
                     }`}
                   >
                     <div className="flex items-center gap-2 truncate">
                       {OptionIcon && (
                         <OptionIcon
                           className={`size-3.5 shrink-0 ${
-                            isSelected ? 'text-[#2563EB]' : 'text-[#64748B]'
+                            isSelected ? 'text-blue-ink' : 'text-muted-foreground'
                           }`}
                         />
                       )}
@@ -221,14 +221,14 @@ function CustomFilterDropdown({
                         <span
                           className={`rounded-full px-1.5 py-0.2 text-[10px] font-semibold ${
                             isSelected
-                              ? 'bg-[#DBEAFE] text-[#1D4ED8]'
-                              : 'bg-[#F1F5F9] text-[#64748B]'
+                              ? 'bg-blue-ink/15 text-blue-ink'
+                              : 'bg-muted text-muted-foreground'
                           }`}
                         >
                           {opt.count}
                         </span>
                       )}
-                      {isSelected && <Check className="size-3.5 text-[#2563EB]" />}
+                      {isSelected && <Check className="size-3.5 text-blue-ink" />}
                     </div>
                   </button>
                 )
@@ -402,6 +402,20 @@ export function CatalogPage({
     )
     return foundSub?.subSubcategories || []
   }, [activeTaxonomy, subcategory])
+
+  const subcategoryLabel =
+    activeTaxonomy?.subcategories.find(
+      (s) =>
+        s.label.toLowerCase() === subcategory.toLowerCase() ||
+        s.id.toLowerCase() === subcategory.toLowerCase()
+    )?.label || subcategory
+
+  const subSubcategoryLabel =
+    availableSubSubcategories.find(
+      (t) =>
+        t.label.toLowerCase() === subSubcategory.toLowerCase() ||
+        t.id.toLowerCase() === subSubcategory.toLowerCase()
+    )?.label || subSubcategory
 
   // Marcas disponibles
   const availableBrands = useMemo(() => {
@@ -743,20 +757,17 @@ export function CatalogPage({
   }, [availableBrands, brandCounts, filtered.length])
 
   return (
-    <main className="min-h-screen bg-white text-[#0F172A] selection:bg-[#2563EB]/15 selection:text-[#2563EB]">
+    <main className="min-h-screen bg-card text-foreground selection:bg-[#2563EB]/15 selection:text-blue-ink">
       <EnhancedHeader quoteCount={quote.count} onQuoteClick={() => setShowQuote(true)} />
 
       {/* ── Breadcrumb Multinivel ────────────────────────────────────────────────── */}
-      <nav aria-label="Migas de pan" className="border-b border-[#E2E8F0] bg-[#F8FAFC]">
-        <div className="mx-auto flex max-w-[1360px] flex-wrap items-center gap-1.5 px-4 py-3 text-xs text-[#64748B] sm:px-6 lg:px-8">
-          <Link href="/" className="font-semibold text-[#475569] transition hover:text-[#2563EB]">
-            Inicio
-          </Link>
-          <ChevronRight className="size-3.5 text-[#94A3B8]" />
-
-          <button
-            type="button"
-            onClick={() => {
+      <Breadcrumbs
+        items={[
+          { label: 'Inicio', href: '/' },
+          {
+            label: 'Productos',
+            active: category === 'Todas',
+            onClick: () => {
               setCategory('Todas')
               setSubcategory('Todas')
               setSubSubcategory('Todas')
@@ -767,93 +778,67 @@ export function CatalogPage({
                 subSubcategory: 'Todas',
                 brand: 'Todas',
               })
-            }}
-            className={`font-semibold transition hover:text-[#2563EB] ${
-              category === 'Todas' ? 'text-[#2563EB]' : 'text-[#475569]'
-            }`}
-          >
-            Productos
-          </button>
-
-          {/* Nivel 1: Categoría */}
-          {category !== 'Todas' && (
-            <>
-              <ChevronRight className="size-3.5 text-[#94A3B8]" />
-              <button
-                type="button"
-                onClick={() => {
-                  setSubcategory('Todas')
-                  setSubSubcategory('Todas')
-                  applyFilterUrl({ subcategory: 'Todas', subSubcategory: 'Todas' })
-                }}
-                className={`font-semibold transition hover:text-[#2563EB] ${
-                  subcategory === 'Todas' ? 'text-[#2563EB]' : 'text-[#475569]'
-                }`}
-              >
-                {activeTaxonomy?.label || category}
-              </button>
-            </>
-          )}
-
-          {/* Nivel 2: Subcategoría */}
-          {subcategory !== 'Todas' && (
-            <>
-              <ChevronRight className="size-3.5 text-[#94A3B8]" />
-              <button
-                type="button"
-                onClick={() => {
-                  setSubSubcategory('Todas')
-                  applyFilterUrl({ subSubcategory: 'Todas' })
-                }}
-                className={`font-semibold transition hover:text-[#2563EB] ${
-                  subSubcategory === 'Todas' ? 'text-[#2563EB]' : 'text-[#475569]'
-                }`}
-              >
-                {subcategory}
-              </button>
-            </>
-          )}
-
-          {/* Nivel 3: Sub-subcategoría / Tipo */}
-          {subSubcategory !== 'Todas' && (
-            <>
-              <ChevronRight className="size-3.5 text-[#94A3B8]" />
-              <span className="font-bold text-[#0F172A]">{subSubcategory}</span>
-            </>
-          )}
-        </div>
-      </nav>
+            },
+          },
+          ...(category !== 'Todas'
+            ? [
+                {
+                  label: activeTaxonomy?.label || category,
+                  active: subcategory === 'Todas',
+                  onClick: () => {
+                    setSubcategory('Todas')
+                    setSubSubcategory('Todas')
+                    applyFilterUrl({ subcategory: 'Todas', subSubcategory: 'Todas' })
+                  },
+                },
+              ]
+            : []),
+          ...(subcategory !== 'Todas'
+            ? [
+                {
+                  label: subcategoryLabel,
+                  active: subSubcategory === 'Todas',
+                  onClick: () => {
+                    setSubSubcategory('Todas')
+                    applyFilterUrl({ subSubcategory: 'Todas' })
+                  },
+                },
+              ]
+            : []),
+          ...(subSubcategory !== 'Todas' ? [{ label: subSubcategoryLabel, current: true }] : []),
+        ]}
+      />
 
       {/* ── Contenedor Principal de Productos (FULL WIDTH) ──────────────────────── */}
       <section className="mx-auto max-w-[1360px] px-4 py-8 sm:px-6 lg:px-8">
         {/* Barra superior de herramientas: Título + Buscador + Dropdowns personalizados */}
-        <div className="rounded-2xl border border-[#E2E8F0] bg-white p-4 shadow-xs sm:p-5">
+        <div className="rounded-2xl border border-border bg-card p-4 shadow-xs sm:p-5">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             {/* Título de la vista y cantidad de productos */}
             <div>
-              <h1 className="font-heading text-xl font-bold tracking-tight text-[#0F172A] sm:text-2xl">
+              <h1 className="font-heading text-xl font-bold tracking-tight text-foreground sm:text-2xl">
                 {activeTitle}
               </h1>
-              <p className="mt-0.5 text-xs font-medium text-[#64748B]">{resultsText}</p>
+              <p className="mt-0.5 text-xs font-medium text-muted-foreground">{resultsText}</p>
             </div>
 
             {/* Controles con Dropdowns de alta gama */}
             <div className="flex flex-wrap items-center gap-2">
               {/* Buscador dentro de la vista */}
               <div className="relative min-w-[180px] flex-1 sm:w-56 sm:flex-none">
-                <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#94A3B8]" />
+                <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                 <input
                   type="text"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Buscar producto..."
-                  className="h-10 w-full rounded-xl border border-[#CBD5E1] bg-white pl-9 pr-8 text-xs text-[#0F172A] outline-none transition placeholder:text-[#94A3B8] focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15"
+                  className="h-10 w-full rounded-xl border border-input bg-card pl-9 pr-8 text-xs text-foreground outline-none transition placeholder:text-muted-foreground focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15"
                 />
                 {query && (
                   <button
                     type="button"
                     onClick={handleClearQuery}
-                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#94A3B8] hover:text-[#0F172A]"
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                     aria-label="Limpiar búsqueda"
                   >
                     <X className="size-3.5" />
@@ -925,7 +910,7 @@ export function CatalogPage({
                 <button
                   type="button"
                   onClick={resetFilters}
-                  className="inline-flex h-10 items-center gap-1.5 rounded-xl border border-red-200 bg-red-50/50 px-3 text-xs font-semibold text-red-600 transition hover:bg-red-100 hover:text-red-700"
+                  className="inline-flex h-10 items-center gap-1.5 rounded-xl border border-red-500/30 bg-red-500/10 px-3 text-xs font-semibold text-danger-ink transition hover:bg-red-500/15 hover:text-danger-ink"
                   title="Restablecer todos los filtros"
                 >
                   <RotateCcw className="size-3.5" />
@@ -938,16 +923,16 @@ export function CatalogPage({
 
           {/* Chips de filtros activos */}
           {hasFilters && (
-            <div className="mt-3.5 flex flex-wrap items-center gap-2 border-t border-[#F1F5F9] pt-3">
-              <span className="text-[11px] font-semibold text-[#64748B]">Filtros activos:</span>
+            <div className="mt-3.5 flex flex-wrap items-center gap-2 border-t border-border pt-3">
+              <span className="text-[11px] font-semibold text-muted-foreground">Filtros activos:</span>
 
               {category !== 'Todas' && (
-                <span className="inline-flex items-center gap-1 rounded-md bg-[#EFF6FF] px-2 py-0.5 text-xs font-medium text-[#2563EB]">
+                <span className="inline-flex items-center gap-1 rounded-md bg-tint-blue px-2 py-0.5 text-xs font-medium text-blue-ink">
                   Categoría: {activeTaxonomy?.label || category}
                   <button
                     type="button"
                     onClick={() => handleSelectCategory('Todas')}
-                    className="hover:text-[#1D4ED8]"
+                    className="hover:text-blue-ink"
                     aria-label="Quitar filtro de categoría"
                   >
                     <X className="size-3" />
@@ -956,12 +941,12 @@ export function CatalogPage({
               )}
 
               {subcategory !== 'Todas' && (
-                <span className="inline-flex items-center gap-1 rounded-md bg-[#EFF6FF] px-2 py-0.5 text-xs font-medium text-[#2563EB]">
+                <span className="inline-flex items-center gap-1 rounded-md bg-tint-blue px-2 py-0.5 text-xs font-medium text-blue-ink">
                   Subcategoría: {subcategory}
                   <button
                     type="button"
                     onClick={() => handleSelectSubcategory('Todas')}
-                    className="hover:text-[#1D4ED8]"
+                    className="hover:text-blue-ink"
                     aria-label="Quitar filtro de subcategoría"
                   >
                     <X className="size-3" />
@@ -970,12 +955,12 @@ export function CatalogPage({
               )}
 
               {subSubcategory !== 'Todas' && (
-                <span className="inline-flex items-center gap-1 rounded-md bg-[#EFF6FF] px-2 py-0.5 text-xs font-medium text-[#2563EB]">
+                <span className="inline-flex items-center gap-1 rounded-md bg-tint-blue px-2 py-0.5 text-xs font-medium text-blue-ink">
                   Tipo: {subSubcategory}
                   <button
                     type="button"
                     onClick={() => handleSelectSubSubcategory('Todas')}
-                    className="hover:text-[#1D4ED8]"
+                    className="hover:text-blue-ink"
                     aria-label="Quitar filtro de tipo"
                   >
                     <X className="size-3" />
@@ -984,12 +969,12 @@ export function CatalogPage({
               )}
 
               {brand !== 'Todas' && (
-                <span className="inline-flex items-center gap-1 rounded-md bg-[#EFF6FF] px-2 py-0.5 text-xs font-medium text-[#2563EB]">
+                <span className="inline-flex items-center gap-1 rounded-md bg-tint-blue px-2 py-0.5 text-xs font-medium text-blue-ink">
                   Marca: {brand}
                   <button
                     type="button"
                     onClick={() => handleSelectBrand('Todas')}
-                    className="hover:text-[#1D4ED8]"
+                    className="hover:text-blue-ink"
                     aria-label="Quitar filtro de marca"
                   >
                     <X className="size-3" />
@@ -998,12 +983,12 @@ export function CatalogPage({
               )}
 
               {query && (
-                <span className="inline-flex items-center gap-1 rounded-md bg-[#EFF6FF] px-2 py-0.5 text-xs font-medium text-[#2563EB]">
+                <span className="inline-flex items-center gap-1 rounded-md bg-tint-blue px-2 py-0.5 text-xs font-medium text-blue-ink">
                   Búsqueda: &quot;{query}&quot;
                   <button
                     type="button"
                     onClick={handleClearQuery}
-                    className="hover:text-[#1D4ED8]"
+                    className="hover:text-blue-ink"
                     aria-label="Quitar filtro de búsqueda"
                   >
                     <X className="size-3" />
@@ -1019,8 +1004,8 @@ export function CatalogPage({
           {isCatalogOverview ? (
             <>
               <div className="mb-4 flex items-center gap-2">
-                <Boxes aria-hidden="true" className="size-4 text-[#2563EB]" />
-                <p className="text-xs font-semibold text-[#64748B]">
+                <Boxes aria-hidden="true" className="size-4 text-blue-ink" />
+                <p className="text-xs font-semibold text-muted-foreground">
                   Selecciona una categoría para ver sus productos
                 </p>
               </div>
@@ -1041,21 +1026,21 @@ export function CatalogPage({
               ))}
             </div>
           ) : (
-            <div className="rounded-3xl border border-dashed border-[#CBD5E1] bg-[#F8FAFC] p-12 text-center sm:p-16">
-              <span className="mx-auto grid size-16 place-items-center rounded-2xl bg-[#2563EB]/10 text-[#2563EB]">
+            <div className="rounded-3xl border border-dashed border-input bg-muted p-12 text-center sm:p-16">
+              <span className="mx-auto grid size-16 place-items-center rounded-2xl bg-[#2563EB]/10 text-blue-ink">
                 <Search className="size-8" />
               </span>
-              <h3 className="mt-4 font-heading text-lg font-bold text-[#0F172A] sm:text-xl">
+              <h3 className="mt-4 font-heading text-lg font-bold text-foreground sm:text-xl">
                 No encontramos productos con estos criterios
               </h3>
-              <p className="mx-auto mt-2 max-w-md text-sm text-[#64748B]">
+              <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
                 Prueba cambiando la subcategoría, quitando la marca o buscando con un término más general.
               </p>
               <div className="mt-6 flex flex-wrap justify-center gap-3">
                 <button
                   type="button"
                   onClick={resetFilters}
-                  className="inline-flex h-11 items-center gap-2 rounded-xl border border-[#CBD5E1] bg-white px-5 text-xs font-bold text-[#0F172A] shadow-xs transition hover:bg-[#F8FAFC]"
+                  className="inline-flex h-11 items-center gap-2 rounded-xl border border-input bg-card px-5 text-xs font-bold text-foreground shadow-xs transition hover:bg-muted"
                 >
                   <RotateCcw className="size-3.5" />
                   Limpiar filtros
@@ -1073,20 +1058,20 @@ export function CatalogPage({
         </div>
 
         {/* ── Banner Corporativo de Asesoría Técnica y Cotización ───────────────── */}
-        <div className="mt-14 rounded-3xl border border-[#DDD6FE] bg-gradient-to-r from-[#EFF6FF] via-white to-[#EDE9FE] p-6 shadow-xs sm:p-8">
+        <div className="mt-14 rounded-3xl border border-brand-ink/30 bg-gradient-to-r from-tint-blue via-white to-brand-soft p-6 shadow-xs sm:p-8">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-start gap-4">
               <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-[#2563EB] text-white shadow-sm">
                 <Headset className="size-6" />
               </span>
               <div>
-                <span className="inline-flex items-center gap-1 rounded-md bg-[#2563EB]/10 px-2 py-0.5 text-[10px] font-bold text-[#2563EB] uppercase tracking-wider">
+                <span className="inline-flex items-center gap-1 rounded-md bg-[#2563EB]/10 px-2 py-0.5 text-[10px] font-bold text-blue-ink uppercase tracking-wider">
                   Atención B2B
                 </span>
-                <h4 className="mt-1 font-heading text-base font-bold text-[#0F172A] sm:text-lg">
+                <h4 className="mt-1 font-heading text-base font-bold text-foreground sm:text-lg">
                   ¿Necesitas compras por volumen o licitaciones para tu empresa?
                 </h4>
-                <p className="mt-1 text-xs leading-relaxed text-[#64748B]">
+                <p className="mt-1 text-xs leading-relaxed text-muted-foreground">
                   Preparamos cotizaciones formales con RUC, crédito corporativo, configuración de imagen de fábrica y despacho en Lima y provincias.
                 </p>
               </div>
@@ -1102,7 +1087,7 @@ export function CatalogPage({
               </Link>
               <Link
                 href="/contacto"
-                className="inline-flex h-11 items-center gap-2 rounded-xl border border-[#CBD5E1] bg-white px-5 text-xs font-bold text-[#0F172A] transition hover:bg-[#F8FAFC]"
+                className="inline-flex h-11 items-center gap-2 rounded-xl border border-input bg-card px-5 text-xs font-bold text-foreground transition hover:bg-muted"
               >
                 Hablar con un asesor
               </Link>

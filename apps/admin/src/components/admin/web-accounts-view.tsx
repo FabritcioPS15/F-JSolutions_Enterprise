@@ -45,9 +45,9 @@ const statusLabels: Record<CustomerAccountStatus, string> = {
 }
 
 const statusStyles: Record<CustomerAccountStatus, string> = {
-  pending: 'bg-amber-50 text-amber-700 ring-amber-200',
-  active: 'bg-emerald-50 text-emerald-700 ring-emerald-200',
-  blocked: 'bg-red-50 text-red-700 ring-red-200',
+  pending: 'bg-amber-500/10 text-warning-ink ring-amber-200',
+  active: 'bg-emerald-500/10 text-success-ink ring-emerald-500/30',
+  blocked: 'bg-red-500/10 text-danger-ink ring-red-200',
 }
 
 const methodLabels: Record<CustomerProvider, string> = {
@@ -202,7 +202,7 @@ export function WebAccountsView() {
               <Inbox className="size-4" aria-hidden="true" />
               Bandeja de correos
               {outbox.length > 0 && (
-                <span className="rounded-full bg-[#5B21B6]/10 px-1.5 text-[11px] font-bold text-[#5B21B6]">
+                <span className="rounded-full bg-[#2563EB]/10 px-1.5 text-[11px] font-bold text-brand-ink">
                   {outbox.length}
                 </span>
               )}
@@ -239,15 +239,15 @@ export function WebAccountsView() {
       </div>
 
       {error && (
-        <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
+        <div className="rounded-2xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm font-medium text-danger-ink">
           {error}
         </div>
       )}
 
-      <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs">
+      <div className="rounded-2xl border border-border/80 bg-card p-4 shadow-xs">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div className="relative w-full min-w-0 lg:flex-1">
-            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
@@ -288,8 +288,8 @@ export function WebAccountsView() {
           </div>
         </div>
 
-        <p className="mt-3 border-t border-slate-100 pt-3 text-[11px] font-medium text-slate-500">
-          <span className="font-bold text-slate-900">{filtered.length}</span>{' '}
+        <p className="mt-3 border-t border-border pt-3 text-[11px] font-medium text-muted-foreground">
+          <span className="font-bold text-foreground">{filtered.length}</span>{' '}
           {filtered.length === 1 ? 'cuenta' : 'cuentas'}
           {hasFilters ? ' con los filtros aplicados' : ' registradas'}
         </p>
@@ -322,7 +322,7 @@ export function WebAccountsView() {
         />
       ) : (
         <>
-          <div className="hidden overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xs lg:block">
+          <div className="hidden overflow-hidden rounded-2xl border border-border/80 bg-card shadow-xs lg:block">
             <div className="overflow-x-auto scrollbar-light">
               <table className={tableClass}>
                 <thead>
@@ -336,29 +336,29 @@ export function WebAccountsView() {
                     <th scope="col" className="whitespace-nowrap px-5 py-3 text-right">Acciones</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-border">
                   {filtered.map((account) => {
                     const busy = busyId === account.id
                     return (
-                      <tr key={account.id} className="group transition-colors hover:bg-slate-50/70">
+                      <tr key={account.id} className="group transition-colors hover:bg-muted/70">
                         <td className="px-5 py-3">
-                          <p className="truncate text-[12.5px] font-semibold text-slate-900">
+                          <p className="truncate text-[12.5px] font-semibold text-foreground">
                             {account.name}
                           </p>
-                          <p className="mt-0.5 truncate text-[11px] text-slate-400">
+                          <p className="mt-0.5 truncate text-[11px] text-muted-foreground">
                             {account.company || 'Persona natural'}
                             {account.phone ? ` · ${account.phone}` : ''}
                           </p>
                         </td>
                         <td className="px-4 py-3">
-                          <p className="max-w-[210px] truncate text-[12.5px] font-medium text-slate-700">
+                          <p className="max-w-[210px] truncate text-[12.5px] font-medium text-foreground/80">
                             {account.email}
                           </p>
                           <p className="mt-0.5 text-[10.5px] font-semibold">
                             {account.emailVerifiedAt ? (
-                              <span className="text-emerald-600">Correo confirmado</span>
+                              <span className="text-success-ink">Correo confirmado</span>
                             ) : (
-                              <span className="text-amber-600">Sin confirmar</span>
+                              <span className="text-warning-ink">Sin confirmar</span>
                             )}
                           </p>
                         </td>
@@ -367,17 +367,17 @@ export function WebAccountsView() {
                             {account.methods.map((method) => (
                               <span
                                 key={method}
-                                className="inline-flex rounded-full bg-slate-100 px-2 py-0.5 text-[10.5px] font-semibold text-slate-600"
+                                className="inline-flex rounded-full bg-muted px-2 py-0.5 text-[10.5px] font-semibold text-muted-foreground"
                               >
                                 {methodLabels[method]}
                               </span>
                             ))}
                           </div>
                         </td>
-                        <td className="px-4 py-3 text-[11px] text-slate-500">
+                        <td className="px-4 py-3 text-[11px] text-muted-foreground">
                           {formatDateTime(account.createdAt)}
                         </td>
-                        <td className="px-4 py-3 text-[11px] text-slate-500">
+                        <td className="px-4 py-3 text-[11px] text-muted-foreground">
                           {account.lastLoginAt ? formatDateTime(account.lastLoginAt) : 'Nunca'}
                         </td>
                         <td className="px-4 py-3">
@@ -430,7 +430,7 @@ export function WebAccountsView() {
                               ]}
                             />
                           ) : (
-                            <span className="pr-2 text-slate-300">—</span>
+                            <span className="pr-2 text-muted-foreground/60">—</span>
                           )}
                         </td>
                       </tr>
@@ -447,12 +447,12 @@ export function WebAccountsView() {
               return (
                 <article
                   key={account.id}
-                  className="flex flex-col rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs"
+                  className="flex flex-col rounded-2xl border border-border/80 bg-card p-4 shadow-xs"
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
-                      <p className="truncate text-[13px] font-bold text-slate-900">{account.name}</p>
-                      <p className="mt-0.5 truncate text-[11px] text-slate-400">
+                      <p className="truncate text-[13px] font-bold text-foreground">{account.name}</p>
+                      <p className="mt-0.5 truncate text-[11px] text-muted-foreground">
                         {account.company || 'Persona natural'}
                       </p>
                     </div>
@@ -468,32 +468,32 @@ export function WebAccountsView() {
 
                   <dl className="mt-3 space-y-1.5 text-[11px]">
                     <div className="flex justify-between gap-3">
-                      <dt className="text-slate-400">Correo</dt>
-                      <dd className="truncate font-medium text-slate-700">{account.email}</dd>
+                      <dt className="text-muted-foreground">Correo</dt>
+                      <dd className="truncate font-medium text-foreground/80">{account.email}</dd>
                     </div>
                     <div className="flex justify-between gap-3">
-                      <dt className="text-slate-400">Confirmado</dt>
-                      <dd className="font-medium text-slate-700">
+                      <dt className="text-muted-foreground">Confirmado</dt>
+                      <dd className="font-medium text-foreground/80">
                         {account.emailVerifiedAt ? 'Sí' : 'Pendiente'}
                       </dd>
                     </div>
                     <div className="flex justify-between gap-3">
-                      <dt className="text-slate-400">Registro</dt>
-                      <dd className="font-medium text-slate-700">
+                      <dt className="text-muted-foreground">Registro</dt>
+                      <dd className="font-medium text-foreground/80">
                         {formatDateTime(account.createdAt)}
                       </dd>
                     </div>
                   </dl>
 
                   {canEdit && (
-                    <div className="mt-3 flex flex-wrap items-center gap-1.5 border-t border-slate-100 pt-3">
+                    <div className="mt-3 flex flex-wrap items-center gap-1.5 border-t border-border pt-3">
                       {!account.emailVerifiedAt && (
                         <>
                           <button
                             type="button"
                             onClick={() => void runAction(account, 'resend')}
                             disabled={busy}
-                            className="inline-flex h-8 flex-1 items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white text-[11px] font-semibold text-slate-700 transition hover:bg-slate-50 disabled:opacity-50"
+                            className="inline-flex h-8 flex-1 items-center justify-center gap-1.5 rounded-lg border border-border bg-card text-[11px] font-semibold text-foreground/80 transition hover:bg-muted disabled:opacity-50"
                           >
                             <MailCheck className="size-3.5" aria-hidden="true" />
                             Reenviar
@@ -502,7 +502,7 @@ export function WebAccountsView() {
                             type="button"
                             onClick={() => void runAction(account, 'verify')}
                             disabled={busy}
-                            className="inline-flex h-8 flex-1 items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white text-[11px] font-semibold text-slate-700 transition hover:bg-slate-50 disabled:opacity-50"
+                            className="inline-flex h-8 flex-1 items-center justify-center gap-1.5 rounded-lg border border-border bg-card text-[11px] font-semibold text-foreground/80 transition hover:bg-muted disabled:opacity-50"
                           >
                             <CheckCircle2 className="size-3.5" aria-hidden="true" />
                             Verificar
@@ -514,7 +514,7 @@ export function WebAccountsView() {
                           type="button"
                           onClick={() => void runAction(account, 'activate')}
                           disabled={busy}
-                          className="inline-flex h-8 flex-1 items-center justify-center gap-1.5 rounded-lg border border-emerald-200 bg-emerald-50 text-[11px] font-semibold text-emerald-700 transition hover:bg-emerald-100 disabled:opacity-50"
+                          className="inline-flex h-8 flex-1 items-center justify-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 text-[11px] font-semibold text-success-ink transition hover:bg-emerald-100 disabled:opacity-50"
                         >
                           <ShieldCheck className="size-3.5" aria-hidden="true" />
                           Activar
@@ -524,7 +524,7 @@ export function WebAccountsView() {
                           type="button"
                           onClick={() => void runAction(account, 'block')}
                           disabled={busy}
-                          className="inline-flex h-8 items-center justify-center gap-1.5 rounded-lg border border-red-200 bg-red-50 px-3 text-[11px] font-semibold text-red-700 transition hover:bg-red-100 disabled:opacity-50"
+                          className="inline-flex h-8 items-center justify-center gap-1.5 rounded-lg border border-red-500/30 bg-red-500/10 px-3 text-[11px] font-semibold text-danger-ink transition hover:bg-red-500/15 disabled:opacity-50"
                         >
                           <ShieldBan className="size-3.5" aria-hidden="true" />
                           Bloquear
@@ -547,34 +547,34 @@ export function WebAccountsView() {
         size="lg"
       >
         {outbox.length === 0 ? (
-          <p className="rounded-xl border border-dashed border-slate-200 bg-slate-50 px-4 py-8 text-center text-sm text-slate-500">
+          <p className="rounded-xl border border-dashed border-border bg-muted px-4 py-8 text-center text-sm text-muted-foreground">
             Todavía no se ha enviado ningún correo de confirmación.
           </p>
         ) : (
-          <ul className="divide-y divide-slate-100">
+          <ul className="divide-y divide-border">
             {outbox.map((email) => (
               <li key={email.id} className="py-3 first:pt-0 last:pb-0">
                 <div className="flex flex-wrap items-start justify-between gap-2">
                   <div className="min-w-0">
-                    <p className="truncate text-[12.5px] font-semibold text-slate-900">
+                    <p className="truncate text-[12.5px] font-semibold text-foreground">
                       {email.subject}
                     </p>
-                    <p className="mt-0.5 truncate text-[11px] text-slate-500">{email.to}</p>
+                    <p className="mt-0.5 truncate text-[11px] text-muted-foreground">{email.to}</p>
                   </div>
                   <span
                     className={cn(
                       'shrink-0 rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ring-1',
                       email.delivery === 'smtp'
-                        ? 'bg-emerald-50 text-emerald-700 ring-emerald-200'
-                        : 'bg-slate-50 text-slate-600 ring-slate-200'
+                        ? 'bg-emerald-500/10 text-success-ink ring-emerald-500/30'
+                        : 'bg-muted text-muted-foreground ring-border'
                     )}
                   >
                     {email.delivery === 'smtp' ? 'SMTP' : 'Bandeja local'}
                   </span>
                 </div>
-                <p className="mt-1 text-[10.5px] text-slate-400">{formatDateTime(email.createdAt)}</p>
+                <p className="mt-1 text-[10.5px] text-muted-foreground">{formatDateTime(email.createdAt)}</p>
                 {email.error && (
-                  <p className="mt-1 text-[10.5px] font-medium text-amber-600">
+                  <p className="mt-1 text-[10.5px] font-medium text-warning-ink">
                     Falló el envío SMTP: {email.error}
                   </p>
                 )}
@@ -583,7 +583,7 @@ export function WebAccountsView() {
                     href={email.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-700 transition hover:bg-slate-50"
+                    className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-border bg-card px-2.5 text-[11px] font-semibold text-foreground/80 transition hover:bg-muted"
                   >
                     <ExternalLink className="size-3.5" aria-hidden="true" />
                     Abrir enlace
@@ -591,7 +591,7 @@ export function WebAccountsView() {
                   <button
                     type="button"
                     onClick={() => void copyLink(email.link)}
-                    className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-700 transition hover:bg-slate-50"
+                    className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-border bg-card px-2.5 text-[11px] font-semibold text-foreground/80 transition hover:bg-muted"
                   >
                     <Copy className="size-3.5" aria-hidden="true" />
                     Copiar enlace

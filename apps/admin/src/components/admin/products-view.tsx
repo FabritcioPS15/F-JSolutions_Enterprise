@@ -71,7 +71,7 @@ const sortOptions = [
 const pageSizes: PageSize[] = [8, 12, 24, 48]
 
 const bulkButton =
-  'inline-flex h-8 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 text-[11px] font-semibold text-slate-700 transition hover:bg-slate-50'
+  'inline-flex h-8 items-center gap-1.5 rounded-lg border border-border bg-card px-2.5 text-[11px] font-semibold text-foreground/80 transition hover:bg-muted'
 
 function matchStock(product: AdminProduct, filter: StockFilter) {
   if (filter === 'all') return true
@@ -105,7 +105,7 @@ function SelectionCheckbox({
       checked={checked}
       onChange={onChange}
       aria-label={label}
-      className="size-4 shrink-0 cursor-pointer rounded border-slate-300 accent-[#5B21B6]"
+      className="size-4 shrink-0 cursor-pointer rounded border-input accent-[#2563EB]"
     />
   )
 }
@@ -303,10 +303,10 @@ export function ProductsView({
         }
       />
 
-      <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs">
+      <div className="rounded-2xl border border-border/80 bg-card p-4 shadow-xs">
         <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
           <div className="relative w-full min-w-0 xl:flex-1">
-            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
@@ -318,7 +318,7 @@ export function ProductsView({
               <button
                 type="button"
                 onClick={() => setQuery('')}
-                className="absolute right-2.5 top-1/2 grid size-5 -translate-y-1/2 place-items-center rounded-md text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+                className="absolute right-2.5 top-1/2 grid size-5 -translate-y-1/2 place-items-center rounded-md text-muted-foreground transition hover:bg-muted hover:text-foreground/80"
                 aria-label="Limpiar búsqueda"
               >
                 <X className="size-3.5" />
@@ -426,7 +426,7 @@ export function ProductsView({
               <button
                 type="button"
                 onClick={resetFilters}
-                className="inline-flex h-10 items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 text-xs font-semibold text-slate-600 transition hover:bg-slate-50"
+                className="inline-flex h-10 items-center justify-center gap-1.5 rounded-xl border border-border bg-card px-3 text-xs font-semibold text-muted-foreground transition hover:bg-muted"
                 title="Limpiar filtros"
               >
                 <RotateCcw className="size-3.5" aria-hidden="true" />
@@ -436,22 +436,22 @@ export function ProductsView({
           </div>
         </div>
 
-        <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 pt-3">
-          <p className="text-[11px] font-medium text-slate-500">
-            <span className="font-bold text-slate-900">{filtered.length}</span>{' '}
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-3">
+          <p className="text-[11px] font-medium text-muted-foreground">
+            <span className="font-bold text-foreground">{filtered.length}</span>{' '}
             {filtered.length === 1 ? 'producto' : 'productos'}
             {hasFilters ? ' con los filtros aplicados' : ' en el catálogo'}
           </p>
 
-          <div className="flex items-center gap-1 rounded-lg bg-slate-100 p-1">
+          <div className="flex items-center gap-1 rounded-lg bg-muted p-1">
             <button
               type="button"
               onClick={() => setView('table')}
               className={cn(
                 'inline-flex size-7 items-center justify-center rounded-md transition',
                 view === 'table'
-                  ? 'bg-white text-slate-900 shadow-xs'
-                  : 'text-slate-500 hover:text-slate-800'
+                  ? 'bg-card text-foreground shadow-xs'
+                  : 'text-muted-foreground hover:text-foreground'
               )}
               aria-label="Vista de tabla"
               aria-pressed={view === 'table'}
@@ -464,8 +464,8 @@ export function ProductsView({
               className={cn(
                 'inline-flex size-7 items-center justify-center rounded-md transition',
                 view === 'grid'
-                  ? 'bg-white text-slate-900 shadow-xs'
-                  : 'text-slate-500 hover:text-slate-800'
+                  ? 'bg-card text-foreground shadow-xs'
+                  : 'text-muted-foreground hover:text-foreground'
               )}
               aria-label="Vista de tarjetas"
               aria-pressed={view === 'grid'}
@@ -477,11 +477,11 @@ export function ProductsView({
       </div>
 
       {selected.length > 0 && (
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-[#DDD6FE] bg-[#F5F3FF]/70 px-4 py-3">
-          <p className="text-xs font-semibold text-[#3B0764]">
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-brand-ink/30 bg-tint-brand/70 px-4 py-3">
+          <p className="text-xs font-semibold text-[#172554]">
             {selected.length} {selected.length === 1 ? 'producto seleccionado' : 'productos seleccionados'}
             {selectedVisibleCount !== selected.length && (
-              <span className="ml-1 font-medium text-[#5B21B6]/70">
+              <span className="ml-1 font-medium text-brand-ink/70">
                 ({selectedVisibleCount} en esta página)
               </span>
             )}
@@ -505,7 +505,7 @@ export function ProductsView({
             </button>
             <button
               type="button"
-              className={cn(bulkButton, 'border-red-200 text-red-600 hover:bg-red-50')}
+              className={cn(bulkButton, 'border-red-500/30 text-danger-ink hover:bg-red-500/10')}
               onClick={() => setBulkConfirm({ action: 'delete', count: selected.length })}
             >
               <Trash2 className="size-3.5" aria-hidden="true" />
@@ -513,7 +513,7 @@ export function ProductsView({
             </button>
             <button
               type="button"
-              className="ml-1 grid size-8 place-items-center rounded-lg text-[#5B21B6] transition hover:bg-[#EDE9FE]"
+              className="ml-1 grid size-8 place-items-center rounded-lg text-brand-ink transition hover:bg-brand-soft"
               onClick={() => setSelected([])}
               aria-label="Cancelar selección"
             >
@@ -550,7 +550,7 @@ export function ProductsView({
         <>
           <div
             className={cn(
-              'overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xs',
+              'overflow-hidden rounded-2xl border border-border/80 bg-card shadow-xs',
               view === 'grid' ? 'hidden' : 'hidden lg:block'
             )}
           >
@@ -577,7 +577,7 @@ export function ProductsView({
                     <th scope="col" className="whitespace-nowrap px-5 py-3 text-right">Acciones</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-border">
                   {visible.map((product) => {
                     const margin = getMargin(product)
                     const isSelected = selected.includes(product.id)
@@ -585,8 +585,8 @@ export function ProductsView({
                       <tr
                         key={product.id}
                         className={cn(
-                          'group transition-colors hover:bg-slate-50/70',
-                          isSelected && 'bg-[#F5F3FF]/40'
+                          'group transition-colors hover:bg-muted/70',
+                          isSelected && 'bg-tint-brand/40'
                         )}
                       >
                         <td className="px-4 py-3">
@@ -608,51 +608,51 @@ export function ProductsView({
                             <div className="min-w-0">
                               <Link
                                 href={`/productos/${product.id}`}
-                                className="line-clamp-1 text-[12.5px] font-semibold text-slate-900 transition hover:text-[#5B21B6]"
+                                className="line-clamp-1 text-[12.5px] font-semibold text-foreground transition hover:text-brand-ink"
                                 title={product.name}
                               >
                                 {product.name}
                               </Link>
-                              <p className="mt-0.5 truncate text-[11px] text-slate-400">
+                              <p className="mt-0.5 truncate text-[11px] text-muted-foreground">
                                 {product.model ?? product.internalCode ?? 'Sin código de modelo'}
                               </p>
                             </div>
                           </div>
                         </td>
                         <td className="px-4 py-3">
-                          <p className="font-mono text-[10.5px] text-slate-600">{product.sku}</p>
+                          <p className="font-mono text-[10.5px] text-muted-foreground">{product.sku}</p>
                           {product.internalCode && (
-                            <p className="mt-0.5 font-mono text-[10px] text-slate-400">
+                            <p className="mt-0.5 font-mono text-[10px] text-muted-foreground">
                               {product.internalCode}
                             </p>
                           )}
                         </td>
                         <td className="px-4 py-3">
-                          <p className="text-[12.5px] font-semibold text-slate-700">{product.brand}</p>
+                          <p className="text-[12.5px] font-semibold text-foreground/80">{product.brand}</p>
                         </td>
                         <td className="px-4 py-3">
-                          <p className="max-w-[150px] truncate text-[12.5px] font-semibold text-slate-700">
+                          <p className="max-w-[150px] truncate text-[12.5px] font-semibold text-foreground/80">
                             {product.category || 'Sin categoría'}
                           </p>
-                          <p className="mt-0.5 max-w-[150px] truncate text-[11px] text-slate-400">
+                          <p className="mt-0.5 max-w-[150px] truncate text-[11px] text-muted-foreground">
                             {product.subcategory ?? 'Sin subcategoría'}
                           </p>
                         </td>
                         <td className="px-4 py-3 text-right">
-                          <p className="whitespace-nowrap text-[12.5px] font-bold tabular-nums text-slate-900">
+                          <p className="whitespace-nowrap text-[12.5px] font-bold tabular-nums text-foreground">
                             {product.price > 0
                               ? formatCurrency(product.price, settings.currency)
                               : 'A cotizar'}
                           </p>
                           {product.price > 0 && !product.showPrice ? (
-                            <p className="mt-0.5 text-[10px] font-medium text-amber-600">
+                            <p className="mt-0.5 text-[10px] font-medium text-warning-ink">
                               Oculto en tienda
                             </p>
                           ) : margin !== null ? (
                             <p
                               className={cn(
                                 'mt-0.5 text-[10px] font-medium',
-                                margin >= 20 ? 'text-emerald-600' : 'text-amber-600'
+                                margin >= 20 ? 'text-success-ink' : 'text-warning-ink'
                               )}
                             >
                               Margen {margin.toFixed(0)}%
@@ -674,7 +674,7 @@ export function ProductsView({
                             <StatusBadge status={product.status} />
                           </div>
                         </td>
-                        <td className="hidden whitespace-nowrap px-4 py-3 text-[11px] text-slate-500 2xl:table-cell">
+                        <td className="hidden whitespace-nowrap px-4 py-3 text-[11px] text-muted-foreground 2xl:table-cell">
                           {formatDate(product.updatedAt)}
                         </td>
                         <td className="whitespace-nowrap px-5 py-3 text-right">
@@ -739,13 +739,13 @@ export function ProductsView({
                 <article
                   key={product.id}
                   className={cn(
-                    'group flex flex-col overflow-hidden rounded-2xl border bg-white shadow-xs transition hover:-translate-y-0.5 hover:border-[#DDD6FE] hover:shadow-md',
-                    isSelected ? 'border-[#C4B5FD] ring-2 ring-[#5B21B6]/10' : 'border-slate-200/80'
+                    'group flex flex-col overflow-hidden rounded-2xl border bg-card shadow-xs transition hover:-translate-y-0.5 hover:border-brand-ink/30 hover:shadow-md',
+                    isSelected ? 'border-brand-ink/40 ring-2 ring-[#2563EB]/10' : 'border-border/80'
                   )}
                 >
                   <div className="relative">
                     <Link href={`/productos/${product.id}`} className="block">
-                      <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-50 p-4">
+                      <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted p-4">
                         <ProductThumb
                           src={product.image}
                           alt={product.imageAlt || product.name}
@@ -767,42 +767,42 @@ export function ProductsView({
                   </div>
 
                   <div className="flex flex-1 flex-col p-4">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
                       {product.brand}
                     </p>
                     <Link
                       href={`/productos/${product.id}`}
-                      className="mt-1 line-clamp-2 min-h-[38px] font-heading text-[13.5px] font-bold leading-snug text-slate-900 transition hover:text-[#5B21B6]"
+                      className="mt-1 line-clamp-2 min-h-[38px] font-heading text-[13.5px] font-bold leading-snug text-foreground transition hover:text-brand-ink"
                     >
                       {product.name}
                     </Link>
-                    <p className="mt-1 truncate text-[10.5px] text-slate-400">
+                    <p className="mt-1 truncate text-[10.5px] text-muted-foreground">
                       {product.category || 'Sin categoría'}
                       {product.subcategory ? ` · ${product.subcategory}` : ''}
                     </p>
 
                     <div className="mt-3 flex items-end justify-between gap-2">
                       <div>
-                        <p className="text-sm font-bold tabular-nums text-slate-900">
+                        <p className="text-sm font-bold tabular-nums text-foreground">
                           {product.price > 0 ? formatCurrency(product.price, settings.currency) : 'A cotizar'}
                         </p>
-                        <p className="mt-0.5 font-mono text-[9.5px] text-slate-400">
+                        <p className="mt-0.5 font-mono text-[9.5px] text-muted-foreground">
                           {product.sku}
                           {product.internalCode ? ` · ${product.internalCode}` : ''}
                         </p>
                       </div>
                       {product.price > 0 && !product.showPrice ? (
-                        <span className="rounded-md bg-amber-50 px-1.5 py-0.5 text-[10px] font-semibold text-amber-700">
+                        <span className="rounded-md bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-warning-ink">
                           Precio oculto
                         </span>
                       ) : margin !== null ? (
-                        <span className="rounded-md bg-emerald-50 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-700">
+                        <span className="rounded-md bg-emerald-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-success-ink">
                           {margin.toFixed(0)}% margen
                         </span>
                       ) : null}
                     </div>
 
-                    <div className="mt-4 flex flex-wrap items-center gap-1.5 border-t border-slate-100 pt-3">
+                    <div className="mt-4 flex flex-wrap items-center gap-1.5 border-t border-border pt-3">
                       <SelectionCheckbox
                         checked={isSelected}
                         onChange={() => toggleSelected(product.id)}
@@ -810,7 +810,7 @@ export function ProductsView({
                       />
                       <Link
                         href={`/productos/${product.id}/editar`}
-                        className="inline-flex h-8 flex-1 items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white text-[11px] font-semibold text-slate-700 transition hover:bg-slate-50"
+                        className="inline-flex h-8 flex-1 items-center justify-center gap-1.5 rounded-lg border border-border bg-card text-[11px] font-semibold text-foreground/80 transition hover:bg-muted"
                       >
                         <Pencil className="size-3.5" aria-hidden="true" />
                         Editar
@@ -818,7 +818,7 @@ export function ProductsView({
                       <button
                         type="button"
                         onClick={() => handleDuplicate(product)}
-                        className={cn(iconButton, 'border border-slate-200 bg-white')}
+                        className={cn(iconButton, 'border border-border bg-card')}
                         title="Duplicar"
                         aria-label={`Duplicar ${product.name}`}
                       >
@@ -828,7 +828,7 @@ export function ProductsView({
                         <button
                           type="button"
                           onClick={() => handleRestore(product)}
-                          className={cn(iconButton, 'border border-slate-200 bg-white')}
+                          className={cn(iconButton, 'border border-border bg-card')}
                           title="Restaurar como borrador"
                           aria-label={`Restaurar ${product.name}`}
                         >
@@ -838,7 +838,7 @@ export function ProductsView({
                         <button
                           type="button"
                           onClick={() => handleArchive(product)}
-                          className={cn(iconButton, 'border border-slate-200 bg-white')}
+                          className={cn(iconButton, 'border border-border bg-card')}
                           title="Archivar"
                           aria-label={`Archivar ${product.name}`}
                         >
@@ -850,7 +850,7 @@ export function ProductsView({
                         onClick={() => setDeleteTarget(product)}
                         className={cn(
                           iconButton,
-                          'border border-slate-200 bg-white hover:bg-red-50 hover:text-red-600'
+                          'border border-border bg-card hover:bg-red-500/10 hover:text-danger-ink'
                         )}
                         title="Eliminar"
                         aria-label={`Eliminar ${product.name}`}
@@ -864,17 +864,17 @@ export function ProductsView({
             })}
           </div>
 
-          <div className="flex flex-col items-center justify-between gap-3 rounded-2xl border border-slate-200/80 bg-white px-4 py-3 shadow-xs sm:flex-row">
+          <div className="flex flex-col items-center justify-between gap-3 rounded-2xl border border-border/80 bg-card px-4 py-3 shadow-xs sm:flex-row">
             <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-              <p className="text-[11px] text-slate-500">
+              <p className="text-[11px] text-muted-foreground">
                 Mostrando{' '}
-                <span className="font-semibold text-slate-900">
+                <span className="font-semibold text-foreground">
                   {(currentPage - 1) * pageSize + 1}–
                   {Math.min(currentPage * pageSize, filtered.length)}
                 </span>{' '}
-                de <span className="font-semibold text-slate-900">{filtered.length}</span>
+                de <span className="font-semibold text-foreground">{filtered.length}</span>
               </p>
-              <label className="flex items-center gap-2 text-[11px] text-slate-500">
+              <label className="flex items-center gap-2 text-[11px] text-muted-foreground">
                 Filas por página
                 <Select
                   value={String(pageSize)}
@@ -895,7 +895,7 @@ export function ProductsView({
                 type="button"
                 onClick={() => setPage((prev) => Math.max(1, prev - 1))}
                 disabled={currentPage === 1}
-                className={cn(btnGhost, 'border border-slate-200 bg-white disabled:opacity-40')}
+                className={cn(btnGhost, 'border border-border bg-card disabled:opacity-40')}
               >
                 <ChevronLeft className="size-4" aria-hidden="true" />
                 Anterior
@@ -907,7 +907,7 @@ export function ProductsView({
                 type="button"
                 onClick={() => setPage((prev) => Math.min(totalPages, prev + 1))}
                 disabled={currentPage === totalPages}
-                className={cn(btnGhost, 'border border-slate-200 bg-white disabled:opacity-40')}
+                className={cn(btnGhost, 'border border-border bg-card disabled:opacity-40')}
               >
                 Siguiente
                 <ChevronRight className="size-4" aria-hidden="true" />

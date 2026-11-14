@@ -63,6 +63,7 @@ const FOOTER_COLUMNS: FooterColumn[] = [
       { label: 'Consultar productos', href: '/cotizador' },
       { label: 'Atención empresarial', href: '/contacto' },
       { label: 'Preguntas frecuentes', href: '/preguntas-frecuentes' },
+      { label: 'Libro de reclamaciones', href: '/libro-de-reclamaciones' },
       { label: 'Contacto', href: '/contacto' },
     ],
   },
@@ -157,11 +158,11 @@ function FooterNavColumn({
         </span>
         <span className="flex items-center gap-2">
           {hasActiveLink && (
-            <span className="size-1.5 rounded-full bg-[#A78BFA]" aria-hidden="true" />
+            <span className="size-1.5 rounded-full bg-[#60A5FA]" aria-hidden="true" />
           )}
           <ChevronDown
             className={cn(
-              'size-4 shrink-0 text-[#64748B] transition-transform duration-300 motion-reduce:transition-none',
+              'size-4 shrink-0 text-muted-foreground transition-transform duration-300 motion-reduce:transition-none',
               open && 'rotate-180'
             )}
             aria-hidden="true"
@@ -188,12 +189,12 @@ function FooterNavColumn({
                   FOCUS_STYLE,
                   active
                     ? 'font-semibold text-white'
-                    : 'text-[#94A3B8] hover:text-[#C4B5FD]'
+                    : 'text-muted-foreground hover:text-[#93C5FD]'
                 )}
               >
                 {active && (
                   <span
-                    className="absolute -left-3 top-1/2 size-1.5 -translate-y-1/2 rounded-full bg-[#A78BFA]"
+                    className="absolute -left-3 top-1/2 size-1.5 -translate-y-1/2 rounded-full bg-[#60A5FA]"
                     aria-hidden="true"
                   />
                 )}
@@ -215,7 +216,8 @@ export function SiteFooter() {
 
   return (
     <footer
-      className="border-t border-[#1E293B]/80 bg-gradient-to-b from-[#0B132B] via-[#0B1220] to-[#2E1065] text-[#94A3B8] selection:bg-[#7C3AED]/30 selection:text-white"
+      data-surface="dark"
+      className="border-t border-[#1E293B]/80 bg-gradient-to-b from-[#0B132B] via-[#0B1220] to-[#172554] text-muted-foreground selection:bg-[#2563EB]/30 selection:text-white"
       aria-label="Pie de página"
     >
       <div className="mx-auto max-w-[1280px] px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-16">
@@ -241,7 +243,7 @@ export function SiteFooter() {
               className="flex items-center gap-2.5 rounded-full border border-[#1E293B] bg-[#0F172A]/60 px-3 py-1.5 sm:rounded-none sm:border-0 sm:border-l sm:bg-transparent sm:px-0 sm:py-0 sm:pl-6"
               aria-label="RUC de la empresa"
             >
-              <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-[#64748B]">
+              <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
                 RUC
               </span>
               <span className="text-sm font-semibold tracking-wide text-[#E2E8F0] tabular-nums">
@@ -260,7 +262,7 @@ export function SiteFooter() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={social.label}
-                  className={`grid size-11 place-items-center rounded-full border border-[#1E293B] bg-[#0F172A]/70 text-[#94A3B8] transition duration-200 hover:border-[#7C3AED]/60 hover:bg-[#1E1B4B] hover:text-white motion-reduce:transition-none ${FOCUS_STYLE}`}
+                  className={`grid size-11 place-items-center rounded-full border border-[#1E293B] bg-[#0F172A]/70 text-muted-foreground transition duration-200 hover:border-[#2563EB]/60 hover:bg-[#1E1B4B] hover:text-white motion-reduce:transition-none ${FOCUS_STYLE}`}
                 >
                   <svg
                     viewBox="0 0 24 24"
@@ -297,8 +299,8 @@ export function SiteFooter() {
 
         {/* ─── C & D. Separador y Franja Legal Inferior ─── */}
         <div className="border-t border-[#1E293B]/80 pt-6 sm:pt-8">
-          <div className="flex flex-col gap-4 text-xs text-[#64748B] sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-[#94A3B8]">
+          <div className="flex flex-col gap-4 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+            <p className="text-muted-foreground">
               &copy; {currentYear} F&J Systems. Todos los derechos reservados.
             </p>
 
@@ -307,6 +309,7 @@ export function SiteFooter() {
                 { label: 'Términos y condiciones', href: '/terminos-y-condiciones' },
                 { label: 'Política de privacidad', href: '/politica-de-privacidad' },
                 { label: 'Información legal', href: '/informacion-legal' },
+                { label: 'Libro de reclamaciones', href: '/libro-de-reclamaciones' },
               ].map((item) => {
                 const active = isActiveLink(item.href, pathname)
                 return (
@@ -319,7 +322,7 @@ export function SiteFooter() {
                         FOCUS_STYLE,
                         active
                           ? 'font-semibold text-white underline decoration-[#38BDF8] decoration-2 underline-offset-4'
-                          : 'hover:text-[#CBD5E1]'
+                          : 'hover:text-muted-foreground/60'
                       )}
                     >
                       {item.label}

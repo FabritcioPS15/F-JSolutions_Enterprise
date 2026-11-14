@@ -59,7 +59,7 @@ const REQUEST_CHANNELS: RequestChannel[] = ['web', 'email', 'whatsapp', 'phone']
 
 const tableClass = 'w-full min-w-[560px] text-left text-[12.5px]'
 const headRowClass =
-  'border-b border-slate-100 bg-slate-50/70 text-[10.5px] font-bold uppercase tracking-[0.12em] text-slate-500'
+  'border-b border-border bg-muted/70 text-[10.5px] font-bold uppercase tracking-[0.12em] text-muted-foreground'
 const cellClass = 'px-4 py-2.5'
 
 function isoDaysAgo(days: number) {
@@ -257,15 +257,15 @@ export default function ReportsPage() {
         }
       />
 
-      <section className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs sm:p-5">
+      <section className="rounded-2xl border border-border/80 bg-card p-4 shadow-xs sm:p-5">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
           <div className="flex flex-wrap items-end gap-3">
             <div className="w-full sm:w-44">
               <label
                 htmlFor="report-from"
-                className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold text-slate-700"
+                className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold text-foreground/80"
               >
-                <CalendarDays className="size-3.5 text-slate-400" aria-hidden="true" />
+                <CalendarDays className="size-3.5 text-muted-foreground" aria-hidden="true" />
                 Desde
               </label>
               <input
@@ -280,9 +280,9 @@ export default function ReportsPage() {
             <div className="w-full sm:w-44">
               <label
                 htmlFor="report-to"
-                className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold text-slate-700"
+                className="mb-1.5 flex items-center gap-1.5 text-xs font-semibold text-foreground/80"
               >
-                <CalendarDays className="size-3.5 text-slate-400" aria-hidden="true" />
+                <CalendarDays className="size-3.5 text-muted-foreground" aria-hidden="true" />
                 Hasta
               </label>
               <input
@@ -296,7 +296,7 @@ export default function ReportsPage() {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <p className="text-[11px] text-slate-400">
+            <p className="text-[11px] text-muted-foreground">
               {sales
                 ? `${sales.range.days} días · ${formatNumber(sales.totals.quotes)} cotizaciones`
                 : 'Selecciona un rango de fechas.'}
@@ -308,12 +308,12 @@ export default function ReportsPage() {
         </div>
 
         {error && (
-          <p className="mt-3 rounded-xl border border-red-100 bg-red-50 px-3 py-2 text-xs font-medium text-red-700">
+          <p className="mt-3 rounded-xl border border-red-100 bg-red-500/10 px-3 py-2 text-xs font-medium text-danger-ink">
             {error}
           </p>
         )}
         {!error && loading && (
-          <p className="mt-3 text-[11px] font-medium text-slate-400">
+          <p className="mt-3 text-[11px] font-medium text-muted-foreground">
             Actualizando reportes…
           </p>
         )}
@@ -386,10 +386,10 @@ export default function ReportsPage() {
                     <th className={cellClass}>Monto USD</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-border">
                   {sales.monthly.map((row) => (
-                    <tr key={row.month} className="text-slate-600">
-                      <td className={cellClass + ' font-semibold text-slate-900'}>{row.label}</td>
+                    <tr key={row.month} className="text-muted-foreground">
+                      <td className={cellClass + ' font-semibold text-foreground'}>{row.label}</td>
                       <td className={cellClass + ' tabular-nums'}>{formatNumber(row.quotes)}</td>
                       <td className={cellClass + ' tabular-nums'}>{formatNumber(row.approved)}</td>
                       <td className={cellClass + ' tabular-nums'}>
@@ -418,10 +418,10 @@ export default function ReportsPage() {
               {QUOTE_STATUSES.map((status) => (
                 <li
                   key={status}
-                  className="flex items-center justify-between gap-3 text-xs text-slate-600"
+                  className="flex items-center justify-between gap-3 text-xs text-muted-foreground"
                 >
                   <span>{quoteStatusLabels[status]}</span>
-                  <span className="font-bold tabular-nums text-slate-900">
+                  <span className="font-bold tabular-nums text-foreground">
                     {formatNumber(sales.byStatus[status])}
                   </span>
                 </li>
@@ -458,13 +458,13 @@ export default function ReportsPage() {
                     <th className={cellClass}>Monto USD</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-border">
                   {sales.topClients.map((row) => (
-                    <tr key={row.key} className="text-slate-600">
+                    <tr key={row.key} className="text-muted-foreground">
                       <td className={cellClass}>
-                        <p className="font-semibold text-slate-900">{row.name}</p>
+                        <p className="font-semibold text-foreground">{row.name}</p>
                         {row.company && (
-                          <p className="text-[10.5px] text-slate-400">{row.company}</p>
+                          <p className="text-[10.5px] text-muted-foreground">{row.company}</p>
                         )}
                       </td>
                       <td className={cellClass + ' tabular-nums'}>{formatNumber(row.quotes)}</td>
@@ -511,12 +511,12 @@ export default function ReportsPage() {
                     <th className={cellClass}>Monto USD</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-border">
                   {sales.topProducts.map((row) => (
-                    <tr key={row.key} className="text-slate-600">
+                    <tr key={row.key} className="text-muted-foreground">
                       <td className={cellClass}>
-                        <p className="font-semibold text-slate-900">{row.name}</p>
-                        {row.sku && <p className="font-mono text-[10.5px] text-slate-400">{row.sku}</p>}
+                        <p className="font-semibold text-foreground">{row.name}</p>
+                        {row.sku && <p className="font-mono text-[10.5px] text-muted-foreground">{row.sku}</p>}
                       </td>
                       <td className={cellClass + ' tabular-nums'}>{formatNumber(row.quantity)}</td>
                       <td className={cellClass + ' tabular-nums'}>{formatNumber(row.quotes)}</td>
@@ -579,10 +579,10 @@ export default function ReportsPage() {
               {REQUEST_CHANNELS.map((channel) => (
                 <li
                   key={channel}
-                  className="flex items-center justify-between gap-3 text-xs text-slate-600"
+                  className="flex items-center justify-between gap-3 text-xs text-muted-foreground"
                 >
                   <span>{requestChannelLabels[channel]}</span>
-                  <span className="font-bold tabular-nums text-slate-900">
+                  <span className="font-bold tabular-nums text-foreground">
                     {formatNumber(helpdesk.byChannel[channel])}
                   </span>
                 </li>
@@ -603,10 +603,10 @@ export default function ReportsPage() {
               {REQUEST_STATUSES.map((status) => (
                 <li
                   key={status}
-                  className="flex items-center justify-between gap-3 text-xs text-slate-600"
+                  className="flex items-center justify-between gap-3 text-xs text-muted-foreground"
                 >
                   <span>{requestStatusLabels[status]}</span>
-                  <span className="font-bold tabular-nums text-slate-900">
+                  <span className="font-bold tabular-nums text-foreground">
                     {formatNumber(helpdesk.byStatus[status])}
                   </span>
                 </li>
@@ -631,12 +631,12 @@ export default function ReportsPage() {
               {helpdesk.monthly.map((row) => (
                 <li
                   key={row.month}
-                  className="flex items-center justify-between gap-3 text-xs text-slate-600"
+                  className="flex items-center justify-between gap-3 text-xs text-muted-foreground"
                 >
                   <span>{row.label}</span>
-                  <span className="tabular-nums text-slate-900">
+                  <span className="tabular-nums text-foreground">
                     {formatNumber(row.requests)} ·{' '}
-                    <span className="text-slate-400">{formatNumber(row.attended)} atendidas</span>
+                    <span className="text-muted-foreground">{formatNumber(row.attended)} atendidas</span>
                   </span>
                 </li>
               ))}

@@ -338,7 +338,7 @@ export function ServiceOfferingEditor({ serviceId }: { serviceId?: string }) {
       />
 
       {error && (
-        <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+        <div className="rounded-2xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-warning-ink">
           {error}
         </div>
       )}
@@ -472,7 +472,7 @@ export function ServiceOfferingEditor({ serviceId }: { serviceId?: string }) {
           </Field>
         </div>
         {draft.heroSrc.trim() && draft.heroAlt.trim() && (
-          <div className="mt-4 overflow-hidden rounded-xl border border-slate-200 bg-slate-50">
+          <div className="mt-4 overflow-hidden rounded-xl border border-border bg-muted">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={draft.heroSrc}
@@ -499,13 +499,13 @@ export function ServiceOfferingEditor({ serviceId }: { serviceId?: string }) {
         }
       >
         {errors.includes && (
-          <p className="mb-3 text-[11px] font-medium text-red-600">{errors.includes}</p>
+          <p className="mb-3 text-[11px] font-medium text-danger-ink">{errors.includes}</p>
         )}
         <div className="space-y-3">
           {draft.includes.map((item, index) => (
             <div
               key={index}
-              className="rounded-xl border border-slate-200 bg-slate-50/40 p-3"
+              className="rounded-xl border border-border bg-muted/40 p-3"
             >
               <div className="grid gap-3 sm:grid-cols-[1fr_2fr]">
                 <Field label={`Título ${index + 1}`}>
@@ -528,7 +528,7 @@ export function ServiceOfferingEditor({ serviceId }: { serviceId?: string }) {
               <div className="mt-2 flex justify-end">
                 <button
                   type="button"
-                  className={cn(iconButton, 'hover:bg-red-50 hover:text-red-600')}
+                  className={cn(iconButton, 'hover:bg-red-500/10 hover:text-danger-ink')}
                   onClick={() =>
                     update(
                       'includes',
@@ -543,7 +543,7 @@ export function ServiceOfferingEditor({ serviceId }: { serviceId?: string }) {
             </div>
           ))}
           {draft.includes.length === 0 && (
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-muted-foreground">
               Sin alcances. Agrega al menos uno para publicar el servicio.
             </p>
           )}
@@ -569,7 +569,7 @@ export function ServiceOfferingEditor({ serviceId }: { serviceId?: string }) {
           {draft.faq.map((item, index) => (
             <div
               key={index}
-              className="rounded-xl border border-slate-200 bg-slate-50/40 p-3"
+              className="rounded-xl border border-border bg-muted/40 p-3"
             >
               <div className="space-y-3">
                 <Field label={`Pregunta ${index + 1}`}>
@@ -592,7 +592,7 @@ export function ServiceOfferingEditor({ serviceId }: { serviceId?: string }) {
               <div className="mt-2 flex justify-end">
                 <button
                   type="button"
-                  className={cn(iconButton, 'hover:bg-red-50 hover:text-red-600')}
+                  className={cn(iconButton, 'hover:bg-red-500/10 hover:text-danger-ink')}
                   onClick={() =>
                     update('faq', draft.faq.filter((_, itemIndex) => itemIndex !== index))
                   }
@@ -604,7 +604,7 @@ export function ServiceOfferingEditor({ serviceId }: { serviceId?: string }) {
             </div>
           ))}
           {draft.faq.length === 0 && (
-            <p className="text-xs text-slate-500">Sin preguntas frecuentes.</p>
+            <p className="text-xs text-muted-foreground">Sin preguntas frecuentes.</p>
           )}
         </div>
       </SectionCard>
@@ -616,9 +616,9 @@ export function ServiceOfferingEditor({ serviceId }: { serviceId?: string }) {
       >
         <div className="grid gap-5 lg:grid-cols-[2fr_1fr]">
           <div>
-            <p className="mb-2 text-xs font-semibold text-slate-700">Servicios relacionados</p>
+            <p className="mb-2 text-xs font-semibold text-foreground/80">Servicios relacionados</p>
             {otherServices.length === 0 ? (
-              <p className="rounded-xl border border-dashed border-slate-300 bg-slate-50/60 px-4 py-6 text-center text-xs text-slate-500">
+              <p className="rounded-xl border border-dashed border-input bg-muted/60 px-4 py-6 text-center text-xs text-muted-foreground">
                 Aún no hay otros servicios para relacionar.
               </p>
             ) : (
@@ -631,21 +631,21 @@ export function ServiceOfferingEditor({ serviceId }: { serviceId?: string }) {
                       className={cn(
                         'flex cursor-pointer items-start gap-2.5 rounded-xl border p-3 text-xs transition',
                         checked
-                          ? 'border-[#C4B5FD] bg-[#F5F3FF]'
-                          : 'border-slate-200 bg-white hover:bg-slate-50'
+                          ? 'border-brand-ink/40 bg-tint-brand'
+                          : 'border-border bg-card hover:bg-muted'
                       )}
                     >
                       <input
                         type="checkbox"
                         checked={checked}
                         onChange={() => toggleRelated(service.slug)}
-                        className="mt-0.5 size-4 accent-[#5B21B6]"
+                        className="mt-0.5 size-4 accent-[#2563EB]"
                       />
                       <span>
-                        <span className="block font-semibold text-slate-900">
+                        <span className="block font-semibold text-foreground">
                           {service.title}
                         </span>
-                        <span className="mt-0.5 block text-[11px] text-slate-500">
+                        <span className="mt-0.5 block text-[11px] text-muted-foreground">
                           {service.category}
                           {service.status !== 'published' ? ' · no publicado' : ''}
                         </span>
@@ -676,10 +676,10 @@ export function ServiceOfferingEditor({ serviceId }: { serviceId?: string }) {
                 ))}
               </Select>
             </Field>
-            <p className="text-[11px] leading-relaxed text-slate-400">
+            <p className="text-[11px] leading-relaxed text-muted-foreground">
               La ruta pública se calcula según la categoría: Desarrollo de software usa
-              <span className="font-semibold text-slate-600"> /sistemas/</span>; el resto usa
-              <span className="font-semibold text-slate-600"> /servicios/</span>.
+              <span className="font-semibold text-muted-foreground"> /sistemas/</span>; el resto usa
+              <span className="font-semibold text-muted-foreground"> /servicios/</span>.
             </p>
           </div>
         </div>

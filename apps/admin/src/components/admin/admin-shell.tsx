@@ -6,6 +6,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import {
   BarChart3,
   Bell,
+  BookOpenCheck,
   Boxes,
   ChevronRight,
   ExternalLink,
@@ -37,6 +38,7 @@ import {
 import { cn } from '@/lib/utils'
 import { useAdmin } from '@/components/admin/admin-provider'
 import { EmptyState, btnSecondary } from '@/components/admin/ui'
+import { ThemeToggle } from '@/components/theme/theme-toggle'
 import { permissionModules } from '@/lib/admin/permissions'
 import { getStockState } from '@/lib/admin/format'
 import { openOrderStatuses } from '@/lib/admin/operations'
@@ -81,6 +83,7 @@ function getBreadcrumb(pathname: string) {
   if (pathname === '/cotizaciones') return { section: 'Comercial', title: 'Cotizaciones' }
   if (pathname === '/clientes') return { section: 'Comercial', title: 'Clientes' }
   if (pathname === '/solicitudes') return { section: 'Atención al cliente', title: 'Mesa de ayuda' }
+  if (pathname === '/reclamaciones') return { section: 'Atención al cliente', title: 'Libro de reclamaciones' }
   if (pathname === '/servicios') return { section: 'Servicios TI', title: 'Catálogo de servicios' }
   if (pathname === '/servicios/nuevo') return { section: 'Servicios TI', title: 'Nuevo servicio' }
   if (pathname.startsWith('/servicios/') && pathname.endsWith('/editar')) {
@@ -260,6 +263,7 @@ export function AdminShell({
               ? '1 mensaje nuevo'
               : `${newRequestCount} mensajes nuevos`,
         },
+        { href: '/reclamaciones', label: 'Libro de reclamaciones', icon: BookOpenCheck },
       ],
     },
     {
@@ -313,7 +317,7 @@ export function AdminShell({
   const breadcrumb = getBreadcrumb(pathname)
 
   return (
-    <div className="min-h-screen bg-[#F4F6FB]">
+    <div className="min-h-screen bg-background">
       {open && (
         <div
           className="fixed inset-0 z-40 bg-slate-950/50 backdrop-blur-sm lg:hidden"
@@ -323,8 +327,9 @@ export function AdminShell({
       )}
 
       <aside
+        data-surface="dark"
         className={cn(
-          'fixed inset-y-0 left-0 z-50 flex w-[272px] flex-col border-r border-white/5 bg-gradient-to-b from-[#2E1065] via-[#1E1B4B] to-[#0B1220] text-slate-300 transition-[transform,width] duration-300 ease-out lg:translate-x-0',
+          'fixed inset-y-0 left-0 z-50 flex w-[272px] flex-col border-r border-white/5 bg-gradient-to-b from-[#172554] via-[#1E1B4B] to-[#0B1220] text-muted-foreground/60 transition-[transform,width] duration-300 ease-out lg:translate-x-0',
           open ? 'translate-x-0' : '-translate-x-full',
           collapsed && 'lg:w-[76px]'
         )}
@@ -361,7 +366,7 @@ export function AdminShell({
             type="button"
             onClick={toggleCollapsed}
             className={cn(
-              'hidden size-8 shrink-0 place-items-center rounded-lg text-slate-400 transition hover:bg-white/10 hover:text-white lg:grid',
+              'hidden size-8 shrink-0 place-items-center rounded-lg text-muted-foreground transition hover:bg-white/10 hover:text-white lg:grid',
               collapsed && 'lg:hidden'
             )}
             aria-label="Contraer menú lateral"
@@ -373,7 +378,7 @@ export function AdminShell({
           <button
             type="button"
             onClick={() => setOpen(false)}
-            className="grid size-8 shrink-0 place-items-center rounded-lg text-slate-400 transition hover:bg-white/10 hover:text-white lg:hidden"
+            className="grid size-8 shrink-0 place-items-center rounded-lg text-muted-foreground transition hover:bg-white/10 hover:text-white lg:hidden"
             aria-label="Cerrar menú"
           >
             <X className="size-4" />
@@ -385,7 +390,7 @@ export function AdminShell({
             <button
               type="button"
               onClick={toggleCollapsed}
-              className="mx-auto mb-4 hidden size-8 place-items-center rounded-lg text-slate-500 transition hover:bg-white/10 hover:text-white lg:grid"
+              className="mx-auto mb-4 hidden size-8 place-items-center rounded-lg text-muted-foreground transition hover:bg-white/10 hover:text-white lg:grid"
               aria-label="Expandir menú lateral"
               title="Expandir menú"
             >
@@ -396,7 +401,7 @@ export function AdminShell({
             <div key={section.label} className="mb-6 last:mb-0">
               <p
                 className={cn(
-                  'mb-2 px-3 text-[9.5px] font-bold uppercase tracking-[0.22em] text-slate-600',
+                  'mb-2 px-3 text-[9.5px] font-bold uppercase tracking-[0.22em] text-muted-foreground',
                   collapsed && 'lg:hidden'
                 )}
               >
@@ -420,14 +425,14 @@ export function AdminShell({
                           'group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-[13px] font-medium transition-all',
                           collapsed && 'lg:justify-center lg:px-0',
                           active
-                            ? 'bg-[#5B21B6]/35 text-white shadow-inner ring-1 ring-[#A78BFA]/25'
-                            : 'text-slate-400 hover:bg-[#5B21B6]/15 hover:text-white'
+                            ? 'bg-[#2563EB]/35 text-white shadow-inner ring-1 ring-[#60A5FA]/25'
+                            : 'text-muted-foreground hover:bg-[#2563EB]/15 hover:text-white'
                         )}
                       >
                         {active && (
                           <span
                             className={cn(
-                              'absolute -left-3 top-1/2 h-5 w-1 -translate-y-1/2 rounded-r-full bg-[#A78BFA]',
+                              'absolute -left-3 top-1/2 h-5 w-1 -translate-y-1/2 rounded-r-full bg-[#60A5FA]',
                               collapsed && 'lg:hidden'
                             )}
                           />
@@ -435,7 +440,7 @@ export function AdminShell({
                         <Icon
                           className={cn(
                             'size-[18px] shrink-0 transition-colors',
-                            active ? 'text-white' : 'text-slate-500 group-hover:text-slate-300'
+                            active ? 'text-white' : 'text-muted-foreground group-hover:text-muted-foreground/60'
                           )}
                           aria-hidden="true"
                         />
@@ -445,7 +450,7 @@ export function AdminShell({
                             className={cn(
                               'ml-auto rounded-full px-1.5 py-0.5 text-[10px] font-bold tabular-nums ring-1 ring-inset',
                               item.badgeTone === 'blue'
-                                ? 'bg-[#A78BFA]/15 text-[#C4B5FD] ring-[#A78BFA]/20'
+                                ? 'bg-[#60A5FA]/15 text-[#93C5FD] ring-[#60A5FA]/20'
                                 : 'bg-amber-400/15 text-amber-300 ring-amber-400/20',
                               collapsed && 'lg:hidden'
                             )}
@@ -472,7 +477,7 @@ export function AdminShell({
             )}
           >
             <p className="truncate text-xs font-semibold text-slate-200">{settings.legalName}</p>
-            <p className="mt-0.5 font-mono text-[11px] tabular-nums tracking-tight text-slate-400">
+            <p className="mt-0.5 font-mono text-[11px] tabular-nums tracking-tight text-muted-foreground">
               RUC {settings.ruc}
             </p>
           </div>
@@ -483,12 +488,12 @@ export function AdminShell({
               collapsed && 'lg:justify-center lg:px-0'
             )}
           >
-            <span className="grid size-9 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[#5B21B6] to-[#3B0764] text-[11px] font-bold text-white ring-1 ring-white/10">
+            <span className="grid size-9 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[#2563EB] to-[#172554] text-[11px] font-bold text-white ring-1 ring-white/10">
               {initials}
             </span>
             <div className={cn('min-w-0', collapsed && 'lg:hidden')}>
               <p className="truncate text-xs font-semibold text-white">{user.name}</p>
-              <p className="truncate text-[10.5px] text-slate-500">{user.roleName}</p>
+              <p className="truncate text-[10.5px] text-muted-foreground">{user.roleName}</p>
             </div>
           </div>
         </div>
@@ -500,32 +505,32 @@ export function AdminShell({
           collapsed ? 'lg:pl-[76px]' : 'lg:pl-[272px]'
         )}
       >
-        <header className="sticky top-0 z-30 border-b border-slate-200/80 bg-white/85 backdrop-blur-lg">
+        <header className="sticky top-0 z-30 border-b border-border/80 bg-card/85 backdrop-blur-lg">
           <div className="flex h-16 items-center gap-3 px-4 sm:px-6 lg:px-8">
             <div className="flex min-w-0 items-center gap-3">
               <button
                 type="button"
                 onClick={() => setOpen(true)}
-                className="grid size-9 place-items-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-xs transition hover:bg-slate-50 lg:hidden"
+                className="grid size-9 place-items-center rounded-xl border border-border bg-card text-muted-foreground shadow-xs transition hover:bg-muted lg:hidden"
                 aria-label="Abrir menú"
               >
                 <Menu className="size-4" />
               </button>
 
               <nav aria-label="Migas de pan" className="flex min-w-0 items-center gap-1.5 text-xs">
-                <span className="hidden text-slate-400 sm:inline">{breadcrumb.section}</span>
+                <span className="hidden text-muted-foreground sm:inline">{breadcrumb.section}</span>
                 <ChevronRight
-                  className="hidden size-3.5 shrink-0 text-slate-300 sm:inline"
+                  className="hidden size-3.5 shrink-0 text-muted-foreground/60 sm:inline"
                   aria-hidden="true"
                 />
-                <span className="truncate font-semibold text-slate-900">{breadcrumb.title}</span>
+                <span className="truncate font-semibold text-foreground">{breadcrumb.title}</span>
               </nav>
             </div>
 
             <form onSubmit={handleSearch} className="ml-auto hidden min-w-0 md:block md:w-64 lg:w-80" role="search">
               <div className="relative">
                 <Search
-                  className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400"
+                  className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
                   aria-hidden="true"
                 />
                 <input
@@ -533,7 +538,7 @@ export function AdminShell({
                   onChange={(event) => setSearch(event.target.value)}
                   placeholder="Buscar productos o SKU…"
                   aria-label="Buscador global de productos"
-                  className="h-9 w-full rounded-xl border border-slate-200 bg-slate-50/70 pl-9 pr-3 text-xs text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-[#5B21B6] focus:bg-white focus:ring-4 focus:ring-[#5B21B6]/10"
+                  className="h-9 w-full rounded-xl border border-border bg-muted/70 pl-9 pr-3 text-xs text-foreground outline-none transition placeholder:text-muted-foreground focus:border-[#2563EB] focus:bg-card focus:ring-4 focus:ring-[#2563EB]/10"
                 />
               </div>
             </form>
@@ -541,7 +546,7 @@ export function AdminShell({
             <div className="ml-auto flex shrink-0 items-center gap-2 md:ml-0">
               <Link
                 href="/productos?stock=low"
-                className="hidden items-center gap-2 rounded-xl border border-amber-200 bg-amber-50/70 px-3 py-2 text-[11px] font-semibold text-amber-700 transition hover:bg-amber-100 sm:inline-flex"
+                className="hidden items-center gap-2 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-[11px] font-semibold text-warning-ink transition hover:bg-amber-500/15 sm:inline-flex"
                 title="Ver productos con stock bajo"
               >
                 <Bell className="size-3.5" aria-hidden="true" />
@@ -553,13 +558,15 @@ export function AdminShell({
                 target="_blank"
                 rel="noreferrer"
                 aria-label="Abrir la tienda en una nueva pestaña"
-                className="inline-flex h-9 items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 text-[11px] font-semibold text-slate-600 shadow-xs transition hover:border-slate-300 hover:bg-slate-50"
+                className="inline-flex h-9 items-center gap-1.5 rounded-xl border border-border bg-card px-3 text-[11px] font-semibold text-muted-foreground shadow-xs transition hover:border-input hover:bg-muted"
               >
                 <ExternalLink className="size-3.5" aria-hidden="true" />
                 <span className="hidden sm:inline">Ver tienda</span>
               </a>
 
-              <span className="hidden h-6 w-px bg-slate-200 sm:block" aria-hidden="true" />
+              <ThemeToggle />
+
+              <span className="hidden h-6 w-px bg-border sm:block" aria-hidden="true" />
 
               <div className="relative" ref={profileRef}>
                 <button
@@ -576,12 +583,12 @@ export function AdminShell({
                 {profileOpen && (
                   <div
                     role="menu"
-                    className="absolute right-0 top-full z-50 mt-2 w-64 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl shadow-slate-900/10"
+                    className="absolute right-0 top-full z-50 mt-2 w-64 overflow-hidden rounded-2xl border border-border bg-card shadow-xl shadow-slate-900/10"
                   >
-                    <div className="border-b border-slate-100 px-4 py-3">
-                      <p className="text-xs font-bold text-slate-900">{user.name}</p>
-                      <p className="mt-0.5 truncate text-[10.5px] text-slate-500">{user.email}</p>
-                      <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-2 py-0.5 text-[9.5px] font-semibold text-slate-500">
+                    <div className="border-b border-border px-4 py-3">
+                      <p className="text-xs font-bold text-foreground">{user.name}</p>
+                      <p className="mt-0.5 truncate text-[10.5px] text-muted-foreground">{user.email}</p>
+                      <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-muted px-2 py-0.5 text-[9.5px] font-semibold text-muted-foreground">
                         <ShieldCheck className="size-3" aria-hidden="true" />
                         {user.roleName}
                       </p>
@@ -589,23 +596,23 @@ export function AdminShell({
                     <div className="p-1.5">
                       <Link
                         href="/configuracion"
-                        className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs font-semibold text-slate-600 transition hover:bg-slate-50 hover:text-slate-900"
+                        className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs font-semibold text-muted-foreground transition hover:bg-muted hover:text-foreground"
                         role="menuitem"
                       >
-                        <Settings className="size-4 text-slate-400" aria-hidden="true" />
+                        <Settings className="size-4 text-muted-foreground" aria-hidden="true" />
                         Configuración
                       </Link>
                       <button
                         type="button"
                         onClick={handleLogout}
                         disabled={loggingOut}
-                        className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-xs font-semibold text-slate-600 transition hover:bg-red-50 hover:text-red-700 disabled:cursor-not-allowed disabled:opacity-60"
+                        className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-xs font-semibold text-muted-foreground transition hover:bg-red-500/10 hover:text-danger-ink disabled:cursor-not-allowed disabled:opacity-60"
                         role="menuitem"
                       >
                         {loggingOut ? (
-                          <Loader2 className="size-4 animate-spin text-slate-400" aria-hidden="true" />
+                          <Loader2 className="size-4 animate-spin text-muted-foreground" aria-hidden="true" />
                         ) : (
-                          <LogOut className="size-4 text-slate-400" aria-hidden="true" />
+                          <LogOut className="size-4 text-muted-foreground" aria-hidden="true" />
                         )}
                         {loggingOut ? 'Cerrando sesión…' : 'Cerrar sesión'}
                       </button>
@@ -619,7 +626,7 @@ export function AdminShell({
 
         {catalogError ? (
           <div className="mx-auto w-full max-w-[1440px] px-4 pt-4 sm:px-6 lg:px-8">
-            <p className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-2.5 text-xs text-amber-900">
+            <p className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-2.5 text-xs text-warning-ink">
               El catálogo no está sincronizado con la base de datos. Se mantiene el respaldo
               local. {catalogError}
             </p>
@@ -628,7 +635,7 @@ export function AdminShell({
 
         {commercialError ? (
           <div className="mx-auto w-full max-w-[1440px] px-4 pt-4 sm:px-6 lg:px-8">
-            <p className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-2.5 text-xs text-amber-900">
+            <p className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-2.5 text-xs text-warning-ink">
               Clientes y cotizaciones no están sincronizados con la base de datos. Se mantiene el
               respaldo local. {commercialError}
             </p>
@@ -652,7 +659,7 @@ export function AdminShell({
           )}
         </main>
 
-        <footer className="mx-auto flex w-full max-w-[1440px] flex-wrap items-center justify-between gap-2 px-4 pb-6 text-[10.5px] text-slate-400 sm:px-6 lg:px-8">
+        <footer className="mx-auto flex w-full max-w-[1440px] flex-wrap items-center justify-between gap-2 px-4 pb-6 text-[10.5px] text-muted-foreground sm:px-6 lg:px-8">
           <p>© 2026 {settings.storeName}. Panel interno de administración.</p>
           <p className="font-medium">
             {catalogSource === 'api' && commercialSource === 'api' && projectsSource === 'api'

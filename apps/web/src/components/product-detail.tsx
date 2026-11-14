@@ -116,16 +116,16 @@ export function ProductDetail({ slug }: ProductDetailProps) {
 
   if (!product) {
     return (
-      <main className="min-h-screen bg-white text-[#0F172A]">
+      <main className="min-h-screen bg-card text-foreground">
         <EnhancedHeader />
         <section className="mx-auto max-w-[1280px] px-4 py-20 sm:px-6 lg:px-8">
           {loading ? (
-            <p className="text-sm text-[#475569]">Cargando producto…</p>
+            <p className="text-sm text-muted-foreground">Cargando producto…</p>
           ) : (
             <>
               <h1 className="text-2xl font-bold">Producto no encontrado</h1>
-              <p className="mt-2 text-[#475569]">El producto que buscas no existe o ha sido eliminado.</p>
-              <Link href="/productos" className="mt-4 inline-flex items-center gap-2 text-[#2563EB] hover:underline">
+              <p className="mt-2 text-muted-foreground">El producto que buscas no existe o ha sido eliminado.</p>
+              <Link href="/productos" className="mt-4 inline-flex items-center gap-2 text-blue-ink hover:underline">
                 <ChevronLeft className="size-4" /> Volver al catálogo
               </Link>
             </>
@@ -209,7 +209,7 @@ export function ProductDetail({ slug }: ProductDetailProps) {
       label: 'X',
       href: `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`,
       icon: FaXTwitter,
-      iconClass: 'text-[#0F172A]',
+      iconClass: 'text-foreground',
     },
     {
       label: 'LinkedIn',
@@ -221,7 +221,7 @@ export function ProductDetail({ slug }: ProductDetailProps) {
       label: 'Correo',
       href: `mailto:?subject=${encodedText}&body=${encodedUrl}`,
       icon: Mail,
-      iconClass: 'text-[#64748B]',
+      iconClass: 'text-muted-foreground',
     },
   ]
 
@@ -238,20 +238,20 @@ export function ProductDetail({ slug }: ProductDetailProps) {
   }
 
   return (
-    <main className="min-h-screen bg-white text-[#0F172A]">
+    <main className="min-h-screen bg-card text-foreground">
       <EnhancedHeader quoteCount={quote.count} onQuoteClick={() => setShowQuote(true)} />
 
-      <div className="border-b border-[#E2E8F0] bg-white">
-        <div className="mx-auto flex max-w-[1280px] items-center gap-2 px-4 py-3 text-xs text-[#475569] sm:px-6 lg:px-8">
-          <Link href="/" className="font-semibold hover:text-[#2563EB]">
+      <div className="border-b border-border bg-card">
+        <div className="mx-auto flex max-w-[1280px] items-center gap-2 px-4 py-3 text-xs text-muted-foreground sm:px-6 lg:px-8">
+          <Link href="/" className="font-semibold hover:text-blue-ink">
             Inicio
           </Link>
           <span>/</span>
-          <Link href="/productos" className="font-semibold hover:text-[#2563EB]">
+          <Link href="/productos" className="font-semibold hover:text-blue-ink">
             Catálogo
           </Link>
           <span>/</span>
-          <span className="font-semibold text-[#0F172A]">{product.name}</span>
+          <span className="font-semibold text-foreground">{product.name}</span>
         </div>
       </div>
 
@@ -259,7 +259,7 @@ export function ProductDetail({ slug }: ProductDetailProps) {
         <div className="lg:grid lg:grid-cols-2 lg:gap-12">
           {/* Galería */}
           <div className="space-y-4">
-            <div className="relative aspect-square overflow-hidden rounded-2xl border border-[#E2E8F0] bg-[#F1F5F9]">
+            <div className="relative aspect-square overflow-hidden rounded-2xl border border-border bg-muted">
               <img
                 src={images[currentImageIndex]}
                 alt={`${product.name} - vista ${currentImageIndex + 1}`}
@@ -269,14 +269,14 @@ export function ProductDetail({ slug }: ProductDetailProps) {
                 <>
                   <button
                     onClick={() => setCurrentImageIndex((i) => (i > 0 ? i - 1 : images.length - 1))}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 grid size-10 place-items-center rounded-full bg-white/90 shadow-lg transition hover:bg-white"
+                    className="absolute left-4 top-1/2 -translate-y-1/2 grid size-10 place-items-center rounded-full bg-card/90 shadow-lg transition hover:bg-card"
                     aria-label="Imagen anterior"
                   >
                     <ChevronLeft className="size-5" />
                   </button>
                   <button
                     onClick={() => setCurrentImageIndex((i) => (i < images.length - 1 ? i + 1 : 0))}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 grid size-10 place-items-center rounded-full bg-white/90 shadow-lg transition hover:bg-white"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 grid size-10 place-items-center rounded-full bg-card/90 shadow-lg transition hover:bg-card"
                     aria-label="Imagen siguiente"
                   >
                     <ChevronRight className="size-5" />
@@ -293,7 +293,7 @@ export function ProductDetail({ slug }: ProductDetailProps) {
                     className={`relative aspect-square w-20 shrink-0 overflow-hidden rounded-lg border-2 transition ${
                       currentImageIndex === index
                         ? 'border-[#2563EB] ring-2 ring-[#2563EB]/20'
-                        : 'border-[#E2E8F0] hover:border-[#2563EB]/50'
+                        : 'border-border hover:border-[#2563EB]/50'
                     }`}
                     aria-label={`Ver imagen ${index + 1}`}
                   >
@@ -307,21 +307,21 @@ export function ProductDetail({ slug }: ProductDetailProps) {
           {/* Información del producto */}
           <div className="space-y-6">
             <div>
-              <div className="mb-3 flex items-center gap-2 text-sm text-[#475569]">
+              <div className="mb-3 flex items-center gap-2 text-sm text-muted-foreground">
                 <span className="font-medium">{product.brand}</span>
                 <span>/</span>
                 <span className="font-medium">{product.category}</span>
               </div>
               <h1 className="text-2xl font-bold sm:text-3xl lg:text-4xl">{product.name}</h1>
               {(product.model || product.sku) && (
-                <div className="mt-2 flex flex-wrap gap-4 font-mono text-sm text-[#64748B]">
+                <div className="mt-2 flex flex-wrap gap-4 font-mono text-sm text-muted-foreground">
                   {product.model && <span>Modelo: {product.model}</span>}
                   {product.sku && <span>SKU: {product.sku}</span>}
                 </div>
               )}
             </div>
 
-            <p className="text-base leading-7 text-[#475569]">{product.description}</p>
+            <p className="text-base leading-7 text-muted-foreground">{product.description}</p>
 
             {product.availability && (
               <div className="inline-flex">
@@ -334,7 +334,7 @@ export function ProductDetail({ slug }: ProductDetailProps) {
             {/* Especificaciones destacadas */}
             <div className="space-y-2">
               {product.specs.slice(0, 4).map((spec) => (
-                <div key={spec} className="flex items-start gap-2 text-sm text-[#475569]">
+                <div key={spec} className="flex items-start gap-2 text-sm text-muted-foreground">
                   <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-[#0E7490]/60" />
                   {spec}
                 </div>
@@ -342,14 +342,14 @@ export function ProductDetail({ slug }: ProductDetailProps) {
             </div>
 
             {/* Selector de cantidad y botón de cotización */}
-            <div className="space-y-4 border-t border-[#E2E8F0] pt-6">
+            <div className="space-y-4 border-t border-border pt-6">
               <div className="flex items-center gap-4">
-                <span className="text-sm font-semibold text-[#0F172A]">Cantidad:</span>
-                <div className="flex items-center rounded-lg border border-[#E2E8F0]">
+                <span className="text-sm font-semibold text-foreground">Cantidad:</span>
+                <div className="flex items-center rounded-lg border border-border">
                   <button
                     onClick={() => handleQuantityChange(-1)}
                     aria-label="Reducir cantidad"
-                    className="grid size-10 place-items-center text-[#475569] hover:text-[#2563EB] disabled:opacity-50"
+                    className="grid size-10 place-items-center text-muted-foreground hover:text-blue-ink disabled:opacity-50"
                     disabled={quantity <= 1}
                   >
                     <Minus className="size-4" />
@@ -358,7 +358,7 @@ export function ProductDetail({ slug }: ProductDetailProps) {
                   <button
                     onClick={() => handleQuantityChange(1)}
                     aria-label="Aumentar cantidad"
-                    className="grid size-10 place-items-center text-[#475569] hover:text-[#2563EB]"
+                    className="grid size-10 place-items-center text-muted-foreground hover:text-blue-ink"
                   >
                     <Plus className="size-4" />
                   </button>
@@ -368,9 +368,9 @@ export function ProductDetail({ slug }: ProductDetailProps) {
               <button
                 onClick={handleAddToQuote}
                 disabled={product.availability === 'consult'}
-                className={`flex h-12 w-full items-center justify-center gap-2 rounded-xl text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22D3EE] focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
+                className={`flex h-12 w-full items-center justify-center gap-2 rounded-xl text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22D3EE] focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                   added
-                    ? 'bg-[#22D3EE] text-[#0B1120]'
+                    ? 'bg-[#22D3EE] text-[#0B1220]'
                     : 'bg-[#2563EB] text-white hover:bg-[#1D4ED8] disabled:bg-[#64748B] disabled:cursor-not-allowed'
                 }`}
               >
@@ -388,9 +388,9 @@ export function ProductDetail({ slug }: ProductDetailProps) {
               <div className="flex gap-2">
                 <button
                   onClick={() => toggleFavorite(product.id)}
-                  className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-[#E2E8F0] px-4 py-2.5 text-sm font-semibold text-[#475569] transition hover:border-[#2563EB]/40 hover:text-[#2563EB]"
+                  className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-border px-4 py-2.5 text-sm font-semibold text-muted-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink"
                 >
-                  <Heart className={`size-4 ${isFavorite(product.id) ? 'fill-current text-[#6D28D9]' : ''}`} />
+                  <Heart className={`size-4 ${isFavorite(product.id) ? 'fill-current text-brand-ink' : ''}`} />
                   {isFavorite(product.id) ? 'Guardado' : 'Guardar'}
                 </button>
                 <div ref={shareRef} className="relative flex-1">
@@ -399,7 +399,7 @@ export function ProductDetail({ slug }: ProductDetailProps) {
                     onClick={toggleShare}
                     aria-expanded={shareOpen}
                     aria-haspopup="menu"
-                    className="flex w-full items-center justify-center gap-2 rounded-lg border border-[#E2E8F0] px-4 py-2.5 text-sm font-semibold text-[#475569] transition hover:border-[#2563EB]/40 hover:text-[#2563EB] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/40"
+                    className="flex w-full items-center justify-center gap-2 rounded-lg border border-border px-4 py-2.5 text-sm font-semibold text-muted-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/40"
                   >
                     <Share2 className="size-4" />
                     Compartir
@@ -409,9 +409,9 @@ export function ProductDetail({ slug }: ProductDetailProps) {
                     <div
                       role="menu"
                       aria-label="Opciones para compartir este producto"
-                      className="absolute right-0 top-full z-30 mt-2 w-60 overflow-hidden rounded-xl border border-[#E2E8F0] bg-white shadow-[0_12px_40px_rgba(15,23,42,0.14)]"
+                      className="absolute right-0 top-full z-30 mt-2 w-60 overflow-hidden rounded-xl border border-border bg-card shadow-[0_12px_40px_rgba(15,23,42,0.14)]"
                     >
-                      <p className="border-b border-[#F1F5F9] px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.14em] text-[#94A3B8]">
+                      <p className="border-b border-border px-4 py-2.5 text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
                         Compartir producto
                       </p>
                       <div className="p-1.5">
@@ -420,9 +420,9 @@ export function ProductDetail({ slug }: ProductDetailProps) {
                             type="button"
                             role="menuitem"
                             onClick={handleNativeShare}
-                            className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-[#0F172A] transition hover:bg-[#F8FAFC]"
+                            className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-foreground transition hover:bg-muted"
                           >
-                            <span className="grid size-8 place-items-center rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] text-[#2563EB]">
+                            <span className="grid size-8 place-items-center rounded-lg border border-border bg-muted text-blue-ink">
                               <Share2 className="size-4" />
                             </span>
                             Compartir...
@@ -440,10 +440,10 @@ export function ProductDetail({ slug }: ProductDetailProps) {
                               target={isExternal ? '_blank' : undefined}
                               rel={isExternal ? 'noopener noreferrer' : undefined}
                               onClick={() => setShareOpen(false)}
-                              className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-[#0F172A] transition hover:bg-[#F8FAFC]"
+                              className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-foreground transition hover:bg-muted"
                             >
                               <span
-                                className={`grid size-8 place-items-center rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] ${link.iconClass}`}
+                                className={`grid size-8 place-items-center rounded-lg border border-border bg-muted ${link.iconClass}`}
                               >
                                 <Icon className="size-4" aria-hidden="true" />
                               </span>
@@ -456,11 +456,11 @@ export function ProductDetail({ slug }: ProductDetailProps) {
                           type="button"
                           role="menuitem"
                           onClick={handleCopyLink}
-                          className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-[#0F172A] transition hover:bg-[#F8FAFC]"
+                          className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-foreground transition hover:bg-muted"
                         >
                           <span
-                            className={`grid size-8 place-items-center rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] ${
-                              copied ? 'text-[#15803D]' : 'text-[#64748B]'
+                            className={`grid size-8 place-items-center rounded-lg border border-border bg-muted ${
+                              copied ? 'text-success' : 'text-muted-foreground'
                             }`}
                           >
                             {copied ? <Check className="size-4" /> : <Link2 className="size-4" />}
@@ -478,17 +478,17 @@ export function ProductDetail({ slug }: ProductDetailProps) {
 
         {/* Especificaciones técnicas */}
         {product.fullSpecs && product.fullSpecs.length > 0 && (
-          <div className="mt-12 border-t border-[#E2E8F0] pt-8">
+          <div className="mt-12 border-t border-border pt-8">
             <h2 className="text-2xl font-bold">Especificaciones técnicas</h2>
             <div className="mt-6 space-y-6">
               {product.fullSpecs.map((group) => (
                 <div key={group.category}>
-                  <h3 className="mb-4 font-semibold text-[#0F172A]">{group.category}</h3>
+                  <h3 className="mb-4 font-semibold text-foreground">{group.category}</h3>
                   <div className="space-y-2">
                     {group.specs.map((spec) => (
-                      <div key={spec.label} className="flex items-baseline gap-3 border-b border-[#E2E8F0] pb-2">
-                        <span className="w-1/3 text-xs text-[#64748B]">{spec.label}</span>
-                        <span className="w-2/3 text-xs font-mono text-[#0F172A]">{spec.value}</span>
+                      <div key={spec.label} className="flex items-baseline gap-3 border-b border-border pb-2">
+                        <span className="w-1/3 text-xs text-muted-foreground">{spec.label}</span>
+                        <span className="w-2/3 text-xs font-mono text-foreground">{spec.value}</span>
                       </div>
                     ))}
                   </div>
@@ -499,9 +499,9 @@ export function ProductDetail({ slug }: ProductDetailProps) {
         )}
 
         {/* Descripción extendida */}
-        <div className="mt-12 border-t border-[#E2E8F0] pt-8">
+        <div className="mt-12 border-t border-border pt-8">
           <h2 className="text-2xl font-bold">Descripción del producto</h2>
-          <div className="mt-4 space-y-4 text-xs leading-6 text-[#475569]">
+          <div className="mt-4 space-y-4 text-xs leading-6 text-muted-foreground">
             <p>
               {product.name} es una solución tecnológica diseñada para satisfacer las necesidades de usuarios profesionales y entusiastas. Este producto combina rendimiento, fiabilidad y diseño ergonómico para ofrecer una experiencia de uso excepcional.
             </p>
@@ -516,17 +516,17 @@ export function ProductDetail({ slug }: ProductDetailProps) {
 
         {/* Productos relacionados */}
         {relatedProducts.length > 0 && (
-          <div className="mt-12 border-t border-[#E2E8F0] pt-8">
+          <div className="mt-12 border-t border-border pt-8">
             <div className="flex flex-wrap items-end justify-between gap-3">
               <div>
                 <h2 className="text-2xl font-bold">Productos relacionados</h2>
-                <p className="mt-1 text-sm text-[#64748B]">
+                <p className="mt-1 text-sm text-muted-foreground">
                   Equipos y accesorios que suelen elegirse junto a este producto.
                 </p>
               </div>
               <Link
                 href={`/productos?categoria=${encodeURIComponent(product.category)}`}
-                className="inline-flex items-center gap-2 text-sm font-semibold text-[#2563EB] hover:underline"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-blue-ink hover:underline"
               >
                 Ver todos <ArrowRight className="size-4" />
               </Link>

@@ -247,7 +247,7 @@ export function ProjectsPage() {
   }, [selectedSector, searchFilter])
 
   return (
-    <div className="min-h-screen bg-white text-[#0F172A] selection:bg-[#2563EB]/15 selection:text-[#2563EB]">
+    <div className="min-h-screen bg-card text-foreground selection:bg-[#2563EB]/15 selection:text-blue-ink">
       <EnhancedHeader />
 
       <main>
@@ -257,7 +257,7 @@ export function ProjectsPage() {
           title={
             <>
               Experiencia comprobada en{' '}
-              <span className="text-[#2563EB]">infraestructura, software y soporte TI</span>
+              <span className="text-blue-ink">infraestructura, software y soporte TI</span>
             </>
           }
           description="Conoce cómo acompañamos a empresas, instituciones y comercios a resolver retos técnicos reales con metodologías claras, plazos cumplidos y resultados medibles."
@@ -281,24 +281,24 @@ export function ProjectsPage() {
         />
 
         {/* Indicadores clave */}
-        <section className="border-y border-[#E2E8F0] bg-[#F8FAFC] py-10" aria-label="Cifras clave">
+        <section className="border-y border-border bg-muted py-10" aria-label="Cifras clave">
           <div className={CONTAINER}>
             <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
               <div className="border-l-2 border-[#2563EB] pl-4">
-                <p className="font-heading text-3xl font-bold tracking-tight text-[#0F172A] sm:text-4xl">850+</p>
-                <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-[#64748B]">Empresas atendidas</p>
+                <p className="font-heading text-3xl font-bold tracking-tight text-foreground sm:text-4xl">850+</p>
+                <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Empresas atendidas</p>
               </div>
               <div className="border-l-2 border-[#2563EB] pl-4">
-                <p className="font-heading text-3xl font-bold tracking-tight text-[#0F172A] sm:text-4xl">2,400+</p>
-                <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-[#64748B]">Equipos gestionados</p>
+                <p className="font-heading text-3xl font-bold tracking-tight text-foreground sm:text-4xl">2,400+</p>
+                <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Equipos gestionados</p>
               </div>
               <div className="border-l-2 border-[#2563EB] pl-4">
-                <p className="font-heading text-3xl font-bold tracking-tight text-[#0F172A] sm:text-4xl">&lt;35 min</p>
-                <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-[#64748B]">Tiempo promedio respuesta</p>
+                <p className="font-heading text-3xl font-bold tracking-tight text-foreground sm:text-4xl">&lt;35 min</p>
+                <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Tiempo promedio respuesta</p>
               </div>
               <div className="border-l-2 border-[#2563EB] pl-4">
-                <p className="font-heading text-3xl font-bold tracking-tight text-[#0F172A] sm:text-4xl">99.8%</p>
-                <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-[#64748B]">Uptime promedio en redes</p>
+                <p className="font-heading text-3xl font-bold tracking-tight text-foreground sm:text-4xl">99.8%</p>
+                <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Uptime promedio en redes</p>
               </div>
             </div>
           </div>
@@ -309,21 +309,21 @@ export function ProjectsPage() {
           <div className={CONTAINER}>
             <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#5B21B6]">Portafolio de soluciones</p>
-                <h2 className="mt-1 font-heading text-2xl font-bold tracking-tight text-[#0F172A] sm:text-3xl">
+                <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-ink">Portafolio de soluciones</p>
+                <h2 className="mt-1 font-heading text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
                   Casos de estudio por sector
                 </h2>
               </div>
 
               {/* Buscador interactivo */}
               <div className="relative w-full sm:w-80">
-                <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-[#94A3B8]" />
+                <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                 <input
                   type="text"
                   value={searchFilter}
                   onChange={(e) => setSearchFilter(e.target.value)}
                   placeholder="Buscar por tecnología, reto..."
-                  className="h-10 w-full rounded-xl border border-[#CBD5E1] bg-white pl-10 pr-4 text-sm text-[#0F172A] outline-none transition placeholder:text-[#94A3B8] focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15"
+                  className="h-10 w-full rounded-xl border border-input bg-card pl-10 pr-4 text-sm text-foreground outline-none transition placeholder:text-muted-foreground focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15"
                 />
               </div>
             </div>
@@ -341,7 +341,7 @@ export function ProjectsPage() {
                     className={`rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-all ${
                       active
                         ? 'bg-[#2563EB] text-white shadow-sm'
-                        : 'border border-[#E2E8F0] bg-white text-[#475569] hover:border-[#CBD5E1] hover:bg-[#F8FAFC]'
+                        : 'border border-border bg-card text-muted-foreground hover:border-input hover:bg-muted'
                     }`}
                   >
                     {sector.label}
@@ -356,10 +356,10 @@ export function ProjectsPage() {
         <section className="pb-16 sm:pb-24" aria-label="Listado de casos de estudio">
           <div className={CONTAINER}>
             {filteredStudies.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-[#CBD5E1] bg-[#F8FAFC] py-16 text-center">
-                <Search className="mx-auto size-8 text-[#94A3B8]" />
-                <h3 className="mt-3 text-base font-semibold text-[#0F172A]">No encontramos proyectos con ese criterio</h3>
-                <p className="mt-1 text-sm text-[#64748B]">Intenta ajustar el filtro de sector o limpiar el término de búsqueda.</p>
+              <div className="rounded-2xl border border-dashed border-input bg-muted py-16 text-center">
+                <Search className="mx-auto size-8 text-muted-foreground" />
+                <h3 className="mt-3 text-base font-semibold text-foreground">No encontramos proyectos con ese criterio</h3>
+                <p className="mt-1 text-sm text-muted-foreground">Intenta ajustar el filtro de sector o limpiar el término de búsqueda.</p>
                 <button
                   type="button"
                   onClick={() => {
@@ -379,13 +379,13 @@ export function ProjectsPage() {
                   return (
                     <article
                       key={study.id}
-                      className="group flex flex-col justify-between rounded-2xl border border-[#E2E8F0] bg-white p-6 shadow-sm transition duration-200 hover:border-[#2563EB]/40 hover:shadow-md sm:p-8"
+                      className="group flex flex-col justify-between rounded-2xl border border-border bg-card p-6 shadow-sm transition duration-200 hover:border-[#2563EB]/40 hover:shadow-md sm:p-8"
                     >
                       <div>
                         {/* Top header */}
-                        <div className="flex items-center justify-between gap-3 border-b border-[#F1F5F9] pb-4">
+                        <div className="flex items-center justify-between gap-3 border-b border-border pb-4">
                           <div className="flex items-center gap-2.5">
-                            <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-[#EFF6FF] text-[#2563EB]">
+                            <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-tint-blue text-blue-ink">
                               <Icon className="size-4" />
                             </span>
                             <div>
@@ -393,38 +393,38 @@ export function ProjectsPage() {
                                 type="button"
                                 onClick={() => setSelectedSector(study.sectorId)}
                                 aria-label={`Ver proyectos del sector ${sectorLabel}`}
-                                className="rounded-sm text-left text-[11px] font-bold uppercase tracking-wider text-[#2563EB] underline-offset-2 transition hover:text-[#1D4ED8] hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/40"
+                                className="rounded-sm text-left text-[11px] font-bold uppercase tracking-wider text-blue-ink underline-offset-2 transition hover:text-blue-ink hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/40"
                               >
                                 {sectorLabel}
                               </button>
-                              <p className="text-xs text-[#64748B]">{study.clientType}</p>
+                              <p className="text-xs text-muted-foreground">{study.clientType}</p>
                             </div>
                           </div>
-                          <span className="inline-flex items-center gap-1 rounded-full bg-[#F1F5F9] px-2.5 py-0.5 text-[11px] font-medium text-[#475569]">
+                          <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-0.5 text-[11px] font-medium text-muted-foreground">
                             <Clock className="size-3" />
                             {study.duration}
                           </span>
                         </div>
 
                         {/* Title & Context */}
-                        <h3 className="mt-5 font-heading text-lg font-bold leading-snug text-[#0F172A] sm:text-xl">
+                        <h3 className="mt-5 font-heading text-lg font-bold leading-snug text-foreground sm:text-xl">
                           {study.title}
                         </h3>
 
-                        <div className="mt-3 rounded-lg bg-[#F8FAFC] p-3 text-xs leading-relaxed text-[#475569]">
-                          <strong className="font-semibold text-[#0F172A]">Contexto inicial: </strong>
+                        <div className="mt-3 rounded-lg bg-muted p-3 text-xs leading-relaxed text-muted-foreground">
+                          <strong className="font-semibold text-foreground">Contexto inicial: </strong>
                           {study.context}
                         </div>
 
                         {/* Actions implemented */}
                         <div className="mt-4 space-y-2">
-                          <p className="text-xs font-bold uppercase tracking-wider text-[#0F172A]">
+                          <p className="text-xs font-bold uppercase tracking-wider text-foreground">
                             Solución técnica implementada:
                           </p>
-                          <ul className="space-y-1.5 text-xs text-[#475569]">
+                          <ul className="space-y-1.5 text-xs text-muted-foreground">
                             {study.solution.map((item, idx) => (
                               <li key={idx} className="flex items-start gap-2">
-                                <CheckCircle2 className="mt-0.5 size-3.5 shrink-0 text-[#2563EB]" />
+                                <CheckCircle2 className="mt-0.5 size-3.5 shrink-0 text-blue-ink" />
                                 <span>{item}</span>
                               </li>
                             ))}
@@ -432,34 +432,34 @@ export function ProjectsPage() {
                         </div>
 
                         {/* Metrics banner */}
-                        <div className="mt-5 grid grid-cols-3 gap-2 rounded-xl border border-[#DBEAFE] bg-[#EFF6FF]/50 p-3">
+                        <div className="mt-5 grid grid-cols-3 gap-2 rounded-xl border border-blue-ink/25 bg-tint-blue/50 p-3">
                           {study.results.map((res, idx) => (
                             <div key={idx} className="text-center">
-                              <p className="font-heading text-sm font-bold text-[#2563EB] sm:text-base">{res.metric}</p>
-                              <p className="mt-0.5 text-[10px] font-medium text-[#475569] leading-tight">{res.label}</p>
+                              <p className="font-heading text-sm font-bold text-blue-ink sm:text-base">{res.metric}</p>
+                              <p className="mt-0.5 text-[10px] font-medium text-muted-foreground leading-tight">{res.label}</p>
                             </div>
                           ))}
                         </div>
 
                         {/* Client quote if available */}
                         {study.quote && (
-                          <div className="mt-4 border-l-2 border-[#2563EB] pl-3 py-1 text-xs italic text-[#475569]">
+                          <div className="mt-4 border-l-2 border-[#2563EB] pl-3 py-1 text-xs italic text-muted-foreground">
                             &ldquo;{study.quote.text}&rdquo;
-                            <span className="block mt-1 font-semibold not-italic text-[#0F172A]">
-                              — {study.quote.author}, <span className="font-normal text-[#64748B]">{study.quote.role}</span>
+                            <span className="block mt-1 font-semibold not-italic text-foreground">
+                              — {study.quote.author}, <span className="font-normal text-muted-foreground">{study.quote.role}</span>
                             </span>
                           </div>
                         )}
                       </div>
 
                       {/* Bottom tags & footer */}
-                      <div className="mt-6 border-t border-[#F1F5F9] pt-4">
+                      <div className="mt-6 border-t border-border pt-4">
                         <div className="flex flex-wrap items-center justify-between gap-3">
                           <div className="flex flex-wrap gap-1.5">
                             {study.technologies.map((tech) => (
                               <span
                                 key={tech}
-                                className="rounded-md border border-[#E2E8F0] bg-white px-2 py-0.5 text-[10px] font-medium text-[#64748B]"
+                                className="rounded-md border border-border bg-card px-2 py-0.5 text-[10px] font-medium text-muted-foreground"
                               >
                                 {tech}
                               </span>
@@ -467,7 +467,7 @@ export function ProjectsPage() {
                           </div>
                           <Link
                             href="/contacto"
-                            className="inline-flex items-center gap-1 text-xs font-bold text-[#2563EB] transition hover:text-[#1D4ED8]"
+                            className="inline-flex items-center gap-1 text-xs font-bold text-blue-ink transition hover:text-blue-ink"
                           >
                             Consultar similar
                             <ArrowRight className="size-3" />
@@ -483,7 +483,7 @@ export function ProjectsPage() {
         </section>
 
         {/* Banner de llamada a la acción */}
-        <section className="border-t border-[#E2E8F0] bg-[#0F172A] py-16 text-white" aria-label="Contacto de proyectos">
+        <section className="border-t border-border bg-[#0F172A] py-16 text-white" aria-label="Contacto de proyectos">
           <div className={CONTAINER}>
             <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
               <div>
@@ -493,7 +493,7 @@ export function ProjectsPage() {
                 <h2 className="mt-2 font-heading text-2xl font-bold tracking-tight text-white sm:text-3xl">
                   Evaluemos la infraestructura o software de tu empresa
                 </h2>
-                <p className="mt-3 max-w-2xl text-sm leading-relaxed text-[#94A3B8]">
+                <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
                   Agenda una sesión de diagnóstico inicial sin costo con un especialista técnico de F&J Systems.
                   Revisamos tus requerimientos y te entregamos una propuesta clara con alcance y presupuesto cerrado.
                 </p>

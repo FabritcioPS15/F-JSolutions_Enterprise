@@ -48,10 +48,10 @@ export function ConfirmDialog({
       }
     >
       <div className="flex items-start gap-3">
-        <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-red-50 text-red-600 ring-1 ring-red-100">
+        <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-red-500/10 text-danger-ink ring-1 ring-red-500/20">
           <AlertTriangle className="size-5" aria-hidden="true" />
         </span>
-        <p className="pt-1 text-sm leading-relaxed text-slate-600">{description}</p>
+        <p className="pt-1 text-sm leading-relaxed text-muted-foreground">{description}</p>
       </div>
     </Modal>
   )

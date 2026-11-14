@@ -231,14 +231,14 @@ const faqs = [
 
 export function ServicesPage() {
   return (
-    <main className="min-h-screen bg-white text-[#0F172A]">
+    <main className="min-h-screen bg-card text-foreground">
       <EnhancedHeader />
 
       <ServiceHero
         title={
           <>
             La base tecnológica de tu operación,{' '}
-            <span className="text-[#2563EB]">sin interrupciones</span>.
+            <span className="text-blue-ink">sin interrupciones</span>.
           </>
         }
         description="Soporte técnico, mantenimiento, redes e infraestructura para mantener tus equipos y sistemas funcionando, con atención cercana y un plan de trabajo claro."
@@ -257,16 +257,16 @@ export function ServicesPage() {
         ]}
       />
 
-      <section id="servicios" className="scroll-mt-20 sm:scroll-mt-24 lg:scroll-mt-28 border-y border-[#E2E8F0] bg-[#F7F9FC]">
+      <section id="servicios" className="scroll-mt-20 sm:scroll-mt-24 lg:scroll-mt-28 border-y border-border bg-muted">
         <div className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
           <div className="max-w-2xl">
-            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#5B21B6]">
+            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-brand-ink">
               Nuestros servicios
             </p>
-            <h2 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-[#0F172A] sm:text-4xl">
+            <h2 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-foreground sm:text-4xl">
               Todo lo que tu operación necesita
             </h2>
-            <p className="mt-3 text-sm leading-6 text-[#475569]">
+            <p className="mt-3 text-sm leading-6 text-muted-foreground">
               Elige un servicio puntual o combínalos en un plan integral. Nos adaptamos al tamaño y
               la madurez tecnológica de tu empresa.
             </p>
@@ -276,24 +276,24 @@ export function ServicesPage() {
             {serviceList.map((service) => (
               <article
                 key={service.title}
-                className="group flex flex-col rounded-2xl border border-[#E2E8F0] bg-white p-6 transition hover:border-[#2563EB]/30 hover:shadow-lg hover:shadow-black/5"
+                className="group flex flex-col rounded-2xl border border-border bg-card p-6 transition hover:border-[#2563EB]/30 hover:shadow-lg hover:shadow-black/5"
               >
-                <span className="grid size-12 place-items-center rounded-2xl bg-[#2563EB]/10 text-[#2563EB] transition group-hover:bg-[#2563EB] group-hover:text-white">
+                <span className="grid size-12 place-items-center rounded-2xl bg-[#2563EB]/10 text-blue-ink transition group-hover:bg-[#2563EB] group-hover:text-white">
                   <service.icon className="size-6" />
                 </span>
-                <h3 className="mt-4 text-base font-bold text-[#0F172A]">{service.title}</h3>
-                <p className="mt-2 text-xs leading-5 text-[#475569]">{service.description}</p>
+                <h3 className="mt-4 text-base font-bold text-foreground">{service.title}</h3>
+                <p className="mt-2 text-xs leading-5 text-muted-foreground">{service.description}</p>
                 <ul className="mt-4 flex-1 space-y-2">
                   {service.points.map((point) => (
-                    <li key={point} className="flex items-start gap-2 text-xs text-[#475569]">
-                      <Check className="mt-0.5 size-3.5 shrink-0 text-[#5B21B6]" />
+                    <li key={point} className="flex items-start gap-2 text-xs text-muted-foreground">
+                      <Check className="mt-0.5 size-3.5 shrink-0 text-brand-ink" />
                       {point}
                     </li>
                   ))}
                 </ul>
                 <Link
                   href={service.href}
-                  className="mt-5 inline-flex items-center gap-1.5 text-xs font-bold text-[#2563EB] hover:text-[#1D4ED8]"
+                  className="mt-5 inline-flex items-center gap-1.5 text-xs font-bold text-blue-ink hover:text-blue-ink"
                 >
                   Saber más <ArrowUpRight className="size-3.5" />
                 </Link>
@@ -307,23 +307,23 @@ export function ServicesPage() {
         id="alquiler"
         className="scroll-mt-20 sm:scroll-mt-24 lg:scroll-mt-28 px-4 py-10 sm:px-6 lg:px-8 lg:py-14"
       >
-        <div className="relative mx-auto max-w-[1280px] overflow-hidden rounded-3xl border border-dashed border-[#CBD5E1] bg-gradient-to-br from-white via-[#F8FAFC] to-[#EDE9FE] p-6 sm:p-10 lg:p-12">
+        <div className="relative mx-auto max-w-[1280px] overflow-hidden rounded-3xl border border-dashed border-input bg-gradient-to-br from-white via-muted to-brand-soft p-6 sm:p-10 lg:p-12">
           <span
             aria-hidden="true"
-            className="pointer-events-none absolute -right-6 -top-16 select-none text-[220px] font-extrabold leading-none text-[#2563EB]/10"
+            className="pointer-events-none absolute -right-6 -top-16 select-none text-[220px] font-extrabold leading-none text-blue-ink/10"
           >
             ?
           </span>
           <div className="relative grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
             <div>
-              <span className="inline-flex items-center gap-2 rounded-full border border-[#CBD5E1] bg-white px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-[#475569]">
-                <HelpCircle className="size-3.5 text-[#2563EB]" /> En evaluación
+              <span className="inline-flex items-center gap-2 rounded-full border border-input bg-card px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
+                <HelpCircle className="size-3.5 text-blue-ink" /> En evaluación
               </span>
-              <h2 className="mt-4 max-w-2xl text-3xl font-bold tracking-[-0.04em] text-[#0F172A] sm:text-4xl">
-                ¿Y si prefieres <span className="text-[#2563EB]">alquilar</span> en lugar de
+              <h2 className="mt-4 max-w-2xl text-3xl font-bold tracking-[-0.04em] text-foreground sm:text-4xl">
+                ¿Y si prefieres <span className="text-blue-ink">alquilar</span> en lugar de
                 comprar?
               </h2>
-              <p className="mt-3 max-w-xl text-sm leading-6 text-[#475569]">
+              <p className="mt-3 max-w-xl text-sm leading-6 text-muted-foreground">
                 Estamos pensando en sumar alquiler de laptops, PCs y equipos de oficina para
                 proyectos puntuales, eventos o reemplazos temporales. Aún no es un servicio
                 disponible, pero si te interesa cuéntanoslo: tu respuesta nos ayuda a decidir.
@@ -333,7 +333,7 @@ export function ServicesPage() {
                   (chip) => (
                     <span
                       key={chip}
-                      className="rounded-full border border-[#E2E8F0] bg-white px-3 py-1 text-[11px] font-semibold text-[#475569]"
+                      className="rounded-full border border-border bg-card px-3 py-1 text-[11px] font-semibold text-muted-foreground"
                     >
                       {chip}
                     </span>
@@ -349,53 +349,53 @@ export function ServicesPage() {
                 </Link>
                 <Link
                   href="/productos"
-                  className="inline-flex h-11 items-center gap-2 rounded-xl border border-[#E2E8F0] bg-white px-5 text-sm font-bold text-[#0F172A] transition hover:border-[#2563EB] hover:text-[#2563EB]"
+                  className="inline-flex h-11 items-center gap-2 rounded-xl border border-border bg-card px-5 text-sm font-bold text-foreground transition hover:border-[#2563EB] hover:text-blue-ink"
                 >
                   Ver equipos en venta
                 </Link>
               </div>
             </div>
 
-            <div className="rounded-2xl border border-[#E2E8F0] bg-white/80 p-5 shadow-sm backdrop-blur">
-              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#64748B]">
+            <div className="rounded-2xl border border-border bg-card/80 p-5 shadow-sm backdrop-blur">
+              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
                 Lo que estamos evaluando
               </p>
               <ul className="mt-4 space-y-3.5 text-xs">
                 <li className="flex items-start gap-3">
-                  <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-[#EFF6FF] text-[#2563EB]">
+                  <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-tint-blue text-blue-ink">
                     <Laptop className="size-4" />
                   </span>
                   <div>
-                    <p className="font-bold text-[#0F172A]">Alquiler mensual o por proyecto</p>
-                    <p className="mt-0.5 leading-4 text-[#475569]">
+                    <p className="font-bold text-foreground">Alquiler mensual o por proyecto</p>
+                    <p className="mt-0.5 leading-4 text-muted-foreground">
                       Equipos configurados y listos para tu equipo de trabajo.
                     </p>
                   </div>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-[#EFF6FF] text-[#2563EB]">
+                  <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-tint-blue text-blue-ink">
                     <CalendarRange className="size-4" />
                   </span>
                   <div>
-                    <p className="font-bold text-[#0F172A]">Equipos para eventos</p>
-                    <p className="mt-0.5 leading-4 text-[#475569]">
+                    <p className="font-bold text-foreground">Equipos para eventos</p>
+                    <p className="mt-0.5 leading-4 text-muted-foreground">
                       Cobertura temporal para ferias, capacitaciones y presentaciones.
                     </p>
                   </div>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-[#EFF6FF] text-[#2563EB]">
+                  <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-tint-blue text-blue-ink">
                     <RefreshCw className="size-4" />
                   </span>
                   <div>
-                    <p className="font-bold text-[#0F172A]">Reemplazos temporales</p>
-                    <p className="mt-0.5 leading-4 text-[#475569]">
+                    <p className="font-bold text-foreground">Reemplazos temporales</p>
+                    <p className="mt-0.5 leading-4 text-muted-foreground">
                       No detengas la operación mientras reparamos tu equipo.
                     </p>
                   </div>
                 </li>
               </ul>
-              <p className="mt-5 rounded-lg bg-[#EFF6FF] px-3 py-2 text-[11px] leading-4 text-[#1E40AF]">
+              <p className="mt-5 rounded-lg bg-tint-blue px-3 py-2 text-[11px] leading-4 text-blue-ink">
                 Si tu empresa lo necesita, escríbenos: tomaremos tu caso en cuenta para el
                 lanzamiento.
               </p>
@@ -404,18 +404,18 @@ export function ServicesPage() {
         </div>
       </section>
 
-      <section className="bg-white">
+      <section className="bg-card">
         <div className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
-              <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#5B21B6]">
+              <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-brand-ink">
                 Cómo trabajamos
               </p>
-              <h2 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-[#0F172A] sm:text-4xl">
+              <h2 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-foreground sm:text-4xl">
                 Un proceso claro, sin sorpresas
               </h2>
             </div>
-            <p className="max-w-md text-sm leading-6 text-[#475569]">
+            <p className="max-w-md text-sm leading-6 text-muted-foreground">
               Cada proyecto tiene responsables, entregables y fechas. Tú siempre sabes en qué etapa
               estamos.
             </p>
@@ -425,16 +425,16 @@ export function ServicesPage() {
             {process.map((item, index) => (
               <div
                 key={item.step}
-                className="relative rounded-2xl border border-[#E2E8F0] bg-[#F8FAFC] p-6"
+                className="relative rounded-2xl border border-border bg-muted p-6"
               >
-                <span className="process-number text-4xl font-extrabold text-[#334155]">{item.step}</span>
-                <span className="absolute right-5 top-5 grid size-9 place-items-center rounded-lg bg-white text-[#2563EB] shadow-sm">
+                <span className="process-number text-4xl font-extrabold text-foreground/85">{item.step}</span>
+                <span className="absolute right-5 top-5 grid size-9 place-items-center rounded-lg bg-card text-blue-ink shadow-sm">
                   <item.icon className="size-4" />
                 </span>
-                <h3 className="mt-2 text-sm font-bold text-[#0F172A]">{item.title}</h3>
-                <p className="mt-2 text-xs leading-5 text-[#475569]">{item.copy}</p>
+                <h3 className="mt-2 text-sm font-bold text-foreground">{item.title}</h3>
+                <p className="mt-2 text-xs leading-5 text-muted-foreground">{item.copy}</p>
                 {index < process.length - 1 && (
-                  <span className="process-arrow absolute -right-3 top-1/2 hidden -translate-y-1/2 text-[#475569] lg:block">
+                  <span className="process-arrow absolute -right-3 top-1/2 hidden -translate-y-1/2 text-muted-foreground lg:block">
                     <ArrowRight className="size-5" />
                   </span>
                 )}
@@ -444,16 +444,16 @@ export function ServicesPage() {
         </div>
       </section>
 
-      <section className="border-y border-[#E2E8F0] bg-[#F7F9FC]">
+      <section className="border-y border-border bg-muted">
         <div className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
           <div className="text-center">
-            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#5B21B6]">
+            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-brand-ink">
               Planes de soporte
             </p>
-            <h2 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-[#0F172A] sm:text-4xl">
+            <h2 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-foreground sm:text-4xl">
               Elige el nivel de acompañamiento
             </h2>
-            <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-[#475569]">
+            <p className="mx-auto mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">
               Precios referenciales mensuales. Ajustamos el plan según la cantidad de equipos,
               sedes y criticidad de tu operación.
             </p>
@@ -465,8 +465,8 @@ export function ServicesPage() {
                 key={plan.name}
                 className={`relative flex flex-col rounded-3xl border p-6 sm:p-7 ${
                   plan.highlighted
-                    ? 'border-[#2563EB] bg-white shadow-2xl shadow-[#2563EB]/20 lg:-mt-3 lg:pb-10'
-                    : 'border-[#E2E8F0] bg-white'
+                    ? 'border-[#2563EB] bg-card shadow-2xl shadow-[#2563EB]/20 lg:-mt-3 lg:pb-10'
+                    : 'border-border bg-card'
                 }`}
               >
                 {plan.highlighted && (
@@ -476,7 +476,7 @@ export function ServicesPage() {
                 )}
                 <p
                   className={`font-heading text-sm font-bold uppercase tracking-wide ${
-                    plan.highlighted ? 'text-[#5B21B6]' : 'text-[#2563EB]'
+                    plan.highlighted ? 'text-brand-ink' : 'text-blue-ink'
                   }`}
                 >
                   {plan.name}
@@ -486,7 +486,7 @@ export function ServicesPage() {
                   {plan.price.startsWith('S/') && (
                     <span
                       className={`pb-1 text-xs font-semibold ${
-                        plan.highlighted ? 'text-[#475569]' : 'text-[#475569]'
+                        plan.highlighted ? 'text-muted-foreground' : 'text-muted-foreground'
                       }`}
                     >
                       /mes
@@ -495,7 +495,7 @@ export function ServicesPage() {
                 </div>
                 <p
                   className={`mt-2 text-xs leading-5 ${
-                    plan.highlighted ? 'text-[#475569]' : 'text-[#475569]'
+                    plan.highlighted ? 'text-muted-foreground' : 'text-muted-foreground'
                   }`}
                 >
                   {plan.copy}
@@ -507,12 +507,12 @@ export function ServicesPage() {
                         className={`mt-0.5 grid size-4 shrink-0 place-items-center rounded-full ${
                           plan.highlighted
                             ? 'bg-[#2563EB] text-white'
-                            : 'bg-[#EDE9FE] text-[#5B21B6]'
+                            : 'bg-brand-soft text-brand-ink'
                         }`}
                       >
                         <Check className="size-2.5" />
                       </span>
-                      <span className={plan.highlighted ? 'text-[#0F172A]' : 'text-[#475569]'}>
+                      <span className={plan.highlighted ? 'text-foreground' : 'text-muted-foreground'}>
                         {feature}
                       </span>
                     </li>
@@ -523,7 +523,7 @@ export function ServicesPage() {
                   className={`mt-6 flex h-11 items-center justify-center gap-2 rounded-xl text-sm font-bold transition ${
                     plan.highlighted
                       ? 'bg-[#2563EB] text-white hover:bg-[#1D4ED8]'
-                      : 'border border-[#E2E8F0] text-[#0F172A] hover:border-[#2563EB] hover:text-[#2563EB]'
+                      : 'border border-border text-foreground hover:border-[#2563EB] hover:text-blue-ink'
                   }`}
                 >
                   Solicitar propuesta <ArrowRight className="size-4" />
@@ -531,18 +531,18 @@ export function ServicesPage() {
               </div>
             ))}
           </div>
-          <p className="mt-4 text-center text-[11px] text-[#475569]">
+          <p className="mt-4 text-center text-[11px] text-muted-foreground">
             * Los precios no incluyen IGV. El alcance final se define luego del diagnóstico.
           </p>
         </div>
       </section>
 
-      <section className="border-y border-[#E2E8F0] bg-[#F8FAFC]">
+      <section className="border-y border-border bg-muted">
         <div className="mx-auto grid max-w-[1280px] grid-cols-2 gap-6 px-4 py-10 sm:px-6 lg:grid-cols-4 lg:px-8">
           {stats.map((stat) => (
             <div key={stat.label} className="text-center">
               <p className="text-3xl font-semibold tracking-tight sm:text-4xl">{stat.value}</p>
-              <p className="mt-1 text-[11px] font-semibold uppercase tracking-wider text-[#475569]">
+              <p className="mt-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
                 {stat.label}
               </p>
             </div>
@@ -553,23 +553,23 @@ export function ServicesPage() {
       <section className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
         <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
           <div>
-            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#5B21B6]">
+            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-brand-ink">
               Industrias
             </p>
-            <h2 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-[#0F172A] sm:text-4xl">
+            <h2 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-foreground sm:text-4xl">
               Entendemos tu contexto
             </h2>
-            <p className="mt-3 max-w-md text-sm leading-6 text-[#475569]">
+            <p className="mt-3 max-w-md text-sm leading-6 text-muted-foreground">
               No aplicamos la misma receta a todos. Adaptamos equipos, redes y soporte a la
               realidad de cada sector.
             </p>
             <div className="mt-6 flex items-center gap-3 rounded-2xl border border-[#2563EB]/30 bg-[#2563EB]/5 p-4">
-              <span className="grid size-10 place-items-center rounded-xl bg-white text-[#2563EB] shadow-sm">
+              <span className="grid size-10 place-items-center rounded-xl bg-card text-blue-ink shadow-sm">
                 <TrendingUp className="size-5" />
               </span>
               <div>
-                <p className="font-heading text-sm font-bold text-[#0F172A]">Tecnología alineada al negocio</p>
-                <p className="text-xs text-[#475569]">
+                <p className="font-heading text-sm font-bold text-foreground">Tecnología alineada al negocio</p>
+                <p className="text-xs text-muted-foreground">
                   Priorizamos lo que impacta en productividad y continuidad.
                 </p>
               </div>
@@ -579,14 +579,14 @@ export function ServicesPage() {
             {industries.map((industry) => (
               <div
                 key={industry.title}
-                className="flex gap-3 rounded-2xl border border-[#E2E8F0] bg-white p-4"
+                className="flex gap-3 rounded-2xl border border-border bg-card p-4"
               >
-                <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-[#F8FAFC] text-[#2563EB]">
+                <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-muted text-blue-ink">
                   <industry.icon className="size-5" />
                 </span>
                 <div>
-                  <p className="font-heading text-sm font-bold text-[#0F172A]">{industry.title}</p>
-                  <p className="mt-1 text-xs leading-5 text-[#475569]">{industry.copy}</p>
+                  <p className="font-heading text-sm font-bold text-foreground">{industry.title}</p>
+                  <p className="mt-1 text-xs leading-5 text-muted-foreground">{industry.copy}</p>
                 </div>
               </div>
             ))}
@@ -594,21 +594,21 @@ export function ServicesPage() {
         </div>
       </section>
 
-      <section id="faq" className="scroll-mt-20 sm:scroll-mt-24 lg:scroll-mt-28 border-y border-[#E2E8F0] bg-white">
+      <section id="faq" className="scroll-mt-20 sm:scroll-mt-24 lg:scroll-mt-28 border-y border-border bg-card">
         <div className="mx-auto grid max-w-[1280px] gap-8 px-4 py-12 sm:px-6 lg:grid-cols-[0.85fr_1.15fr] lg:px-8 lg:py-16">
           <div>
-            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#5B21B6]">
+            <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-brand-ink">
               Preguntas frecuentes
             </p>
-            <h2 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-[#0F172A] sm:text-4xl">
+            <h2 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-foreground sm:text-4xl">
               Antes de empezar
             </h2>
-            <p className="mt-3 text-sm leading-6 text-[#475569]">
+            <p className="mt-3 text-sm leading-6 text-muted-foreground">
               Estas son las dudas más comunes de empresas que nos contactan por primera vez.
             </p>
             <Link
               href="#contacto"
-              className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-[#2563EB] hover:text-[#1D4ED8]"
+              className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-blue-ink hover:text-blue-ink"
             >
               Hacer otra consulta <ArrowRight className="size-4" />
             </Link>
@@ -618,39 +618,39 @@ export function ServicesPage() {
       </section>
 
       <section id="contacto" className="scroll-mt-20 sm:scroll-mt-24 lg:scroll-mt-28 px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
-        <div className="relative mx-auto max-w-[1280px] overflow-hidden rounded-3xl border border-[#7C3AED]/25 bg-gradient-to-br from-[#EFF6FF] via-white to-[#EDE9FE] px-6 py-10 shadow-sm sm:px-10 lg:px-14 lg:py-14">
+        <div className="relative mx-auto max-w-[1280px] overflow-hidden rounded-3xl border border-[#2563EB]/25 bg-gradient-to-br from-tint-blue via-white to-brand-soft px-6 py-10 shadow-sm sm:px-10 lg:px-14 lg:py-14">
           <div className="pointer-events-none absolute -right-24 -top-24 size-80 rounded-full bg-[#2563EB]/10 blur-2xl" />
-          <div className="pointer-events-none absolute -bottom-32 left-1/3 size-80 rounded-full bg-[#7C3AED]/20 blur-3xl" />
+          <div className="pointer-events-none absolute -bottom-32 left-1/3 size-80 rounded-full bg-[#2563EB]/20 blur-3xl" />
           <div className="relative grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
             <div>
-              <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-[#334155]">
+              <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-foreground/85">
                 Hablemos de tu proyecto
               </p>
               <h2 className="mt-3 text-3xl font-bold tracking-[-0.04em] sm:text-4xl">
                 Cuéntanos qué necesitas y armamos una propuesta.
               </h2>
-              <p className="mt-3 max-w-xl text-sm leading-6 text-[#334155]">
+              <p className="mt-3 max-w-xl text-sm leading-6 text-foreground/85">
                 Diagnóstico sin costo, alcance claro y acompañamiento desde la primera reunión.
                 Atendemos empresas de todos los tamaños.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link
                   href="/cotizador"
-                  className="inline-flex h-11 items-center gap-2 rounded-xl bg-gradient-to-r from-[#6D28D9] to-[#7C3AED] px-5 text-sm font-bold text-white transition hover:from-[#5B21B6] hover:to-[#6D28D9]"
+                  className="inline-flex h-11 items-center gap-2 rounded-xl bg-gradient-to-r from-[#1D4ED8] to-[#2563EB] px-5 text-sm font-bold text-white transition hover:from-[#2563EB] hover:to-[#1D4ED8]"
                 >
                   Solicitar cotización <ArrowRight className="size-4" />
                 </Link>
                 <a
                   href="tel:+51999888777"
-                  className="inline-flex h-11 items-center gap-2 rounded-xl border border-[#CBD5E1] bg-white px-5 text-sm font-bold text-[#0F172A] transition hover:border-[#2563EB] hover:text-[#2563EB]"
+                  className="inline-flex h-11 items-center gap-2 rounded-xl border border-input bg-card px-5 text-sm font-bold text-foreground transition hover:border-[#2563EB] hover:text-blue-ink"
                 >
                   <Phone className="size-4" /> +51 999 888 777
                 </a>
               </div>
             </div>
-            <div className="grid gap-3 rounded-2xl border border-[#E2E8F0] bg-[#F1F5F9] p-5 backdrop-blur">
+            <div className="grid gap-3 rounded-2xl border border-border bg-muted p-5 backdrop-blur">
               <a href="tel:+51999888777" className="flex items-center gap-3 text-sm font-semibold">
-                <span className="grid size-9 place-items-center rounded-lg bg-[#E2E8F0]">
+                <span className="grid size-9 place-items-center rounded-lg bg-border">
                   <Phone className="size-4" />
                 </span>
                 +51 999 888 777
@@ -659,18 +659,18 @@ export function ServicesPage() {
                 href="mailto:ventas@fjsolutions.pe"
                 className="flex items-center gap-3 text-sm font-semibold"
               >
-                <span className="grid size-9 place-items-center rounded-lg bg-[#E2E8F0]">
+                <span className="grid size-9 place-items-center rounded-lg bg-border">
                   <Mail className="size-4" />
                 </span>
                 ventas@fjsolutions.pe
               </a>
               <div className="flex items-center gap-3 text-sm font-semibold">
-                <span className="grid size-9 place-items-center rounded-lg bg-[#E2E8F0]">
+                <span className="grid size-9 place-items-center rounded-lg bg-border">
                   <Headset className="size-4" />
                 </span>
                 Atención de lunes a sábado
               </div>
-              <div className="mt-1 rounded-lg bg-white px-3 py-2 text-[11px] text-[#334155]">
+              <div className="mt-1 rounded-lg bg-card px-3 py-2 text-[11px] text-foreground/85">
                 Respondemos solicitudes en menos de 24 horas hábiles.
               </div>
             </div>

@@ -154,13 +154,13 @@ export function LandingPage() {
   }
 
   return (
-    <main className="min-h-screen overflow-x-clip bg-[#f8fafc] text-[#172033]">
+    <main className="min-h-screen overflow-x-clip bg-muted text-foreground">
       <EnhancedHeader quoteCount={quote.count} />
 
       <HomeHero />
 
       {/* Accesos rápidos */}
-      <section className="relative z-10 border-y border-[#D8E4F2] bg-[#EEF5FC] py-6 sm:py-8 shadow-[inset_0_2px_4px_rgba(15,23,42,0.02)]">
+      <section className="relative z-10 border-y border-border bg-muted py-6 sm:py-8 shadow-[inset_0_2px_4px_rgba(15,23,42,0.02)]">
         <div className="mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
           <div className="grid gap-3.5 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
             <Reveal className="h-full">
@@ -184,26 +184,26 @@ export function LandingPage() {
       <section id="productos" className="mx-auto max-w-[1280px] scroll-mt-20 sm:scroll-mt-24 px-4 py-8 sm:py-10 sm:px-6 lg:px-8">
         <Reveal className="relative z-20 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#5B21B6] sm:text-sm">Selección FJ Tech</p>
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-ink sm:text-sm">Selección FJ Tech</p>
             <h2 className="mt-2 text-2xl font-bold tracking-[-0.05em] sm:text-3xl lg:text-4xl">Productos destacados</h2>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <div ref={categoryRef} className="relative">
-              <button type="button" onClick={() => setCategoryOpen((value) => !value)} aria-expanded={categoryOpen} aria-haspopup="listbox" className={`flex h-10 items-center gap-2 rounded-lg border px-3.5 text-sm font-semibold transition ${category !== 'Todas' ? 'border-[#155eef]/30 bg-[#eef5ff] text-[#155eef]' : 'border-[#dbe2ea] bg-white text-[#172033] hover:border-[#155eef]/40 hover:text-[#155eef]'}`}>
+              <button type="button" onClick={() => setCategoryOpen((value) => !value)} aria-expanded={categoryOpen} aria-haspopup="listbox" className={`flex h-10 items-center gap-2 rounded-lg border px-3.5 text-sm font-semibold transition ${category !== 'Todas' ? 'border-[#155eef]/30 bg-tint-blue text-blue-ink' : 'border-border bg-card text-foreground hover:border-[#155eef]/40 hover:text-blue-ink'}`}>
                 <SlidersHorizontal className="size-4" />
                 {category === 'Todas' ? 'Categorías' : category}
                 <ChevronDown className={`size-4 transition-transform duration-200 ${categoryOpen ? 'rotate-180' : ''}`} />
               </button>
               {categoryOpen && (
-                <div className="absolute left-0 top-[calc(100%+8px)] z-30 w-64 rounded-xl border border-[#e5eaf0] bg-white p-1.5 shadow-[0_16px_40px_-12px_rgba(15,23,42,0.25)] sm:left-auto sm:right-0">
+                <div className="absolute left-0 top-[calc(100%+8px)] z-30 w-64 rounded-xl border border-border bg-card p-1.5 shadow-[0_16px_40px_-12px_rgba(15,23,42,0.25)] sm:left-auto sm:right-0">
                   <div className="max-h-72 overflow-y-auto">
-                    <button type="button" onClick={() => { setCategory('Todas'); setCategoryOpen(false) }} className={`flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm font-semibold transition ${category === 'Todas' ? 'bg-[#eef5ff] text-[#155eef]' : 'text-[#172033] hover:bg-[#f8fafc]'}`}>
+                    <button type="button" onClick={() => { setCategory('Todas'); setCategoryOpen(false) }} className={`flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm font-semibold transition ${category === 'Todas' ? 'bg-tint-blue text-blue-ink' : 'text-foreground hover:bg-muted'}`}>
                       Todas las categorías
                       {category === 'Todas' && <Check className="size-4" />}
                     </button>
-                    <div className="my-1 h-px bg-[#eef2f6]" />
+                    <div className="my-1 h-px bg-muted" />
                     {categories.map((item) => (
-                      <button key={item} type="button" onClick={() => { setCategory(item); setCategoryOpen(false) }} className={`flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2.5 text-left text-sm transition ${category === item ? 'bg-[#eef5ff] text-[#155eef]' : 'text-[#172033] hover:bg-[#f8fafc]'}`}>
+                      <button key={item} type="button" onClick={() => { setCategory(item); setCategoryOpen(false) }} className={`flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2.5 text-left text-sm transition ${category === item ? 'bg-tint-blue text-blue-ink' : 'text-foreground hover:bg-muted'}`}>
                         {item}
                         {category === item && <Check className="size-4" />}
                       </button>
@@ -212,11 +212,11 @@ export function LandingPage() {
                 </div>
               )}
             </div>
-            <a href="/productos" className="group inline-flex h-10 items-center gap-2 rounded-lg border border-[#dbe2ea] bg-white px-4 text-sm font-semibold text-[#172033] transition hover:border-[#155eef]/40 hover:text-[#155eef]">
+            <a href="/productos" className="group inline-flex h-10 items-center gap-2 rounded-lg border border-border bg-card px-4 text-sm font-semibold text-foreground transition hover:border-[#155eef]/40 hover:text-blue-ink">
               Ver catálogo completo <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-0.5" />
             </a>
             <div className="flex items-center gap-1.5">
-              <span className="mr-1 hidden text-xs font-semibold text-[#64748b] sm:inline">
+              <span className="mr-1 hidden text-xs font-semibold text-muted-foreground sm:inline">
                 {featured.items.length} de {featured.total}
               </span>
               <button
@@ -224,7 +224,7 @@ export function LandingPage() {
                 onClick={() => scrollCarousel(-1)}
                 disabled={!canScrollLeft}
                 aria-label="Ver productos anteriores"
-                className="grid size-10 place-items-center rounded-lg border border-[#dbe2ea] bg-white text-[#172033] transition hover:border-[#155eef]/40 hover:text-[#155eef] disabled:cursor-not-allowed disabled:opacity-40"
+                className="grid size-10 place-items-center rounded-lg border border-border bg-card text-foreground transition hover:border-[#155eef]/40 hover:text-blue-ink disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <ChevronLeft className="size-4" />
               </button>
@@ -233,7 +233,7 @@ export function LandingPage() {
                 onClick={() => scrollCarousel(1)}
                 disabled={!canScrollRight}
                 aria-label="Ver más productos"
-                className="grid size-10 place-items-center rounded-lg border border-[#dbe2ea] bg-white text-[#172033] transition hover:border-[#155eef]/40 hover:text-[#155eef] disabled:cursor-not-allowed disabled:opacity-40"
+                className="grid size-10 place-items-center rounded-lg border border-border bg-card text-foreground transition hover:border-[#155eef]/40 hover:text-blue-ink disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <ChevronRight className="size-4" />
               </button>
@@ -241,9 +241,9 @@ export function LandingPage() {
           </div>
         </Reveal>
         {featured.total === 0 ? (
-          <div className="mt-5 rounded-2xl border border-dashed border-[#dbe2ea] bg-white px-4 py-10 text-center">
-            <p className="text-sm font-bold text-[#172033]">No hay productos en esta categoría</p>
-            <p className="mt-1 text-xs text-[#64748b]">Prueba con otra categoría o revisa el catálogo completo.</p>
+          <div className="mt-5 rounded-2xl border border-dashed border-border bg-card px-4 py-10 text-center">
+            <p className="text-sm font-bold text-foreground">No hay productos en esta categoría</p>
+            <p className="mt-1 text-xs text-muted-foreground">Prueba con otra categoría o revisa el catálogo completo.</p>
             <button
               type="button"
               onClick={() => setCategory('Todas')}
@@ -272,12 +272,12 @@ export function LandingPage() {
         )}
       </section>
 
-      <section id="servicios" className="border-y border-[#e5eaf0] bg-white scroll-mt-20 sm:scroll-mt-24 px-4 py-8 sm:py-10 sm:px-6 lg:px-8">
+      <section id="servicios" className="border-y border-border bg-card scroll-mt-20 sm:scroll-mt-24 px-4 py-8 sm:py-10 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-[1280px]">
           <Reveal>
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#5B21B6] sm:text-sm">Servicios para empresas</p>
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-ink sm:text-sm">Servicios para empresas</p>
             <h2 className="mt-2 text-2xl font-bold tracking-[-0.05em] sm:text-3xl">Soporte TI en cada etapa</h2>
-            <p className="mt-3 max-w-2xl text-sm leading-6 text-[#64748b]">Además de vender tecnología, ayudamos a implementar, mantener y proteger tu operación.</p>
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">Además de vender tecnología, ayudamos a implementar, mantener y proteger tu operación.</p>
           </Reveal>
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {enterpriseServices.map((service, index) => (
@@ -291,10 +291,10 @@ export function LandingPage() {
               </Reveal>
             ))}
           </div>
-          <div className="mt-8 flex flex-wrap gap-2 rounded-xl border border-[#dbeafe] bg-[#f8fbff] p-4">
+          <div className="mt-8 flex flex-wrap gap-2 rounded-xl border border-blue-ink/25 bg-muted p-4">
             {businessLinks.map((link, index) => (
               <Reveal key={link} delay={index * 50}>
-                <a href={link.includes('Soporte') ? '/soporte-ti' : '/cotizacion'} className="inline-flex rounded-full border border-[#cbdcfb] bg-white px-3 py-2 text-xs font-bold text-[#155eef] transition duration-300 hover:-translate-y-0.5 hover:border-[#155eef]/40 hover:bg-[#e8f0ff] hover:shadow-sm">{link}</a>
+                <a href={link.includes('Soporte') ? '/soporte-ti' : '/cotizacion'} className="inline-flex rounded-full border border-blue-ink/30 bg-card px-3 py-2 text-xs font-bold text-blue-ink transition duration-300 hover:-translate-y-0.5 hover:border-[#155eef]/40 hover:bg-tint-blue hover:shadow-sm">{link}</a>
               </Reveal>
             ))}
           </div>
@@ -345,24 +345,24 @@ function Feature({ icon, title, copy, onClick }: { icon: React.ReactNode; title:
   return (
     <button
       onClick={onClick}
-      className="group relative flex h-full w-full items-center gap-3 overflow-hidden rounded-2xl border border-[#e5eaf0] bg-white p-4 text-left transition-[transform,box-shadow,border-color] duration-300 ease-out hover:-translate-y-1 hover:border-[#3B82F6]/60 hover:shadow-[0_22px_45px_-24px_rgba(59,130,246,0.6)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3B82F6]/45 focus-visible:ring-offset-2 active:translate-y-0 active:shadow-sm sm:gap-4 sm:p-5"
+      className="group relative flex h-full w-full items-center gap-3 overflow-hidden rounded-2xl border border-border bg-card p-4 text-left transition-[transform,box-shadow,border-color] duration-300 ease-out hover:-translate-y-1 hover:border-[#3B82F6]/60 hover:shadow-[0_22px_45px_-24px_rgba(59,130,246,0.6)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3B82F6]/45 focus-visible:ring-offset-2 active:translate-y-0 active:shadow-sm sm:gap-4 sm:p-5"
     >
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#EFF6FF] via-white to-[#F5F3FF] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-br from-tint-blue via-white to-tint-brand opacity-0 transition-opacity duration-300 group-hover:opacity-100"
       />
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute -right-8 -top-10 size-28 rounded-full bg-[#7C3AED]/10 opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100"
+        className="pointer-events-none absolute -right-8 -top-10 size-28 rounded-full bg-[#2563EB]/10 opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100"
       />
-      <span className="relative flex size-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#e8f0ff] to-[#dbeafe] text-[#155eef] shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] transition-all duration-300 group-hover:scale-110 group-hover:from-[#3B82F6] group-hover:to-[#7C3AED] group-hover:text-white group-hover:shadow-[0_12px_24px_-10px_rgba(59,130,246,0.85)] sm:size-11">
+      <span className="relative flex size-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-tint-blue to-blue-ink/15 text-blue-ink shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] transition-all duration-300 group-hover:scale-110 group-hover:from-[#3B82F6] group-hover:to-[#2563EB] group-hover:text-white group-hover:shadow-[0_12px_24px_-10px_rgba(59,130,246,0.85)] sm:size-11">
         {icon}
       </span>
       <span className="relative flex-1">
-        <span className="block font-heading text-xs font-bold text-[#172033] transition-colors duration-300 group-hover:text-[#1D4ED8] sm:text-sm">{title}</span>
-        <span className="mt-1 block text-[10px] text-[#64748b] transition-colors duration-300 group-hover:text-[#475569] sm:text-xs">{copy}</span>
+        <span className="block font-heading text-xs font-bold text-foreground transition-colors duration-300 group-hover:text-blue-ink sm:text-sm">{title}</span>
+        <span className="mt-1 block text-[10px] text-muted-foreground transition-colors duration-300 group-hover:text-muted-foreground sm:text-xs">{copy}</span>
       </span>
-      <span className="relative grid size-7 shrink-0 translate-x-1 place-items-center rounded-full border border-[#E2E8F0] bg-white text-[#94A3B8] opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:border-[#3B82F6]/30 group-hover:text-[#2563EB] group-hover:opacity-100">
+      <span className="relative grid size-7 shrink-0 translate-x-1 place-items-center rounded-full border border-border bg-card text-muted-foreground opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:border-[#3B82F6]/30 group-hover:text-blue-ink group-hover:opacity-100">
         <ArrowRight className="size-3.5" />
       </span>
     </button>
@@ -383,20 +383,20 @@ function Info({
   return (
     <a
       href={href}
-      className="group flex h-full w-full items-center gap-3.5 rounded-2xl border border-[#e5eaf0] bg-[#f8fafc] p-4 transition-all duration-300 hover:border-[#3B82F6]/40 hover:bg-gradient-to-br hover:from-[#eef5ff] hover:to-[#dbeafe] hover:shadow-md hover:shadow-[#3B82F6]/10 hover:-translate-y-0.5"
+      className="group flex h-full w-full items-center gap-3.5 rounded-2xl border border-border bg-muted p-4 transition-all duration-300 hover:border-[#3B82F6]/40 hover:bg-gradient-to-br hover:from-tint-blue hover:to-blue-ink/15 hover:shadow-md hover:shadow-[#3B82F6]/10 hover:-translate-y-0.5"
     >
-      <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#dbeafe] to-[#bfdbfe] text-[#155eef] transition-all duration-300 group-hover:scale-110 group-hover:from-[#3B82F6] group-hover:to-[#1D4ED8] group-hover:text-white shadow-xs">
+      <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-ink/15 to-[#bfdbfe] text-blue-ink transition-all duration-300 group-hover:scale-110 group-hover:from-[#3B82F6] group-hover:to-[#1D4ED8] group-hover:text-white shadow-xs">
         <Icon className="size-5" />
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block font-heading text-xs sm:text-sm font-bold text-[#172033] transition-colors duration-300 group-hover:text-[#3B82F6]">
+        <span className="block font-heading text-xs sm:text-sm font-bold text-foreground transition-colors duration-300 group-hover:text-[#3B82F6]">
           {title}
         </span>
-        <span className="mt-1 block text-[10px] sm:text-xs leading-relaxed text-[#64748b]">
+        <span className="mt-1 block text-[10px] sm:text-xs leading-relaxed text-muted-foreground">
           {copy}
         </span>
       </span>
-      <ArrowRight className="size-4 shrink-0 text-[#94a3b8] opacity-0 transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100" />
+      <ArrowRight className="size-4 shrink-0 text-muted-foreground opacity-0 transition-all duration-300 group-hover:translate-x-1 group-hover:opacity-100" />
     </a>
   )
 }

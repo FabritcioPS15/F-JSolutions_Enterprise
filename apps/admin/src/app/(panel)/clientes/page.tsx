@@ -21,7 +21,7 @@ export default function ClientesPage() {
       <div
         role="tablist"
         aria-label="Secciones de clientes"
-        className="flex w-fit flex-wrap items-center gap-1 rounded-xl border border-slate-200 bg-white p-1 shadow-xs"
+        className="flex w-fit flex-wrap items-center gap-1 rounded-xl border border-border bg-card p-1 shadow-xs"
       >
         {tabs.map(({ id, label, icon: Icon }) => {
           const active = tab === id
@@ -35,8 +35,8 @@ export default function ClientesPage() {
               className={cn(
                 'inline-flex h-9 items-center gap-2 rounded-lg px-3.5 text-sm font-semibold transition',
                 active
-                  ? 'bg-[#5B21B6] text-white shadow-sm shadow-[#5B21B6]/20'
-                  : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                  ? 'bg-[#2563EB] text-white shadow-sm shadow-[#2563EB]/20'
+                  : 'text-muted-foreground hover:bg-muted hover:text-foreground'
               )}
             >
               <Icon className="size-4" aria-hidden="true" />

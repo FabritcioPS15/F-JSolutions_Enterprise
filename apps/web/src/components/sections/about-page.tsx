@@ -261,14 +261,14 @@ const faqs = [
 
 export function AboutPage() {
   return (
-    <main className="min-h-screen bg-white text-[#0F172A]">
+    <main className="min-h-screen bg-card text-foreground">
       <EnhancedHeader />
 
       <EditorialHero
         title={
           <>
             Entendemos tu operación antes de proponer{' '}
-            <span className="text-[#2563EB]">tecnología</span>.
+            <span className="text-blue-ink">tecnología</span>.
           </>
         }
         description="Somos un equipo de infraestructura, soporte y desarrollo de software en Lima. Trabajamos con empresas que necesitan decisiones técnicas claras, implementaciones ordenadas y un aliado que siga ahí después de la entrega."
@@ -284,15 +284,15 @@ export function AboutPage() {
       />
 
       {/* Indicadores */}
-      <section aria-label="Indicadores de experiencia" className="bg-white">
+      <section aria-label="Indicadores de experiencia" className="bg-card">
         <div className={`${CONTAINER} pb-2 pt-4 sm:pt-6`}>
-          <div className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-[#E2E8F0] bg-[#E2E8F0] shadow-[0_18px_50px_-38px_rgba(15,23,42,0.4)] sm:grid-cols-4">
+          <div className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-border bg-border shadow-[0_18px_50px_-38px_rgba(15,23,42,0.4)] sm:grid-cols-4">
             {stats.map((stat) => (
-              <div key={stat.label} className="bg-white px-3 py-5 text-center sm:px-4 sm:py-6">
-                <p className="font-heading text-2xl font-bold tracking-[-0.04em] text-[#0F172A] sm:text-3xl">
+              <div key={stat.label} className="bg-card px-3 py-5 text-center sm:px-4 sm:py-6">
+                <p className="font-heading text-2xl font-bold tracking-[-0.04em] text-foreground sm:text-3xl">
                   {stat.value}
                 </p>
-                <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-[#64748B] sm:text-[11px]">
+                <p className="mt-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground sm:text-[11px]">
                   {stat.label}
                 </p>
               </div>
@@ -302,18 +302,18 @@ export function AboutPage() {
       </section>
 
       {/* Quiénes somos */}
-      <section id="historia" className="scroll-mt-32 bg-white">
+      <section id="historia" className="scroll-mt-32 bg-card">
         <div className={`${CONTAINER} py-14 sm:py-16 lg:py-20`}>
           <div className="grid gap-10 lg:grid-cols-[minmax(0,1.12fr)_minmax(0,0.88fr)] lg:items-start lg:gap-16">
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5B21B6]">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-brand-ink">
                 Quiénes somos
               </p>
-              <h2 className="mt-3 max-w-[22ch] font-heading text-[clamp(1.8rem,1.1rem+2.2vw,2.85rem)] font-bold leading-[1.08] tracking-[-0.045em] text-[#0F172A]">
-                Un socio técnico, <span className="text-[#2563EB]">no solo un proveedor</span>.
+              <h2 className="mt-3 max-w-[22ch] font-heading text-[clamp(1.8rem,1.1rem+2.2vw,2.85rem)] font-bold leading-[1.08] tracking-[-0.045em] text-foreground">
+                Un socio técnico, <span className="text-blue-ink">no solo un proveedor</span>.
               </h2>
 
-              <div className="mt-5 max-w-[62ch] space-y-4 text-sm leading-7 text-[#475569] sm:text-[15px]">
+              <div className="mt-5 max-w-[62ch] space-y-4 text-sm leading-7 text-muted-foreground sm:text-[15px]">
                 <p>
                   F&J Systems nació resolviendo necesidades concretas: equipos que fallaban, redes
                   que no alcanzaban y procesos que dependían de hojas de cálculo. Con los años, ese
@@ -325,7 +325,7 @@ export function AboutPage() {
                   una solución cerrada: primero entendemos cómo trabaja tu equipo, qué está en riesgo
                   y qué necesita crecer.
                 </p>
-                <p className="border-l-2 border-[#BFDBFE] pl-4 font-medium text-[#334155]">
+                <p className="border-l-2 border-blue-ink/25 pl-4 font-medium text-foreground/85">
                   Nuestra medida es simple: que la tecnología funcione sin convertirse en un problema
                   adicional.
                 </p>
@@ -335,9 +335,9 @@ export function AboutPage() {
                 {['Lima, Perú', 'Atención a nivel nacional', 'Facturación electrónica'].map((item) => (
                   <span
                     key={item}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-[#E2E8F0] bg-white px-3 py-1.5 text-[11px] font-semibold text-[#475569]"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-[11px] font-semibold text-muted-foreground"
                   >
-                    <span aria-hidden="true" className="size-1.5 rounded-full bg-[#7C3AED]" />
+                    <span aria-hidden="true" className="size-1.5 rounded-full bg-[#2563EB]" />
                     {item}
                   </span>
                 ))}
@@ -348,24 +348,24 @@ export function AboutPage() {
               {values.map((value) => (
                 <div
                   key={value.title}
-                  className="group flex gap-3.5 rounded-2xl border border-[#E2E8F0] bg-white p-4 transition duration-300 hover:border-[#2563EB]/35 hover:shadow-[0_18px_40px_-30px_rgba(15,23,42,0.4)]"
+                  className="group flex gap-3.5 rounded-2xl border border-border bg-card p-4 transition duration-300 hover:border-[#2563EB]/35 hover:shadow-[0_18px_40px_-30px_rgba(15,23,42,0.4)]"
                 >
-                  <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-[#EFF6FF] text-[#2563EB] transition duration-300 group-hover:bg-[#2563EB] group-hover:text-white">
+                  <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-tint-blue text-blue-ink transition duration-300 group-hover:bg-[#2563EB] group-hover:text-white">
                     <value.icon aria-hidden="true" className="size-4.5" />
                   </span>
                   <div>
-                    <p className="font-heading text-sm font-bold text-[#0F172A]">{value.title}</p>
-                    <p className="mt-1 text-xs leading-5 text-[#64748B]">{value.copy}</p>
+                    <p className="font-heading text-sm font-bold text-foreground">{value.title}</p>
+                    <p className="mt-1 text-xs leading-5 text-muted-foreground">{value.copy}</p>
                   </div>
                 </div>
               ))}
 
-              <div className="rounded-2xl border border-[#DBEAFE] bg-[#F8FBFF] p-5">
-                <Quote aria-hidden="true" className="size-5 text-[#2563EB]" />
-                <p className="mt-2 font-heading text-base font-semibold leading-6 tracking-[-0.02em] text-[#0F172A]">
+              <div className="rounded-2xl border border-blue-ink/25 bg-muted p-5">
+                <Quote aria-hidden="true" className="size-5 text-blue-ink" />
+                <p className="mt-2 font-heading text-base font-semibold leading-6 tracking-[-0.02em] text-foreground">
                   “La tecnología debe resolver, no complicar.”
                 </p>
-                <p className="mt-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-[#64748B]">
+                <p className="mt-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
                   Principio de trabajo F&amp;J
                 </p>
               </div>
@@ -375,17 +375,17 @@ export function AboutPage() {
       </section>
 
       {/* Proyectos y experiencia */}
-      <section id="proyectos" className="scroll-mt-32 border-y border-[#E2E8F0] bg-[#F7F9FC]">
+      <section id="proyectos" className="scroll-mt-32 border-y border-border bg-muted">
         <div className={`${CONTAINER} py-14 sm:py-16 lg:py-20`}>
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5B21B6]">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-brand-ink">
                 Proyectos y experiencia
               </p>
-              <h2 className="mt-3 font-heading text-[clamp(1.8rem,1.1rem+2.2vw,2.85rem)] font-bold leading-[1.08] tracking-[-0.045em] text-[#0F172A]">
+              <h2 className="mt-3 font-heading text-[clamp(1.8rem,1.1rem+2.2vw,2.85rem)] font-bold leading-[1.08] tracking-[-0.045em] text-foreground">
                 Casos donde la tecnología tenía que funcionar.
               </h2>
-              <p className="mt-4 max-w-xl text-sm leading-6 text-[#475569]">
+              <p className="mt-4 max-w-xl text-sm leading-6 text-muted-foreground">
                 Cada proyecto empieza con un problema concreto. Estos son algunos de los frentes que
                 hemos resuelto para empresas de distintos sectores.
               </p>
@@ -406,31 +406,31 @@ export function AboutPage() {
             {projects.map((project, index) => (
               <article
                 key={project.title}
-                className="group flex flex-col rounded-2xl border border-[#E2E8F0] bg-white p-5 transition duration-300 hover:-translate-y-0.5 hover:border-[#2563EB]/30 hover:shadow-[0_24px_50px_-38px_rgba(15,23,42,0.5)]"
+                className="group flex flex-col rounded-2xl border border-border bg-card p-5 transition duration-300 hover:-translate-y-0.5 hover:border-[#2563EB]/30 hover:shadow-[0_24px_50px_-38px_rgba(15,23,42,0.5)]"
               >
                 <div className="flex items-center justify-between gap-3">
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-[#EFF6FF] px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.1em] text-[#1D4ED8]">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-tint-blue px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.1em] text-blue-ink">
                     <project.icon aria-hidden="true" className="size-3" />
                     {project.sector}
                   </span>
-                  <span className="font-mono text-[10px] text-[#94A3B8]">
+                  <span className="font-mono text-[10px] text-muted-foreground">
                     {String(index + 1).padStart(2, '0')}
                   </span>
                 </div>
 
-                <h3 className="mt-3 font-heading text-[15px] font-bold leading-5 tracking-[-0.02em] text-[#0F172A]">
+                <h3 className="mt-3 font-heading text-[15px] font-bold leading-5 tracking-[-0.02em] text-foreground">
                   {project.title}
                 </h3>
-                <p className="mt-2 text-xs leading-5 text-[#475569]">{project.context}</p>
+                <p className="mt-2 text-xs leading-5 text-muted-foreground">{project.context}</p>
 
-                <div className="mt-4 flex-1 rounded-xl border border-[#EEF2F7] bg-[#F8FAFC] p-3.5">
-                  <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-[#64748B]">
+                <div className="mt-4 flex-1 rounded-xl border border-border bg-muted p-3.5">
+                  <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
                     Qué hicimos
                   </p>
                   <ul className="mt-2 space-y-1.5">
                     {project.actions.map((action) => (
-                      <li key={action} className="flex items-start gap-2 text-[11px] leading-4 text-[#475569]">
-                        <span className="mt-0.5 grid size-3.5 shrink-0 place-items-center rounded-full bg-[#DBEAFE] text-[#2563EB]">
+                      <li key={action} className="flex items-start gap-2 text-[11px] leading-4 text-muted-foreground">
+                        <span className="mt-0.5 grid size-3.5 shrink-0 place-items-center rounded-full bg-blue-ink/15 text-blue-ink">
                           <Check aria-hidden="true" className="size-2" strokeWidth={3} />
                         </span>
                         {action}
@@ -443,7 +443,7 @@ export function AboutPage() {
                   {project.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="rounded-md border border-[#E2E8F0] bg-white px-1.5 py-0.5 text-[9px] font-semibold text-[#64748B]"
+                      className="rounded-md border border-border bg-card px-1.5 py-0.5 text-[9px] font-semibold text-muted-foreground"
                     >
                       {tag}
                     </span>
@@ -453,8 +453,8 @@ export function AboutPage() {
             ))}
           </div>
 
-          <p className="mt-6 flex items-start gap-2 text-[10.5px] leading-4 text-[#64748B]">
-            <ShieldCheck aria-hidden="true" className="mt-0.5 size-3.5 shrink-0 text-[#2563EB]" />
+          <p className="mt-6 flex items-start gap-2 text-[10.5px] leading-4 text-muted-foreground">
+            <ShieldCheck aria-hidden="true" className="mt-0.5 size-3.5 shrink-0 text-blue-ink" />
             Casos representativos de proyectos ejecutados por nuestro equipo. Por confidencialidad,
             no publicamos nombres de clientes ni cifras internas.
           </p>
@@ -462,24 +462,24 @@ export function AboutPage() {
       </section>
 
       {/* Cómo trabajamos */}
-      <section id="metodologia" className="scroll-mt-32 bg-white">
+      <section id="metodologia" className="scroll-mt-32 bg-card">
         <div className={`${CONTAINER} py-14 sm:py-16 lg:py-20`}>
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5B21B6]">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-brand-ink">
                 Cómo trabajamos
               </p>
-              <h2 className="mt-3 font-heading text-[clamp(1.8rem,1.1rem+2.2vw,2.85rem)] font-bold leading-[1.08] tracking-[-0.045em] text-[#0F172A]">
+              <h2 className="mt-3 font-heading text-[clamp(1.8rem,1.1rem+2.2vw,2.85rem)] font-bold leading-[1.08] tracking-[-0.045em] text-foreground">
                 Un proceso claro, de la primera conversación al soporte.
               </h2>
-              <p className="mt-4 max-w-xl text-sm leading-6 text-[#475569]">
+              <p className="mt-4 max-w-xl text-sm leading-6 text-muted-foreground">
                 No improvisamos sobre tu operación. Cada etapa tiene un objetivo, un responsable y un
                 entregable concreto.
               </p>
             </div>
             <Link
               href="/como-trabajamos"
-              className="group inline-flex h-11 w-fit items-center gap-2 rounded-xl border border-[#E2E8F0] bg-white px-4 text-sm font-bold text-[#0F172A] transition hover:border-[#2563EB]/40 hover:text-[#1D4ED8]"
+              className="group inline-flex h-11 w-fit items-center gap-2 rounded-xl border border-border bg-card px-4 text-sm font-bold text-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink"
             >
               Conocer metodología y garantías
               <ArrowRight
@@ -493,23 +493,23 @@ export function AboutPage() {
             {process.map((item, index) => (
               <div
                 key={item.step}
-                className="group relative flex flex-col rounded-2xl border border-[#E2E8F0] bg-white p-5 transition duration-300 hover:border-[#2563EB]/30 hover:shadow-[0_22px_46px_-36px_rgba(15,23,42,0.45)]"
+                className="group relative flex flex-col rounded-2xl border border-border bg-card p-5 transition duration-300 hover:border-[#2563EB]/30 hover:shadow-[0_22px_46px_-36px_rgba(15,23,42,0.45)]"
               >
                 <div className="flex items-center justify-between">
-                  <span className="process-number font-mono text-[11px] font-bold tracking-[0.08em] text-[#94A3B8]">
+                  <span className="process-number font-mono text-[11px] font-bold tracking-[0.08em] text-muted-foreground">
                     {item.step}
                   </span>
-                  <span className="grid size-9 place-items-center rounded-xl bg-[#EFF6FF] text-[#2563EB] transition duration-300 group-hover:bg-[#2563EB] group-hover:text-white">
+                  <span className="grid size-9 place-items-center rounded-xl bg-tint-blue text-blue-ink transition duration-300 group-hover:bg-[#2563EB] group-hover:text-white">
                     <item.icon aria-hidden="true" className="size-4" />
                   </span>
                 </div>
-                <h3 className="mt-3 font-heading text-sm font-bold text-[#0F172A]">{item.title}</h3>
-                <p className="mt-2 flex-1 text-xs leading-5 text-[#475569]">{item.copy}</p>
-                <div className="mt-4 border-t border-[#EEF2F7] pt-3">
-                  <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-[#94A3B8]">
+                <h3 className="mt-3 font-heading text-sm font-bold text-foreground">{item.title}</h3>
+                <p className="mt-2 flex-1 text-xs leading-5 text-muted-foreground">{item.copy}</p>
+                <div className="mt-4 border-t border-border pt-3">
+                  <p className="text-[9px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
                     Entregable
                   </p>
-                  <p className="mt-1 text-[11px] font-semibold leading-4 text-[#334155]">
+                  <p className="mt-1 text-[11px] font-semibold leading-4 text-foreground/85">
                     {item.deliverable}
                   </p>
                 </div>
@@ -517,7 +517,7 @@ export function AboutPage() {
                 {index < process.length - 1 && (
                   <span
                     aria-hidden="true"
-                    className="process-arrow absolute -right-3 top-1/2 z-10 hidden size-6 -translate-y-1/2 place-items-center rounded-full border border-[#E2E8F0] bg-white text-[#2563EB] shadow-sm lg:grid"
+                    className="process-arrow absolute -right-3 top-1/2 z-10 hidden size-6 -translate-y-1/2 place-items-center rounded-full border border-border bg-card text-blue-ink shadow-sm lg:grid"
                   >
                     <ArrowRight className="size-3" />
                   </span>
@@ -526,15 +526,15 @@ export function AboutPage() {
             ))}
           </ProcessSequence>
 
-          <div className="mt-6 grid gap-3 rounded-2xl border border-[#DBEAFE] bg-[#F8FBFF] p-4 sm:grid-cols-3 sm:p-5">
+          <div className="mt-6 grid gap-3 rounded-2xl border border-blue-ink/25 bg-muted p-4 sm:grid-cols-3 sm:p-5">
             {commitments.map((item) => (
               <div key={item.title} className="flex gap-3">
-                <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-white text-[#2563EB] shadow-sm">
+                <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-card text-blue-ink shadow-sm">
                   <item.icon aria-hidden="true" className="size-3.5" />
                 </span>
                 <div>
-                  <p className="text-[11px] font-bold text-[#0F172A]">{item.title}</p>
-                  <p className="mt-0.5 text-[10.5px] leading-4 text-[#64748B]">{item.copy}</p>
+                  <p className="text-[11px] font-bold text-foreground">{item.title}</p>
+                  <p className="mt-0.5 text-[10.5px] leading-4 text-muted-foreground">{item.copy}</p>
                 </div>
               </div>
             ))}
@@ -543,22 +543,22 @@ export function AboutPage() {
       </section>
 
       {/* Capacidades */}
-      <section className="border-t border-[#E2E8F0] bg-[#F8FAFC]">
+      <section className="border-t border-border bg-muted">
         <div className={`${CONTAINER} py-14 sm:py-16 lg:py-20`}>
           <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5B21B6]">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-brand-ink">
                 Equipo y capacidades
               </p>
-              <h2 className="mt-3 font-heading text-[clamp(1.8rem,1.1rem+2.2vw,2.85rem)] font-bold leading-[1.08] tracking-[-0.045em] text-[#0F172A]">
+              <h2 className="mt-3 font-heading text-[clamp(1.8rem,1.1rem+2.2vw,2.85rem)] font-bold leading-[1.08] tracking-[-0.045em] text-foreground">
                 Un solo equipo para toda la cadena tecnológica.
               </h2>
-              <p className="mt-4 max-w-xl text-sm leading-6 text-[#475569]">
+              <p className="mt-4 max-w-xl text-sm leading-6 text-muted-foreground">
                 Podemos entrar por un equipo, una red o un sistema. Lo importante es que la solución
                 completa tenga sentido.
               </p>
             </div>
-            <div className="flex w-fit items-center gap-2 self-start rounded-full border border-[#DBEAFE] bg-white px-3 py-1.5 text-[11px] font-semibold text-[#1D4ED8]">
+            <div className="flex w-fit items-center gap-2 self-start rounded-full border border-blue-ink/25 bg-card px-3 py-1.5 text-[11px] font-semibold text-blue-ink">
               <Sparkles aria-hidden="true" className="size-3.5" />
               Diagnóstico sin costo
             </div>
@@ -568,26 +568,26 @@ export function AboutPage() {
             {capabilities.map((capability) => (
               <div
                 key={capability.title}
-                className="group flex flex-col rounded-2xl border border-[#E2E8F0] bg-white p-5 transition duration-300 hover:border-[#2563EB]/30 hover:shadow-[0_22px_46px_-36px_rgba(15,23,42,0.45)]"
+                className="group flex flex-col rounded-2xl border border-border bg-card p-5 transition duration-300 hover:border-[#2563EB]/30 hover:shadow-[0_22px_46px_-36px_rgba(15,23,42,0.45)]"
               >
-                <span className="grid size-11 place-items-center rounded-2xl bg-[#EFF6FF] text-[#2563EB] transition duration-300 group-hover:bg-[#2563EB] group-hover:text-white">
+                <span className="grid size-11 place-items-center rounded-2xl bg-tint-blue text-blue-ink transition duration-300 group-hover:bg-[#2563EB] group-hover:text-white">
                   <capability.icon aria-hidden="true" className="size-5" />
                 </span>
-                <h3 className="mt-4 font-heading text-sm font-bold text-[#0F172A]">
+                <h3 className="mt-4 font-heading text-sm font-bold text-foreground">
                   {capability.title}
                 </h3>
-                <p className="mt-2 text-xs leading-5 text-[#475569]">{capability.copy}</p>
+                <p className="mt-2 text-xs leading-5 text-muted-foreground">{capability.copy}</p>
                 <ul className="mt-3 flex-1 space-y-1.5">
                   {capability.points.map((point) => (
-                    <li key={point} className="flex items-start gap-2 text-[11px] text-[#64748B]">
-                      <Check aria-hidden="true" className="mt-0.5 size-3 shrink-0 text-[#2563EB]" />
+                    <li key={point} className="flex items-start gap-2 text-[11px] text-muted-foreground">
+                      <Check aria-hidden="true" className="mt-0.5 size-3 shrink-0 text-blue-ink" />
                       {point}
                     </li>
                   ))}
                 </ul>
                 <Link
                   href={capability.href}
-                  className="mt-4 inline-flex items-center gap-1.5 text-[11px] font-bold text-[#2563EB] transition hover:text-[#1D4ED8]"
+                  className="mt-4 inline-flex items-center gap-1.5 text-[11px] font-bold text-blue-ink transition hover:text-blue-ink"
                 >
                   {capability.cta}
                   <ArrowUpRight aria-hidden="true" className="size-3.5" />
@@ -599,17 +599,17 @@ export function AboutPage() {
       </section>
 
       {/* Preguntas frecuentes */}
-      <section id="faq" className="scroll-mt-32 border-y border-[#E2E8F0] bg-white">
+      <section id="faq" className="scroll-mt-32 border-y border-border bg-card">
         <div className={`${CONTAINER} py-14 sm:py-16 lg:py-20`}>
           <div className="grid gap-9 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-14">
             <div>
-              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5B21B6]">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-brand-ink">
                 Preguntas frecuentes
               </p>
-              <h2 className="mt-3 max-w-[18ch] font-heading text-[clamp(1.8rem,1.1rem+2.2vw,2.85rem)] font-bold leading-[1.08] tracking-[-0.045em] text-[#0F172A]">
+              <h2 className="mt-3 max-w-[18ch] font-heading text-[clamp(1.8rem,1.1rem+2.2vw,2.85rem)] font-bold leading-[1.08] tracking-[-0.045em] text-foreground">
                 Lo que suelen preguntarnos antes de empezar.
               </h2>
-              <p className="mt-4 max-w-sm text-sm leading-6 text-[#475569]">
+              <p className="mt-4 max-w-sm text-sm leading-6 text-muted-foreground">
                 Si tu caso no aparece aquí, escríbenos. Respondemos con una orientación concreta, no
                 con una plantilla.
               </p>
@@ -623,19 +623,19 @@ export function AboutPage() {
                 </Link>
                 <Link
                   href="/contacto"
-                  className="inline-flex h-11 items-center gap-2 rounded-xl border border-[#E2E8F0] bg-white px-4 text-sm font-bold text-[#0F172A] transition hover:border-[#2563EB]/40 hover:text-[#1D4ED8]"
+                  className="inline-flex h-11 items-center gap-2 rounded-xl border border-border bg-card px-4 text-sm font-bold text-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink"
                 >
                   Consultar al equipo
                 </Link>
               </div>
 
-              <div className="mt-8 hidden items-center gap-3 rounded-2xl border border-[#EEF2F7] bg-[#F8FAFC] p-4 lg:flex">
-                <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-white text-[#2563EB] shadow-sm">
+              <div className="mt-8 hidden items-center gap-3 rounded-2xl border border-border bg-muted p-4 lg:flex">
+                <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-card text-blue-ink shadow-sm">
                   <Headset aria-hidden="true" className="size-4.5" />
                 </span>
                 <div>
-                  <p className="text-[11px] font-bold text-[#0F172A]">Atención directa</p>
-                  <p className="mt-0.5 text-[10.5px] text-[#64748B]">
+                  <p className="text-[11px] font-bold text-foreground">Atención directa</p>
+                  <p className="mt-0.5 text-[10.5px] text-muted-foreground">
                     Lun-Sáb · 9:00 a 18:00
                   </p>
                 </div>
@@ -651,27 +651,27 @@ export function AboutPage() {
       </section>
 
       {/* Contacto */}
-      <section id="contacto" className="scroll-mt-32 bg-white">
+      <section id="contacto" className="scroll-mt-32 bg-card">
         <div className={`${CONTAINER} py-12 sm:py-14 lg:py-16`}>
-          <div className="relative overflow-hidden rounded-[28px] border border-[#2563EB]/15 bg-[linear-gradient(135deg,#F5F9FF_0%,#FFFFFF_48%,#F8FAFC_100%)] p-6 shadow-[0_30px_80px_-60px_rgba(15,23,42,0.5)] sm:p-8 lg:p-10">
+          <div className="relative overflow-hidden rounded-[28px] border border-[#2563EB]/15 bg-[linear-gradient(135deg,#F5F9FF_0%,#FFFFFF_48%,#F8FAFC_100%)] p-6 shadow-[0_30px_80px_-60px_rgba(15,23,42,0.5)] dark:bg-[linear-gradient(135deg,#101A2B_0%,#0E1626_48%,#0B1220_100%)] sm:p-8 lg:p-10">
             <div
               aria-hidden="true"
               className="pointer-events-none absolute -right-24 -top-28 size-80 rounded-full bg-[#2563EB]/10 blur-3xl"
             />
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute -bottom-32 left-1/3 size-80 rounded-full bg-[#7C3AED]/15 blur-3xl"
+              className="pointer-events-none absolute -bottom-32 left-1/3 size-80 rounded-full bg-[#2563EB]/15 blur-3xl"
             />
 
             <div className="relative grid gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-center lg:gap-12">
               <div>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#5B21B6]">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-brand-ink">
                   Hablemos
                 </p>
-                <h2 className="mt-3 max-w-[20ch] font-heading text-[clamp(1.9rem,1.15rem+2.4vw,3rem)] font-bold leading-[1.06] tracking-[-0.045em] text-[#0F172A]">
+                <h2 className="mt-3 max-w-[20ch] font-heading text-[clamp(1.9rem,1.15rem+2.4vw,3rem)] font-bold leading-[1.06] tracking-[-0.045em] text-foreground">
                   Tu próxima decisión tecnológica empieza con una conversación.
                 </h2>
-                <p className="mt-4 max-w-xl text-sm leading-6 text-[#475569]">
+                <p className="mt-4 max-w-xl text-sm leading-6 text-muted-foreground">
                   Cuéntanos qué está pasando o qué quieres implementar. Te respondemos con un
                   siguiente paso concreto y sin compromiso.
                 </p>
@@ -688,7 +688,7 @@ export function AboutPage() {
                   </Link>
                   <a
                     href={`tel:${EMPRESA.telefono.replace(/\s/g, '')}`}
-                    className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-[#DBE2EA] bg-white px-5 text-sm font-bold text-[#0F172A] transition hover:-translate-y-0.5 hover:border-[#2563EB]/45 hover:text-[#1D4ED8] sm:w-auto"
+                    className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-border bg-card px-5 text-sm font-bold text-foreground transition hover:-translate-y-0.5 hover:border-[#2563EB]/45 hover:text-blue-ink sm:w-auto"
                   >
                     <Phone aria-hidden="true" className="size-4" />
                     {EMPRESA.telefono}
@@ -696,8 +696,8 @@ export function AboutPage() {
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-[#E2E8F0] bg-white/90 p-4 shadow-[0_20px_50px_-42px_rgba(15,23,42,0.45)] backdrop-blur sm:p-5">
-                <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-[#64748B]">
+              <div className="rounded-2xl border border-border bg-card/90 p-4 shadow-[0_20px_50px_-42px_rgba(15,23,42,0.45)] backdrop-blur sm:p-5">
+                <p className="text-[9px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
                   Canales directos
                 </p>
                 <div className="mt-3 space-y-2">
@@ -720,11 +720,11 @@ export function AboutPage() {
                     href="/contacto"
                   />
                 </div>
-                <div className="mt-3 flex items-start gap-2.5 rounded-xl bg-[#F8FAFC] p-3">
-                  <Clock aria-hidden="true" className="mt-0.5 size-3.5 shrink-0 text-[#2563EB]" />
+                <div className="mt-3 flex items-start gap-2.5 rounded-xl bg-muted p-3">
+                  <Clock aria-hidden="true" className="mt-0.5 size-3.5 shrink-0 text-blue-ink" />
                   <div>
-                    <p className="text-[10.5px] font-semibold text-[#334155]">{EMPRESA.horario}</p>
-                    <p className="mt-0.5 text-[9.5px] leading-4 text-[#64748B]">
+                    <p className="text-[10.5px] font-semibold text-foreground/85">{EMPRESA.horario}</p>
+                    <p className="mt-0.5 text-[9.5px] leading-4 text-muted-foreground">
                       Respuesta en menos de 24 horas hábiles.
                     </p>
                   </div>
@@ -748,25 +748,25 @@ function CompanyCard() {
 
   return (
     <div className="relative">
-      <div className="hero-float-soft relative overflow-hidden rounded-[26px] border border-[#E2E8F0] bg-white/95 p-5 shadow-[0_36px_90px_-48px_rgba(15,23,42,0.5)] backdrop-blur">
+      <div className="hero-float-soft relative overflow-hidden rounded-[26px] border border-border bg-card/95 p-5 shadow-[0_36px_90px_-48px_rgba(15,23,42,0.5)] backdrop-blur">
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-[linear-gradient(180deg,#F5F9FF_0%,rgba(255,255,255,0)_100%)]"
+          className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-[linear-gradient(180deg,#F5F9FF_0%,rgba(255,255,255,0)_100%)] dark:bg-[linear-gradient(180deg,#101A2B_0%,rgba(11,18,32,0)_100%)]"
         />
         <div className="relative">
           <div className="flex items-center gap-3">
-            <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-[#3B82F6] to-[#7C3AED] font-heading text-sm font-bold tracking-tight text-white shadow-[0_12px_24px_-12px_rgba(124,58,237,0.6)]">
+            <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-[#3B82F6] to-[#2563EB] font-heading text-sm font-bold tracking-tight text-white shadow-[0_12px_24px_-12px_rgba(37,99,235,0.6)]">
               FJ
             </span>
             <div className="min-w-0">
-              <p className="font-heading text-sm font-bold tracking-[-0.02em] text-[#0F172A]">
+              <p className="font-heading text-sm font-bold tracking-[-0.02em] text-foreground">
                 F&amp;J Solutions
               </p>
-              <p className="mt-0.5 truncate text-[10px] text-[#64748B]">
+              <p className="mt-0.5 truncate text-[10px] text-muted-foreground">
                 Tecnología empresarial · Lima, Perú
               </p>
             </div>
-            <span className="ml-auto shrink-0 rounded-full border border-[#DBEAFE] bg-[#EFF6FF] px-2 py-1 text-[8px] font-bold uppercase tracking-[0.12em] text-[#1D4ED8]">
+            <span className="ml-auto shrink-0 rounded-full border border-blue-ink/25 bg-tint-blue px-2 py-1 text-[8px] font-bold uppercase tracking-[0.12em] text-blue-ink">
               B2B
             </span>
           </div>
@@ -775,36 +775,36 @@ function CompanyCard() {
             {items.map((item) => (
               <div
                 key={item.title}
-                className="rounded-xl border border-[#EEF2F7] bg-[#F8FAFC] p-2.5"
+                className="rounded-xl border border-border bg-muted p-2.5"
               >
-                <span className="grid size-7 place-items-center rounded-lg bg-white text-[#2563EB] shadow-sm">
+                <span className="grid size-7 place-items-center rounded-lg bg-card text-blue-ink shadow-sm">
                   <item.icon aria-hidden="true" className="size-3.5" />
                 </span>
-                <p className="mt-2 text-[10px] font-bold leading-4 text-[#0F172A]">{item.title}</p>
-                <p className="truncate text-[8.5px] text-[#64748B]">{item.detail}</p>
+                <p className="mt-2 text-[10px] font-bold leading-4 text-foreground">{item.title}</p>
+                <p className="truncate text-[8.5px] text-muted-foreground">{item.detail}</p>
               </div>
             ))}
           </div>
 
-          <div className="mt-3 rounded-2xl border border-[#DBEAFE] bg-[#F8FBFF] p-3.5">
-            <p className="text-[8.5px] font-bold uppercase tracking-[0.16em] text-[#1D4ED8]">
+          <div className="mt-3 rounded-2xl border border-blue-ink/25 bg-muted p-3.5">
+            <p className="text-[8.5px] font-bold uppercase tracking-[0.16em] text-blue-ink">
               Nuestro enfoque
             </p>
-            <p className="mt-1.5 text-[12px] font-semibold leading-5 text-[#0F172A]">
+            <p className="mt-1.5 text-[12px] font-semibold leading-5 text-foreground">
               Entender la operación antes de proponer tecnología.
             </p>
-            <p className="mt-2.5 inline-flex items-center gap-1.5 rounded-full border border-[#DBEAFE] bg-white px-2 py-1 text-[9px] font-bold text-[#1D4ED8]">
+            <p className="mt-2.5 inline-flex items-center gap-1.5 rounded-full border border-blue-ink/25 bg-card px-2 py-1 text-[9px] font-bold text-blue-ink">
               <Sparkles aria-hidden="true" className="size-2.5" />
               Diagnóstico sin costo
             </p>
           </div>
 
           <div className="mt-3 flex items-center justify-between gap-2 text-[9.5px]">
-            <span className="inline-flex items-center gap-1.5 text-[#64748B]">
+            <span className="inline-flex items-center gap-1.5 text-muted-foreground">
               <MapPin aria-hidden="true" className="size-3" />
               Lima, Perú
             </span>
-            <span className="inline-flex items-center gap-1.5 font-semibold text-[#1D4ED8]">
+            <span className="inline-flex items-center gap-1.5 font-semibold text-blue-ink">
               <Clock aria-hidden="true" className="size-3" />
               Lun-Sáb
             </span>
@@ -829,20 +829,20 @@ function ContactChannel({
   return (
     <a
       href={href}
-      className="group flex items-center gap-3 rounded-xl border border-[#EEF2F7] bg-white px-3 py-2.5 transition hover:border-[#2563EB]/30 hover:bg-[#FBFDFF]"
+      className="group flex items-center gap-3 rounded-xl border border-border bg-card px-3 py-2.5 transition hover:border-[#2563EB]/30 hover:bg-muted"
     >
-      <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-[#EFF6FF] text-[#2563EB]">
+      <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-tint-blue text-blue-ink">
         <Icon aria-hidden="true" className="size-3.5" />
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block text-[9px] font-semibold uppercase tracking-[0.1em] text-[#94A3B8]">
+        <span className="block text-[9px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
           {label}
         </span>
-        <span className="block truncate text-[11px] font-bold text-[#0F172A]">{value}</span>
+        <span className="block truncate text-[11px] font-bold text-foreground">{value}</span>
       </span>
       <ArrowUpRight
         aria-hidden="true"
-        className="size-3.5 shrink-0 text-[#94A3B8] transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[#2563EB]"
+        className="size-3.5 shrink-0 text-muted-foreground transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-blue-ink"
       />
     </a>
   )

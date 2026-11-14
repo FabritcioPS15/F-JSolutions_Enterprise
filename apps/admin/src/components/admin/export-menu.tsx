@@ -28,22 +28,22 @@ const formatMeta: Record<
   excel: {
     description: 'Libro .xlsx con formato',
     icon: FileSpreadsheet,
-    tone: 'bg-emerald-50 text-emerald-600 ring-emerald-100',
+    tone: 'bg-emerald-500/10 text-success-ink ring-emerald-500/20',
   },
   csv: {
     description: 'Texto separado por comas',
     icon: Table2,
-    tone: 'bg-sky-50 text-sky-600 ring-sky-100',
+    tone: 'bg-sky-500/10 text-sky-600 ring-sky-100',
   },
   pdf: {
     description: 'Documento listo para imprimir',
     icon: FileText,
-    tone: 'bg-red-50 text-red-600 ring-red-100',
+    tone: 'bg-red-500/10 text-danger-ink ring-red-500/20',
   },
   json: {
     description: 'Respaldo para restaurar',
     icon: FileJson,
-    tone: 'bg-amber-50 text-amber-600 ring-amber-100',
+    tone: 'bg-amber-500/10 text-warning-ink ring-amber-100',
   },
 }
 
@@ -146,7 +146,7 @@ export function ExportMenu({
           }
           setOpen((prev) => !prev)
         }}
-        className={cn(btnSecondary, open && 'border-slate-300 bg-slate-50')}
+        className={cn(btnSecondary, open && 'border-input bg-muted')}
       >
         {pending ? (
           <Loader2 className="size-4 animate-spin" aria-hidden="true" />
@@ -156,7 +156,7 @@ export function ExportMenu({
         {pending ? 'Generando…' : label}
         <ChevronDown
           className={cn(
-            'size-4 text-slate-400 transition-transform duration-200',
+            'size-4 text-muted-foreground transition-transform duration-200',
             open && 'rotate-180'
           )}
           aria-hidden="true"
@@ -169,11 +169,11 @@ export function ExportMenu({
           role="menu"
           aria-label={label}
           className={cn(
-            'absolute top-full z-50 mt-2 w-64 overflow-hidden rounded-2xl border border-slate-200 bg-white p-1.5 shadow-xl shadow-slate-900/10 animate-in fade-in-0 zoom-in-95 duration-150',
+            'absolute top-full z-50 mt-2 w-64 overflow-hidden rounded-2xl border border-border bg-card p-1.5 shadow-xl shadow-slate-900/10 animate-in fade-in-0 zoom-in-95 duration-150',
             align === 'right' ? 'right-0' : 'left-0'
           )}
         >
-          <p className="px-2.5 pb-1 pt-1 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">
+          <p className="px-2.5 pb-1 pt-1 text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
             Formato de descarga
           </p>
           {formats.map((format) => {
@@ -185,7 +185,7 @@ export function ExportMenu({
                 type="button"
                 role="menuitem"
                 onClick={() => void run(format)}
-                className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left transition hover:bg-slate-50 focus-visible:bg-slate-50 focus-visible:outline-none"
+                className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left transition hover:bg-muted focus-visible:bg-muted focus-visible:outline-none"
               >
                 <span
                   className={cn(
@@ -196,10 +196,10 @@ export function ExportMenu({
                   <Icon className="size-4" aria-hidden="true" />
                 </span>
                 <span className="min-w-0">
-                  <span className="block text-[13px] font-semibold text-slate-800">
+                  <span className="block text-[13px] font-semibold text-foreground">
                     {exportFormatLabels[format]}
                   </span>
-                  <span className="block truncate text-[10.5px] text-slate-400">
+                  <span className="block truncate text-[10.5px] text-muted-foreground">
                     {meta.description}
                   </span>
                 </span>

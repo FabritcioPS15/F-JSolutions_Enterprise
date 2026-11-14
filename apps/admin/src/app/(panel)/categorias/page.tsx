@@ -108,9 +108,9 @@ const levelBadgeLabels: Record<NodeKind, string> = {
 }
 
 const levelStyles: Record<NodeKind, string> = {
-  category: 'bg-slate-100 text-slate-600 ring-slate-500/15',
-  subcategory: 'bg-[#F5F3FF] text-[#5B21B6] ring-[#5B21B6]/15',
-  type: 'bg-teal-50 text-teal-700 ring-teal-600/15',
+  category: 'bg-muted text-muted-foreground ring-slate-500/15',
+  subcategory: 'bg-tint-brand text-brand-ink ring-[#2563EB]/15',
+  type: 'bg-teal-500/10 text-teal-ink ring-teal-600/15',
 }
 
 const addPlaceholders: Record<NodeKind, string> = {
@@ -466,26 +466,26 @@ export default function CategoriasPage() {
           return (
             <div
               key={item.label}
-              className="flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs"
+              className="flex items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-xs"
             >
-              <span className="grid size-9 place-items-center rounded-xl bg-slate-50 text-slate-500 ring-1 ring-slate-200/70">
+              <span className="grid size-9 place-items-center rounded-xl bg-muted text-muted-foreground ring-1 ring-border/70">
                 <Icon className="size-[18px]" aria-hidden="true" />
               </span>
               <div>
-                <p className="font-heading text-lg font-bold leading-none text-slate-900">
+                <p className="font-heading text-lg font-bold leading-none text-foreground">
                   {formatNumber(item.value)}
                 </p>
-                <p className="mt-1 text-[10.5px] font-medium text-slate-500">{item.label}</p>
+                <p className="mt-1 text-[10.5px] font-medium text-muted-foreground">{item.label}</p>
               </div>
             </div>
           )
         })}
       </div>
 
-      <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs">
+      <div className="rounded-2xl border border-border/80 bg-card p-4 shadow-xs">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div className="relative w-full sm:max-w-sm">
-            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <input
               value={search}
               onChange={(event) => setSearch(event.target.value)}
@@ -497,7 +497,7 @@ export default function CategoriasPage() {
               <button
                 type="button"
                 onClick={() => setSearch('')}
-                className="absolute right-2.5 top-1/2 grid size-5 -translate-y-1/2 place-items-center rounded-md text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+                className="absolute right-2.5 top-1/2 grid size-5 -translate-y-1/2 place-items-center rounded-md text-muted-foreground transition hover:bg-muted hover:text-foreground/80"
                 aria-label="Limpiar búsqueda"
               >
                 <X className="size-3.5" />
@@ -518,8 +518,8 @@ export default function CategoriasPage() {
                 { value: 'inactive', label: 'Inactivas', count: inactiveCategories },
               ]}
             />
-            <p className="text-[11px] text-slate-500">
-              <span className="font-bold text-slate-900">{filteredCategories.length}</span>{' '}
+            <p className="text-[11px] text-muted-foreground">
+              <span className="font-bold text-foreground">{filteredCategories.length}</span>{' '}
               {filteredCategories.length === 1 ? 'categoría visible' : 'categorías visibles'}
               {searching ? ' con los filtros' : ''}
             </p>
@@ -571,20 +571,20 @@ export default function CategoriasPage() {
               <section
                 key={category.id}
                 className={cn(
-                  'relative overflow-hidden rounded-2xl border bg-white shadow-xs transition-colors',
-                  isOpen ? 'border-slate-300' : 'border-slate-200/80'
+                  'relative overflow-hidden rounded-2xl border bg-card shadow-xs transition-colors',
+                  isOpen ? 'border-input' : 'border-border/80'
                 )}
               >
                 {isOpen && (
                   <span
-                    className="absolute inset-y-0 left-0 w-[3px] bg-slate-900"
+                    className="absolute inset-y-0 left-0 w-[3px] bg-primary"
                     aria-hidden="true"
                   />
                 )}
                 <div
                   className={cn(
                     'flex items-center gap-2 px-3 py-3 transition-colors sm:px-4',
-                    isOpen && 'bg-slate-50/70'
+                    isOpen && 'bg-muted/70'
                   )}
                 >
                   <button
@@ -597,42 +597,42 @@ export default function CategoriasPage() {
                       className={cn(
                         'grid size-10 shrink-0 place-items-center rounded-xl ring-1 transition-colors',
                         isOpen
-                          ? 'bg-slate-900 text-white ring-slate-900'
-                          : 'bg-slate-50 text-slate-500 ring-slate-200/70'
+                          ? 'bg-primary text-primary-foreground ring-primary'
+                          : 'bg-muted text-muted-foreground ring-border/70'
                       )}
                     >
                       <CategoryGlyph label={category.label} />
                     </span>
                     <span className="min-w-0 flex-1">
                       <span className="flex flex-wrap items-center gap-2">
-                        <span className="truncate text-[13.5px] font-bold text-slate-900">
+                        <span className="truncate text-[13.5px] font-bold text-foreground">
                           {category.label}
                         </span>
-                        <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-600">
+                        <span className="rounded-full bg-muted px-2 py-0.5 text-[10px] font-semibold text-muted-foreground">
                           {plural(count, 'producto', 'productos')}
                         </span>
                         {category.status === 'inactive' && (
-                          <span className="rounded-full border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-slate-500">
+                          <span className="rounded-full border border-border bg-muted px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-muted-foreground">
                             Inactiva
                           </span>
                         )}
                       </span>
-                      <span className="mt-1 flex flex-wrap items-center gap-x-1.5 text-[10.5px] text-slate-500">
+                      <span className="mt-1 flex flex-wrap items-center gap-x-1.5 text-[10.5px] text-muted-foreground">
                         <span>
                           {plural(subcategoryCount, 'subcategoría', 'subcategorías')}
-                          <span className="mx-1.5 text-slate-300">·</span>
+                          <span className="mx-1.5 text-muted-foreground/60">·</span>
                           {plural(typeCount, 'tipo', 'tipos')}
                         </span>
                         {category.description && (
                           <>
-                            <span className="text-slate-300">·</span>
-                            <span className="max-w-[380px] truncate text-slate-400">
+                            <span className="text-muted-foreground/60">·</span>
+                            <span className="max-w-[380px] truncate text-muted-foreground">
                               {category.description}
                             </span>
                           </>
                         )}
                       </span>
-                      <span className="mt-0.5 block truncate font-mono text-[9.5px] text-slate-400">
+                      <span className="mt-0.5 block truncate font-mono text-[9.5px] text-muted-foreground">
                         /{category.slug}
                       </span>
                     </span>
@@ -648,7 +648,7 @@ export default function CategoriasPage() {
                           categoryLabel: category.label,
                         })
                       }
-                      className="inline-flex h-8 items-center gap-1 rounded-lg px-2 text-[11px] font-semibold text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
+                      className="inline-flex h-8 items-center gap-1 rounded-lg px-2 text-[11px] font-semibold text-muted-foreground transition hover:bg-muted hover:text-foreground"
                       title="Añadir subcategoría"
                       aria-label={`Añadir subcategoría a ${category.label}`}
                     >
@@ -674,7 +674,7 @@ export default function CategoriasPage() {
                         })
                       }
                       disabled={count > 0}
-                      className={cn(iconButton, 'hover:bg-red-50 hover:text-red-600 disabled:opacity-30')}
+                      className={cn(iconButton, 'hover:bg-red-500/10 hover:text-danger-ink disabled:opacity-30')}
                       title={
                         count > 0
                           ? `No se puede eliminar: tiene ${plural(count, 'producto', 'productos')}`
@@ -689,7 +689,7 @@ export default function CategoriasPage() {
                       onClick={() => toggleExpanded(category.id)}
                       className={cn(
                         iconButton,
-                        isOpen && 'bg-slate-100 text-slate-900 hover:bg-slate-200'
+                        isOpen && 'bg-muted text-foreground hover:bg-border'
                       )}
                       aria-label={isOpen ? 'Contraer categoría' : 'Expandir categoría'}
                       aria-expanded={isOpen}
@@ -702,14 +702,14 @@ export default function CategoriasPage() {
                 </div>
 
                 {isOpen && (
-                  <div className="border-t border-slate-100 bg-slate-50/60 p-3 sm:p-4">
+                  <div className="border-t border-border bg-muted/60 p-3 sm:p-4">
                     <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
                       <div className="flex items-center gap-2">
-                        <span className="inline-flex items-center gap-1 rounded-md bg-[#F5F3FF] px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-[#5B21B6] ring-1 ring-inset ring-[#5B21B6]/15">
+                        <span className="inline-flex items-center gap-1 rounded-md bg-tint-brand px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-brand-ink ring-1 ring-inset ring-[#2563EB]/15">
                           <Layers className="size-2.5" aria-hidden="true" />
                           Subcategorías
                         </span>
-                        <span className="text-[10.5px] text-slate-500">
+                        <span className="text-[10.5px] text-muted-foreground">
                           {plural(subcategoryCount, 'subcategoría', 'subcategorías')}
                         </span>
                       </div>
@@ -723,7 +723,7 @@ export default function CategoriasPage() {
                             category: category.label,
                           })
                         }
-                        className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-2.5 py-1 text-[10.5px] font-semibold text-slate-600 transition hover:border-slate-300 hover:bg-slate-50 hover:text-slate-900"
+                        className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-2.5 py-1 text-[10.5px] font-semibold text-muted-foreground transition hover:border-input hover:bg-muted hover:text-foreground"
                         title={`Ver productos vinculados a ${category.label}`}
                       >
                         <Package className="size-3.5" aria-hidden="true" />
@@ -735,11 +735,11 @@ export default function CategoriasPage() {
                     </div>
 
                     {category.subcategories.length === 0 ? (
-                      <div className="rounded-xl border border-dashed border-slate-300 bg-white/70 px-4 py-6 text-center">
-                        <p className="text-[11px] font-semibold text-slate-600">
+                      <div className="rounded-xl border border-dashed border-input bg-card/70 px-4 py-6 text-center">
+                        <p className="text-[11px] font-semibold text-muted-foreground">
                           Esta categoría aún no tiene subcategorías
                         </p>
-                        <p className="mt-1 text-[10.5px] text-slate-400">
+                        <p className="mt-1 text-[10.5px] text-muted-foreground">
                           Añade la primera para clasificar mejor los productos.
                         </p>
                         <button
@@ -782,20 +782,20 @@ export default function CategoriasPage() {
                             return (
                               <div
                                 key={sub.id}
-                                className="relative overflow-hidden rounded-xl border border-[#DDD6FE] bg-white p-3 pl-4 shadow-xs"
+                                className="relative overflow-hidden rounded-xl border border-brand-ink/30 bg-card p-3 pl-4 shadow-xs"
                               >
                                 <span
-                                  className="absolute inset-y-3 left-0 w-[3px] rounded-full bg-[#6D28D9]"
+                                  className="absolute inset-y-3 left-0 w-[3px] rounded-full bg-[#1D4ED8]"
                                   aria-hidden="true"
                                 />
                                 <div className="flex flex-wrap items-start gap-2">
                                   <div className="min-w-0 flex-1">
                                     <div className="flex flex-wrap items-center gap-2">
-                                      <span className="inline-flex items-center gap-1 rounded-md bg-[#F5F3FF] px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-[#5B21B6] ring-1 ring-inset ring-[#5B21B6]/15">
+                                      <span className="inline-flex items-center gap-1 rounded-md bg-tint-brand px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-brand-ink ring-1 ring-inset ring-[#2563EB]/15">
                                         <Layers className="size-2.5" aria-hidden="true" />
                                         Subcategoría
                                       </span>
-                                      <p className="truncate text-[12px] font-semibold text-slate-900">
+                                      <p className="truncate text-[12px] font-semibold text-foreground">
                                         {sub.label}
                                       </p>
                                     </div>
@@ -811,7 +811,7 @@ export default function CategoriasPage() {
                                             subcategory: sub.label,
                                           })
                                         }
-                                        className="inline-flex items-center gap-1 rounded-full bg-[#F5F3FF] px-2 py-0.5 text-[10px] font-semibold text-[#5B21B6] transition hover:bg-[#EDE9FE] hover:text-[#4C1D95]"
+                                        className="inline-flex items-center gap-1 rounded-full bg-tint-brand px-2 py-0.5 text-[10px] font-semibold text-brand-ink transition hover:bg-brand-soft hover:text-brand-ink"
                                         title={`Ver productos vinculados a ${sub.label}`}
                                       >
                                         <Package className="size-3" aria-hidden="true" />
@@ -819,7 +819,7 @@ export default function CategoriasPage() {
                                         <ChevronRight className="size-3" aria-hidden="true" />
                                       </button>
                                       {sub.subSubcategories.length === 0 ? (
-                                        <span className="text-[10px] text-slate-400">Sin tipos</span>
+                                        <span className="text-[10px] text-muted-foreground">Sin tipos</span>
                                       ) : (
                                         <button
                                           type="button"
@@ -829,8 +829,8 @@ export default function CategoriasPage() {
                                           className={cn(
                                             'inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-[10px] font-medium transition',
                                             typesOpen
-                                              ? 'bg-teal-50 text-teal-700'
-                                              : 'text-teal-600 hover:bg-teal-50'
+                                              ? 'bg-teal-500/10 text-teal-ink'
+                                              : 'text-teal-ink hover:bg-teal-500/10'
                                           )}
                                           aria-expanded={typesOpen}
                                           title={typesOpen ? 'Ocultar tipos' : 'Mostrar tipos'}
@@ -859,7 +859,7 @@ export default function CategoriasPage() {
                                           subcategoryLabel: sub.label,
                                         })
                                       }
-                                      className="inline-flex h-7 items-center gap-1 rounded-lg px-2 text-[10.5px] font-semibold text-teal-600 transition hover:bg-teal-50 hover:text-teal-800"
+                                      className="inline-flex h-7 items-center gap-1 rounded-lg px-2 text-[10.5px] font-semibold text-teal-ink transition hover:bg-teal-500/10 hover:text-teal-800"
                                       title="Añadir tipo"
                                       aria-label={`Añadir tipo a ${sub.label}`}
                                     >
@@ -879,7 +879,7 @@ export default function CategoriasPage() {
                                           subcategoryLabel: sub.label,
                                         })
                                       }
-                                      className="grid size-7 place-items-center rounded-lg text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+                                      className="grid size-7 place-items-center rounded-lg text-muted-foreground transition hover:bg-muted hover:text-foreground/80"
                                       title="Renombrar subcategoría"
                                       aria-label={`Renombrar subcategoría ${sub.label}`}
                                     >
@@ -896,7 +896,7 @@ export default function CategoriasPage() {
                                         })
                                       }
                                       disabled={subCount > 0}
-                                      className="grid size-7 place-items-center rounded-lg text-slate-400 transition hover:bg-red-50 hover:text-red-600 disabled:opacity-30"
+                                      className="grid size-7 place-items-center rounded-lg text-muted-foreground transition hover:bg-red-500/10 hover:text-danger-ink disabled:opacity-30"
                                       title={
                                         subCount > 0
                                           ? `No se puede eliminar: tiene ${plural(subCount, 'producto', 'productos')}`
@@ -910,7 +910,7 @@ export default function CategoriasPage() {
                                 </div>
 
                                 {typesOpen && (
-                                  <div className="mt-2.5 space-y-1.5 border-t border-slate-100 pt-2.5">
+                                  <div className="mt-2.5 space-y-1.5 border-t border-border pt-2.5">
                                     {sub.subSubcategories.map((type) => {
                                       const typeCount = productCount(
                                         category.label,
@@ -920,7 +920,7 @@ export default function CategoriasPage() {
                                       return (
                                         <div
                                           key={type.id}
-                                          className="relative overflow-hidden rounded-lg border border-teal-100 bg-white p-2.5 pl-3.5"
+                                          className="relative overflow-hidden rounded-lg border border-teal-100 bg-card p-2.5 pl-3.5"
                                         >
                                           <span
                                             className="absolute inset-y-2.5 left-0 w-[3px] rounded-full bg-teal-500"
@@ -929,11 +929,11 @@ export default function CategoriasPage() {
                                           <div className="flex flex-wrap items-start gap-2">
                                             <div className="min-w-0 flex-1">
                                               <div className="flex flex-wrap items-center gap-2">
-                                                <span className="inline-flex items-center gap-1 rounded-md bg-teal-50 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-teal-700 ring-1 ring-inset ring-teal-600/15">
+                                                <span className="inline-flex items-center gap-1 rounded-md bg-teal-500/10 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-teal-ink ring-1 ring-inset ring-teal-600/15">
                                                   <Tag className="size-2.5" aria-hidden="true" />
                                                   Tipo
                                                 </span>
-                                                <p className="truncate text-[11.5px] font-semibold text-slate-900">
+                                                <p className="truncate text-[11.5px] font-semibold text-foreground">
                                                   {type.label}
                                                 </p>
                                               </div>
@@ -950,7 +950,7 @@ export default function CategoriasPage() {
                                                       type: type.label,
                                                     })
                                                   }
-                                                  className="inline-flex items-center gap-1 rounded-full bg-teal-50 px-2 py-0.5 text-[10px] font-semibold text-teal-700 transition hover:bg-teal-100 hover:text-teal-800"
+                                                  className="inline-flex items-center gap-1 rounded-full bg-teal-500/10 px-2 py-0.5 text-[10px] font-semibold text-teal-ink transition hover:bg-teal-100 hover:text-teal-800"
                                                   title={`Ver productos vinculados a ${type.label}`}
                                                 >
                                                   <Package className="size-3" aria-hidden="true" />
@@ -973,7 +973,7 @@ export default function CategoriasPage() {
                                                     subcategoryLabel: sub.label,
                                                   })
                                                 }
-                                                className="grid size-7 place-items-center rounded-lg text-slate-400 transition hover:bg-teal-50 hover:text-teal-700"
+                                                className="grid size-7 place-items-center rounded-lg text-muted-foreground transition hover:bg-teal-500/10 hover:text-teal-ink"
                                                 title="Renombrar tipo"
                                                 aria-label={`Renombrar tipo ${type.label}`}
                                               >
@@ -991,7 +991,7 @@ export default function CategoriasPage() {
                                                   })
                                                 }
                                                 disabled={typeCount > 0}
-                                                className="grid size-7 place-items-center rounded-lg text-slate-400 transition hover:bg-red-50 hover:text-red-600 disabled:opacity-30"
+                                                className="grid size-7 place-items-center rounded-lg text-muted-foreground transition hover:bg-red-500/10 hover:text-danger-ink disabled:opacity-30"
                                                 title={
                                                   typeCount > 0
                                                     ? `No se puede eliminar: tiene ${plural(typeCount, 'producto', 'productos')}`
@@ -1039,7 +1039,7 @@ export default function CategoriasPage() {
         }
       >
         <label className="block space-y-1.5">
-          <span className="text-xs font-semibold text-slate-700">Nombre</span>
+          <span className="text-xs font-semibold text-foreground/80">Nombre</span>
           <input
             value={name}
             onChange={(event) => setName(event.target.value)}
@@ -1074,7 +1074,7 @@ export default function CategoriasPage() {
         }
       >
         <label className="block space-y-1.5">
-          <span className="text-xs font-semibold text-slate-700">Nombre</span>
+          <span className="text-xs font-semibold text-foreground/80">Nombre</span>
           <input
             value={editName}
             onChange={(event) => setEditName(event.target.value)}
@@ -1090,7 +1090,7 @@ export default function CategoriasPage() {
           />
         </label>
         {editTarget && (
-          <p className="mt-2 text-[10.5px] leading-relaxed text-slate-400">
+          <p className="mt-2 text-[10.5px] leading-relaxed text-muted-foreground">
             Ruta actual: {editTarget.categoryLabel}
             {editTarget.kind !== 'category' && editTarget.subcategoryLabel
               ? ` › ${editTarget.subcategoryLabel}`
@@ -1256,7 +1256,7 @@ export default function CategoriasPage() {
       >
         {linkedTarget && (
           <div className="space-y-3">
-            <div className="flex flex-wrap items-center gap-2 rounded-xl border border-slate-200/80 bg-slate-50 px-3 py-2">
+            <div className="flex flex-wrap items-center gap-2 rounded-xl border border-border/80 bg-muted px-3 py-2">
               <span
                 className={cn(
                   'inline-flex items-center rounded-md px-2 py-0.5 text-[9.5px] font-bold uppercase tracking-wide ring-1 ring-inset',
@@ -1265,10 +1265,10 @@ export default function CategoriasPage() {
               >
                 {levelBadgeLabels[linkedTarget.kind]}
               </span>
-              <span className="min-w-0 flex-1 truncate font-mono text-[10.5px] text-slate-500">
+              <span className="min-w-0 flex-1 truncate font-mono text-[10.5px] text-muted-foreground">
                 {linkedTarget.path}
               </span>
-              <span className="rounded-full bg-white px-2 py-0.5 text-[10px] font-semibold text-slate-600 ring-1 ring-inset ring-slate-200">
+              <span className="rounded-full bg-card px-2 py-0.5 text-[10px] font-semibold text-muted-foreground ring-1 ring-inset ring-border">
                 {plural(linkedProducts.length, 'producto', 'productos')}
               </span>
             </div>
@@ -1294,7 +1294,7 @@ export default function CategoriasPage() {
                 {linkedProducts.map((product) => (
                   <li
                     key={product.id}
-                    className="overflow-hidden rounded-xl border border-slate-200/80 bg-white transition hover:border-slate-300"
+                    className="overflow-hidden rounded-xl border border-border/80 bg-card transition hover:border-input"
                   >
                     <div className="flex items-center gap-1.5 p-1.5 pl-2.5">
                       <Link
@@ -1308,10 +1308,10 @@ export default function CategoriasPage() {
                           className="size-11 shrink-0"
                         />
                         <div className="min-w-0 flex-1">
-                          <p className="truncate text-[12px] font-semibold text-slate-900">
+                          <p className="truncate text-[12px] font-semibold text-foreground">
                             {product.name}
                           </p>
-                          <p className="mt-0.5 truncate text-[10px] text-slate-400">
+                          <p className="mt-0.5 truncate text-[10px] text-muted-foreground">
                             {product.sku}
                             {product.subcategory ? ` · ${product.subcategory}` : ''}
                             {product.subSubcategory ? ` › ${product.subSubcategory}` : ''}
@@ -1321,14 +1321,14 @@ export default function CategoriasPage() {
                           <StatusBadge status={product.status} />
                         </span>
                         <ChevronRight
-                          className="size-4 shrink-0 text-slate-300 transition group-hover:text-slate-500"
+                          className="size-4 shrink-0 text-muted-foreground/60 transition group-hover:text-muted-foreground"
                           aria-hidden="true"
                         />
                       </Link>
                       <button
                         type="button"
                         onClick={() => setUnlinkTargetId(product.id)}
-                        className="inline-flex h-8 shrink-0 items-center gap-1 rounded-lg px-2 text-[10.5px] font-semibold text-slate-400 transition hover:bg-red-50 hover:text-red-600"
+                        className="inline-flex h-8 shrink-0 items-center gap-1 rounded-lg px-2 text-[10.5px] font-semibold text-muted-foreground transition hover:bg-red-500/10 hover:text-danger-ink"
                         title={`Desvincular de ${kindLabels[linkedTarget.kind]}`}
                         aria-label={`Desvincular ${product.name} de ${kindLabels[linkedTarget.kind]}`}
                       >
@@ -1337,8 +1337,8 @@ export default function CategoriasPage() {
                       </button>
                     </div>
                     {unlinkTargetId === product.id && (
-                      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 bg-slate-50/80 px-3 py-2">
-                        <p className="text-[10.5px] leading-relaxed text-slate-600">
+                      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-border bg-muted/80 px-3 py-2">
+                        <p className="text-[10.5px] leading-relaxed text-muted-foreground">
                           {unlinkHint(linkedTarget)}
                         </p>
                         <div className="flex shrink-0 gap-1.5">

@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 
 export default function BlogPostPage({ params }: { params: { slug: string } }) {
   return (
-    <main className="min-h-screen bg-white text-[#0F172A]">
+    <main className="min-h-screen bg-card text-foreground">
       <EnhancedHeader />
       <article className="mx-auto max-w-[860px] px-4 py-20 sm:px-6">
         <h1>Blog: {params.slug}</h1>

@@ -136,12 +136,12 @@ export function QuoteDocumentPreview({
         </>
       }
     >
-      <div className="relative overflow-hidden rounded-xl border border-slate-200 bg-slate-100">
-        <div className="flex h-9 items-center gap-2 border-b border-slate-200 bg-slate-50 px-3">
+      <div className="relative overflow-hidden rounded-xl border border-border bg-muted">
+        <div className="flex h-9 items-center gap-2 border-b border-border bg-muted px-3">
           <span className="size-2.5 rounded-full bg-red-400" aria-hidden="true" />
           <span className="size-2.5 rounded-full bg-amber-400" aria-hidden="true" />
           <span className="size-2.5 rounded-full bg-emerald-400" aria-hidden="true" />
-          <span className="ml-2 truncate font-mono text-[10px] text-slate-500">{fileName}</span>
+          <span className="ml-2 truncate font-mono text-[10px] text-muted-foreground">{fileName}</span>
         </div>
 
         {pdfUrl ? (
@@ -149,14 +149,14 @@ export function QuoteDocumentPreview({
             ref={iframeRef}
             src={pdfUrl}
             title={`Documento de cotización ${quote.code}`}
-            className="h-[68vh] min-h-[420px] w-full bg-white"
+            className="h-[68vh] min-h-[420px] w-full bg-card"
           />
         ) : (
           <div className="flex h-[68vh] min-h-[420px] flex-col items-center justify-center gap-3 px-6 text-center">
             {error ? (
               <>
-                <FileWarning className="size-7 text-slate-400" aria-hidden="true" />
-                <p className="max-w-xs text-xs leading-relaxed text-slate-500">{error}</p>
+                <FileWarning className="size-7 text-muted-foreground" aria-hidden="true" />
+                <p className="max-w-xs text-xs leading-relaxed text-muted-foreground">{error}</p>
                 <button
                   type="button"
                   className={btnSecondary}
@@ -168,10 +168,10 @@ export function QuoteDocumentPreview({
             ) : (
               <>
                 <LoaderCircle
-                  className="size-6 animate-spin text-[#5B21B6]"
+                  className="size-6 animate-spin text-brand-ink"
                   aria-hidden="true"
                 />
-                <p className="text-xs font-medium text-slate-500">Generando documento A4…</p>
+                <p className="text-xs font-medium text-muted-foreground">Generando documento A4…</p>
               </>
             )}
           </div>

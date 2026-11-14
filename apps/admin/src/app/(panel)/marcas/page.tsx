@@ -277,26 +277,26 @@ export default function MarcasPage() {
           return (
             <div
               key={item.label}
-              className="flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs"
+              className="flex items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-xs"
             >
-              <span className="grid size-9 place-items-center rounded-xl bg-slate-50 text-slate-500 ring-1 ring-slate-200/70">
+              <span className="grid size-9 place-items-center rounded-xl bg-muted text-muted-foreground ring-1 ring-border/70">
                 <Icon className="size-[18px]" aria-hidden="true" />
               </span>
               <div>
-                <p className="font-heading text-lg font-bold leading-none text-slate-900">
+                <p className="font-heading text-lg font-bold leading-none text-foreground">
                   {formatNumber(item.value)}
                 </p>
-                <p className="mt-1 text-[10.5px] font-medium text-slate-500">{item.label}</p>
+                <p className="mt-1 text-[10.5px] font-medium text-muted-foreground">{item.label}</p>
               </div>
             </div>
           )
         })}
       </div>
 
-      <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs">
+      <div className="rounded-2xl border border-border/80 bg-card p-4 shadow-xs">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div className="relative w-full lg:max-w-sm">
-            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <input
               value={search}
               onChange={(event) => setSearch(event.target.value)}
@@ -308,7 +308,7 @@ export default function MarcasPage() {
               <button
                 type="button"
                 onClick={() => setSearch('')}
-                className="absolute right-2.5 top-1/2 grid size-5 -translate-y-1/2 place-items-center rounded-md text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+                className="absolute right-2.5 top-1/2 grid size-5 -translate-y-1/2 place-items-center rounded-md text-muted-foreground transition hover:bg-muted hover:text-foreground/80"
                 aria-label="Limpiar búsqueda"
               >
                 <X className="size-3.5" />
@@ -338,8 +338,8 @@ export default function MarcasPage() {
                 },
               ]}
             />
-            <p className="text-[11px] text-slate-500">
-              <span className="font-bold text-slate-900">{filtered.length}</span>{' '}
+            <p className="text-[11px] text-muted-foreground">
+              <span className="font-bold text-foreground">{filtered.length}</span>{' '}
               {filtered.length === 1 ? 'marca visible' : 'marcas visibles'}
             </p>
           </div>
@@ -382,30 +382,30 @@ export default function MarcasPage() {
             return (
               <article
                 key={brand.id}
-                className="group flex items-start gap-3 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs transition hover:border-[#DDD6FE] hover:shadow-sm"
+                className="group flex items-start gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-xs transition hover:border-brand-ink/30 hover:shadow-sm"
               >
                 <ProductThumb src={brand.logo} alt={`Logo de ${brand.name}`} className="size-11" />
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-1.5">
-                    <p className="truncate text-[13px] font-bold text-slate-900">{brand.name}</p>
+                    <p className="truncate text-[13px] font-bold text-foreground">{brand.name}</p>
                     {brand.status === 'inactive' && (
-                      <span className="rounded-full border border-slate-200 bg-slate-100 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-slate-500">
+                      <span className="rounded-full border border-border bg-muted px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-muted-foreground">
                         Inactiva
                       </span>
                     )}
                   </div>
-                  <p className="mt-0.5 line-clamp-1 text-[10.5px] text-slate-500">
+                  <p className="mt-0.5 line-clamp-1 text-[10.5px] text-muted-foreground">
                     {brand.description || 'Sin descripción'}
                   </p>
-                  <p className="mt-1 flex flex-wrap items-center gap-x-1.5 font-mono text-[9.5px] text-slate-400">
+                  <p className="mt-1 flex flex-wrap items-center gap-x-1.5 font-mono text-[9.5px] text-muted-foreground">
                     <span className="truncate">{brand.slug}</span>
-                    <span className="font-sans text-slate-300">·</span>
-                    <span className="font-sans font-semibold text-slate-600">
+                    <span className="font-sans text-muted-foreground/60">·</span>
+                    <span className="font-sans font-semibold text-muted-foreground">
                       {total} {total === 1 ? 'producto' : 'productos'}
                     </span>
                     {inUse && (
                       <>
-                        <span className="font-sans text-slate-300">·</span>
+                        <span className="font-sans text-muted-foreground/60">·</span>
                         <span className="font-sans">
                           {published} {published === 1 ? 'publicado' : 'publicados'}
                         </span>
@@ -427,7 +427,7 @@ export default function MarcasPage() {
                     type="button"
                     onClick={() => setDeleteTarget(brand)}
                     disabled={inUse}
-                    className={cn(iconButton, 'hover:bg-red-50 hover:text-red-600 disabled:opacity-30')}
+                    className={cn(iconButton, 'hover:bg-red-500/10 hover:text-danger-ink disabled:opacity-30')}
                     title={
                       inUse
                         ? `No se puede eliminar: tiene ${total} productos`
@@ -445,7 +445,7 @@ export default function MarcasPage() {
       )}
 
       {brandStats.unassigned > 0 && (
-        <p className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-[11px] leading-relaxed text-amber-800">
+        <p className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-[11px] leading-relaxed text-warning-ink">
           Hay <span className="font-bold">{brandStats.unassigned}</span>{' '}
           {brandStats.unassigned === 1 ? 'producto' : 'productos'} sin marca asignada. Edítalos
           desde Productos para completar su clasificación.
@@ -542,10 +542,10 @@ export default function MarcasPage() {
                 className={cn(
                   'grid size-16 shrink-0 place-items-center overflow-hidden rounded-xl border-2 border-dashed transition',
                   logoDragging
-                    ? 'border-[#A78BFA] bg-[#F5F3FF]/60'
+                    ? 'border-brand-ink/50 bg-tint-brand/60'
                     : draft.logo
-                      ? 'border-transparent bg-white ring-1 ring-inset ring-slate-200'
-                      : 'border-slate-200 bg-slate-50/60'
+                      ? 'border-transparent bg-card ring-1 ring-inset ring-border'
+                      : 'border-border bg-muted/60'
                 )}
                 title="Arrastra un logo aquí"
               >
@@ -556,7 +556,7 @@ export default function MarcasPage() {
                     className="size-full rounded-none ring-0"
                   />
                 ) : (
-                  <ImagePlus className="size-5 text-slate-400" aria-hidden="true" />
+                  <ImagePlus className="size-5 text-muted-foreground" aria-hidden="true" />
                 )}
               </div>
 
@@ -580,13 +580,13 @@ export default function MarcasPage() {
                     <button
                       type="button"
                       onClick={() => updateDraft('logo', '')}
-                      className="inline-flex h-9 items-center gap-1.5 rounded-xl px-2.5 text-xs font-semibold text-slate-500 transition hover:bg-red-50 hover:text-red-600"
+                      className="inline-flex h-9 items-center gap-1.5 rounded-xl px-2.5 text-xs font-semibold text-muted-foreground transition hover:bg-red-500/10 hover:text-danger-ink"
                     >
                       <X className="size-3.5" aria-hidden="true" />
                       Quitar
                     </button>
                   )}
-                  <span className="text-[10px] text-slate-400">o arrastra el archivo</span>
+                  <span className="text-[10px] text-muted-foreground">o arrastra el archivo</span>
                 </div>
 
                 <input
@@ -598,7 +598,7 @@ export default function MarcasPage() {
                   inputMode="url"
                 />
 
-                <p className="text-[10px] leading-relaxed text-slate-400">
+                <p className="text-[10px] leading-relaxed text-muted-foreground">
                   {draft.logo.startsWith('data:')
                     ? 'Archivo cargado desde tu equipo y optimizado a 512 px; se guarda en este navegador.'
                     : draft.logo

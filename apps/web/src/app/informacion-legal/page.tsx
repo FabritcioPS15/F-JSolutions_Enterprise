@@ -72,8 +72,9 @@ const sections: LegalSection[] = [
     id: 'libro-de-reclamaciones',
     title: 'Libro de reclamaciones',
     paragraphs: [
-      'Contamos con un Libro de Reclamaciones a disposición de los clientes en nuestro establecimiento, conforme al Código de Protección y Defensa del Consumidor.',
-      `Si no puedes acercarte, escríbenos a ${EMPRESA.email} indicando tu nombre, documento, detalle del reclamo y el servicio o producto involucrado. Coordinaremos la atención por nuestros canales y te informaremos el plazo de respuesta.`,
+      'Contamos con un Libro de Reclamaciones Virtual disponible las 24 horas en /libro-de-reclamaciones, conforme al Código de Protección y Defensa del Consumidor.',
+      'Al registrar tu reclamo o queja recibirás una constancia con un código de seguimiento. La empresa responderá en un plazo máximo de 30 días calendario y podrás consultar el estado con tu código y correo.',
+      `Si prefieres atención presencial, también puedes acercarte a nuestro establecimiento o escribirnos a ${EMPRESA.email}.`,
     ],
   },
   {

@@ -17,6 +17,9 @@
       ],
       "customer-accounts": [
         "./dist/customer-accounts.d.ts"
+      ],
+      "complaints-book": [
+        "./dist/complaints-book.d.ts"
       ]
     }
   },
@@ -40,6 +43,10 @@
     "./customer-accounts": {
       "types": "./dist/customer-accounts.d.ts",
       "default": "./dist/customer-accounts.js"
+    },
+    "./complaints-book": {
+      "types": "./dist/complaints-book.d.ts",
+      "default": "./dist/complaints-book.js"
     }
   },
   "files": [

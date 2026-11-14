@@ -165,17 +165,17 @@ function UnitsBar({ order }: { order: Order }) {
   const percent = ordered > 0 ? Math.round((delivered / ordered) * 100) : 0
   return (
     <div className="w-40">
-      <div className="flex items-baseline justify-between gap-2 text-[11px] text-slate-500">
-        <span className="font-semibold tabular-nums text-slate-700">
+      <div className="flex items-baseline justify-between gap-2 text-[11px] text-muted-foreground">
+        <span className="font-semibold tabular-nums text-foreground/80">
           {delivered}/{ordered}
         </span>
         <span className="tabular-nums">{percent}%</span>
       </div>
-      <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-slate-100">
+      <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-muted">
         <div
           className={cn(
             'h-full rounded-full transition-all',
-            percent === 100 ? 'bg-emerald-500' : percent > 0 ? 'bg-[#7C3AED]' : 'bg-slate-200'
+            percent === 100 ? 'bg-emerald-500' : percent > 0 ? 'bg-[#2563EB]' : 'bg-border'
           )}
           style={{ width: `${percent}%` }}
         />
@@ -204,15 +204,15 @@ function DeliveryStepper({ order }: { order: Order }) {
               className={cn(
                 'inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold ring-1 ring-inset',
                 reached
-                  ? 'bg-[#F5F3FF] text-[#5B21B6] ring-[#DDD6FE]'
-                  : 'bg-white text-slate-400 ring-slate-200'
+                  ? 'bg-tint-brand text-brand-ink ring-brand-ink/30'
+                  : 'bg-card text-muted-foreground ring-border'
               )}
             >
               {index < currentIndex && <CheckCircle2 className="size-3.5" aria-hidden="true" />}
               {orderStatusLabels[status]}
             </span>
             {index < deliveryFlow.length - 1 ? (
-              <ArrowRight className="size-3.5 text-slate-300" aria-hidden="true" />
+              <ArrowRight className="size-3.5 text-muted-foreground/60" aria-hidden="true" />
             ) : null}
           </li>
         )
@@ -474,11 +474,11 @@ export function OrdersView() {
         />
       </div>
 
-      <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs">
+      <div className="rounded-2xl border border-border/80 bg-card p-4 shadow-xs">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div className="relative w-full min-w-0 lg:flex-1">
             <Search
-              className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400"
+              className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
               aria-hidden="true"
             />
             <input
@@ -492,7 +492,7 @@ export function OrdersView() {
               <button
                 type="button"
                 onClick={() => setQuery('')}
-                className="absolute right-2.5 top-1/2 grid size-5 -translate-y-1/2 place-items-center rounded-md text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+                className="absolute right-2.5 top-1/2 grid size-5 -translate-y-1/2 place-items-center rounded-md text-muted-foreground transition hover:bg-muted hover:text-foreground/80"
                 aria-label="Limpiar búsqueda"
               >
                 <X className="size-3.5" />
@@ -547,7 +547,7 @@ export function OrdersView() {
         </div>
       </div>
 
-      <section className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xs">
+      <section className="overflow-hidden rounded-2xl border border-border/80 bg-card shadow-xs">
         {filtered.length === 0 ? (
           <div className="p-5">
             <EmptyState
@@ -595,24 +595,24 @@ export function OrdersView() {
                   <th className="px-4 py-3 text-right">Acciones</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-border">
                 {filtered.map((order) => {
                   const totals = quoteTotals(order.items, settings.igv)
                   const late = isDeliveryLate(order)
                   const next = nextOrderStatus(order.status)
                   return (
-                    <tr key={order.id} className="align-top transition hover:bg-slate-50/60">
+                    <tr key={order.id} className="align-top transition hover:bg-muted/60">
                       <td className="px-5 py-3.5">
                         <button
                           type="button"
                           onClick={() => setDetail(order)}
-                          className="font-semibold text-slate-900 transition hover:text-[#5B21B6]"
+                          className="font-semibold text-foreground transition hover:text-brand-ink"
                         >
                           {order.code}
                         </button>
-                        <p className="mt-0.5 text-[11px] text-slate-500">{order.clientName}</p>
+                        <p className="mt-0.5 text-[11px] text-muted-foreground">{order.clientName}</p>
                         {order.quoteCode ? (
-                          <p className="mt-0.5 text-[10px] text-slate-400">
+                          <p className="mt-0.5 text-[10px] text-muted-foreground">
                             Desde {order.quoteCode}
                           </p>
                         ) : null}
@@ -620,18 +620,18 @@ export function OrdersView() {
                       <td className="px-4 py-3.5">
                         <StatusChip status={order.status} />
                         {late ? (
-                          <p className="mt-1 text-[10.5px] font-semibold text-rose-600">
+                          <p className="mt-1 text-[10.5px] font-semibold text-danger-ink">
                             Entrega atrasada
                           </p>
                         ) : null}
                       </td>
-                      <td className="px-4 py-3.5 text-slate-600">
+                      <td className="px-4 py-3.5 text-muted-foreground">
                         {deliveryMethodLabels[order.deliveryMethod]}
                         {order.carrier ? (
-                          <p className="mt-0.5 text-[10.5px] text-slate-400">{order.carrier}</p>
+                          <p className="mt-0.5 text-[10.5px] text-muted-foreground">{order.carrier}</p>
                         ) : null}
                       </td>
-                      <td className="px-4 py-3.5 text-slate-600">
+                      <td className="px-4 py-3.5 text-muted-foreground">
                         {order.deliveredAt
                           ? formatDateTime(order.deliveredAt)
                           : order.expectedDeliveryAt
@@ -642,11 +642,11 @@ export function OrdersView() {
                         <UnitsBar order={order} />
                       </td>
                       <td className="px-4 py-3.5">
-                        <span className="text-[11.5px] font-medium text-slate-600">
+                        <span className="text-[11.5px] font-medium text-muted-foreground">
                           {paymentStatusLabels[order.paymentStatus]}
                         </span>
                       </td>
-                      <td className="px-4 py-3.5 text-right font-semibold tabular-nums text-slate-900">
+                      <td className="px-4 py-3.5 text-right font-semibold tabular-nums text-foreground">
                         {formatCurrency(totals.total, order.currency)}
                       </td>
                       <td className="px-4 py-3.5 text-right">
@@ -712,7 +712,7 @@ export function OrdersView() {
         footer={
           detailOrder ? (
             <>
-              <label className="mr-auto flex items-center gap-2 text-[11px] font-semibold text-slate-500">
+              <label className="mr-auto flex items-center gap-2 text-[11px] font-semibold text-muted-foreground">
                 Pago
                 <Select
                   value={detailOrder.paymentStatus}
@@ -790,20 +790,20 @@ export function OrdersView() {
                       : 'Por coordinar',
                 },
               ].map((item) => (
-                <div key={item.label} className="rounded-xl bg-slate-50 px-3 py-2.5">
-                  <p className="text-[9.5px] font-bold uppercase tracking-[0.12em] text-slate-400">
+                <div key={item.label} className="rounded-xl bg-muted px-3 py-2.5">
+                  <p className="text-[9.5px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
                     {item.label}
                   </p>
-                  <p className="mt-1 text-[12.5px] font-medium leading-snug text-slate-800">
+                  <p className="mt-1 text-[12.5px] font-medium leading-snug text-foreground">
                     {item.value}
                   </p>
                 </div>
               ))}
             </div>
 
-            <div className="overflow-hidden rounded-xl border border-slate-200/80">
+            <div className="overflow-hidden rounded-xl border border-border/80">
               <table className="w-full text-left text-[12.5px]">
-                <thead className="bg-slate-50 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">
+                <thead className="bg-muted text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
                   <tr>
                     <th className="px-4 py-2.5">Mercancía</th>
                     <th className="px-4 py-2.5 text-right">Pedido</th>
@@ -811,16 +811,16 @@ export function OrdersView() {
                     <th className="px-4 py-2.5 text-right">Importe</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-border">
                   {detailOrder.items.map((item) => (
                     <tr key={item.id}>
                       <td className="px-4 py-2.5">
-                        <p className="font-semibold text-slate-800">{item.name}</p>
+                        <p className="font-semibold text-foreground">{item.name}</p>
                         {item.sku ? (
-                          <p className="mt-0.5 font-mono text-[10.5px] text-slate-400">{item.sku}</p>
+                          <p className="mt-0.5 font-mono text-[10.5px] text-muted-foreground">{item.sku}</p>
                         ) : null}
                       </td>
-                      <td className="px-4 py-2.5 text-right tabular-nums text-slate-600">
+                      <td className="px-4 py-2.5 text-right tabular-nums text-muted-foreground">
                         {item.quantity}
                       </td>
                       <td className="px-4 py-2.5 text-right">
@@ -836,19 +836,19 @@ export function OrdersView() {
                           aria-label={`Unidades entregadas de ${item.name}`}
                         />
                       </td>
-                      <td className="px-4 py-2.5 text-right tabular-nums text-slate-700">
+                      <td className="px-4 py-2.5 text-right tabular-nums text-foreground/80">
                         {formatCurrency(item.quantity * item.unitPrice, detailOrder.currency)}
                       </td>
                     </tr>
                   ))}
                 </tbody>
-                <tfoot className="bg-slate-50/70">
+                <tfoot className="bg-muted/70">
                   <tr>
-                    <td className="px-4 py-2.5 text-[11px] text-slate-500" colSpan={3}>
+                    <td className="px-4 py-2.5 text-[11px] text-muted-foreground" colSpan={3}>
                       Subtotal {formatCurrency(quoteTotals(detailOrder.items, settings.igv).net, detailOrder.currency)} ·
                       IGV {settings.igv}% {formatCurrency(quoteTotals(detailOrder.items, settings.igv).tax, detailOrder.currency)}
                     </td>
-                    <td className="px-4 py-2.5 text-right font-bold tabular-nums text-slate-900">
+                    <td className="px-4 py-2.5 text-right font-bold tabular-nums text-foreground">
                       {formatCurrency(quoteTotals(detailOrder.items, settings.igv).total, detailOrder.currency)}
                     </td>
                   </tr>
@@ -857,7 +857,7 @@ export function OrdersView() {
             </div>
 
             <div>
-              <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">
+              <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
                 Trazabilidad de la entrega
               </p>
               <ol className="space-y-2.5">
@@ -873,14 +873,14 @@ export function OrdersView() {
                         aria-hidden="true"
                       />
                       <div className="min-w-0">
-                        <p className="text-[12.5px] font-semibold text-slate-800">
+                        <p className="text-[12.5px] font-semibold text-foreground">
                           {orderStatusLabels[event.status]}
-                          <span className="ml-2 text-[11px] font-normal text-slate-400">
+                          <span className="ml-2 text-[11px] font-normal text-muted-foreground">
                             {formatDateTime(event.at)}
                           </span>
                         </p>
                         {event.note ? (
-                          <p className="mt-0.5 text-[11.5px] leading-relaxed text-slate-500">
+                          <p className="mt-0.5 text-[11.5px] leading-relaxed text-muted-foreground">
                             {event.note}
                           </p>
                         ) : null}
@@ -891,7 +891,7 @@ export function OrdersView() {
             </div>
 
             {detailOrder.notes ? (
-              <p className="rounded-xl bg-slate-50 px-3 py-2.5 text-[11.5px] leading-relaxed text-slate-600">
+              <p className="rounded-xl bg-muted px-3 py-2.5 text-[11.5px] leading-relaxed text-muted-foreground">
                 {detailOrder.notes}
               </p>
             ) : null}
@@ -1074,13 +1074,13 @@ export function OrdersView() {
             </div>
 
             {errors.items ? (
-              <p className="text-[11px] font-medium text-red-600">{errors.items}</p>
+              <p className="text-[11px] font-medium text-danger-ink">{errors.items}</p>
             ) : null}
 
             {draft.items.length > 0 ? (
-              <div className="overflow-hidden rounded-xl border border-slate-200/80">
+              <div className="overflow-hidden rounded-xl border border-border/80">
                 <table className="w-full text-left text-[12.5px]">
-                  <thead className="bg-slate-50 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-500">
+                  <thead className="bg-muted text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
                     <tr>
                       <th className="px-4 py-2.5">Producto</th>
                       <th className="w-24 px-4 py-2.5">Cantidad</th>
@@ -1089,7 +1089,7 @@ export function OrdersView() {
                       <th className="w-12 px-4 py-2.5" />
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-border">
                     {draft.items.map((item) => (
                       <tr key={item.id}>
                         <td className="px-4 py-2.5">
@@ -1100,7 +1100,7 @@ export function OrdersView() {
                             aria-label="Nombre del ítem"
                           />
                           {item.sku ? (
-                            <p className="mt-0.5 font-mono text-[10px] text-slate-400">{item.sku}</p>
+                            <p className="mt-0.5 font-mono text-[10px] text-muted-foreground">{item.sku}</p>
                           ) : null}
                         </td>
                         <td className="px-4 py-2.5">
@@ -1128,13 +1128,13 @@ export function OrdersView() {
                             aria-label="Precio unitario"
                           />
                         </td>
-                        <td className="px-4 py-2.5 text-right font-semibold tabular-nums text-slate-800">
+                        <td className="px-4 py-2.5 text-right font-semibold tabular-nums text-foreground">
                           {formatCurrency(item.quantity * item.unitPrice, draft.currency)}
                         </td>
                         <td className="px-4 py-2.5 text-right">
                           <button
                             type="button"
-                            className={cn(iconButton, 'hover:bg-red-50 hover:text-red-600')}
+                            className={cn(iconButton, 'hover:bg-red-500/10 hover:text-danger-ink')}
                             onClick={() => removeLine(item.id)}
                             aria-label={`Quitar ${item.name}`}
                           >
@@ -1147,7 +1147,7 @@ export function OrdersView() {
                 </table>
               </div>
             ) : (
-              <p className="rounded-xl border border-dashed border-slate-200 bg-slate-50/60 px-4 py-3 text-[11.5px] text-slate-500">
+              <p className="rounded-xl border border-dashed border-border bg-muted/60 px-4 py-3 text-[11.5px] text-muted-foreground">
                 El pedido aún no tiene líneas de mercancía.
               </p>
             )}

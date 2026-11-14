@@ -137,22 +137,22 @@ function QuoteTotals({
 }) {
   const totals = quoteTotals(items, igv)
   return (
-    <dl className="space-y-1.5 rounded-xl border border-slate-200 bg-slate-50/70 px-4 py-3 text-[11.5px]">
+    <dl className="space-y-1.5 rounded-xl border border-border bg-muted/70 px-4 py-3 text-[11.5px]">
       <div className="flex items-center justify-between gap-3">
-        <dt className="text-slate-500">Subtotal (sin IGV)</dt>
-        <dd className="font-semibold tabular-nums text-slate-700">
+        <dt className="text-muted-foreground">Subtotal (sin IGV)</dt>
+        <dd className="font-semibold tabular-nums text-foreground/80">
           {formatCurrency(totals.net, currency)}
         </dd>
       </div>
       <div className="flex items-center justify-between gap-3">
-        <dt className="text-slate-500">IGV ({igv}%)</dt>
-        <dd className="font-semibold tabular-nums text-slate-700">
+        <dt className="text-muted-foreground">IGV ({igv}%)</dt>
+        <dd className="font-semibold tabular-nums text-foreground/80">
           {formatCurrency(totals.tax, currency)}
         </dd>
       </div>
-      <div className="flex items-center justify-between gap-3 border-t border-slate-200 pt-1.5">
-        <dt className="text-xs font-bold text-slate-900">Total</dt>
-        <dd className="font-heading text-base font-bold tabular-nums text-slate-900">
+      <div className="flex items-center justify-between gap-3 border-t border-border pt-1.5">
+        <dt className="text-xs font-bold text-foreground">Total</dt>
+        <dd className="font-heading text-base font-bold tabular-nums text-foreground">
           {formatCurrency(totals.total, currency)}
         </dd>
       </div>
@@ -455,10 +455,10 @@ export function QuotesView({ initialQuery = '' }: { initialQuery?: string }) {
         />
       </div>
 
-      <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs">
+      <div className="rounded-2xl border border-border/80 bg-card p-4 shadow-xs">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div className="relative w-full min-w-0 lg:flex-1">
-            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
@@ -470,7 +470,7 @@ export function QuotesView({ initialQuery = '' }: { initialQuery?: string }) {
               <button
                 type="button"
                 onClick={() => setQuery('')}
-                className="absolute right-2.5 top-1/2 grid size-5 -translate-y-1/2 place-items-center rounded-md text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+                className="absolute right-2.5 top-1/2 grid size-5 -translate-y-1/2 place-items-center rounded-md text-muted-foreground transition hover:bg-muted hover:text-foreground/80"
                 aria-label="Limpiar búsqueda"
               >
                 <X className="size-3.5" />
@@ -522,8 +522,8 @@ export function QuotesView({ initialQuery = '' }: { initialQuery?: string }) {
           </div>
         </div>
 
-        <p className="mt-3 border-t border-slate-100 pt-3 text-[11px] font-medium text-slate-500">
-          <span className="font-bold text-slate-900">{filtered.length}</span>{' '}
+        <p className="mt-3 border-t border-border pt-3 text-[11px] font-medium text-muted-foreground">
+          <span className="font-bold text-foreground">{filtered.length}</span>{' '}
           {filtered.length === 1 ? 'cotización' : 'cotizaciones'}
           {hasFilters ? ' con los filtros aplicados' : ' registradas'}
         </p>
@@ -558,7 +558,7 @@ export function QuotesView({ initialQuery = '' }: { initialQuery?: string }) {
         />
       ) : (
         <>
-          <div className="hidden overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xs lg:block">
+          <div className="hidden overflow-hidden rounded-2xl border border-border/80 bg-card shadow-xs lg:block">
             <div className="overflow-x-auto scrollbar-light">
               <table className={tableClass}>
                 <thead>
@@ -572,16 +572,16 @@ export function QuotesView({ initialQuery = '' }: { initialQuery?: string }) {
                     <th scope="col" className="whitespace-nowrap px-5 py-3 text-right">Acciones</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-border">
                   {filtered.map((quote) => {
                     const totals = quoteTotals(quote.items, settings.igv)
                     return (
-                      <tr key={quote.id} className="group transition-colors hover:bg-slate-50/70">
+                      <tr key={quote.id} className="group transition-colors hover:bg-muted/70">
                         <td className="px-5 py-3">
-                          <p className="font-mono text-[11px] font-semibold text-slate-800">
+                          <p className="font-mono text-[11px] font-semibold text-foreground">
                             {quote.code}
                           </p>
-                          <p className="mt-0.5 text-[11px] text-slate-400">
+                          <p className="mt-0.5 text-[11px] text-muted-foreground">
                             {formatDate(quote.createdAt)}
                           </p>
                         </td>
@@ -593,34 +593,34 @@ export function QuotesView({ initialQuery = '' }: { initialQuery?: string }) {
                               className="size-9"
                             />
                             <div className="min-w-0">
-                              <p className="truncate text-[12.5px] font-semibold text-slate-900">
+                              <p className="truncate text-[12.5px] font-semibold text-foreground">
                                 {quote.clientCompany || quote.clientName}
                               </p>
-                              <p className="mt-0.5 truncate text-[11px] text-slate-400">
+                              <p className="mt-0.5 truncate text-[11px] text-muted-foreground">
                                 {quote.clientCompany ? quote.clientName : quote.clientEmail}
                               </p>
                             </div>
                           </div>
                         </td>
                         <td className="px-4 py-3">
-                          <p className="text-[12.5px] font-semibold text-slate-700">
+                          <p className="text-[12.5px] font-semibold text-foreground/80">
                             {quote.items.length}{' '}
                             {quote.items.length === 1 ? 'línea' : 'líneas'}
                           </p>
-                          <p className="mt-0.5 text-[11px] text-slate-400">
+                          <p className="mt-0.5 text-[11px] text-muted-foreground">
                             {formatNumber(quoteItemCount(quote.items))} unidades
                           </p>
                         </td>
                         <td className="px-4 py-3 text-right">
-                          <p className="whitespace-nowrap text-[12.5px] font-bold tabular-nums text-slate-900">
+                          <p className="whitespace-nowrap text-[12.5px] font-bold tabular-nums text-foreground">
                             {formatCurrency(totals.total, settings.currency)}
                           </p>
-                          <p className="mt-0.5 text-[10px] text-slate-400">IGV incluido</p>
+                          <p className="mt-0.5 text-[10px] text-muted-foreground">IGV incluido</p>
                         </td>
                         <td className="px-4 py-3">
                           <QuoteStatusBadge status={quote.status} />
                         </td>
-                        <td className="whitespace-nowrap px-4 py-3 text-[12.5px] text-slate-500">
+                        <td className="whitespace-nowrap px-4 py-3 text-[12.5px] text-muted-foreground">
                           {quote.validUntil ? formatDate(quote.validUntil) : 'Sin fecha'}
                         </td>
                         <td className="whitespace-nowrap px-5 py-3 text-right">
@@ -670,47 +670,47 @@ export function QuotesView({ initialQuery = '' }: { initialQuery?: string }) {
               return (
                 <article
                   key={quote.id}
-                  className="flex flex-col rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs"
+                  className="flex flex-col rounded-2xl border border-border/80 bg-card p-4 shadow-xs"
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="min-w-0">
-                      <p className="font-mono text-[10.5px] font-semibold text-slate-500">
+                      <p className="font-mono text-[10.5px] font-semibold text-muted-foreground">
                         {quote.code}
                       </p>
-                      <p className="mt-1 truncate text-[13px] font-bold text-slate-900">
+                      <p className="mt-1 truncate text-[13px] font-bold text-foreground">
                         {quote.clientCompany || quote.clientName}
                       </p>
-                      <p className="mt-0.5 truncate text-[10.5px] text-slate-400">
+                      <p className="mt-0.5 truncate text-[10.5px] text-muted-foreground">
                         {quote.clientCompany ? quote.clientName : quote.clientEmail}
                       </p>
                     </div>
                     <QuoteStatusBadge status={quote.status} />
                   </div>
 
-                  <div className="mt-3 flex items-end justify-between gap-2 rounded-xl bg-slate-50 px-3 py-2.5">
+                  <div className="mt-3 flex items-end justify-between gap-2 rounded-xl bg-muted px-3 py-2.5">
                     <div>
-                      <p className="text-[9.5px] font-bold uppercase tracking-wide text-slate-400">
+                      <p className="text-[9.5px] font-bold uppercase tracking-wide text-muted-foreground">
                         Total
                       </p>
-                      <p className="mt-0.5 text-sm font-bold tabular-nums text-slate-900">
+                      <p className="mt-0.5 text-sm font-bold tabular-nums text-foreground">
                         {formatCurrency(totals.total, settings.currency)}
                       </p>
                     </div>
-                    <p className="text-[10px] text-slate-400">
+                    <p className="text-[10px] text-muted-foreground">
                       {quote.items.length} {quote.items.length === 1 ? 'línea' : 'líneas'} ·{' '}
                       {formatNumber(quoteItemCount(quote.items))} uds.
                     </p>
                   </div>
 
-                  <p className="mt-2 text-[10px] text-slate-400">
+                  <p className="mt-2 text-[10px] text-muted-foreground">
                     Válida hasta {quote.validUntil ? formatDate(quote.validUntil) : '—'}
                   </p>
 
-                  <div className="mt-3 flex items-center gap-1.5 border-t border-slate-100 pt-3">
+                  <div className="mt-3 flex items-center gap-1.5 border-t border-border pt-3">
                     <button
                       type="button"
                       onClick={() => setViewerId(quote.id)}
-                      className="inline-flex h-8 flex-1 items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white text-[11px] font-semibold text-slate-700 transition hover:bg-slate-50"
+                      className="inline-flex h-8 flex-1 items-center justify-center gap-1.5 rounded-lg border border-border bg-card text-[11px] font-semibold text-foreground/80 transition hover:bg-muted"
                     >
                       <Eye className="size-3.5" aria-hidden="true" />
                       Ver
@@ -718,7 +718,7 @@ export function QuotesView({ initialQuery = '' }: { initialQuery?: string }) {
                     <button
                       type="button"
                       onClick={() => setPreviewId(quote.id)}
-                      className={cn(iconButton, 'border border-slate-200 bg-white')}
+                      className={cn(iconButton, 'border border-border bg-card')}
                       title="Vista previa del documento"
                       aria-label={`Vista previa del documento de ${quote.code}`}
                     >
@@ -727,7 +727,7 @@ export function QuotesView({ initialQuery = '' }: { initialQuery?: string }) {
                     <button
                       type="button"
                       onClick={() => setEditor({ mode: 'edit', id: quote.id })}
-                      className={cn(iconButton, 'border border-slate-200 bg-white')}
+                      className={cn(iconButton, 'border border-border bg-card')}
                       aria-label={`Editar cotización ${quote.code}`}
                     >
                       <Pencil className="size-3.5" />
@@ -737,7 +737,7 @@ export function QuotesView({ initialQuery = '' }: { initialQuery?: string }) {
                       onClick={() => setDeleteTarget(quote)}
                       className={cn(
                         iconButton,
-                        'border border-slate-200 bg-white hover:bg-red-50 hover:text-red-600'
+                        'border border-border bg-card hover:bg-red-500/10 hover:text-danger-ink'
                       )}
                       aria-label={`Eliminar cotización ${quote.code}`}
                     >
@@ -770,7 +770,7 @@ export function QuotesView({ initialQuery = '' }: { initialQuery?: string }) {
                   setViewerId(null)
                   setDeleteTarget(viewer)
                 }}
-                className="mr-auto inline-flex h-10 items-center gap-2 rounded-xl px-3 text-sm font-semibold text-red-600 transition hover:bg-red-50"
+                className="mr-auto inline-flex h-10 items-center gap-2 rounded-xl px-3 text-sm font-semibold text-danger-ink transition hover:bg-red-500/10"
               >
                 <Trash2 className="size-4" aria-hidden="true" />
                 Eliminar
@@ -812,54 +812,54 @@ export function QuotesView({ initialQuery = '' }: { initialQuery?: string }) {
           <div className="space-y-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <QuoteStatusBadge status={viewer.status} />
-              <p className="text-[10.5px] text-slate-500">
+              <p className="text-[10.5px] text-muted-foreground">
                 Válida hasta{' '}
-                <span className="font-semibold text-slate-700">
+                <span className="font-semibold text-foreground/80">
                   {viewer.validUntil ? formatDate(viewer.validUntil) : 'sin fecha'}
                 </span>
               </p>
             </div>
 
             <div className="grid gap-3 sm:grid-cols-2">
-              <div className="rounded-xl border border-slate-100 bg-slate-50/70 px-3 py-2.5">
-                <p className="text-[9.5px] font-bold uppercase tracking-[0.12em] text-slate-400">
+              <div className="rounded-xl border border-border bg-muted/70 px-3 py-2.5">
+                <p className="text-[9.5px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
                   Cliente
                 </p>
-                <p className="mt-1 text-xs font-semibold text-slate-900">
+                <p className="mt-1 text-xs font-semibold text-foreground">
                   {viewer.clientCompany || viewer.clientName}
                 </p>
-                <p className="mt-0.5 text-[11px] text-slate-500">
+                <p className="mt-0.5 text-[11px] text-muted-foreground">
                   {viewer.clientCompany ? viewer.clientName : 'Persona natural'}
                   {viewerClient ? ' · Cliente registrado' : ' · Sin registrar'}
                 </p>
               </div>
-              <div className="rounded-xl border border-slate-100 bg-slate-50/70 px-3 py-2.5">
-                <p className="text-[9.5px] font-bold uppercase tracking-[0.12em] text-slate-400">
+              <div className="rounded-xl border border-border bg-muted/70 px-3 py-2.5">
+                <p className="text-[9.5px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
                   Contacto
                 </p>
-                <p className="mt-1 truncate text-xs font-semibold text-[#5B21B6]">
+                <p className="mt-1 truncate text-xs font-semibold text-brand-ink">
                   {viewer.clientEmail}
                 </p>
-                <p className="mt-0.5 text-[11px] text-slate-500">
+                <p className="mt-0.5 text-[11px] text-muted-foreground">
                   {viewer.clientPhone || 'Sin teléfono'}
                 </p>
               </div>
             </div>
 
-            <div className="overflow-hidden rounded-xl border border-slate-200">
+            <div className="overflow-hidden rounded-xl border border-border">
               <table className="w-full text-left text-[11.5px]">
                 <thead>
-                  <tr className="border-b border-slate-100 bg-slate-50/70 text-[9.5px] font-bold uppercase tracking-[0.1em] text-slate-500">
+                  <tr className="border-b border-border bg-muted/70 text-[9.5px] font-bold uppercase tracking-[0.1em] text-muted-foreground">
                     <th scope="col" className="px-3 py-2">Producto</th>
                     <th scope="col" className="w-16 px-3 py-2 text-right">Cant.</th>
                     <th scope="col" className="w-24 px-3 py-2 text-right">P. unit.</th>
                     <th scope="col" className="w-28 px-3 py-2 text-right">Importe</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-border">
                   {viewer.items.length === 0 ? (
                     <tr>
-                      <td colSpan={4} className="px-3 py-6 text-center text-[11px] text-slate-400">
+                      <td colSpan={4} className="px-3 py-6 text-center text-[11px] text-muted-foreground">
                         Sin productos agregados todavía.
                       </td>
                     </tr>
@@ -867,18 +867,18 @@ export function QuotesView({ initialQuery = '' }: { initialQuery?: string }) {
                     viewer.items.map((item) => (
                       <tr key={item.id}>
                         <td className="px-3 py-2.5">
-                          <p className="font-semibold text-slate-800">{item.name}</p>
+                          <p className="font-semibold text-foreground">{item.name}</p>
                           {item.sku && (
-                            <p className="mt-0.5 font-mono text-[9.5px] text-slate-400">{item.sku}</p>
+                            <p className="mt-0.5 font-mono text-[9.5px] text-muted-foreground">{item.sku}</p>
                           )}
                         </td>
-                        <td className="px-3 py-2.5 text-right tabular-nums text-slate-700">
+                        <td className="px-3 py-2.5 text-right tabular-nums text-foreground/80">
                           {item.quantity}
                         </td>
-                        <td className="whitespace-nowrap px-3 py-2.5 text-right tabular-nums text-slate-700">
+                        <td className="whitespace-nowrap px-3 py-2.5 text-right tabular-nums text-foreground/80">
                           {formatCurrency(item.unitPrice, settings.currency)}
                         </td>
-                        <td className="whitespace-nowrap px-3 py-2.5 text-right font-semibold tabular-nums text-slate-900">
+                        <td className="whitespace-nowrap px-3 py-2.5 text-right font-semibold tabular-nums text-foreground">
                           {formatCurrency(item.quantity * item.unitPrice, settings.currency)}
                         </td>
                       </tr>
@@ -892,17 +892,17 @@ export function QuotesView({ initialQuery = '' }: { initialQuery?: string }) {
 
             {viewer.notes && (
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400">
+                <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
                   Observaciones
                 </p>
-                <p className="mt-1.5 whitespace-pre-line rounded-xl border border-slate-100 bg-slate-50/70 px-3 py-2.5 text-[11px] leading-relaxed text-slate-600">
+                <p className="mt-1.5 whitespace-pre-line rounded-xl border border-border bg-muted/70 px-3 py-2.5 text-[11px] leading-relaxed text-muted-foreground">
                   {viewer.notes}
                 </p>
               </div>
             )}
 
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400">
+              <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
                 Cambiar estado
               </p>
               <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
@@ -916,7 +916,7 @@ export function QuotesView({ initialQuery = '' }: { initialQuery?: string }) {
                       'h-9 rounded-lg border text-[11px] font-semibold transition',
                       viewer.status === item
                         ? 'border-slate-900 bg-slate-900 text-white'
-                        : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50'
+                        : 'border-border bg-card text-muted-foreground hover:border-input hover:bg-muted'
                     )}
                   >
                     {quoteStatusLabels[item]}
@@ -1061,7 +1061,7 @@ export function QuotesView({ initialQuery = '' }: { initialQuery?: string }) {
             </Field>
           </div>
 
-          <div className="rounded-2xl border border-slate-200 p-4">
+          <div className="rounded-2xl border border-border p-4">
             <div className="flex flex-wrap items-end gap-2">
               <div className="min-w-0 flex-1">
                 <Field label="Agregar producto" htmlFor="quote-product">
@@ -1105,14 +1105,14 @@ export function QuotesView({ initialQuery = '' }: { initialQuery?: string }) {
             </div>
 
             {errors.items && (
-              <p className="mt-2 text-[11px] font-medium text-red-600">{errors.items}</p>
+              <p className="mt-2 text-[11px] font-medium text-danger-ink">{errors.items}</p>
             )}
 
             <div className="mt-4 space-y-2">
               {draft.items.length === 0 ? (
-                <div className="rounded-xl border border-dashed border-slate-300 bg-slate-50/60 px-4 py-6 text-center">
-                  <p className="text-[11px] font-semibold text-slate-600">Sin productos</p>
-                  <p className="mt-1 text-[10.5px] text-slate-400">
+                <div className="rounded-xl border border-dashed border-input bg-muted/60 px-4 py-6 text-center">
+                  <p className="text-[11px] font-semibold text-muted-foreground">Sin productos</p>
+                  <p className="mt-1 text-[10.5px] text-muted-foreground">
                     Elige un producto del catálogo para agregar la primera línea.
                   </p>
                 </div>
@@ -1120,17 +1120,17 @@ export function QuotesView({ initialQuery = '' }: { initialQuery?: string }) {
                 draft.items.map((item) => (
                   <div
                     key={item.id}
-                    className="grid gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2.5 sm:grid-cols-[minmax(0,1fr)_80px_120px_auto] sm:items-center"
+                    className="grid gap-2 rounded-xl border border-border bg-card px-3 py-2.5 sm:grid-cols-[minmax(0,1fr)_80px_120px_auto] sm:items-center"
                   >
                     <div className="min-w-0">
-                      <p className="truncate text-[11.5px] font-semibold text-slate-800">
+                      <p className="truncate text-[11.5px] font-semibold text-foreground">
                         {item.name}
                       </p>
-                      <p className="mt-0.5 font-mono text-[9.5px] text-slate-400">
+                      <p className="mt-0.5 font-mono text-[9.5px] text-muted-foreground">
                         {item.sku ?? 'Sin SKU'}
                       </p>
                     </div>
-                    <label className="flex items-center gap-1.5 text-[10px] text-slate-400">
+                    <label className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
                       <span className="sm:hidden">Cant.</span>
                       <input
                         type="number"
@@ -1145,7 +1145,7 @@ export function QuotesView({ initialQuery = '' }: { initialQuery?: string }) {
                         className={cn(inputClass, 'h-8 w-full px-2 text-xs tabular-nums')}
                       />
                     </label>
-                    <label className="flex items-center gap-1.5 text-[10px] text-slate-400">
+                    <label className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
                       <span className="shrink-0 sm:hidden">P. unit.</span>
                       <input
                         type="number"
@@ -1162,13 +1162,13 @@ export function QuotesView({ initialQuery = '' }: { initialQuery?: string }) {
                       />
                     </label>
                     <div className="flex items-center justify-between gap-2 sm:justify-end">
-                      <p className="text-[11px] font-bold tabular-nums text-slate-900 sm:hidden">
+                      <p className="text-[11px] font-bold tabular-nums text-foreground sm:hidden">
                         {formatCurrency(item.quantity * item.unitPrice, settings.currency)}
                       </p>
                       <button
                         type="button"
                         onClick={() => removeLine(item.id)}
-                        className={cn(iconButton, 'hover:bg-red-50 hover:text-red-600')}
+                        className={cn(iconButton, 'hover:bg-red-500/10 hover:text-danger-ink')}
                         aria-label={`Quitar ${item.name}`}
                       >
                         <Trash2 className="size-3.5" />

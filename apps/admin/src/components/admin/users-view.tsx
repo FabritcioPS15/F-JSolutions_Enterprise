@@ -347,10 +347,10 @@ export function UsersView() {
         />
       </div>
 
-      <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs">
+      <div className="rounded-2xl border border-border/80 bg-card p-4 shadow-xs">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div className="relative w-full min-w-0 lg:flex-1">
-            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
@@ -362,7 +362,7 @@ export function UsersView() {
               <button
                 type="button"
                 onClick={() => setQuery('')}
-                className="absolute right-2.5 top-1/2 grid size-5 -translate-y-1/2 place-items-center rounded-md text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+                className="absolute right-2.5 top-1/2 grid size-5 -translate-y-1/2 place-items-center rounded-md text-muted-foreground transition hover:bg-muted hover:text-foreground/80"
                 aria-label="Limpiar búsqueda"
               >
                 <X className="size-3.5" />
@@ -411,7 +411,7 @@ export function UsersView() {
           </div>
         </div>
 
-        <p className="mt-3 text-[11px] font-medium text-slate-500">
+        <p className="mt-3 text-[11px] font-medium text-muted-foreground">
           {filtered.length === users.length
             ? `${formatNumber(users.length)} cuentas registradas`
             : `${formatNumber(filtered.length)} de ${formatNumber(users.length)} cuentas`}
@@ -458,37 +458,37 @@ export function UsersView() {
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-border">
                 {filtered.map((user) => (
-                  <tr key={user.id} className="transition hover:bg-slate-50/70">
+                  <tr key={user.id} className="transition hover:bg-muted/70">
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
-                        <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-[#F5F3FF] font-heading text-[12px] font-bold text-[#5B21B6]">
+                        <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-tint-brand font-heading text-[12px] font-bold text-brand-ink">
                           {userInitials(user)}
                         </span>
                         <div className="min-w-0">
                           <div className="flex items-center gap-1.5">
-                            <p className="truncate text-[13px] font-semibold text-slate-900">
+                            <p className="truncate text-[13px] font-semibold text-foreground">
                               {user.name}
                             </p>
                             {user.seeded && (
-                              <span className="shrink-0 rounded-full bg-[#F5F3FF] px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-[#5B21B6]">
+                              <span className="shrink-0 rounded-full bg-tint-brand px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-brand-ink">
                                 Cuenta base
                               </span>
                             )}
                           </div>
-                          <p className="truncate text-[11.5px] text-slate-500">{user.email}</p>
+                          <p className="truncate text-[11.5px] text-muted-foreground">{user.email}</p>
                           {user.phone && (
-                            <p className="truncate text-[11px] text-slate-400">{user.phone}</p>
+                            <p className="truncate text-[11px] text-muted-foreground">{user.phone}</p>
                           )}
                         </div>
                       </div>
                     </td>
                     <td className="px-4 py-3">
-                      <p className="text-[12.5px] font-semibold text-slate-800">
+                      <p className="text-[12.5px] font-semibold text-foreground">
                         {roleLabels[user.role]}
                       </p>
-                      <p className="text-[11px] text-slate-400">
+                      <p className="text-[11px] text-muted-foreground">
                         {formatNumber(roleSummary(user.role))} permisos
                       </p>
                     </td>
@@ -497,18 +497,18 @@ export function UsersView() {
                     </td>
                     <td className="px-4 py-3">
                       {user.twoFactorEnabled ? (
-                        <span className="inline-flex items-center gap-1.5 text-[11.5px] font-semibold text-emerald-600">
+                        <span className="inline-flex items-center gap-1.5 text-[11.5px] font-semibold text-success-ink">
                           <ShieldCheck className="size-3.5" aria-hidden="true" />
                           Activo
                         </span>
                       ) : (
-                        <span className="text-[11.5px] font-medium text-slate-400">Desactivado</span>
+                        <span className="text-[11.5px] font-medium text-muted-foreground">Desactivado</span>
                       )}
                     </td>
-                    <td className="px-4 py-3 text-[11.5px] text-slate-600">
+                    <td className="px-4 py-3 text-[11.5px] text-muted-foreground">
                       {user.lastLoginAt ? formatDateTime(user.lastLoginAt) : 'Nunca ingresó'}
                     </td>
-                    <td className="px-4 py-3 text-[11.5px] text-slate-600">
+                    <td className="px-4 py-3 text-[11.5px] text-muted-foreground">
                       {formatDate(user.createdAt)}
                     </td>
                     <td className="px-4 py-3 text-right">
@@ -567,43 +567,43 @@ export function UsersView() {
         <div className="-mx-4 overflow-x-auto px-4">
           <table className="w-full min-w-[900px] text-left">
             <thead>
-              <tr className="border-b border-slate-200">
-                <th className="py-2.5 pr-3 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400">
+              <tr className="border-b border-border">
+                <th className="py-2.5 pr-3 text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
                   Módulo
                 </th>
                 {roleOrder.map((item) => (
                   <th key={item} className="py-2.5 px-2 align-bottom">
-                    <p className="text-[11.5px] font-bold text-slate-800">{roleLabels[item]}</p>
-                    <p className="text-[10px] font-medium text-slate-400">
+                    <p className="text-[11.5px] font-bold text-foreground">{roleLabels[item]}</p>
+                    <p className="text-[10px] font-medium text-muted-foreground">
                       {formatNumber(roleSummary(item))} permisos
                     </p>
                   </th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-border">
               {matrix.map(({ module, grants }) => (
                 <tr key={module.key}>
                   <td className="py-2.5 pr-3">
-                    <p className="text-[12.5px] font-semibold text-slate-900">{module.label}</p>
-                    <p className="font-mono text-[10px] text-slate-400">{module.key}</p>
+                    <p className="text-[12.5px] font-semibold text-foreground">{module.label}</p>
+                    <p className="font-mono text-[10px] text-muted-foreground">{module.key}</p>
                   </td>
                   {grants.map((granted, index) => {
                     const roleKey = roleOrder[index]
                     return (
                       <td key={roleKey} className="py-2.5 px-2 align-top">
                         {module.actions.every((action) => granted.has(`${module.key}.${action}`)) ? (
-                          <span className="inline-flex rounded-full bg-emerald-50 px-2 py-0.5 text-[10.5px] font-semibold text-emerald-700 ring-1 ring-inset ring-emerald-200">
+                          <span className="inline-flex rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10.5px] font-semibold text-success-ink ring-1 ring-inset ring-emerald-500/30">
                             Todos
                           </span>
                         ) : granted.size === 0 ? (
-                          <span className="text-[11px] text-slate-300">—</span>
+                          <span className="text-[11px] text-muted-foreground/60">—</span>
                         ) : (
                           <div className="flex flex-wrap gap-1">
                             {[...granted].map((key) => (
                               <span
                                 key={key}
-                                className="rounded-md bg-slate-100 px-1.5 py-0.5 text-[10px] font-semibold text-slate-600"
+                                className="rounded-md bg-muted px-1.5 py-0.5 text-[10px] font-semibold text-muted-foreground"
                               >
                                 {permissionActionLabels[key.split('.')[1]] ?? key.split('.')[1]}
                               </span>
@@ -642,11 +642,11 @@ export function UsersView() {
           <div className="space-y-4">
             <div className="flex flex-wrap items-center gap-2">
               <StatusChip status={permissionsTarget.status} />
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-2.5 py-0.5 text-[10.5px] font-semibold text-slate-600">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-2.5 py-0.5 text-[10.5px] font-semibold text-muted-foreground">
                 <ShieldCheck className="size-3.5" aria-hidden="true" />
                 {permissionsTarget.twoFactorEnabled ? 'Doble factor activo' : 'Sin doble factor'}
               </span>
-              <span className="text-[11px] text-slate-500">{permissionsTarget.email}</span>
+              <span className="text-[11px] text-muted-foreground">{permissionsTarget.email}</span>
             </div>
 
             <div className="space-y-2.5">
@@ -659,11 +659,11 @@ export function UsersView() {
                 .map((module) => (
                   <div
                     key={module.key}
-                    className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-slate-100 bg-slate-50/70 px-3 py-2.5"
+                    className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border bg-muted/70 px-3 py-2.5"
                   >
                     <div className="min-w-0">
-                      <p className="text-[12.5px] font-semibold text-slate-900">{module.label}</p>
-                      <p className="font-mono text-[10px] text-slate-400">{module.key}</p>
+                      <p className="text-[12.5px] font-semibold text-foreground">{module.label}</p>
+                      <p className="font-mono text-[10px] text-muted-foreground">{module.key}</p>
                     </div>
                     <div className="flex flex-wrap gap-1">
                       {module.actions
@@ -673,7 +673,7 @@ export function UsersView() {
                         .map((action) => (
                           <span
                             key={action}
-                            className="rounded-md bg-white px-1.5 py-0.5 text-[10px] font-semibold text-[#5B21B6] ring-1 ring-inset ring-[#DDD6FE]"
+                            className="rounded-md bg-card px-1.5 py-0.5 text-[10px] font-semibold text-brand-ink ring-1 ring-inset ring-brand-ink/30"
                           >
                             {permissionActionLabels[action] ?? action}
                           </span>
@@ -800,10 +800,10 @@ export function UsersView() {
             </Field>
           </div>
 
-          <div className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-2.5">
+          <div className="flex items-center justify-between gap-3 rounded-xl border border-border bg-muted/70 px-3 py-2.5">
             <div className="min-w-0">
-              <p className="text-[12.5px] font-semibold text-slate-900">Doble factor</p>
-              <p className="text-[11px] leading-relaxed text-slate-500">
+              <p className="text-[12.5px] font-semibold text-foreground">Doble factor</p>
+              <p className="text-[11px] leading-relaxed text-muted-foreground">
                 Se guarda como preferencia de la cuenta. El segundo factor todavía no se exige en
                 el acceso local.
               </p>
@@ -815,12 +815,12 @@ export function UsersView() {
             />
           </div>
 
-          <div className="rounded-xl border border-slate-100 bg-[#F5F3FF] px-3 py-2.5">
-            <p className="flex items-center gap-2 text-[11.5px] font-semibold text-[#5B21B6]">
+          <div className="rounded-xl border border-border bg-tint-brand px-3 py-2.5">
+            <p className="flex items-center gap-2 text-[11.5px] font-semibold text-brand-ink">
               <UserRound className="size-3.5" aria-hidden="true" />
               {roleLabels[draft.role]} · {formatNumber(roleSummary(draft.role))} permisos
             </p>
-            <p className="mt-1 text-[11px] leading-relaxed text-[#6D28D9]/80">
+            <p className="mt-1 text-[11px] leading-relaxed text-brand-ink/80">
               {draft.status === 'invited'
                 ? 'La cuenta queda como invitada hasta que la persona ingrese por primera vez.'
                 : draft.status === 'disabled'

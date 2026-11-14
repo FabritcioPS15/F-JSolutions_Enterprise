@@ -57,6 +57,7 @@ import {
   type SiteSearchType,
 } from '@/lib/site-search'
 import { mainNav, storeCategories, featuredBrands, itServicesMenu, infrastructureMenu, softwareDevMenu, companyMenu } from '@/lib/navigation'
+import { ThemeToggle } from '@/components/theme/theme-toggle'
 
 // ─── Types ───────────────────────────────────────────────────────────────────────────────
 
@@ -151,10 +152,10 @@ function MobileAccordion({
     <div
       className={`relative overflow-hidden rounded-2xl border transition-all duration-300 ${
         isOpen
-          ? 'border-[#2563EB]/45 bg-white shadow-[0_18px_40px_-32px_rgba(37,99,235,0.65)]'
+          ? 'border-[#2563EB]/45 bg-card shadow-[0_18px_40px_-32px_rgba(37,99,235,0.65)]'
           : active
-          ? 'border-[#2563EB]/30 bg-[#EFF6FF]/25'
-          : 'border-[#E2E8F0] bg-white'
+          ? 'border-[#2563EB]/30 bg-tint-blue/25'
+          : 'border-border bg-card'
       }`}
     >
       <button
@@ -169,8 +170,8 @@ function MobileAccordion({
               isOpen
                 ? 'border-[#2563EB] bg-[#2563EB] text-white'
                 : active
-                ? 'border-[#2563EB]/25 bg-[#EFF6FF] text-[#2563EB]'
-                : 'border-[#E2E8F0] bg-[#F8FAFC] text-[#64748B]'
+                ? 'border-[#2563EB]/25 bg-tint-blue text-blue-ink'
+                : 'border-border bg-muted text-muted-foreground'
             }`}
           >
             <Icon className="size-4" />
@@ -181,19 +182,19 @@ function MobileAccordion({
           <span className="flex items-center gap-2">
             <span
               className={`truncate text-sm font-semibold transition-colors duration-200 ${
-                isOpen || active ? 'text-[#2563EB]' : 'text-[#0F172A]'
+                isOpen || active ? 'text-blue-ink' : 'text-foreground'
               }`}
             >
               {label}
             </span>
             {active && !isOpen && <span className="size-1.5 shrink-0 rounded-full bg-[#2563EB]" />}
             {badge && (
-              <span className="shrink-0 rounded-full bg-[#EFF6FF] px-2 py-0.5 text-[10px] font-bold text-[#2563EB]">
+              <span className="shrink-0 rounded-full bg-tint-blue px-2 py-0.5 text-[10px] font-bold text-blue-ink">
                 {badge}
               </span>
             )}
           </span>
-          <span className="mt-0.5 block truncate text-[11px] text-[#94A3B8]">
+          <span className="mt-0.5 block truncate text-[11px] text-muted-foreground">
             {isOpen ? 'Toca para cerrar' : `${count ?? 0} opciones`}
           </span>
         </span>
@@ -202,7 +203,7 @@ function MobileAccordion({
           className={`grid size-7 shrink-0 place-items-center rounded-full border transition-all duration-300 ${
             isOpen
               ? 'rotate-180 border-[#2563EB] bg-[#2563EB] text-white'
-              : 'border-[#E2E8F0] bg-white text-[#64748B]'
+              : 'border-border bg-card text-muted-foreground'
           }`}
         >
           <ChevronDown className="size-3.5" />
@@ -216,7 +217,7 @@ function MobileAccordion({
         inert={!isOpen}
       >
         <div className="overflow-hidden">
-          <div className="border-t border-[#F1F5F9] bg-[#F8FAFC]/70 p-2.5">{children}</div>
+          <div className="border-t border-border bg-muted/70 p-2.5">{children}</div>
         </div>
       </div>
     </div>
@@ -242,32 +243,32 @@ function MobileStoreMenu({ onClose }: { onClose: () => void }) {
           <div
             key={category.id}
             className={`rounded-xl transition-colors ${
-              isOpen ? 'border border-[#E2E8F0] bg-white shadow-xs' : 'hover:bg-white/80'
+              isOpen ? 'border border-border bg-card shadow-xs' : 'hover:bg-card/80'
             }`}
           >
             <button
               type="button"
               onClick={() => toggleCategory(category.id)}
               aria-expanded={isOpen}
-              className="flex w-full items-center gap-2.5 px-2.5 py-2.5 text-left text-sm font-semibold text-[#0F172A]"
+              className="flex w-full items-center gap-2.5 px-2.5 py-2.5 text-left text-sm font-semibold text-foreground"
             >
               <span
                 className={`flex size-8 shrink-0 items-center justify-center rounded-lg border transition-colors ${
                   isOpen
-                    ? 'border-[#2563EB]/25 bg-[#EFF6FF] text-[#2563EB]'
-                    : 'border-[#E2E8F0] bg-white text-[#64748B]'
+                    ? 'border-[#2563EB]/25 bg-tint-blue text-blue-ink'
+                    : 'border-border bg-card text-muted-foreground'
                 }`}
               >
                 <Icon className="size-3.5" />
               </span>
-              <span className={`flex-1 truncate ${isOpen ? 'text-[#2563EB]' : ''}`}>
+              <span className={`flex-1 truncate ${isOpen ? 'text-blue-ink' : ''}`}>
                 {category.label}
               </span>
               <span
                 className={`grid size-6 shrink-0 place-items-center rounded-full border transition-all duration-300 ${
                   isOpen
                     ? 'rotate-180 border-[#2563EB] bg-[#2563EB] text-white'
-                    : 'border-[#E2E8F0] bg-white text-[#64748B]'
+                    : 'border-border bg-card text-muted-foreground'
                 }`}
               >
                 <ChevronDown className="size-3" />
@@ -281,11 +282,11 @@ function MobileStoreMenu({ onClose }: { onClose: () => void }) {
               inert={!isOpen}
             >
               <div className="overflow-hidden">
-                <div className="border-t border-[#F1F5F9] px-3 pb-3 pt-2">
+                <div className="border-t border-border px-3 pb-3 pt-2">
                   <Link
                     href={category.items[0]?.href || '/productos'}
                     onClick={onClose}
-                    className="mb-2 flex items-center justify-between rounded-md bg-[#EFF6FF] px-2.5 py-1.5 text-xs font-bold text-[#2563EB] transition-colors hover:bg-[#DBEAFE]"
+                    className="mb-2 flex items-center justify-between rounded-md bg-tint-blue px-2.5 py-1.5 text-xs font-bold text-blue-ink transition-colors hover:bg-blue-ink/15"
                   >
                     <span>Ver todo en {category.label}</span>
                     <ArrowRight className="size-3" />
@@ -297,7 +298,7 @@ function MobileStoreMenu({ onClose }: { onClose: () => void }) {
                         <Link
                           href={item.href}
                           onClick={onClose}
-                          className="block rounded-md px-1.5 py-1 text-xs font-medium text-[#334155] transition-colors hover:text-[#2563EB]"
+                          className="block rounded-md px-1.5 py-1 text-xs font-medium text-foreground/85 transition-colors hover:text-blue-ink"
                         >
                           {item.label}
                         </Link>
@@ -309,7 +310,7 @@ function MobileStoreMenu({ onClose }: { onClose: () => void }) {
                                 key={subItem.label}
                                 href={subItem.href}
                                 onClick={onClose}
-                                className="rounded-full border border-[#E2E8F0] bg-white px-2 py-0.5 text-[10px] font-medium text-[#64748B] transition-colors hover:border-[#2563EB]/40 hover:text-[#2563EB]"
+                                className="rounded-full border border-border bg-card px-2 py-0.5 text-[10px] font-medium text-muted-foreground transition-colors hover:border-[#2563EB]/40 hover:text-blue-ink"
                               >
                                 {subItem.label}
                               </Link>
@@ -328,8 +329,8 @@ function MobileStoreMenu({ onClose }: { onClose: () => void }) {
 
       {/* Marcas destacadas en Tienda Móvil */}
       <div className="pt-1.5">
-        <div className="rounded-lg border border-[#E2E8F0] bg-white p-2.5">
-          <p className="mb-1.5 text-[10px] font-bold uppercase tracking-wider text-[#64748B]">
+        <div className="rounded-lg border border-border bg-card p-2.5">
+          <p className="mb-1.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
             Marcas destacadas
           </p>
           <div className="flex flex-wrap gap-1">
@@ -338,7 +339,7 @@ function MobileStoreMenu({ onClose }: { onClose: () => void }) {
                 key={brand.name}
                 href={brand.href}
                 onClick={onClose}
-                className="rounded-md border border-[#E2E8F0] bg-[#F8FAFC] px-2 py-1 text-[11px] font-semibold text-[#334155] transition-colors hover:border-[#2563EB]/40 hover:bg-[#EFF6FF] hover:text-[#2563EB]"
+                className="rounded-md border border-border bg-muted px-2 py-1 text-[11px] font-semibold text-foreground/85 transition-colors hover:border-[#2563EB]/40 hover:bg-tint-blue hover:text-blue-ink"
               >
                 {brand.name}
               </Link>
@@ -373,12 +374,12 @@ function StoreMegaMenu({ onClose }: { onClose: () => void }) {
       ref={ref}
       role="dialog"
       aria-label="Categorías de productos"
-      className="absolute left-0 top-[calc(100%+4px)] z-[60] w-[980px] max-w-[calc(100vw-10rem)] overflow-hidden rounded-xl border border-[#E2E8F0] bg-white shadow-[0_12px_40px_rgba(15,23,42,0.12)] animate-in fade-in slide-in-from-top-2 duration-200"
+      className="absolute left-0 top-[calc(100%+4px)] z-[60] w-[980px] max-w-[calc(100vw-10rem)] overflow-hidden rounded-xl border border-border bg-card shadow-[0_12px_40px_rgba(15,23,42,0.12)] animate-in fade-in slide-in-from-top-2 duration-200"
     >
       <div className="flex">
         {/* Categorías principales */}
-        <div className="w-[264px] shrink-0 border-r border-[#F1F5F9] p-4">
-          <h3 className="mb-2 px-2 text-[10px] font-bold uppercase tracking-[0.14em] text-[#64748B]">
+        <div className="w-[264px] shrink-0 border-r border-border p-4">
+          <h3 className="mb-2 px-2 text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
             Categorías
           </h3>
           <div className="space-y-0.5">
@@ -395,28 +396,28 @@ function StoreMegaMenu({ onClose }: { onClose: () => void }) {
                   onClick={onClose}
                   aria-current={isActive ? 'true' : undefined}
                   className={`group flex items-center gap-2.5 rounded-lg px-2.5 py-2 transition-colors ${
-                    isActive ? 'bg-[#EFF6FF]' : 'hover:bg-[#F8FAFC]'
+                    isActive ? 'bg-tint-blue' : 'hover:bg-muted'
                   }`}
                 >
                   <span
                     className={`flex size-7 shrink-0 items-center justify-center rounded-md border transition-colors ${
                       isActive
-                        ? 'border-[#2563EB]/20 bg-white text-[#2563EB]'
-                        : 'border-[#E2E8F0] bg-white text-[#64748B] group-hover:border-[#2563EB]/20 group-hover:text-[#2563EB]'
+                        ? 'border-[#2563EB]/20 bg-card text-blue-ink'
+                        : 'border-border bg-card text-muted-foreground group-hover:border-[#2563EB]/20 group-hover:text-blue-ink'
                     }`}
                   >
                     <Icon className="size-3.5" />
                   </span>
                   <span
                     className={`min-w-0 flex-1 truncate text-sm font-semibold ${
-                      isActive ? 'text-[#2563EB]' : 'text-[#0F172A] group-hover:text-[#2563EB]'
+                      isActive ? 'text-blue-ink' : 'text-foreground group-hover:text-blue-ink'
                     }`}
                   >
                     {category.label}
                   </span>
                   <ChevronRight
                     className={`size-3.5 shrink-0 transition-colors ${
-                      isActive ? 'text-[#2563EB]' : 'text-[#94A3B8] group-hover:text-[#2563EB]'
+                      isActive ? 'text-blue-ink' : 'text-muted-foreground group-hover:text-blue-ink'
                     }`}
                   />
                 </Link>
@@ -428,13 +429,13 @@ function StoreMegaMenu({ onClose }: { onClose: () => void }) {
         {/* Subcategorías de la categoría activa */}
         <div className="min-w-0 flex-1 p-5">
           <div className="flex items-center justify-between gap-3">
-            <h3 className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#64748B]">
+            <h3 className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
               {active.label}
             </h3>
             <Link
               href={active.items[0]?.href || '/productos'}
               onClick={onClose}
-              className="text-[11px] font-bold text-[#2563EB] transition-colors hover:text-[#1D4ED8]"
+              className="text-[11px] font-bold text-blue-ink transition-colors hover:text-blue-ink"
             >
               Ver categoría
             </Link>
@@ -446,7 +447,7 @@ function StoreMegaMenu({ onClose }: { onClose: () => void }) {
                 <Link
                   href={item.href}
                   onClick={onClose}
-                  className="block text-sm font-semibold text-[#0F172A] transition-colors hover:text-[#2563EB]"
+                  className="block text-sm font-semibold text-foreground transition-colors hover:text-blue-ink"
                 >
                   {item.label}
                 </Link>
@@ -457,7 +458,7 @@ function StoreMegaMenu({ onClose }: { onClose: () => void }) {
                         <Link
                           href={subItem.href}
                           onClick={onClose}
-                          className="block rounded-md px-2 py-1 text-xs text-[#64748B] transition-colors hover:bg-[#F8FAFC] hover:text-[#2563EB]"
+                          className="block rounded-md px-2 py-1 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-blue-ink"
                         >
                           {subItem.label}
                         </Link>
@@ -471,8 +472,8 @@ function StoreMegaMenu({ onClose }: { onClose: () => void }) {
         </div>
 
         {/* Sidebar: Marcas destacadas */}
-        <div className="w-[190px] shrink-0 border-l border-[#F1F5F9] p-4">
-          <h3 className="mb-2 px-2 text-[10px] font-bold uppercase tracking-[0.14em] text-[#64748B]">
+        <div className="w-[190px] shrink-0 border-l border-border p-4">
+          <h3 className="mb-2 px-2 text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
             Marcas
           </h3>
           <div className="space-y-0.5">
@@ -481,18 +482,18 @@ function StoreMegaMenu({ onClose }: { onClose: () => void }) {
                 key={brand.name}
                 href={brand.href}
                 onClick={onClose}
-                className="block rounded-md px-2 py-1.5 text-xs font-medium text-[#475569] transition-colors hover:bg-[#F8FAFC] hover:text-[#2563EB]"
+                className="block rounded-md px-2 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-blue-ink"
               >
                 {brand.name}
               </Link>
             ))}
           </div>
 
-          <div className="mt-3 border-t border-[#F1F5F9] pt-3">
+          <div className="mt-3 border-t border-border pt-3">
             <Link
               href="/productos"
               onClick={onClose}
-              className="flex items-center gap-1.5 px-2 text-xs font-bold text-[#2563EB] transition-colors hover:text-[#1D4ED8]"
+              className="flex items-center gap-1.5 px-2 text-xs font-bold text-blue-ink transition-colors hover:text-blue-ink"
             >
               Ver todo
               <ArrowRight className="size-3.5" />
@@ -521,14 +522,14 @@ function CompactDropdown({ items, onClose }: { items: Array<{ label: string; hre
     <div
       ref={ref}
       role="dialog"
-      className="absolute left-0 top-[calc(100%+4px)] z-[60] w-80 rounded-xl border border-[#E2E8F0] bg-white shadow-[0_12px_40px_rgba(15,23,42,0.12)] animate-in fade-in slide-in-from-top-2 duration-200"
+      className="absolute left-0 top-[calc(100%+4px)] z-[60] w-80 rounded-xl border border-border bg-card shadow-[0_12px_40px_rgba(15,23,42,0.12)] animate-in fade-in slide-in-from-top-2 duration-200"
     >
       <div className="p-2">
         {items.map((item, index) => {
           const active = isItemActive(item.href)
           const isGeneral = item.variant === 'general'
           return (
-            <div key={index} className={isGeneral ? 'mt-2 border-t border-[#F1F5F9] pt-2' : undefined}>
+            <div key={index} className={isGeneral ? 'mt-2 border-t border-border pt-2' : undefined}>
               <Link
                 href={item.href}
                 onClick={onClose}
@@ -536,11 +537,11 @@ function CompactDropdown({ items, onClose }: { items: Array<{ label: string; hre
                 className={`flex items-center gap-3 rounded-lg px-4 py-3 text-sm transition-colors ${
                   isGeneral
                     ? active
-                      ? 'bg-[#4C1D95] text-white ring-2 ring-[#5B21B6]/25'
-                      : 'bg-[#5B21B6] text-white shadow-[0_8px_20px_-12px_rgba(91,33,182,0.8)] hover:bg-[#4C1D95]'
+                      ? 'bg-[#1D4ED8] text-white ring-2 ring-[#2563EB]/25'
+                      : 'bg-[#2563EB] text-white shadow-[0_8px_20px_-12px_rgba(37,99,235,0.8)] hover:bg-[#1D4ED8]'
                     : active
-                      ? 'bg-[#EFF6FF] text-[#2563EB]'
-                      : 'text-[#0F172A] hover:bg-[#F8FAFC] hover:text-[#2563EB]'
+                      ? 'bg-tint-blue text-blue-ink'
+                      : 'text-foreground hover:bg-muted hover:text-blue-ink'
                 }`}
               >
                 <span className="min-w-0 flex-1">
@@ -548,7 +549,7 @@ function CompactDropdown({ items, onClose }: { items: Array<{ label: string; hre
                   {item.desc && !isGeneral && (
                     <span
                       className={`mt-0.5 block text-xs ${
-                        active ? 'text-[#1D4ED8]' : 'text-[#64748B]'
+                        active ? 'text-blue-ink' : 'text-muted-foreground'
                       }`}
                     >
                       {item.desc}
@@ -575,7 +576,7 @@ function ActiveIndicator() {
   return (
     <span
       aria-hidden="true"
-      className="pointer-events-none absolute inset-x-3 bottom-0.5 h-[2px] rounded-full bg-gradient-to-r from-[#2563EB] via-[#4F46E5] to-[#7C3AED]"
+      className="pointer-events-none absolute inset-x-3 bottom-0.5 h-[2px] rounded-full bg-gradient-to-r from-[#2563EB] via-[#4F46E5] to-[#2563EB]"
     />
   )
 }
@@ -810,7 +811,7 @@ function SearchAutocomplete({
         <span className="sr-only">Buscar en todo el sitio</span>
         <Search
           className={`pointer-events-none absolute top-1/2 size-4 -translate-y-1/2 transition-colors ${
-            focused ? 'text-[#2563EB]' : 'text-[#94A3B8]'
+            focused ? 'text-blue-ink' : 'text-muted-foreground'
           } ${isDesktop ? 'left-3.5' : 'left-3'}`}
         />
         <input
@@ -827,10 +828,10 @@ function SearchAutocomplete({
           aria-autocomplete="list"
           aria-controls={listboxId}
           aria-activedescendant={activeIndex >= 0 ? optionId(activeIndex) : undefined}
-          className={`w-full rounded-lg border bg-[#F8FAFC] text-sm text-[#0F172A] outline-none transition placeholder:text-[#94A3B8] focus:border-[#2563EB] focus:bg-white focus:ring-2 focus:ring-[#2563EB]/15 ${
+          className={`w-full rounded-lg border bg-muted text-sm text-foreground outline-none transition placeholder:text-muted-foreground focus:border-[#2563EB] focus:bg-card focus:ring-2 focus:ring-[#2563EB]/15 ${
             isDesktop
-              ? 'h-11 border-[#E2E8F0] pl-10 pr-28'
-              : 'h-11 rounded-xl border-[#E2E8F0] pl-9 pr-[5.75rem] shadow-xs'
+              ? 'h-11 border-border pl-10 pr-28'
+              : 'h-11 rounded-xl border-border pl-9 pr-[5.75rem] shadow-xs'
           }`}
         />
         {query && (
@@ -841,7 +842,7 @@ function SearchAutocomplete({
               inputRef.current?.focus()
             }}
             aria-label="Limpiar búsqueda"
-            className={`absolute top-1/2 grid size-5 -translate-y-1/2 place-items-center rounded-full text-[#94A3B8] transition-colors hover:bg-[#E2E8F0] hover:text-[#475569] ${
+            className={`absolute top-1/2 grid size-5 -translate-y-1/2 place-items-center rounded-full text-muted-foreground transition-colors hover:bg-border hover:text-muted-foreground ${
               isDesktop ? 'right-20' : 'right-[4.4rem]'
             }`}
           >
@@ -866,7 +867,7 @@ function SearchAutocomplete({
           id={listboxId}
           role="listbox"
           ref={listRef}
-          className={`overflow-y-auto overscroll-contain rounded-xl border border-[#E2E8F0] bg-white shadow-[0_12px_40px_rgba(15,23,42,0.12)] animate-in fade-in slide-in-from-top-2 duration-150 ${
+          className={`overflow-y-auto overscroll-contain rounded-xl border border-border bg-card shadow-[0_12px_40px_rgba(15,23,42,0.12)] animate-in fade-in slide-in-from-top-2 duration-150 ${
             isDesktop
               ? 'absolute left-0 right-0 top-full z-[80] mt-1.5 max-h-[420px]'
               : 'relative z-10 mt-2 max-h-[min(52vh,420px)] shadow-[0_18px_36px_-28px_rgba(15,23,42,0.35)]'
@@ -874,10 +875,10 @@ function SearchAutocomplete({
         >
           {/* Section label */}
           {query.trim() && (
-            <div className="flex items-center gap-1.5 border-b border-[#F1F5F9] px-3.5 pb-1.5 pt-3">
-              <Sparkles className="size-3 text-[#2563EB]" />
-              <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#94A3B8]">Sugerencias</span>
-              <span className="ml-auto rounded-full bg-[#EFF6FF] px-1.5 py-0.5 text-[9px] font-bold text-[#2563EB]">
+            <div className="flex items-center gap-1.5 border-b border-border px-3.5 pb-1.5 pt-3">
+              <Sparkles className="size-3 text-blue-ink" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">Sugerencias</span>
+              <span className="ml-auto rounded-full bg-tint-blue px-1.5 py-0.5 text-[9px] font-bold text-blue-ink">
                 {suggestions.length}
               </span>
             </div>
@@ -885,17 +886,17 @@ function SearchAutocomplete({
 
           {query.trim() && suggestions.length === 0 && (
             <div className="px-3.5 pb-3.5 pt-2.5">
-              <p className="text-sm font-semibold text-[#0F172A]">
+              <p className="text-sm font-semibold text-foreground">
                 Sin resultados para &quot;{query.trim()}&quot;
               </p>
-              <p className="mt-1 text-xs text-[#64748B]">Prueba con alguna de estas búsquedas:</p>
+              <p className="mt-1 text-xs text-muted-foreground">Prueba con alguna de estas búsquedas:</p>
               <div className="mt-2.5 flex flex-wrap gap-1.5">
                 {popularSearches.map((term) => (
                   <button
                     key={term}
                     type="button"
                     onClick={() => setQuery(term)}
-                    className="rounded-full border border-[#E2E8F0] bg-[#F8FAFC] px-2.5 py-1 text-[11px] font-semibold text-[#475569] transition hover:border-[#2563EB]/40 hover:text-[#2563EB]"
+                    className="rounded-full border border-border bg-muted px-2.5 py-1 text-[11px] font-semibold text-muted-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink"
                   >
                     {term}
                   </button>
@@ -914,8 +915,8 @@ function SearchAutocomplete({
                 <div key={result.id}>
                   {showGroupLabel && (
                     <div className="flex items-center gap-1.5 px-3 pb-1 pt-2.5">
-                      <GroupIcon className="size-3 text-[#94A3B8]" aria-hidden="true" />
-                      <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#94A3B8]">
+                      <GroupIcon className="size-3 text-muted-foreground" aria-hidden="true" />
+                      <span className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
                         {result.group}
                       </span>
                     </div>
@@ -930,12 +931,12 @@ function SearchAutocomplete({
                     onMouseEnter={() => setActiveIndex(index)}
                     onClick={() => navigate(result)}
                     className={`flex w-full cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors ${
-                      activeIndex === index ? 'bg-[#EFF6FF]' : 'hover:bg-[#F8FAFC]'
+                      activeIndex === index ? 'bg-tint-blue' : 'hover:bg-muted'
                     }`}
                   >
                     {/* Icon / image */}
                     {result.type === 'product' && result.image ? (
-                      <div className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-[#E2E8F0] bg-white">
+                      <div className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-card">
                         <img
                           src={result.image}
                           alt=""
@@ -947,8 +948,8 @@ function SearchAutocomplete({
                       <div
                         className={`flex size-9 shrink-0 items-center justify-center rounded-lg border ${
                           result.type === 'category' || result.type === 'system'
-                            ? 'border-[#DBEAFE] bg-[#EFF6FF] text-[#2563EB]'
-                            : 'border-[#E2E8F0] bg-[#F8FAFC] text-[#64748B]'
+                            ? 'border-blue-ink/25 bg-tint-blue text-blue-ink'
+                            : 'border-border bg-muted text-muted-foreground'
                         }`}
                       >
                         <TypeIcon className="size-3.5" aria-hidden="true" />
@@ -958,12 +959,12 @@ function SearchAutocomplete({
                     {/* Text */}
                     <div className="min-w-0 flex-1">
                       <p className={`truncate text-sm font-medium ${
-                        activeIndex === index ? 'text-[#2563EB]' : 'text-[#0F172A]'
+                        activeIndex === index ? 'text-blue-ink' : 'text-foreground'
                       }`}>
                         {result.label}
                       </p>
                       {result.sublabel && (
-                        <p className="mt-0.5 truncate text-[11px] text-[#94A3B8]">
+                        <p className="mt-0.5 truncate text-[11px] text-muted-foreground">
                           {result.sublabel}
                         </p>
                       )}
@@ -974,14 +975,14 @@ function SearchAutocomplete({
                       <button
                         type="button"
                         onClick={(e) => handleDeleteRecent(result.label, e)}
-                        className="shrink-0 rounded-md p-1 text-[#CBD5E1] transition-colors hover:bg-red-50 hover:text-red-400"
+                        className="shrink-0 rounded-md p-1 text-muted-foreground/60 transition-colors hover:bg-red-500/10 hover:text-red-400"
                         aria-label={`Eliminar "${result.label}" de recientes`}
                       >
                         <X className="size-3" />
                       </button>
                     ) : (
                       <ArrowUpRight className={`size-3.5 shrink-0 ${
-                        activeIndex === index ? 'text-[#2563EB]' : 'text-[#CBD5E1]'
+                        activeIndex === index ? 'text-blue-ink' : 'text-muted-foreground/60'
                       }`} />
                     )}
                   </div>
@@ -992,7 +993,7 @@ function SearchAutocomplete({
 
           {/* Footer */}
           {query.trim() && (
-            <div className="border-t border-[#F1F5F9] px-3.5 py-2.5">
+            <div className="border-t border-border px-3.5 py-2.5">
               <button
                 type="button"
                 onClick={() => {
@@ -1002,7 +1003,7 @@ function SearchAutocomplete({
                   onNavigate?.()
                   router.push(`/buscar?q=${encodeURIComponent(query.trim())}`)
                 }}
-                className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-xs font-semibold text-[#2563EB] transition-colors hover:bg-[#EFF6FF]"
+                className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-xs font-semibold text-blue-ink transition-colors hover:bg-tint-blue"
               >
                 <Search className="size-3.5" />
                 Ver todos los resultados para &quot;{query.trim()}&quot;
@@ -1012,17 +1013,17 @@ function SearchAutocomplete({
           )}
 
           {/* Keyboard hint */}
-          <div className="hidden items-center gap-3 border-t border-[#F1F5F9] px-3.5 py-2 md:flex">
-            <span className="flex items-center gap-1 text-[10px] text-[#94A3B8]">
-              <kbd className="rounded border border-[#E2E8F0] bg-[#F8FAFC] px-1 py-0.5 font-mono text-[9px]">↑↓</kbd>
+          <div className="hidden items-center gap-3 border-t border-border px-3.5 py-2 md:flex">
+            <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
+              <kbd className="rounded border border-border bg-muted px-1 py-0.5 font-mono text-[9px]">↑↓</kbd>
               navegar
             </span>
-            <span className="flex items-center gap-1 text-[10px] text-[#94A3B8]">
-              <kbd className="rounded border border-[#E2E8F0] bg-[#F8FAFC] px-1 py-0.5 font-mono text-[9px]">Enter</kbd>
+            <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
+              <kbd className="rounded border border-border bg-muted px-1 py-0.5 font-mono text-[9px]">Enter</kbd>
               seleccionar
             </span>
-            <span className="flex items-center gap-1 text-[10px] text-[#94A3B8]">
-              <kbd className="rounded border border-[#E2E8F0] bg-[#F8FAFC] px-1 py-0.5 font-mono text-[9px]">Esc</kbd>
+            <span className="flex items-center gap-1 text-[10px] text-muted-foreground">
+              <kbd className="rounded border border-border bg-muted px-1 py-0.5 font-mono text-[9px]">Esc</kbd>
               cerrar
             </span>
           </div>
@@ -1182,10 +1183,10 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
   return (
     <>
     <header
-      className={`sticky top-0 z-50 w-full bg-white transition-all duration-200 ${
+      className={`sticky top-0 z-50 w-full bg-card transition-all duration-200 ${
         scrolled
-          ? 'border-b border-slate-200/90 shadow-md shadow-slate-900/5'
-          : 'border-b border-[#F1F5F9]'
+          ? 'border-b border-border/90 shadow-md shadow-slate-900/5'
+          : 'border-b border-border'
       }`}
     >
       {/* Primera franja: Logo, enlaces corporativos, buscador, acciones */}
@@ -1203,7 +1204,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
               <img
                 src="/images/logos/logo.png"
                 alt="F&J Systems"
-                className="h-12 sm:h-14 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
+                className="h-12 sm:h-14 w-auto object-contain transition-transform duration-200 group-hover:scale-105 dark:brightness-0 dark:invert"
               />
             </Link>
 
@@ -1220,13 +1221,14 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
 
             {/* Acciones del usuario */}
             <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
+              <ThemeToggle />
               <Link
                 href="/mi-cuenta"
                 aria-current={isAccountActive ? 'page' : undefined}
                 className={`hidden items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold transition lg:flex ${
                   isAccountActive
-                    ? 'bg-[#EFF6FF] text-[#2563EB]'
-                    : 'text-[#475569] hover:bg-[#F8FAFC] hover:text-[#2563EB]'
+                    ? 'bg-tint-blue text-blue-ink'
+                    : 'text-muted-foreground hover:bg-muted hover:text-blue-ink'
                 }`}
               >
                 <UserRound className="size-4" />
@@ -1239,8 +1241,8 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                 aria-current={isQuotePageActive ? 'page' : undefined}
                 className={`relative flex items-center gap-1.5 sm:gap-2 rounded-lg px-2 sm:px-3 py-2 text-sm font-semibold transition ${
                   isQuotePageActive
-                    ? 'bg-[#EFF6FF] text-[#2563EB]'
-                    : 'text-[#475569] hover:bg-[#F8FAFC] hover:text-[#2563EB]'
+                    ? 'bg-tint-blue text-blue-ink'
+                    : 'text-muted-foreground hover:bg-muted hover:text-blue-ink'
                 }`}
                 aria-label={`Abrir cotización, ${quoteCount} productos`}
               >
@@ -1258,7 +1260,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                 onClick={() => (menuOpen ? closeMobileMenu() : setMenuOpen(true))}
                 aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
                 aria-expanded={menuOpen}
-                className="grid size-9 sm:size-10 place-items-center rounded-lg border border-[#E2E8F0] text-[#475569] transition hover:border-[#2563EB]/30 hover:bg-[#F8FAFC] hover:text-[#2563EB] lg:hidden"
+                className="grid size-9 sm:size-10 place-items-center rounded-lg border border-border text-muted-foreground transition hover:border-[#2563EB]/30 hover:bg-muted hover:text-blue-ink lg:hidden"
               >
                 {menuOpen ? <X className="size-4 sm:size-5" /> : <Menu className="size-4 sm:size-5" />}
               </button>
@@ -1300,8 +1302,8 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                         aria-haspopup="dialog"
                         aria-current={active ? 'page' : undefined}
                         className={`relative flex h-10 items-center gap-1.5 rounded-lg px-3 text-sm font-semibold transition-colors ${active
-                            ? 'text-[#2563EB]'
-                            : 'text-[#475569] hover:text-[#2563EB]'
+                            ? 'text-blue-ink'
+                            : 'text-muted-foreground hover:text-blue-ink'
                           }`}
                       >
                         {link.label}
@@ -1321,8 +1323,8 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                         aria-haspopup="dialog"
                         aria-current={active ? 'page' : undefined}
                         className={`relative flex h-10 items-center gap-1.5 rounded-lg px-3 text-sm font-semibold transition-colors ${active
-                            ? 'text-[#2563EB]'
-                            : 'text-[#475569] hover:text-[#2563EB]'
+                            ? 'text-blue-ink'
+                            : 'text-muted-foreground hover:text-blue-ink'
                           }`}
                       >
                         {link.label}
@@ -1340,8 +1342,8 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                       href={link.href}
                       aria-current={active ? 'page' : undefined}
                       className={`relative flex h-10 items-center rounded-lg px-3 text-sm font-semibold transition-colors ${active
-                          ? 'text-[#2563EB]'
-                          : 'text-[#475569] hover:text-[#2563EB]'
+                          ? 'text-blue-ink'
+                          : 'text-muted-foreground hover:text-blue-ink'
                         }`}
                     >
                       {link.label}
@@ -1356,7 +1358,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
             <div className="ml-auto">
               <Link
                 href="/contacto"
-                className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#2563EB] to-[#6D28D9] px-4 py-2 text-sm font-semibold text-white transition hover:from-[#1D4ED8] hover:to-[#5B21B6]"
+                className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#2563EB] to-[#1D4ED8] px-4 py-2 text-sm font-semibold text-white transition hover:from-[#1D4ED8] hover:to-[#2563EB]"
               >
                 <FaTeamspeak aria-hidden="true" className="size-4" />
                 <span className="hidden sm:inline">Solicitar asesoría</span>
@@ -1384,10 +1386,10 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
           role="dialog"
           aria-modal="true"
           aria-label="Menú de navegación"
-          className="fixed inset-y-0 right-0 z-[110] flex w-full max-w-[340px] sm:max-w-sm flex-col bg-white shadow-2xl transition-transform animate-in slide-in-from-right duration-250 lg:hidden"
+          className="fixed inset-y-0 right-0 z-[110] flex w-full max-w-[340px] sm:max-w-sm flex-col bg-card shadow-2xl transition-transform animate-in slide-in-from-right duration-250 lg:hidden"
         >
           {/* Cabecera fija */}
-          <div className="flex shrink-0 items-center justify-between gap-3 border-b border-[#F1F5F9] px-4 py-3">
+          <div className="flex shrink-0 items-center justify-between gap-3 border-b border-border px-4 py-3">
             <Link
               href="/"
               className="inline-flex items-center gap-2.5 group"
@@ -1401,14 +1403,14 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
               <img
                 src="/images/logos/logo.png"
                 alt="F&J Systems"
-                className="h-11 sm:h-12 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
+                className="h-11 sm:h-12 w-auto object-contain transition-transform duration-200 group-hover:scale-105 dark:brightness-0 dark:invert"
               />
             </Link>
 
             <button
               type="button"
               onClick={closeMobileMenu}
-              className="grid size-9 shrink-0 place-items-center rounded-lg border border-[#E2E8F0] text-[#475569] transition-colors hover:bg-[#F8FAFC] hover:text-[#2563EB]"
+              className="grid size-9 shrink-0 place-items-center rounded-lg border border-border text-muted-foreground transition-colors hover:bg-muted hover:text-blue-ink"
               aria-label="Cerrar menú"
             >
               <X className="size-4 sm:size-5" />
@@ -1479,7 +1481,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                             return (
                               <div
                                 key={`${item.href}-${itemIdx}`}
-                                className={isGeneral ? 'mt-2 border-t border-[#E2E8F0] pt-2' : undefined}
+                                className={isGeneral ? 'mt-2 border-t border-border pt-2' : undefined}
                               >
                                 <Link
                                   href={item.href}
@@ -1487,10 +1489,10 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                                   aria-current={isItemActive ? 'page' : undefined}
                                   className={`group flex items-center gap-2.5 rounded-xl px-2.5 py-2.5 transition-colors ${
                                     isGeneral
-                                      ? 'bg-[#5B21B6] text-white shadow-[0_8px_20px_-14px_rgba(91,33,182,0.9)] hover:bg-[#4C1D95]'
+                                      ? 'bg-[#2563EB] text-white shadow-[0_8px_20px_-14px_rgba(37,99,235,0.9)] hover:bg-[#1D4ED8]'
                                       : isItemActive
-                                        ? 'bg-white text-[#2563EB] shadow-xs ring-1 ring-[#2563EB]/15'
-                                        : 'text-[#334155] hover:bg-white hover:text-[#2563EB]'
+                                        ? 'bg-card text-blue-ink shadow-xs ring-1 ring-[#2563EB]/15'
+                                        : 'text-foreground/85 hover:bg-card hover:text-blue-ink'
                                   }`}
                                 >
                                   {isGeneral ? (
@@ -1501,8 +1503,8 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                                     <span
                                       className={`grid size-8 shrink-0 place-items-center rounded-lg border transition-colors ${
                                         isItemActive
-                                          ? 'border-[#2563EB]/25 bg-[#EFF6FF] text-[#2563EB]'
-                                          : 'border-[#E2E8F0] bg-white text-[#64748B] group-hover:border-[#2563EB]/25 group-hover:text-[#2563EB]'
+                                          ? 'border-[#2563EB]/25 bg-tint-blue text-blue-ink'
+                                          : 'border-border bg-card text-muted-foreground group-hover:border-[#2563EB]/25 group-hover:text-blue-ink'
                                       }`}
                                     >
                                       <ItemIcon className="size-3.5" />
@@ -1514,14 +1516,14 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                                         isGeneral
                                           ? ''
                                           : isItemActive
-                                            ? 'text-[#2563EB]'
-                                            : 'text-[#334155] group-hover:text-[#2563EB]'
+                                            ? 'text-blue-ink'
+                                            : 'text-foreground/85 group-hover:text-blue-ink'
                                       }`}
                                     >
                                       {item.label}
                                     </span>
                                     {item.desc && !isGeneral && (
-                                      <span className="mt-0.5 block text-[11px] leading-snug text-[#64748B] group-hover:text-[#475569]">
+                                      <span className="mt-0.5 block text-[11px] leading-snug text-muted-foreground group-hover:text-muted-foreground">
                                         {item.desc}
                                       </span>
                                     )}
@@ -1531,7 +1533,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                                   ) : isItemActive ? (
                                     <span className="size-1.5 shrink-0 rounded-full bg-[#2563EB]" />
                                   ) : (
-                                    <ChevronRight className="size-3.5 shrink-0 text-[#94A3B8] group-hover:text-[#2563EB]" />
+                                    <ChevronRight className="size-3.5 shrink-0 text-muted-foreground group-hover:text-blue-ink" />
                                   )}
                                 </Link>
                               </div>
@@ -1545,12 +1547,12 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                         onClick={markMobileNavigation}
                         className={`flex items-center justify-between rounded-xl border px-3.5 py-3 text-sm font-semibold transition-colors ${
                           active
-                            ? 'border-[#2563EB]/40 bg-[#EFF6FF] text-[#2563EB]'
-                            : 'border-[#E2E8F0] bg-white text-[#0F172A] hover:bg-[#F8FAFC] hover:text-[#2563EB]'
+                            ? 'border-[#2563EB]/40 bg-tint-blue text-blue-ink'
+                            : 'border-border bg-card text-foreground hover:bg-muted hover:text-blue-ink'
                         }`}
                       >
                         <span>{link.label}</span>
-                        <ChevronRight className="size-4 text-[#94A3B8]" />
+                        <ChevronRight className="size-4 text-muted-foreground" />
                       </Link>
                     )}
                   </div>
@@ -1559,18 +1561,18 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
             </nav>
 
             {/* Acciones rápidas móvil */}
-            <div className="mt-5 space-y-2 border-t border-[#F1F5F9] pt-4">
+            <div className="mt-5 space-y-2 border-t border-border pt-4">
               <Link
                 href="/mi-cuenta"
                 onClick={markMobileNavigation}
                 aria-current={isAccountActive ? 'page' : undefined}
                 className={`flex items-center gap-3 rounded-xl border px-3.5 py-2.5 text-sm font-semibold transition-colors ${
                   isAccountActive
-                    ? 'border-[#2563EB]/40 bg-[#EFF6FF] text-[#2563EB]'
-                    : 'border-[#E2E8F0] text-[#334155] hover:bg-[#F8FAFC] hover:text-[#2563EB]'
+                    ? 'border-[#2563EB]/40 bg-tint-blue text-blue-ink'
+                    : 'border-border text-foreground/85 hover:bg-muted hover:text-blue-ink'
                 }`}
               >
-                <div className="grid size-8 place-items-center rounded-lg bg-[#F1F5F9] text-[#64748B]">
+                <div className="grid size-8 place-items-center rounded-lg bg-muted text-muted-foreground">
                   <UserRound className="size-4" />
                 </div>
                 <span>Mi cuenta</span>
@@ -1585,12 +1587,12 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                 aria-current={isQuotePageActive ? 'page' : undefined}
                 className={`flex w-full items-center justify-between rounded-xl border px-3.5 py-2.5 text-sm font-semibold transition-colors ${
                   isQuotePageActive
-                    ? 'border-[#2563EB]/40 bg-[#EFF6FF] text-[#2563EB]'
-                    : 'border-[#E2E8F0] text-[#334155] hover:bg-[#F8FAFC] hover:text-[#2563EB]'
+                    ? 'border-[#2563EB]/40 bg-tint-blue text-blue-ink'
+                    : 'border-border text-foreground/85 hover:bg-muted hover:text-blue-ink'
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <div className="grid size-8 place-items-center rounded-lg bg-[#EFF6FF] text-[#2563EB]">
+                  <div className="grid size-8 place-items-center rounded-lg bg-tint-blue text-blue-ink">
                     <FileText className="size-4" />
                   </div>
                   <span>Mi cotización</span>
@@ -1600,14 +1602,14 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                     {quoteCount}
                   </span>
                 ) : (
-                  <span className="text-xs font-normal text-[#94A3B8]">0 items</span>
+                  <span className="text-xs font-normal text-muted-foreground">0 items</span>
                 )}
               </button>
 
               <Link
                 href="/contacto"
                 onClick={markMobileNavigation}
-                className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#2563EB] to-[#6D28D9] px-4 py-2.5 text-sm font-semibold text-white shadow-xs transition hover:from-[#1D4ED8] hover:to-[#5B21B6]"
+                className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#2563EB] to-[#1D4ED8] px-4 py-2.5 text-sm font-semibold text-white shadow-xs transition hover:from-[#1D4ED8] hover:to-[#2563EB]"
               >
                 <FaTeamspeak aria-hidden="true" className="size-4" />
                 <span>Solicitar asesoría</span>
@@ -1615,23 +1617,23 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
             </div>
 
             {/* Contacto móvil */}
-            <div className="mt-5 border-t border-[#F1F5F9] pt-4">
-              <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-[#94A3B8]">
+            <div className="mt-5 border-t border-border pt-4">
+              <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                 Atención directa
               </p>
-              <div className="space-y-1.5 text-xs text-[#64748B]">
+              <div className="space-y-1.5 text-xs text-muted-foreground">
                 <a
                   href="tel:+51999888777"
-                  className="flex items-center gap-2 rounded-lg p-1.5 transition-colors hover:bg-[#F8FAFC] hover:text-[#2563EB]"
+                  className="flex items-center gap-2 rounded-lg p-1.5 transition-colors hover:bg-muted hover:text-blue-ink"
                 >
-                  <Phone className="size-3.5 text-[#2563EB]" />
+                  <Phone className="size-3.5 text-blue-ink" />
                   <span>+51 999 888 777</span>
                 </a>
                 <a
                   href="mailto:ventas@fjsolutions.pe"
-                  className="flex items-center gap-2 rounded-lg p-1.5 transition-colors hover:bg-[#F8FAFC] hover:text-[#2563EB]"
+                  className="flex items-center gap-2 rounded-lg p-1.5 transition-colors hover:bg-muted hover:text-blue-ink"
                 >
-                  <Mail className="size-3.5 text-[#2563EB]" />
+                  <Mail className="size-3.5 text-blue-ink" />
                   <span>ventas@fjsolutions.pe</span>
                 </a>
               </div>

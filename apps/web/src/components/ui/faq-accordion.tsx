@@ -37,8 +37,8 @@ const variantStyles: Record<
     trigger: 'px-5 py-4',
     question: 'text-sm leading-6',
     panel: 'px-5 pb-4',
-    answer: 'mt-3 text-sm leading-6 text-[#475569]',
-    openCard: 'border-[#7C3AED]/35 shadow-sm',
+    answer: 'mt-3 text-sm leading-6 text-muted-foreground',
+    openCard: 'border-[#2563EB]/35 shadow-sm',
   },
   numbered: {
     list: 'space-y-2',
@@ -46,18 +46,18 @@ const variantStyles: Record<
     trigger: 'px-5 py-4',
     question: 'text-sm leading-6',
     panel: 'px-5 pb-4',
-    answer: 'mt-3 pl-8 text-sm leading-6 text-[#475569]',
-    openCard: 'border-[#7C3AED]/35 shadow-sm',
+    answer: 'mt-3 pl-8 text-sm leading-6 text-muted-foreground',
+    openCard: 'border-[#2563EB]/35 shadow-sm',
   },
   search: {
     list: 'space-y-3',
     card: 'rounded-2xl',
     trigger: 'p-5',
     question: 'mt-2 font-heading text-sm font-bold sm:text-base',
-    panel: 'border-t border-[#F1F5F9] bg-[#F8FAFC]/50 px-5 pb-5 pt-3',
-    answer: 'text-xs leading-relaxed text-[#475569] sm:text-sm',
-    openCard: 'border-[#7C3AED]/45 shadow-sm',
-    openQuestion: 'text-[#5B21B6]',
+    panel: 'border-t border-border bg-muted/50 px-5 pb-5 pt-3',
+    answer: 'text-xs leading-relaxed text-muted-foreground sm:text-sm',
+    openCard: 'border-[#2563EB]/45 shadow-sm',
+    openQuestion: 'text-brand-ink',
   },
 }
 
@@ -79,9 +79,9 @@ export function FaqAccordion({ items, variant = 'default', className }: FaqAccor
           <div
             key={item.question}
             className={cn(
-              'overflow-hidden border bg-white transition-[border-color,box-shadow] duration-200',
+              'overflow-hidden border bg-card transition-[border-color,box-shadow] duration-200',
               styles.card,
-              isOpen ? styles.openCard : 'border-[#E2E8F0] hover:border-[#CBD5E1]',
+              isOpen ? styles.openCard : 'border-border hover:border-input',
             )}
           >
             <button
@@ -93,19 +93,19 @@ export function FaqAccordion({ items, variant = 'default', className }: FaqAccor
                 setOpenQuestion((current) => (current === item.question ? null : item.question))
               }
               className={cn(
-                'flex w-full items-start justify-between gap-4 text-left transition-colors focus-visible:ring-2 focus-visible:ring-[#7C3AED]/40 focus-visible:ring-inset focus-visible:outline-none',
+                'flex w-full items-start justify-between gap-4 text-left transition-colors focus-visible:ring-2 focus-visible:ring-[#2563EB]/40 focus-visible:ring-inset focus-visible:outline-none',
                 styles.trigger,
               )}
             >
               <div className={cn('flex flex-1 items-start', isNumbered && 'gap-3')}>
                 {isNumbered && (
-                  <span className="mt-0.5 font-mono text-[10px] text-[#94A3B8]">
+                  <span className="mt-0.5 font-mono text-[10px] text-muted-foreground">
                     {String(index + 1).padStart(2, '0')}
                   </span>
                 )}
                 <div className="flex-1">
                   {isSearch && item.badge && (
-                    <span className="inline-block rounded-md bg-[#EDE9FE] px-2 py-0.5 text-[10px] font-bold tracking-wide text-[#5B21B6] uppercase">
+                    <span className="inline-block rounded-md bg-brand-soft px-2 py-0.5 text-[10px] font-bold tracking-wide text-brand-ink uppercase">
                       {item.badge}
                     </span>
                   )}
@@ -113,7 +113,7 @@ export function FaqAccordion({ items, variant = 'default', className }: FaqAccor
                     className={cn(
                       'font-bold transition-colors duration-200',
                       styles.question,
-                      isOpen ? (styles.openQuestion ?? 'text-[#0F172A]') : 'text-[#0F172A]',
+                      isOpen ? (styles.openQuestion ?? 'text-foreground') : 'text-foreground',
                     )}
                   >
                     {item.question}
@@ -126,8 +126,8 @@ export function FaqAccordion({ items, variant = 'default', className }: FaqAccor
                   className={cn(
                     'flex size-7 shrink-0 items-center justify-center rounded-lg border transition-[rotate,background-color,border-color,color] duration-300 motion-reduce:transition-none',
                     isOpen
-                      ? 'rotate-180 border-[#7C3AED]/25 bg-[#EDE9FE] text-[#5B21B6]'
-                      : 'border-[#E2E8F0] bg-[#F8FAFC] text-[#64748B]',
+                      ? 'rotate-180 border-[#2563EB]/25 bg-brand-soft text-brand-ink'
+                      : 'border-border bg-muted text-muted-foreground',
                   )}
                 >
                   <ChevronDown className="size-4" aria-hidden="true" />
@@ -136,9 +136,9 @@ export function FaqAccordion({ items, variant = 'default', className }: FaqAccor
                 <ChevronDown
                   aria-hidden="true"
                   className={cn(
-                    'size-4 shrink-0 text-[#64748B] transition-transform duration-300 motion-reduce:transition-none',
+                    'size-4 shrink-0 text-muted-foreground transition-transform duration-300 motion-reduce:transition-none',
                     isNumbered && 'mt-0.5',
-                    isOpen && 'rotate-180 text-[#5B21B6]',
+                    isOpen && 'rotate-180 text-brand-ink',
                   )}
                 />
               )}

@@ -400,19 +400,19 @@ export function RequestsView() {
       />
 
       {helpdeskError && (
-        <div className="flex flex-col gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-col gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-start gap-3">
-            <AlertTriangle className="mt-0.5 size-4 shrink-0 text-amber-600" aria-hidden="true" />
+            <AlertTriangle className="mt-0.5 size-4 shrink-0 text-warning-ink" aria-hidden="true" />
             <div>
-              <p className="text-xs font-bold text-amber-900">Sin conexión con la API de consultas</p>
-              <p className="mt-0.5 text-[11px] leading-relaxed text-amber-800">
+              <p className="text-xs font-bold text-warning-ink">Sin conexión con la API de consultas</p>
+              <p className="mt-0.5 text-[11px] leading-relaxed text-warning-ink">
                 {helpdeskError} Revisa que la API esté activa en el puerto 4000.
               </p>
             </div>
           </div>
           <button
             type="button"
-            className="inline-flex h-9 shrink-0 items-center gap-2 rounded-lg border border-amber-300 bg-white px-3 text-[11px] font-semibold text-amber-900 transition hover:bg-amber-100"
+            className="inline-flex h-9 shrink-0 items-center gap-2 rounded-lg border border-amber-500/40 bg-card px-3 text-[11px] font-semibold text-warning-ink transition hover:bg-amber-500/15"
             onClick={handleRefresh}
             disabled={working !== null}
           >
@@ -453,10 +453,10 @@ export function RequestsView() {
         />
       </div>
 
-      <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs">
+      <div className="rounded-2xl border border-border/80 bg-card p-4 shadow-xs">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div className="relative w-full min-w-0 lg:flex-1">
-            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
@@ -468,7 +468,7 @@ export function RequestsView() {
               <button
                 type="button"
                 onClick={() => setQuery('')}
-                className="absolute right-2.5 top-1/2 grid size-5 -translate-y-1/2 place-items-center rounded-md text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+                className="absolute right-2.5 top-1/2 grid size-5 -translate-y-1/2 place-items-center rounded-md text-muted-foreground transition hover:bg-muted hover:text-foreground/80"
                 aria-label="Limpiar búsqueda"
               >
                 <X className="size-3.5" />
@@ -523,12 +523,12 @@ export function RequestsView() {
           </div>
         </div>
 
-        <p className="mt-3 border-t border-slate-100 pt-3 text-[11px] font-medium text-slate-500">
-          <span className="font-bold text-slate-900">{filtered.length}</span>{' '}
+        <p className="mt-3 border-t border-border pt-3 text-[11px] font-medium text-muted-foreground">
+          <span className="font-bold text-foreground">{filtered.length}</span>{' '}
           {filtered.length === 1 ? 'mensaje' : 'mensajes'}
           {hasFilters ? ' con los filtros aplicados' : ' en la bandeja'}
           {!helpdeskSynced && (
-            <span className="ml-2 inline-flex items-center gap-1 text-slate-400">
+            <span className="ml-2 inline-flex items-center gap-1 text-muted-foreground">
               <RefreshCw className="size-3 animate-spin" aria-hidden="true" />
               Sincronizando…
             </span>
@@ -567,8 +567,8 @@ export function RequestsView() {
               <article
                 key={item.id}
                 className={cn(
-                  'group rounded-2xl border bg-white p-4 shadow-xs transition hover:border-slate-300 hover:shadow-sm sm:p-5',
-                  item.status === 'new' ? 'border-[#DDD6FE]/80' : 'border-slate-200/80'
+                  'group rounded-2xl border bg-card p-4 shadow-xs transition hover:border-input hover:shadow-sm sm:p-5',
+                  item.status === 'new' ? 'border-brand-ink/30' : 'border-border/80'
                 )}
               >
                 <div className="flex flex-wrap items-start gap-3">
@@ -576,8 +576,8 @@ export function RequestsView() {
                     className={cn(
                       'grid size-10 shrink-0 place-items-center rounded-xl ring-1 ring-inset',
                       item.status === 'new'
-                        ? 'bg-[#F5F3FF] text-[#5B21B6] ring-[#DDD6FE]'
-                        : 'bg-slate-50 text-slate-500 ring-slate-200/70'
+                        ? 'bg-tint-brand text-brand-ink ring-brand-ink/30'
+                        : 'bg-muted text-muted-foreground ring-border/70'
                     )}
                     aria-hidden="true"
                   >
@@ -586,22 +586,22 @@ export function RequestsView() {
 
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-center gap-2">
-                      <p className="text-[12.5px] font-bold text-slate-900">
+                      <p className="text-[12.5px] font-bold text-foreground">
                         {item.company || item.name}
                       </p>
                       {item.company && (
-                        <span className="text-[10.5px] text-slate-400">{item.name}</span>
+                        <span className="text-[10.5px] text-muted-foreground">{item.name}</span>
                       )}
-                      <span className="rounded-full bg-slate-100 px-1.5 py-0.5 font-mono text-[9.5px] font-semibold text-slate-500">
+                      <span className="rounded-full bg-muted px-1.5 py-0.5 font-mono text-[9.5px] font-semibold text-muted-foreground">
                         {item.code}
                       </span>
                       <RequestStatusBadge status={item.status} />
                     </div>
-                    <p className="mt-1 text-[12px] font-semibold text-slate-800">{item.topic}</p>
-                    <p className="mt-1 line-clamp-2 text-[11px] leading-relaxed text-slate-500">
+                    <p className="mt-1 text-[12px] font-semibold text-foreground">{item.topic}</p>
+                    <p className="mt-1 line-clamp-2 text-[11px] leading-relaxed text-muted-foreground">
                       {item.message}
                     </p>
-                    <p className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-slate-400">
+                    <p className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-muted-foreground">
                       <span>{requestChannelLabels[item.channel]}</span>
                       <span aria-hidden="true">·</span>
                       <span>{formatDateTime(item.createdAt)}</span>
@@ -612,13 +612,13 @@ export function RequestsView() {
                         </>
                       )}
                       {item.repliedAt && (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-1.5 py-0.5 font-semibold text-emerald-700">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-1.5 py-0.5 font-semibold text-success-ink">
                           <MailCheck className="size-2.5" aria-hidden="true" />
                           Respondida
                         </span>
                       )}
                       {item.quoteId && (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-[#F5F3FF] px-1.5 py-0.5 font-semibold text-[#5B21B6]">
+                        <span className="inline-flex items-center gap-1 rounded-full bg-tint-brand px-1.5 py-0.5 font-semibold text-brand-ink">
                           <FileText className="size-2.5" aria-hidden="true" />
                           Cotización creada
                         </span>
@@ -638,7 +638,7 @@ export function RequestsView() {
                     <button
                       type="button"
                       onClick={() => setDeleteTarget(item)}
-                      className="grid size-10 place-items-center rounded-xl border border-slate-200 bg-white text-slate-400 shadow-xs transition hover:bg-red-50 hover:text-red-600"
+                      className="grid size-10 place-items-center rounded-xl border border-border bg-card text-muted-foreground shadow-xs transition hover:bg-red-500/10 hover:text-danger-ink"
                       title="Eliminar consulta"
                       aria-label={`Eliminar consulta ${item.code}`}
                     >
@@ -667,7 +667,7 @@ export function RequestsView() {
                   setDetailId(null)
                   setDeleteTarget(detail)
                 }}
-                className="mr-auto inline-flex h-10 items-center gap-2 rounded-xl px-3 text-sm font-semibold text-red-600 transition hover:bg-red-50"
+                className="mr-auto inline-flex h-10 items-center gap-2 rounded-xl px-3 text-sm font-semibold text-danger-ink transition hover:bg-red-500/10"
               >
                 <Trash2 className="size-4" aria-hidden="true" />
                 Eliminar
@@ -713,61 +713,61 @@ export function RequestsView() {
         {detail && (
           <div className="space-y-5">
             <div className="grid gap-3 sm:grid-cols-2">
-              <div className="rounded-xl border border-slate-100 bg-slate-50/70 px-3 py-2.5">
-                <p className="text-[9.5px] font-bold uppercase tracking-[0.12em] text-slate-400">
+              <div className="rounded-xl border border-border bg-muted/70 px-3 py-2.5">
+                <p className="text-[9.5px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
                   Contacto
                 </p>
-                <p className="mt-1 text-xs font-semibold text-slate-900">{detail.name}</p>
-                <p className="mt-0.5 text-[11px] text-slate-500">{detail.company || 'Sin empresa'}</p>
+                <p className="mt-1 text-xs font-semibold text-foreground">{detail.name}</p>
+                <p className="mt-0.5 text-[11px] text-muted-foreground">{detail.company || 'Sin empresa'}</p>
               </div>
-              <div className="rounded-xl border border-slate-100 bg-slate-50/70 px-3 py-2.5">
-                <p className="text-[9.5px] font-bold uppercase tracking-[0.12em] text-slate-400">
+              <div className="rounded-xl border border-border bg-muted/70 px-3 py-2.5">
+                <p className="text-[9.5px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
                   Canal y fecha
                 </p>
-                <p className="mt-1 text-xs font-semibold text-slate-900">
+                <p className="mt-1 text-xs font-semibold text-foreground">
                   {requestChannelLabels[detail.channel]}
                 </p>
-                <p className="mt-0.5 text-[11px] text-slate-500">
+                <p className="mt-0.5 text-[11px] text-muted-foreground">
                   {formatDateTime(detail.createdAt)}
                 </p>
               </div>
-              <div className="rounded-xl border border-slate-100 px-3 py-2.5">
-                <p className="text-[9.5px] font-bold uppercase tracking-[0.12em] text-slate-400">
+              <div className="rounded-xl border border-border px-3 py-2.5">
+                <p className="text-[9.5px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
                   Correo
                 </p>
                 <a
                   href={`mailto:${detail.email}`}
-                  className="mt-1 block truncate text-xs font-semibold text-[#5B21B6] hover:text-[#5B21B6]"
+                  className="mt-1 block truncate text-xs font-semibold text-brand-ink hover:text-brand-ink"
                 >
                   {detail.email}
                 </a>
               </div>
-              <div className="rounded-xl border border-slate-100 px-3 py-2.5">
-                <p className="text-[9.5px] font-bold uppercase tracking-[0.12em] text-slate-400">
+              <div className="rounded-xl border border-border px-3 py-2.5">
+                <p className="text-[9.5px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
                   Teléfono
                 </p>
-                <p className="mt-1 text-xs font-semibold text-slate-900">
+                <p className="mt-1 text-xs font-semibold text-foreground">
                   {detail.phone || 'Sin teléfono'}
                 </p>
               </div>
             </div>
 
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400">
+              <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
                 Mensaje recibido
               </p>
-              <p className="mt-2 whitespace-pre-line rounded-xl border border-slate-100 bg-slate-50/70 px-4 py-3 text-xs leading-relaxed text-slate-700">
+              <p className="mt-2 whitespace-pre-line rounded-xl border border-border bg-muted/70 px-4 py-3 text-xs leading-relaxed text-foreground/80">
                 {detail.message}
               </p>
             </div>
 
             {detail.lastReply && (
-              <div className="rounded-xl border border-emerald-200/70 bg-emerald-50/50 px-4 py-3">
+              <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3">
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-emerald-700">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-success-ink">
                     Última respuesta
                   </p>
-                  <span className="text-[10px] font-medium text-emerald-700">
+                  <span className="text-[10px] font-medium text-success-ink">
                     {detail.lastReply.delivered ? 'Enviada' : 'No enviada'} ·{' '}
                     {formatDateTime(detail.lastReply.at)}
                   </span>
@@ -775,19 +775,19 @@ export function RequestsView() {
                 <p className="mt-1 text-xs font-semibold text-emerald-900">
                   {detail.lastReply.subject}
                 </p>
-                <p className="mt-1 line-clamp-3 whitespace-pre-line text-[11px] leading-relaxed text-emerald-800">
+                <p className="mt-1 line-clamp-3 whitespace-pre-line text-[11px] leading-relaxed text-success-ink">
                   {detail.lastReply.message}
                 </p>
               </div>
             )}
 
             {(linkedClient || linkedQuote) && (
-              <div className="flex flex-wrap items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-2.5">
-                <span className="text-[9.5px] font-bold uppercase tracking-[0.12em] text-slate-400">
+              <div className="flex flex-wrap items-center gap-2 rounded-xl border border-border bg-card px-3 py-2.5">
+                <span className="text-[9.5px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
                   Vinculado
                 </span>
                 {linkedClient && (
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-2 py-0.5 text-[10.5px] font-semibold text-slate-700">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-2 py-0.5 text-[10.5px] font-semibold text-foreground/80">
                     {linkedClient.company || linkedClient.name}
                     <ClientStatusBadge status={linkedClient.status} />
                   </span>
@@ -795,7 +795,7 @@ export function RequestsView() {
                 {linkedQuote && (
                   <Link
                     href={`/cotizaciones?q=${encodeURIComponent(linkedQuote.code)}`}
-                    className="inline-flex items-center gap-1.5 rounded-full bg-[#F5F3FF] px-2 py-0.5 font-mono text-[10.5px] font-semibold text-[#5B21B6] transition hover:bg-[#EDE9FE]"
+                    className="inline-flex items-center gap-1.5 rounded-full bg-tint-brand px-2 py-0.5 font-mono text-[10.5px] font-semibold text-brand-ink transition hover:bg-brand-soft"
                   >
                     <FileText className="size-3" aria-hidden="true" />
                     {linkedQuote.code}
@@ -805,7 +805,7 @@ export function RequestsView() {
             )}
 
             <div>
-              <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400">
+              <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
                 Estado de atención
               </p>
               <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-4">
@@ -820,7 +820,7 @@ export function RequestsView() {
                       'h-9 rounded-lg border text-[11px] font-semibold transition disabled:opacity-60',
                       detail.status === item
                         ? 'border-slate-900 bg-slate-900 text-white'
-                        : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50'
+                        : 'border-border bg-card text-muted-foreground hover:border-input hover:bg-muted'
                     )}
                   >
                     {requestStatusLabels[item]}
@@ -908,7 +908,7 @@ export function RequestsView() {
               className={cn(textareaClass, 'min-h-56 font-normal')}
             />
           </Field>
-          <p className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-[11px] leading-relaxed text-slate-500">
+          <p className="rounded-xl border border-border bg-muted px-3 py-2 text-[11px] leading-relaxed text-muted-foreground">
             Si la API no tiene SMTP configurado, la respuesta quedará registrada en la consulta
             pero no se enviará el correo. La consulta pasa a <strong>Atendida</strong> solo cuando
             el envío se completa.

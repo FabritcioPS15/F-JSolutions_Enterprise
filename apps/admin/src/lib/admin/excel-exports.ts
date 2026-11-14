@@ -27,6 +27,7 @@ import {
   supplierStatusLabels,
   userStatusLabels,
 } from './operations'
+import type { Complaint } from '@fj-solutions/contracts/complaints-book'
 import {
   buildSheet,
   excelDate,
@@ -928,5 +929,74 @@ export function backupDataset(data: AdminData): DatasetExport {
       ...activitySheets(data.activity),
       ...settingsSheet(data.settings),
     ],
+  }
+}
+
+const complaintKindLabels: Record<Complaint['kind'], string> = {
+  reclamo: 'Reclamo',
+  queja: 'Queja',
+}
+
+const complaintStatusLabels: Record<Complaint['status'], string> = {
+  pending: 'Pendiente',
+  review: 'En revisión',
+  answered: 'Respondido',
+}
+
+const complaintDocumentLabels: Record<Complaint['consumer']['documentType'], string> = {
+  dni: 'DNI',
+  ce: 'Carné de extranjería',
+  pasaporte: 'Pasaporte',
+  ruc: 'RUC',
+}
+
+function complaintSheets(complaints: Complaint[]): ExcelSheet[] {
+  const columns: ExcelColumn<Complaint>[] = [
+    { header: 'Código', width: 16, getValue: (item) => item.code },
+    { header: 'Tipo', width: 12, getValue: (item) => complaintKindLabels[item.kind] },
+    { header: 'Estado', width: 14, getValue: (item) => complaintStatusLabels[item.status] },
+    { header: 'Consumidor', width: 26, getValue: (item) => item.consumer.name },
+    {
+      header: 'Documento',
+      width: 20,
+      getValue: (item) =>
+        `${complaintDocumentLabels[item.consumer.documentType]} ${item.consumer.documentNumber}`,
+    },
+    { header: 'Correo', width: 26, getValue: (item) => item.consumer.email },
+    { header: 'Teléfono', width: 16, getValue: (item) => item.consumer.phone },
+    { header: 'Domicilio', width: 30, wrap: true, getValue: (item) => item.consumer.address },
+    {
+      header: 'Bien o servicio',
+      width: 26,
+      wrap: true,
+      getValue: (item) => `${item.item.type === 'producto' ? 'Producto' : 'Servicio'}: ${item.item.description}`,
+    },
+    { header: 'Pedido / comprobante', width: 20, getValue: (item) => item.item.orderCode || '—' },
+    { header: 'Detalle', width: 40, wrap: true, getValue: (item) => item.detail },
+    { header: 'Pedido concreto', width: 32, wrap: true, getValue: (item) => item.request },
+    { header: 'Registrado', width: 18, getValue: (item) => excelDate(item.createdAt) },
+    { header: 'Fecha límite', width: 18, getValue: (item) => excelDate(item.dueAt) },
+    {
+      header: 'Respondido',
+      width: 18,
+      getValue: (item) => (item.response ? excelDate(item.response.respondedAt) : '—'),
+    },
+    {
+      header: 'Respuesta',
+      width: 40,
+      wrap: true,
+      getValue: (item) => item.response?.message ?? '—',
+    },
+  ]
+
+  return [buildSheet('Reclamaciones', columns, complaints)]
+}
+
+export function complaintsDataset(complaints: Complaint[]): DatasetExport {
+  return {
+    prefix: 'libro-de-reclamaciones',
+    title: 'Libro de reclamaciones',
+    json: complaints,
+    sheets: complaintSheets(complaints),
   }
 }

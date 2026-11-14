@@ -116,16 +116,16 @@ function CategoryPanel({ onClose }: { onClose: () => void }) {
     <div
       role="dialog"
       aria-label="Categorías de productos"
-      className="absolute left-0 top-[calc(100%+8px)] z-50 w-[700px] rounded-2xl border border-[#E2E8F0] bg-white shadow-[0_8px_40px_rgba(15,23,42,0.10)]"
+      className="absolute left-0 top-[calc(100%+8px)] z-50 w-[700px] rounded-2xl border border-border bg-card shadow-[0_8px_40px_rgba(15,23,42,0.10)]"
     >
-      <div className="flex items-center justify-between border-b border-[#F1F5F9] px-5 py-3.5">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-[#64748B]">
+      <div className="flex items-center justify-between border-b border-border px-5 py-3.5">
+        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
           Categorías de productos
         </p>
         <Link
           href="/productos"
           onClick={onClose}
-          className="flex items-center gap-1 text-[13px] font-semibold text-[#2563EB] transition hover:text-[#1D4ED8]"
+          className="flex items-center gap-1 text-[13px] font-semibold text-blue-ink transition hover:text-blue-ink"
         >
           Ver todo <ArrowRight className="size-3.5" />
         </Link>
@@ -136,27 +136,27 @@ function CategoryPanel({ onClose }: { onClose: () => void }) {
             key={label}
             href={`/productos?categoria=${encodeURIComponent(label)}`}
             onClick={onClose}
-            className="group flex items-start gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-[#F8FAFC]"
+            className="group flex items-start gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-muted"
           >
-            <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg border border-[#E2E8F0] bg-white text-[#64748B] transition-colors group-hover:border-[#2563EB]/20 group-hover:bg-[#EFF6FF] group-hover:text-[#2563EB]">
+            <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition-colors group-hover:border-[#2563EB]/20 group-hover:bg-tint-blue group-hover:text-blue-ink">
               <Icon className="size-4" />
             </span>
             <span className="min-w-0">
-              <span className="block truncate text-[13px] font-semibold leading-snug text-[#0F172A] group-hover:text-[#2563EB]">
+              <span className="block truncate text-[13px] font-semibold leading-snug text-foreground group-hover:text-blue-ink">
                 {label}
               </span>
-              <span className="block truncate text-[11.5px] leading-snug text-[#64748B]">
+              <span className="block truncate text-[11.5px] leading-snug text-muted-foreground">
                 {desc}
               </span>
             </span>
           </Link>
         ))}
       </div>
-      <div className="border-t border-[#F1F5F9] px-5 py-3">
+      <div className="border-t border-border px-5 py-3">
         <Link
           href="/productos?oferta=1"
           onClick={onClose}
-          className="flex items-center gap-2 text-[13px] font-semibold text-[#6D28D9] transition hover:text-[#5B21B6]"
+          className="flex items-center gap-2 text-[13px] font-semibold text-brand-ink transition hover:text-brand-ink"
         >
           <Zap className="size-4 fill-current" />
           Ver ofertas del día
@@ -174,7 +174,7 @@ function NavDropdown({ items, onClose }: { items: MenuItem[]; onClose: () => voi
   return (
     <div
       role="dialog"
-      className="absolute left-1/2 top-[calc(100%+8px)] z-50 w-72 -translate-x-1/2 rounded-2xl border border-[#E2E8F0] bg-white shadow-[0_8px_40px_rgba(15,23,42,0.10)]"
+      className="absolute left-1/2 top-[calc(100%+8px)] z-50 w-72 -translate-x-1/2 rounded-2xl border border-border bg-card shadow-[0_8px_40px_rgba(15,23,42,0.10)]"
     >
       <div className="p-2">
         {items.map(({ label, href, icon: Icon, desc, highlight }) => (
@@ -183,14 +183,14 @@ function NavDropdown({ items, onClose }: { items: MenuItem[]; onClose: () => voi
             href={href}
             onClick={onClose}
             className={`group flex items-start gap-3 rounded-xl px-3.5 py-3 transition-colors ${
-              highlight ? 'bg-[#EFF6FF] hover:bg-[#DBEAFE]' : 'hover:bg-[#F8FAFC]'
+              highlight ? 'bg-tint-blue hover:bg-blue-ink/15' : 'hover:bg-muted'
             }`}
           >
             <span
               className={`mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg border transition-colors ${
                 highlight
-                  ? 'border-[#2563EB]/20 bg-white text-[#2563EB]'
-                  : 'border-[#E2E8F0] bg-white text-[#64748B] group-hover:border-[#2563EB]/20 group-hover:bg-[#EFF6FF] group-hover:text-[#2563EB]'
+                  ? 'border-[#2563EB]/20 bg-card text-blue-ink'
+                  : 'border-border bg-card text-muted-foreground group-hover:border-[#2563EB]/20 group-hover:bg-tint-blue group-hover:text-blue-ink'
               }`}
             >
               <Icon className="size-4" />
@@ -198,16 +198,16 @@ function NavDropdown({ items, onClose }: { items: MenuItem[]; onClose: () => voi
             <span className="min-w-0 flex-1">
               <span
                 className={`block text-[13px] font-semibold leading-snug ${
-                  highlight ? 'text-[#2563EB]' : 'text-[#0F172A] group-hover:text-[#2563EB]'
+                  highlight ? 'text-blue-ink' : 'text-foreground group-hover:text-blue-ink'
                 }`}
               >
                 {label}
               </span>
-              <span className="block text-[11.5px] leading-snug text-[#64748B]">{desc}</span>
+              <span className="block text-[11.5px] leading-snug text-muted-foreground">{desc}</span>
             </span>
             <ArrowRight
-              className={`ml-auto mt-1.5 size-3.5 shrink-0 text-[#94A3B8] transition-opacity ${
-                highlight ? 'opacity-100 text-[#2563EB]' : 'opacity-0 group-hover:opacity-100'
+              className={`ml-auto mt-1.5 size-3.5 shrink-0 text-muted-foreground transition-opacity ${
+                highlight ? 'opacity-100 text-blue-ink' : 'opacity-0 group-hover:opacity-100'
               }`}
             />
           </Link>
@@ -222,18 +222,18 @@ function NavDropdown({ items, onClose }: { items: MenuItem[]; onClose: () => voi
 function MobileAccordion({ label, children }: { label: string; children: React.ReactNode }) {
   const [open, setOpen] = useState(false)
   return (
-    <div className="overflow-hidden rounded-xl border border-[#F1F5F9]">
+    <div className="overflow-hidden rounded-xl border border-border">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
-        className="flex w-full items-center justify-between px-4 py-3 text-sm font-semibold text-[#0F172A]"
+        className="flex w-full items-center justify-between px-4 py-3 text-sm font-semibold text-foreground"
       >
         {label}
         <ChevronDown
-          className={`size-4 text-[#64748B] transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+          className={`size-4 text-muted-foreground transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
         />
       </button>
-      {open && <div className="border-t border-[#F1F5F9] bg-[#F8FAFC] px-3 py-2">{children}</div>}
+      {open && <div className="border-t border-border bg-muted px-3 py-2">{children}</div>}
     </div>
   )
 }
@@ -309,7 +309,8 @@ export function SiteHeader({ quoteCount = 0, onQuoteClick }: SiteHeaderProps) {
 
       {/* Top bar */}
       <div
-        className={`overflow-hidden bg-[#0B1B33] text-[#CBD5E1] transition-[max-height,opacity] duration-200 ease-out ${
+        data-surface="dark"
+        className={`overflow-hidden bg-[#0B1B33] text-muted-foreground/60 transition-[max-height,opacity] duration-200 ease-out ${
           topBarClosed ? 'max-h-0 opacity-0' : 'max-h-24 opacity-100'
         }`}
       >
@@ -345,7 +346,7 @@ export function SiteHeader({ quoteCount = 0, onQuoteClick }: SiteHeaderProps) {
 
       {/* Main bar */}
       <div
-        className={`border-b border-[#E2E8F0] bg-white/90 backdrop-blur-xl transition-shadow duration-300 ${
+        className={`border-b border-border bg-card/90 backdrop-blur-xl transition-shadow duration-300 ${
           topBarClosed ? 'shadow-[0_12px_32px_-16px_rgba(15,23,42,0.35)]' : 'shadow-none'
         }`}
       >
@@ -366,7 +367,7 @@ export function SiteHeader({ quoteCount = 0, onQuoteClick }: SiteHeaderProps) {
             <img
               src="/images/logos/logo.png"
               alt="F&J Systems"
-              className="h-10 sm:h-11 w-auto object-contain transition-transform duration-200 group-hover:scale-105"
+              className="h-10 sm:h-11 w-auto object-contain transition-transform duration-200 group-hover:scale-105 dark:brightness-0 dark:invert"
             />
           </Link>
 
@@ -379,8 +380,8 @@ export function SiteHeader({ quoteCount = 0, onQuoteClick }: SiteHeaderProps) {
               aria-haspopup="dialog"
               className={`flex h-10 shrink-0 items-center gap-2 rounded-xl border px-4 text-[14px] font-semibold transition-all ${
                 openDropdown === 'categories'
-                  ? 'border-[#2563EB]/30 bg-[#EFF6FF] text-[#2563EB]'
-                  : 'border-[#E2E8F0] bg-white text-[#0F172A] hover:border-[#2563EB]/30 hover:bg-[#F8FAFC] hover:text-[#2563EB]'
+                  ? 'border-[#2563EB]/30 bg-tint-blue text-blue-ink'
+                  : 'border-border bg-card text-foreground hover:border-[#2563EB]/30 hover:bg-muted hover:text-blue-ink'
               }`}
             >
               <LayoutGrid className="size-4" />
@@ -395,12 +396,12 @@ export function SiteHeader({ quoteCount = 0, onQuoteClick }: SiteHeaderProps) {
           {/* Search */}
           <form onSubmit={submitSearch} className="relative flex min-w-0 flex-1">
             <span className="sr-only">Buscar productos</span>
-            <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-[#94A3B8]" />
+            <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Busca laptops, monitores, componentes..."
-              className="h-10 w-full rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] pl-10 pr-24 text-[14px] text-[#0F172A] outline-none transition placeholder:text-[#94A3B8] focus:border-[#2563EB] focus:bg-white focus:ring-2 focus:ring-[#2563EB]/15"
+              className="h-10 w-full rounded-xl border border-border bg-muted pl-10 pr-24 text-[14px] text-foreground outline-none transition placeholder:text-muted-foreground focus:border-[#2563EB] focus:bg-card focus:ring-2 focus:ring-[#2563EB]/15"
             />
             <button
               type="submit"
@@ -416,7 +417,7 @@ export function SiteHeader({ quoteCount = 0, onQuoteClick }: SiteHeaderProps) {
               <button
                 type="button"
                 onClick={() => setTopBarClosed(false)}
-                className="hidden items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold text-[#475569] transition hover:bg-[#F8FAFC] hover:text-[#2563EB] lg:flex"
+                className="hidden items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold text-muted-foreground transition hover:bg-muted hover:text-blue-ink lg:flex"
                 aria-label="Mostrar barra superior"
               >
                 <svg className="size-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -427,7 +428,7 @@ export function SiteHeader({ quoteCount = 0, onQuoteClick }: SiteHeaderProps) {
             )}
             <Link
               href="/cotizador"
-              className="hidden items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-[#475569] transition hover:bg-[#F8FAFC] hover:text-[#2563EB] xl:flex"
+              className="hidden items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-muted-foreground transition hover:bg-muted hover:text-blue-ink xl:flex"
             >
               <UserRound className="size-4" />
               Mi cuenta
@@ -435,7 +436,7 @@ export function SiteHeader({ quoteCount = 0, onQuoteClick }: SiteHeaderProps) {
             <button
               type="button"
               onClick={goToCart}
-              className="relative flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm font-semibold text-[#475569] transition hover:bg-[#F8FAFC] hover:text-[#2563EB]"
+              className="relative flex items-center gap-2 rounded-lg px-2.5 py-2 text-sm font-semibold text-muted-foreground transition hover:bg-muted hover:text-blue-ink"
               aria-label={`Abrir cotización, ${quoteCount} productos`}
             >
               <ShoppingCart className="size-5" />
@@ -451,7 +452,7 @@ export function SiteHeader({ quoteCount = 0, onQuoteClick }: SiteHeaderProps) {
               onClick={() => setMenuOpen((v) => !v)}
               aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
               aria-expanded={menuOpen}
-              className="grid size-10 place-items-center rounded-xl border border-[#E2E8F0] text-[#475569] transition hover:border-[#2563EB]/30 hover:bg-[#F8FAFC] hover:text-[#2563EB] lg:hidden"
+              className="grid size-10 place-items-center rounded-xl border border-border text-muted-foreground transition hover:border-[#2563EB]/30 hover:bg-muted hover:text-blue-ink lg:hidden"
             >
               {menuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
             </button>
@@ -459,7 +460,7 @@ export function SiteHeader({ quoteCount = 0, onQuoteClick }: SiteHeaderProps) {
         </div>
 
         {/* Desktop nav */}
-        <nav className="hidden border-t border-[#F1F5F9] lg:block" aria-label="Navegación principal">
+        <nav className="hidden border-t border-border lg:block" aria-label="Navegación principal">
           <div className="mx-auto flex max-w-[1280px] items-center gap-1 px-8">
             {navLinks.map((link) => {
               const active = isActive(link.href)
@@ -474,8 +475,8 @@ export function SiteHeader({ quoteCount = 0, onQuoteClick }: SiteHeaderProps) {
                     href={link.href}
                     className={`border-b-2 px-3 py-4 text-[14px] font-semibold transition-colors ${
                       active
-                        ? 'border-[#2563EB] text-[#2563EB]'
-                        : 'border-transparent text-[#475569] hover:text-[#2563EB]'
+                        ? 'border-[#2563EB] text-blue-ink'
+                        : 'border-transparent text-muted-foreground hover:text-blue-ink'
                     }`}
                   >
                     {link.label}
@@ -496,8 +497,8 @@ export function SiteHeader({ quoteCount = 0, onQuoteClick }: SiteHeaderProps) {
                     aria-haspopup="dialog"
                     className={`flex items-center gap-1 border-b-2 px-3 py-4 text-[14px] font-semibold transition-colors ${
                       active || isOpen
-                        ? 'border-[#2563EB] text-[#2563EB]'
-                        : 'border-transparent text-[#475569] hover:text-[#2563EB]'
+                        ? 'border-[#2563EB] text-blue-ink'
+                        : 'border-transparent text-muted-foreground hover:text-blue-ink'
                     }`}
                   >
                     {link.label}
@@ -512,16 +513,16 @@ export function SiteHeader({ quoteCount = 0, onQuoteClick }: SiteHeaderProps) {
 
             <Link
               href="/productos?oferta=1"
-              className="ml-1 flex items-center gap-1.5 py-4 text-[14px] font-bold text-[#6D28D9] transition hover:text-[#5B21B6]"
+              className="ml-1 flex items-center gap-1.5 py-4 text-[14px] font-bold text-brand-ink transition hover:text-brand-ink"
             >
               <Zap className="size-4 fill-current" /> Ofertas del día
             </Link>
 
             <Link
               href="/servicios"
-              className="ml-auto flex items-center gap-2 border-l border-[#E2E8F0] py-4 pl-6 text-[14px] font-bold text-[#0F172A] transition hover:text-[#2563EB]"
+              className="ml-auto flex items-center gap-2 border-l border-border py-4 pl-6 text-[14px] font-bold text-foreground transition hover:text-blue-ink"
             >
-              <Headset className="size-4 text-[#2563EB]" />
+              <Headset className="size-4 text-blue-ink" />
               Asesoría gratuita
             </Link>
           </div>
@@ -530,14 +531,14 @@ export function SiteHeader({ quoteCount = 0, onQuoteClick }: SiteHeaderProps) {
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div className="max-h-[calc(100vh-140px)] overflow-y-auto border-b border-[#E2E8F0] bg-white px-4 pb-6 pt-4 shadow-xl lg:hidden">
+        <div className="max-h-[calc(100vh-140px)] overflow-y-auto border-b border-border bg-card px-4 pb-6 pt-4 shadow-xl lg:hidden">
           <form onSubmit={submitSearch} className="relative mb-4">
-            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#94A3B8]" />
+            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Buscar productos..."
-              className="h-11 w-full rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] pl-9 pr-4 text-sm outline-none focus:border-[#2563EB]"
+              className="h-11 w-full rounded-xl border border-border bg-muted pl-9 pr-4 text-sm outline-none focus:border-[#2563EB]"
             />
           </form>
 
@@ -549,8 +550,8 @@ export function SiteHeader({ quoteCount = 0, onQuoteClick }: SiteHeaderProps) {
                 onClick={() => setMenuOpen(false)}
                 className={`rounded-xl px-4 py-3 text-sm font-semibold transition-colors ${
                   isActive(link.href)
-                    ? 'bg-[#EFF6FF] text-[#2563EB]'
-                    : 'text-[#0F172A] hover:bg-[#F8FAFC]'
+                    ? 'bg-tint-blue text-blue-ink'
+                    : 'text-foreground hover:bg-muted'
                 }`}
               >
                 {link.label}
@@ -566,9 +567,9 @@ export function SiteHeader({ quoteCount = 0, onQuoteClick }: SiteHeaderProps) {
                     key={label}
                     href={href}
                     onClick={() => setMenuOpen(false)}
-                    className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm text-[#0F172A] transition hover:bg-white"
+                    className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm text-foreground transition hover:bg-card"
                   >
-                    <Icon className="size-4 text-[#2563EB]" />
+                    <Icon className="size-4 text-blue-ink" />
                     {label}
                   </Link>
                 ))}
@@ -584,9 +585,9 @@ export function SiteHeader({ quoteCount = 0, onQuoteClick }: SiteHeaderProps) {
                     key={label}
                     href={href}
                     onClick={() => setMenuOpen(false)}
-                    className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm text-[#0F172A] transition hover:bg-white"
+                    className="flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm text-foreground transition hover:bg-card"
                   >
-                    <Icon className="size-4 text-[#2563EB]" />
+                    <Icon className="size-4 text-blue-ink" />
                     {label}
                   </Link>
                 ))}
@@ -601,21 +602,21 @@ export function SiteHeader({ quoteCount = 0, onQuoteClick }: SiteHeaderProps) {
                   key={label}
                   href={`/productos?categoria=${encodeURIComponent(label)}`}
                   onClick={() => setMenuOpen(false)}
-                  className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-xs font-medium text-[#475569] transition hover:bg-white hover:text-[#2563EB]"
+                  className="flex items-center gap-2 rounded-lg px-3 py-2.5 text-xs font-medium text-muted-foreground transition hover:bg-card hover:text-blue-ink"
                 >
-                  <Icon className="size-3.5 shrink-0 text-[#2563EB]" />
+                  <Icon className="size-3.5 shrink-0 text-blue-ink" />
                   {label}
                 </Link>
               ))}
             </div>
           </MobileAccordion>
 
-          <div className="mt-4 grid gap-2.5 border-t border-[#F1F5F9] pt-4 text-sm">
-            <a href="tel:+51999888777" className="flex items-center gap-2 text-[#475569]">
-              <Phone className="size-4 text-[#2563EB]" /> +51 999 888 777
+          <div className="mt-4 grid gap-2.5 border-t border-border pt-4 text-sm">
+            <a href="tel:+51999888777" className="flex items-center gap-2 text-muted-foreground">
+              <Phone className="size-4 text-blue-ink" /> +51 999 888 777
             </a>
-            <a href="mailto:ventas@fjsolutions.pe" className="flex items-center gap-2 text-[#475569]">
-              <Mail className="size-4 text-[#2563EB]" /> ventas@fjsolutions.pe
+            <a href="mailto:ventas@fjsolutions.pe" className="flex items-center gap-2 text-muted-foreground">
+              <Mail className="size-4 text-blue-ink" /> ventas@fjsolutions.pe
             </a>
           </div>
         </div>

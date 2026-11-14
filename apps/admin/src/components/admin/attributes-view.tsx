@@ -341,10 +341,10 @@ export function AttributesView() {
         />
       </div>
 
-      <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs">
+      <div className="rounded-2xl border border-border/80 bg-card p-4 shadow-xs">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div className="relative w-full min-w-0 lg:flex-1">
-            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
@@ -356,7 +356,7 @@ export function AttributesView() {
               <button
                 type="button"
                 onClick={() => setQuery('')}
-                className="absolute right-2.5 top-1/2 grid size-5 -translate-y-1/2 place-items-center rounded-md text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+                className="absolute right-2.5 top-1/2 grid size-5 -translate-y-1/2 place-items-center rounded-md text-muted-foreground transition hover:bg-muted hover:text-foreground/80"
                 aria-label="Limpiar búsqueda"
               >
                 <X className="size-3.5" />
@@ -426,7 +426,7 @@ export function AttributesView() {
         </div>
 
         <div className="mt-3 flex flex-wrap items-center gap-3">
-          <p className="text-[11px] font-medium text-slate-500">
+          <p className="text-[11px] font-medium text-muted-foreground">
             {filtered.length === attributes.length
               ? `${formatNumber(attributes.length)} atributos definidos`
               : `${formatNumber(filtered.length)} de ${formatNumber(attributes.length)} atributos`}
@@ -480,32 +480,32 @@ export function AttributesView() {
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-border">
                 {filtered.map((attribute) => {
                   const result = coverage.get(attribute.id)
                   const scope = result?.scope ?? 0
                   const hits = result?.hits.length ?? 0
                   const percent = scope === 0 ? 0 : Math.round((hits / scope) * 100)
                   return (
-                    <tr key={attribute.id} className="transition hover:bg-slate-50/70">
+                    <tr key={attribute.id} className="transition hover:bg-muted/70">
                       <td className="px-4 py-3">
                         <button
                           type="button"
                           onClick={() => setCoverageTarget(attribute)}
                           className="text-left"
                         >
-                          <p className="text-[13px] font-semibold text-slate-900 hover:text-[#5B21B6]">
+                          <p className="text-[13px] font-semibold text-foreground hover:text-brand-ink">
                             {attribute.label}
                           </p>
-                          <p className="mt-0.5 flex items-center gap-1.5 text-[11px] text-slate-500">
+                          <p className="mt-0.5 flex items-center gap-1.5 text-[11px] text-muted-foreground">
                             {attribute.unit && <span>{attribute.unit}</span>}
                             {attribute.required && (
-                              <span className="rounded-full bg-amber-50 px-1.5 py-0.5 text-[10px] font-semibold text-amber-700 ring-1 ring-inset ring-amber-200">
+                              <span className="rounded-full bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-warning-ink ring-1 ring-inset ring-amber-200">
                                 Obligatorio
                               </span>
                             )}
                             {attribute.options.length > 0 && (
-                              <span className="text-slate-400">
+                              <span className="text-muted-foreground">
                                 {attribute.options.length} opciones
                               </span>
                             )}
@@ -513,21 +513,21 @@ export function AttributesView() {
                         </button>
                       </td>
                       <td className="px-4 py-3">
-                        <span className="inline-flex rounded-full bg-slate-100 px-2 py-0.5 text-[10.5px] font-semibold text-slate-600">
+                        <span className="inline-flex rounded-full bg-muted px-2 py-0.5 text-[10.5px] font-semibold text-muted-foreground">
                           {attributeTypeLabels[attribute.type]}
                         </span>
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex max-w-[260px] flex-wrap gap-1">
                           {attribute.categoryIds.length === 0 ? (
-                            <span className="rounded-full bg-[#F5F3FF] px-2 py-0.5 text-[10.5px] font-semibold text-[#5B21B6] ring-1 ring-inset ring-[#DDD6FE]">
+                            <span className="rounded-full bg-tint-brand px-2 py-0.5 text-[10.5px] font-semibold text-brand-ink ring-1 ring-inset ring-brand-ink/30">
                               Todas las categorías
                             </span>
                           ) : (
                             attribute.categoryIds.map((id) => (
                               <span
                                 key={id}
-                                className="rounded-full bg-slate-50 px-2 py-0.5 text-[10.5px] font-medium text-slate-600 ring-1 ring-inset ring-slate-200"
+                                className="rounded-full bg-muted px-2 py-0.5 text-[10.5px] font-medium text-muted-foreground ring-1 ring-inset ring-border"
                               >
                                 {categoryLabel.get(id) ?? id}
                               </span>
@@ -536,7 +536,7 @@ export function AttributesView() {
                         </div>
                       </td>
                       <td className="px-4 py-3">
-                        <p className="max-w-[220px] truncate text-[11.5px] text-slate-500">
+                        <p className="max-w-[220px] truncate text-[11.5px] text-muted-foreground">
                           {attribute.keywords.length > 0
                             ? attribute.keywords.join(' · ')
                             : 'Sin palabras clave'}
@@ -544,7 +544,7 @@ export function AttributesView() {
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
-                          <span className="h-1.5 w-20 shrink-0 overflow-hidden rounded-full bg-slate-100">
+                          <span className="h-1.5 w-20 shrink-0 overflow-hidden rounded-full bg-muted">
                             <span
                               className={cn(
                                 'block h-full rounded-full',
@@ -560,11 +560,11 @@ export function AttributesView() {
                           <button
                             type="button"
                             onClick={() => setCoverageTarget(attribute)}
-                            className="text-[11.5px] font-semibold text-slate-700 hover:text-[#5B21B6]"
+                            className="text-[11.5px] font-semibold text-foreground/80 hover:text-brand-ink"
                           >
                             {formatNumber(hits)} / {formatNumber(scope)}
                           </button>
-                          <span className="text-[11px] tabular-nums text-slate-400">{percent}%</span>
+                          <span className="text-[11px] tabular-nums text-muted-foreground">{percent}%</span>
                         </div>
                       </td>
                       <td className="px-4 py-3">
@@ -572,13 +572,13 @@ export function AttributesView() {
                           className={cn(
                             'inline-flex items-center rounded-full px-2 py-0.5 text-[10.5px] font-semibold ring-1 ring-inset',
                             attribute.status === 'active'
-                              ? 'bg-emerald-50 text-emerald-700 ring-emerald-200'
-                              : 'bg-slate-100 text-slate-600 ring-slate-200'
+                              ? 'bg-emerald-500/10 text-success-ink ring-emerald-500/30'
+                              : 'bg-muted text-muted-foreground ring-border'
                           )}
                         >
                           {attribute.status === 'active' ? 'Activo' : 'Inactivo'}
                         </span>
-                        <p className="mt-1 text-[10.5px] text-slate-400">
+                        <p className="mt-1 text-[10.5px] text-muted-foreground">
                           Alta el {formatDate(attribute.createdAt)}
                         </p>
                       </td>
@@ -672,19 +672,19 @@ export function AttributesView() {
                     { label: 'Declaran el atributo', value: formatNumber(hits.length) },
                     { label: 'Cobertura', value: `${formatNumber(percent)}%` },
                   ].map((item) => (
-                    <div key={item.label} className="rounded-xl bg-slate-50 px-3 py-2.5">
-                      <p className="font-heading text-lg font-bold leading-none text-slate-900">
+                    <div key={item.label} className="rounded-xl bg-muted px-3 py-2.5">
+                      <p className="font-heading text-lg font-bold leading-none text-foreground">
                         {item.value}
                       </p>
-                      <p className="mt-1 text-[10.5px] font-medium uppercase tracking-[0.1em] text-slate-400">
+                      <p className="mt-1 text-[10.5px] font-medium uppercase tracking-[0.1em] text-muted-foreground">
                         {item.label}
                       </p>
                     </div>
                   ))}
                 </div>
 
-                <div className="rounded-xl border border-slate-100 bg-slate-50/70 px-3 py-2.5 text-[11.5px] leading-relaxed text-slate-600">
-                  <p className="font-semibold text-slate-800">Cómo se detecta</p>
+                <div className="rounded-xl border border-border bg-muted/70 px-3 py-2.5 text-[11.5px] leading-relaxed text-muted-foreground">
+                  <p className="font-semibold text-foreground">Cómo se detecta</p>
                   <p className="mt-1">
                     {coverageTarget.keywords.length > 0
                       ? `Se busca ${coverageTarget.keywords.map((k) => `“${k}”`).join(', ')} dentro de las especificaciones cargadas en cada producto.`
@@ -699,11 +699,11 @@ export function AttributesView() {
                 </div>
 
                 <div className="space-y-2">
-                  <p className="text-[10.5px] font-bold uppercase tracking-[0.12em] text-slate-400">
+                  <p className="text-[10.5px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
                     Fichas que lo declaran
                   </p>
                   {hits.length === 0 ? (
-                    <p className="rounded-xl border border-dashed border-slate-200 px-3 py-3 text-[11.5px] text-slate-500">
+                    <p className="rounded-xl border border-dashed border-border px-3 py-3 text-[11.5px] text-muted-foreground">
                       Ninguna ficha del alcance menciona este atributo todavía.
                     </p>
                   ) : (
@@ -711,15 +711,15 @@ export function AttributesView() {
                       {hits.slice(0, 8).map((hit) => (
                         <li
                           key={hit.product}
-                          className="rounded-lg bg-slate-50 px-3 py-2 text-[11.5px] text-slate-600"
+                          className="rounded-lg bg-muted px-3 py-2 text-[11.5px] text-muted-foreground"
                         >
-                          <span className="font-semibold text-slate-900">{hit.product}</span>
-                          <span className="mx-1.5 text-slate-300">·</span>
+                          <span className="font-semibold text-foreground">{hit.product}</span>
+                          <span className="mx-1.5 text-muted-foreground/60">·</span>
                           {hit.spec}
                         </li>
                       ))}
                       {hits.length > 8 && (
-                        <li className="px-3 text-[11px] text-slate-400">
+                        <li className="px-3 text-[11px] text-muted-foreground">
                           y {formatNumber(hits.length - 8)} fichas más
                         </li>
                       )}
@@ -728,11 +728,11 @@ export function AttributesView() {
                 </div>
 
                 <div className="space-y-2">
-                  <p className="text-[10.5px] font-bold uppercase tracking-[0.12em] text-slate-400">
+                  <p className="text-[10.5px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
                     Fichas sin el dato {missing.length > 0 && `(${formatNumber(missing.length)})`}
                   </p>
                   {missing.length === 0 ? (
-                    <p className="rounded-xl bg-emerald-50 px-3 py-2.5 text-[11.5px] font-medium text-emerald-700 ring-1 ring-inset ring-emerald-200">
+                    <p className="rounded-xl bg-emerald-500/10 px-3 py-2.5 text-[11.5px] font-medium text-success-ink ring-1 ring-inset ring-emerald-500/30">
                       Cobertura completa en el alcance.
                     </p>
                   ) : (
@@ -740,13 +740,13 @@ export function AttributesView() {
                       {missing.slice(0, 12).map((name) => (
                         <li
                           key={name}
-                          className="rounded-lg bg-white px-2 py-1 text-[11px] text-slate-600 ring-1 ring-inset ring-slate-200"
+                          className="rounded-lg bg-card px-2 py-1 text-[11px] text-muted-foreground ring-1 ring-inset ring-border"
                         >
                           {name}
                         </li>
                       ))}
                       {missing.length > 12 && (
-                        <li className="px-2 py-1 text-[11px] text-slate-400">
+                        <li className="px-2 py-1 text-[11px] text-muted-foreground">
                           y {formatNumber(missing.length - 12)} más
                         </li>
                       )}
@@ -874,8 +874,8 @@ export function AttributesView() {
                     className={cn(
                       'rounded-full px-3 py-1.5 text-[11.5px] font-semibold ring-1 ring-inset transition',
                       selected
-                        ? 'bg-[#F5F3FF] text-[#5B21B6] ring-[#DDD6FE]'
-                        : 'bg-white text-slate-500 ring-slate-200 hover:bg-slate-50'
+                        ? 'bg-tint-brand text-brand-ink ring-brand-ink/30'
+                        : 'bg-card text-muted-foreground ring-border hover:bg-muted'
                     )}
                     aria-pressed={selected}
                   >
@@ -886,10 +886,10 @@ export function AttributesView() {
             </div>
           </Field>
 
-          <div className="flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-slate-50/70 px-3 py-2.5">
+          <div className="flex items-center justify-between gap-3 rounded-xl border border-border bg-muted/70 px-3 py-2.5">
             <div className="min-w-0">
-              <p className="text-[12.5px] font-semibold text-slate-900">Obligatorio al publicar</p>
-              <p className="text-[11px] leading-relaxed text-slate-500">
+              <p className="text-[12.5px] font-semibold text-foreground">Obligatorio al publicar</p>
+              <p className="text-[11px] leading-relaxed text-muted-foreground">
                 El editor de productos avisará si la ficha no declara este atributo.
               </p>
             </div>

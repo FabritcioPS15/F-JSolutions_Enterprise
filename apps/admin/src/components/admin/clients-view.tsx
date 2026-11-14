@@ -276,10 +276,10 @@ export function ClientsView() {
         />
       </div>
 
-      <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs">
+      <div className="rounded-2xl border border-border/80 bg-card p-4 shadow-xs">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
           <div className="relative w-full min-w-0 lg:flex-1">
-            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
@@ -291,7 +291,7 @@ export function ClientsView() {
               <button
                 type="button"
                 onClick={() => setQuery('')}
-                className="absolute right-2.5 top-1/2 grid size-5 -translate-y-1/2 place-items-center rounded-md text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
+                className="absolute right-2.5 top-1/2 grid size-5 -translate-y-1/2 place-items-center rounded-md text-muted-foreground transition hover:bg-muted hover:text-foreground/80"
                 aria-label="Limpiar búsqueda"
               >
                 <X className="size-3.5" />
@@ -348,8 +348,8 @@ export function ClientsView() {
           </div>
         </div>
 
-        <p className="mt-3 border-t border-slate-100 pt-3 text-[11px] font-medium text-slate-500">
-          <span className="font-bold text-slate-900">{filtered.length}</span>{' '}
+        <p className="mt-3 border-t border-border pt-3 text-[11px] font-medium text-muted-foreground">
+          <span className="font-bold text-foreground">{filtered.length}</span>{' '}
           {filtered.length === 1 ? 'cliente' : 'clientes'}
           {hasFilters ? ' con los filtros aplicados' : ' registrados'}
         </p>
@@ -380,7 +380,7 @@ export function ClientsView() {
         />
       ) : (
         <>
-          <div className="hidden overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xs lg:block">
+          <div className="hidden overflow-hidden rounded-2xl border border-border/80 bg-card shadow-xs lg:block">
             <div className="overflow-x-auto scrollbar-light">
               <table className={tableClass}>
                 <thead>
@@ -394,7 +394,7 @@ export function ClientsView() {
                     <th scope="col" className="whitespace-nowrap px-5 py-3 text-right">Acciones</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-border">
                   {filtered.map((client) => {
                     const clientQuotes = quotes
                       .filter((quote) => quote.clientId === client.id)
@@ -402,15 +402,15 @@ export function ClientsView() {
                         (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
                       )
                     return (
-                      <tr key={client.id} className="group transition-colors hover:bg-slate-50/70">
+                      <tr key={client.id} className="group transition-colors hover:bg-muted/70">
                         <td className="px-5 py-3">
                           <div className="flex items-center gap-3">
                             <ClientAvatar name={client.name} company={client.company} />
                             <div className="min-w-0">
-                              <p className="truncate text-[12.5px] font-semibold text-slate-900">
+                              <p className="truncate text-[12.5px] font-semibold text-foreground">
                                 {client.company || client.name}
                               </p>
-                              <p className="mt-0.5 truncate text-[11px] text-slate-400">
+                              <p className="mt-0.5 truncate text-[11px] text-muted-foreground">
                                 {client.company ? client.name : 'Persona natural'}
                                 {client.city ? ` · ${client.city}` : ''}
                               </p>
@@ -420,42 +420,42 @@ export function ClientsView() {
                         <td className="px-4 py-3">
                           {client.documentNumber ? (
                             <>
-                              <p className="text-[10px] font-bold uppercase tracking-wide text-slate-400">
+                              <p className="text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
                                 {client.documentType === 'dni' ? 'DNI' : 'RUC'}
                               </p>
-                              <p className="mt-0.5 font-mono text-[11px] text-slate-600">
+                              <p className="mt-0.5 font-mono text-[11px] text-muted-foreground">
                                 {client.documentNumber}
                               </p>
                             </>
                           ) : (
-                            <span className="text-[11px] text-slate-400">Sin documento</span>
+                            <span className="text-[11px] text-muted-foreground">Sin documento</span>
                           )}
                         </td>
                         <td className="px-4 py-3">
-                          <p className="max-w-[190px] truncate text-[12.5px] font-medium text-slate-700">
+                          <p className="max-w-[190px] truncate text-[12.5px] font-medium text-foreground/80">
                             {client.email}
                           </p>
-                          <p className="mt-0.5 text-[11px] text-slate-400">
+                          <p className="mt-0.5 text-[11px] text-muted-foreground">
                             {client.phone || 'Sin teléfono'}
                           </p>
                         </td>
                         <td className="px-4 py-3">
-                          <span className="inline-flex rounded-full bg-slate-100 px-2 py-0.5 text-[10.5px] font-semibold text-slate-600">
+                          <span className="inline-flex rounded-full bg-muted px-2 py-0.5 text-[10.5px] font-semibold text-muted-foreground">
                             {clientSegmentLabels[client.segment]}
                           </span>
                         </td>
                         <td className="px-4 py-3">
                           {clientQuotes.length > 0 ? (
                             <>
-                              <p className="text-[12.5px] font-bold tabular-nums text-slate-900">
+                              <p className="text-[12.5px] font-bold tabular-nums text-foreground">
                                 {clientQuotes.length}
                               </p>
-                              <p className="mt-0.5 text-[11px] text-slate-400">
+                              <p className="mt-0.5 text-[11px] text-muted-foreground">
                                 Última {formatDate(clientQuotes[0].createdAt)}
                               </p>
                             </>
                           ) : (
-                            <span className="text-[11px] text-slate-400">Sin cotizaciones</span>
+                            <span className="text-[11px] text-muted-foreground">Sin cotizaciones</span>
                           )}
                         </td>
                         <td className="px-4 py-3">
@@ -510,15 +510,15 @@ export function ClientsView() {
               return (
                 <article
                   key={client.id}
-                  className="flex flex-col rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs"
+                  className="flex flex-col rounded-2xl border border-border/80 bg-card p-4 shadow-xs"
                 >
                   <div className="flex items-start gap-3">
                     <ClientAvatar name={client.name} company={client.company} />
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-[13px] font-bold text-slate-900">
+                      <p className="truncate text-[13px] font-bold text-foreground">
                         {client.company || client.name}
                       </p>
-                      <p className="mt-0.5 truncate text-[10.5px] text-slate-400">
+                      <p className="mt-0.5 truncate text-[10.5px] text-muted-foreground">
                         {client.company ? client.name : 'Persona natural'}
                         {client.city ? ` · ${client.city}` : ''}
                       </p>
@@ -528,23 +528,23 @@ export function ClientsView() {
 
                   <dl className="mt-3 space-y-1.5 text-[11px]">
                     <div className="flex justify-between gap-3">
-                      <dt className="text-slate-400">Correo</dt>
-                      <dd className="truncate font-medium text-slate-700">{client.email}</dd>
+                      <dt className="text-muted-foreground">Correo</dt>
+                      <dd className="truncate font-medium text-foreground/80">{client.email}</dd>
                     </div>
                     <div className="flex justify-between gap-3">
-                      <dt className="text-slate-400">Teléfono</dt>
-                      <dd className="font-medium text-slate-700">{client.phone || '—'}</dd>
+                      <dt className="text-muted-foreground">Teléfono</dt>
+                      <dd className="font-medium text-foreground/80">{client.phone || '—'}</dd>
                     </div>
                     <div className="flex justify-between gap-3">
-                      <dt className="text-slate-400">Cotizaciones</dt>
-                      <dd className="font-medium text-slate-700">{clientQuotes.length}</dd>
+                      <dt className="text-muted-foreground">Cotizaciones</dt>
+                      <dd className="font-medium text-foreground/80">{clientQuotes.length}</dd>
                     </div>
                   </dl>
 
-                  <div className="mt-3 flex items-center gap-1.5 border-t border-slate-100 pt-3">
+                  <div className="mt-3 flex items-center gap-1.5 border-t border-border pt-3">
                     <Link
                       href={`/cotizaciones?q=${encodeURIComponent(client.email)}`}
-                      className="inline-flex h-8 flex-1 items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white text-[11px] font-semibold text-slate-700 transition hover:bg-slate-50"
+                      className="inline-flex h-8 flex-1 items-center justify-center gap-1.5 rounded-lg border border-border bg-card text-[11px] font-semibold text-foreground/80 transition hover:bg-muted"
                     >
                       <FileText className="size-3.5" aria-hidden="true" />
                       Cotizaciones
@@ -553,7 +553,7 @@ export function ClientsView() {
                       <button
                         type="button"
                         onClick={() => setEditing(client)}
-                        className={cn(iconButton, 'border border-slate-200 bg-white')}
+                        className={cn(iconButton, 'border border-border bg-card')}
                         aria-label={`Editar ${client.company || client.name}`}
                       >
                         <Pencil className="size-3.5" />
@@ -565,7 +565,7 @@ export function ClientsView() {
                         onClick={() => setDeleteTarget(client)}
                         className={cn(
                           iconButton,
-                          'border border-slate-200 bg-white hover:bg-red-50 hover:text-red-600'
+                          'border border-border bg-card hover:bg-red-500/10 hover:text-danger-ink'
                         )}
                         aria-label={`Eliminar ${client.company || client.name}`}
                       >

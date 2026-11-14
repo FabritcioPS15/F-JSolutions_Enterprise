@@ -33,16 +33,16 @@ const EDGE = 8
 
 function itemClass(tone: RowAction['tone'], disabled?: boolean) {
   return cn(
-    'flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-[12.5px] font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5B21B6]/25',
+    'flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-[12.5px] font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/25',
     tone === 'danger'
-      ? 'text-rose-600 hover:bg-rose-50 focus-visible:bg-rose-50'
-      : 'text-slate-700 hover:bg-slate-50 focus-visible:bg-slate-50',
+      ? 'text-danger-ink hover:bg-rose-50 focus-visible:bg-rose-50'
+      : 'text-foreground/80 hover:bg-muted focus-visible:bg-muted',
     disabled && 'pointer-events-none opacity-40'
   )
 }
 
 function iconClass(tone: RowAction['tone']) {
-  return cn('size-4 shrink-0', tone === 'danger' ? 'text-rose-500' : 'text-slate-400')
+  return cn('size-4 shrink-0', tone === 'danger' ? 'text-rose-500' : 'text-muted-foreground')
 }
 
 export function RowActions({
@@ -173,7 +173,7 @@ export function RowActions({
         disabled={busy}
         className={cn(
           iconButton,
-          open && 'bg-slate-100 text-slate-700',
+          open && 'bg-muted text-foreground/80',
           busy && 'pointer-events-none',
           className
         )}
@@ -186,7 +186,7 @@ export function RowActions({
         }}
       >
         {busy ? (
-          <Loader2 className="size-4 animate-spin text-slate-400" aria-hidden="true" />
+          <Loader2 className="size-4 animate-spin text-muted-foreground" aria-hidden="true" />
         ) : (
           <MoreHorizontal className="size-4" aria-hidden="true" />
         )}
@@ -205,10 +205,10 @@ export function RowActions({
               left: pos?.left ?? 0,
               visibility: pos ? 'visible' : 'hidden',
             }}
-            className="fixed z-[95] w-52 overflow-hidden rounded-xl border border-slate-200 bg-white p-1 shadow-xl shadow-slate-900/10 animate-in fade-in-0 zoom-in-95 duration-150"
+            className="fixed z-[95] w-52 overflow-hidden rounded-xl border border-border bg-card p-1 shadow-xl shadow-slate-900/10 animate-in fade-in-0 zoom-in-95 duration-150"
           >
             {title && (
-              <p className="truncate px-2.5 pb-1 pt-1.5 text-[10px] font-bold uppercase tracking-[0.12em] text-slate-400">
+              <p className="truncate px-2.5 pb-1 pt-1.5 text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
                 {title}
               </p>
             )}
@@ -225,7 +225,7 @@ export function RowActions({
                   <div
                     key={`${item.key}-divider`}
                     role="separator"
-                    className="my-1 h-px bg-slate-100"
+                    className="my-1 h-px bg-muted"
                   />
                 ) : null
 

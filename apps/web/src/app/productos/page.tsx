@@ -3,7 +3,7 @@ import { CatalogPage } from '@/components/sections/catalog-page'
 
 export default function ProductosPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-[#f8fafc]" />}>
+    <Suspense fallback={<div className="min-h-screen bg-muted" />}>
       <CatalogPage />
     </Suspense>
   )

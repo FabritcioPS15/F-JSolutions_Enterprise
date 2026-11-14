@@ -59,9 +59,9 @@ const statusLabels: Record<ServiceOfferingStatus, string> = {
 }
 
 const statusClasses: Record<ServiceOfferingStatus, string> = {
-  draft: 'bg-amber-50 text-amber-700 ring-amber-200',
-  published: 'bg-emerald-50 text-emerald-700 ring-emerald-200',
-  archived: 'bg-slate-100 text-slate-600 ring-slate-200',
+  draft: 'bg-amber-500/10 text-warning-ink ring-amber-200',
+  published: 'bg-emerald-500/10 text-success-ink ring-emerald-500/30',
+  archived: 'bg-muted text-muted-foreground ring-border',
 }
 
 function storePath(service: ServiceOffering) {
@@ -199,11 +199,11 @@ export function ServicesView() {
       </div>
 
       {error && (
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-warning-ink">
           <p>{error}</p>
           <button
             type="button"
-            className="inline-flex items-center gap-2 rounded-lg border border-amber-300 bg-white px-3 py-1.5 text-xs font-semibold text-amber-800 transition hover:bg-amber-100"
+            className="inline-flex items-center gap-2 rounded-lg border border-amber-500/40 bg-card px-3 py-1.5 text-xs font-semibold text-warning-ink transition hover:bg-amber-500/15"
             onClick={() => void load()}
           >
             <RefreshCw className="size-3.5" aria-hidden="true" />
@@ -212,11 +212,11 @@ export function ServicesView() {
         </div>
       )}
 
-      <section className="overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-xs">
-        <div className="flex flex-col gap-3 border-b border-slate-100 p-4 sm:flex-row sm:items-center">
+      <section className="overflow-hidden rounded-2xl border border-border/80 bg-card shadow-xs">
+        <div className="flex flex-col gap-3 border-b border-border p-4 sm:flex-row sm:items-center">
           <div className="relative flex-1">
             <Search
-              className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400"
+              className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
               aria-hidden="true"
             />
             <input
@@ -292,19 +292,19 @@ export function ServicesView() {
                   <th className="px-4 py-3 text-right">Acciones</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-border">
                 {filtered.map((service) => (
-                  <tr key={service.id} className="align-top transition hover:bg-slate-50/60">
+                  <tr key={service.id} className="align-top transition hover:bg-muted/60">
                     <td className="px-5 py-3.5">
                       <Link
                         href={`/servicios/${service.id}/editar`}
-                        className="font-semibold text-slate-900 transition hover:text-[#5B21B6]"
+                        className="font-semibold text-foreground transition hover:text-brand-ink"
                       >
                         {service.title}
                       </Link>
-                      <p className="mt-0.5 text-[11px] text-slate-400">/{service.slug}</p>
+                      <p className="mt-0.5 text-[11px] text-muted-foreground">/{service.slug}</p>
                     </td>
-                    <td className="px-4 py-3.5 text-slate-600">{service.category}</td>
+                    <td className="px-4 py-3.5 text-muted-foreground">{service.category}</td>
                     <td className="px-4 py-3.5">
                       <span
                         className={cn(
@@ -315,8 +315,8 @@ export function ServicesView() {
                         {statusLabels[service.status]}
                       </span>
                     </td>
-                    <td className="px-4 py-3.5 text-slate-600">{service.related.length}</td>
-                    <td className="px-4 py-3.5 text-slate-500">{formatDate(service.updatedAt)}</td>
+                    <td className="px-4 py-3.5 text-muted-foreground">{service.related.length}</td>
+                    <td className="px-4 py-3.5 text-muted-foreground">{formatDate(service.updatedAt)}</td>
                     <td className="px-4 py-3.5 text-right">
                       <RowActions
                         label={`Acciones para ${service.title}`}
@@ -362,7 +362,7 @@ export function ServicesView() {
         )}
       </section>
 
-      <p className="flex items-center gap-1.5 text-[11px] text-slate-400">
+      <p className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
         <ArrowUpRight className="size-3.5" aria-hidden="true" />
         Los servicios publicados aparecen en la tienda; si no hay registros, se mantienen las
         páginas estáticas del sitio.

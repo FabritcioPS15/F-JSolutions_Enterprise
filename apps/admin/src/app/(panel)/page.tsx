@@ -53,14 +53,14 @@ const activityMeta: Record<
   ActivityType,
   { label: string; icon: LucideIcon; chip: string }
 > = {
-  created: { label: 'Producto creado', icon: PackagePlus, chip: 'bg-slate-50 text-slate-500 ring-slate-200' },
-  updated: { label: 'Producto actualizado', icon: Pencil, chip: 'bg-slate-50 text-slate-500 ring-slate-200' },
-  published: { label: 'Producto publicado', icon: CheckCircle2, chip: 'bg-emerald-50 text-emerald-600 ring-emerald-100' },
-  unpublished: { label: 'Retirado de publicación', icon: EyeOff, chip: 'bg-slate-50 text-slate-500 ring-slate-200' },
-  archived: { label: 'Producto archivado', icon: Archive, chip: 'bg-amber-50 text-amber-600 ring-amber-100' },
-  restored: { label: 'Producto restaurado', icon: RotateCcw, chip: 'bg-emerald-50 text-emerald-600 ring-emerald-100' },
-  duplicated: { label: 'Producto duplicado', icon: Copy, chip: 'bg-slate-50 text-slate-500 ring-slate-200' },
-  deleted: { label: 'Producto eliminado', icon: Trash2, chip: 'bg-red-50 text-red-600 ring-red-100' },
+  created: { label: 'Producto creado', icon: PackagePlus, chip: 'bg-muted text-muted-foreground ring-border' },
+  updated: { label: 'Producto actualizado', icon: Pencil, chip: 'bg-muted text-muted-foreground ring-border' },
+  published: { label: 'Producto publicado', icon: CheckCircle2, chip: 'bg-emerald-500/10 text-success-ink ring-emerald-500/20' },
+  unpublished: { label: 'Retirado de publicación', icon: EyeOff, chip: 'bg-muted text-muted-foreground ring-border' },
+  archived: { label: 'Producto archivado', icon: Archive, chip: 'bg-amber-500/10 text-warning-ink ring-amber-100' },
+  restored: { label: 'Producto restaurado', icon: RotateCcw, chip: 'bg-emerald-500/10 text-success-ink ring-emerald-500/20' },
+  duplicated: { label: 'Producto duplicado', icon: Copy, chip: 'bg-muted text-muted-foreground ring-border' },
+  deleted: { label: 'Producto eliminado', icon: Trash2, chip: 'bg-red-500/10 text-danger-ink ring-red-500/20' },
 }
 
 export default function DashboardPage() {
@@ -143,7 +143,7 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#2E1065] via-[#1E1B4B] to-[#0B1220] px-6 py-7 text-white shadow-xl shadow-slate-900/10 sm:px-8 sm:py-9">
+      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#172554] via-[#1E1B4B] to-[#0B1220] px-6 py-7 text-white shadow-xl shadow-slate-900/10 sm:px-8 sm:py-9">
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.12]"
           style={{
@@ -164,19 +164,19 @@ export default function DashboardPage() {
 
         <div className="relative flex flex-col gap-7 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-2xl">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.06] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-300">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.06] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground/60">
               <Sparkles className="size-3" aria-hidden="true" />
               {settings.storeName} · Administración
             </span>
             <h1 className="mt-4 font-heading text-2xl font-bold leading-tight tracking-tight sm:text-[32px]">
               Tu catálogo, bajo control.
             </h1>
-            <p className="mt-2 max-w-xl text-sm leading-relaxed text-slate-400">
+            <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground">
               Revisa el estado del catálogo, la actividad reciente y los productos que necesitan
               atención. El resumen comercial y de atención se calcula sobre los datos que muestra el
               panel.
             </p>
-            <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-[11px] font-medium text-slate-400">
+            <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-[11px] font-medium text-muted-foreground">
               <span className="inline-flex items-center gap-1.5">
                 <Package className="size-3.5" aria-hidden="true" />
                 {products.length} productos
@@ -195,7 +195,7 @@ export default function DashboardPage() {
           <div className="flex flex-wrap items-center gap-2.5">
             <Link
               href="/productos/nuevo"
-              className="inline-flex h-11 items-center gap-2 rounded-xl bg-white px-5 text-xs font-bold text-slate-900 shadow-lg shadow-black/20 transition hover:bg-slate-100"
+              className="inline-flex h-11 items-center gap-2 rounded-xl bg-card px-5 text-xs font-bold text-foreground shadow-lg shadow-black/20 transition hover:bg-muted"
             >
               <PackagePlus className="size-4" aria-hidden="true" />
               Nuevo producto
@@ -284,17 +284,17 @@ export default function DashboardPage() {
             <Link
               key={action.href}
               href={action.href}
-              className="group flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs transition hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md"
+              className="group flex items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-xs transition hover:-translate-y-0.5 hover:border-input hover:shadow-md"
             >
-              <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-slate-50 text-slate-500 ring-1 ring-slate-200/70">
+              <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-muted text-muted-foreground ring-1 ring-border/70">
                 <Icon className="size-[18px]" aria-hidden="true" />
               </span>
               <span className="min-w-0">
-                <span className="block text-xs font-bold text-slate-900">{action.title}</span>
-                <span className="mt-0.5 block text-[10.5px] text-slate-500">{action.text}</span>
+                <span className="block text-xs font-bold text-foreground">{action.title}</span>
+                <span className="mt-0.5 block text-[10.5px] text-muted-foreground">{action.text}</span>
               </span>
               <ArrowUpRight
-                className="ml-auto size-4 shrink-0 text-slate-300 transition group-hover:text-slate-500"
+                className="ml-auto size-4 shrink-0 text-muted-foreground/60 transition group-hover:text-muted-foreground"
                 aria-hidden="true"
               />
             </Link>
@@ -304,17 +304,17 @@ export default function DashboardPage() {
           href={`${storeUrl}/productos`}
           target="_blank"
           rel="noreferrer"
-          className="group flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs transition hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md"
+          className="group flex items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-xs transition hover:-translate-y-0.5 hover:border-input hover:shadow-md"
         >
-          <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-slate-50 text-slate-500 ring-1 ring-slate-200/70">
+          <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-muted text-muted-foreground ring-1 ring-border/70">
             <ArrowUpRight className="size-[18px]" aria-hidden="true" />
           </span>
           <span className="min-w-0">
-            <span className="block text-xs font-bold text-slate-900">Ver catálogo público</span>
-            <span className="mt-0.5 block text-[10.5px] text-slate-500">Abre la tienda en otra pestaña.</span>
+            <span className="block text-xs font-bold text-foreground">Ver catálogo público</span>
+            <span className="mt-0.5 block text-[10.5px] text-muted-foreground">Abre la tienda en otra pestaña.</span>
           </span>
           <ArrowUpRight
-            className="ml-auto size-4 shrink-0 text-slate-300 transition group-hover:text-slate-500"
+            className="ml-auto size-4 shrink-0 text-muted-foreground/60 transition group-hover:text-muted-foreground"
             aria-hidden="true"
           />
         </a>
@@ -349,24 +349,24 @@ export default function DashboardPage() {
             <Link
               key={item.href}
               href={item.href}
-              className="group flex items-center gap-3 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-xs transition hover:-translate-y-0.5 hover:border-[#DDD6FE] hover:shadow-md"
+              className="group flex items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-xs transition hover:-translate-y-0.5 hover:border-brand-ink/30 hover:shadow-md"
             >
-              <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-slate-50 text-slate-500 ring-1 ring-slate-200/70">
+              <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-muted text-muted-foreground ring-1 ring-border/70">
                 <Icon className="size-[18px]" aria-hidden="true" />
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block text-[10px] font-bold uppercase tracking-[0.14em] text-slate-400">
+                <span className="block text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
                   {item.label}
                 </span>
                 <span className="mt-1 flex items-baseline gap-2">
-                  <span className="font-heading text-xl font-bold leading-none text-slate-900">
+                  <span className="font-heading text-xl font-bold leading-none text-foreground">
                     {item.value}
                   </span>
-                  <span className="truncate text-[10px] text-slate-400">{item.hint}</span>
+                  <span className="truncate text-[10px] text-muted-foreground">{item.hint}</span>
                 </span>
               </span>
               <ArrowUpRight
-                className="size-4 shrink-0 text-slate-300 transition group-hover:text-slate-500"
+                className="size-4 shrink-0 text-muted-foreground/60 transition group-hover:text-muted-foreground"
                 aria-hidden="true"
               />
             </Link>
@@ -375,7 +375,7 @@ export default function DashboardPage() {
       </div>
 
       {summaryError && (
-        <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs leading-relaxed text-amber-800">
+        <div className="rounded-2xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-xs leading-relaxed text-warning-ink">
           {summaryError} Se muestran los datos locales mientras la API esté disponible.
         </div>
       )}
@@ -419,7 +419,7 @@ export default function DashboardPage() {
           action={
             <Link
               href="/cotizaciones"
-              className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#5B21B6] transition hover:text-[#5B21B6]"
+              className="inline-flex items-center gap-1 text-[11px] font-semibold text-brand-ink transition hover:text-brand-ink"
             >
               Ver todas
               <ArrowUpRight className="size-3.5" aria-hidden="true" />
@@ -433,24 +433,24 @@ export default function DashboardPage() {
               description="Las cotizaciones registradas aparecerán aquí."
             />
           ) : (
-            <ul className="divide-y divide-slate-100">
+            <ul className="divide-y divide-border">
               {summary.recentQuotes.map((quote) => (
                 <li
                   key={quote.id}
                   className="flex items-center gap-3 py-3 first:pt-0 last:pb-0"
                 >
-                  <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-slate-50 text-slate-500 ring-1 ring-slate-200/70">
+                  <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-muted text-muted-foreground ring-1 ring-border/70">
                     <FileText className="size-4" aria-hidden="true" />
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-[11.5px] font-semibold text-slate-800">
+                    <p className="truncate text-[11.5px] font-semibold text-foreground">
                       {quote.code} · {quote.clientName}
                     </p>
-                    <p className="mt-0.5 text-[10px] text-slate-400">
+                    <p className="mt-0.5 text-[10px] text-muted-foreground">
                       {quoteStatusLabels[quote.status]} · {formatDate(quote.createdAt)}
                     </p>
                   </div>
-                  <span className="shrink-0 text-[11px] font-bold tabular-nums text-slate-700">
+                  <span className="shrink-0 text-[11px] font-bold tabular-nums text-foreground/80">
                     {formatCurrency(quote.total, quote.currency)}
                   </span>
                 </li>
@@ -466,7 +466,7 @@ export default function DashboardPage() {
           action={
             <Link
               href="/solicitudes"
-              className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#5B21B6] transition hover:text-[#5B21B6]"
+              className="inline-flex items-center gap-1 text-[11px] font-semibold text-brand-ink transition hover:text-brand-ink"
             >
               Ver todas
               <ArrowUpRight className="size-3.5" aria-hidden="true" />
@@ -480,20 +480,20 @@ export default function DashboardPage() {
               description="Las consultas recibidas aparecerán aquí."
             />
           ) : (
-            <ul className="divide-y divide-slate-100">
+            <ul className="divide-y divide-border">
               {summary.recentRequests.map((request) => (
                 <li
                   key={request.id}
                   className="flex items-center gap-3 py-3 first:pt-0 last:pb-0"
                 >
-                  <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-slate-50 text-slate-500 ring-1 ring-slate-200/70">
+                  <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-muted text-muted-foreground ring-1 ring-border/70">
                     <Inbox className="size-4" aria-hidden="true" />
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-[11.5px] font-semibold text-slate-800">
+                    <p className="truncate text-[11.5px] font-semibold text-foreground">
                       {request.code} · {request.name}
                     </p>
-                    <p className="mt-0.5 truncate text-[10px] text-slate-400">
+                    <p className="mt-0.5 truncate text-[10px] text-muted-foreground">
                       {requestStatusLabels[request.status]} · {request.topic} ·{' '}
                       {formatDate(request.createdAt)}
                     </p>
@@ -514,7 +514,7 @@ export default function DashboardPage() {
           action={
             <Link
               href="/categorias"
-              className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#5B21B6] transition hover:text-[#5B21B6]"
+              className="inline-flex items-center gap-1 text-[11px] font-semibold text-brand-ink transition hover:text-brand-ink"
             >
               Gestionar
               <ArrowUpRight className="size-3.5" aria-hidden="true" />
@@ -527,7 +527,7 @@ export default function DashboardPage() {
               title="Aún no hay productos"
               description="Crea tu primer producto para ver la distribución por categoría."
               action={
-                <Link href="/productos/nuevo" className="text-xs font-semibold text-[#5B21B6]">
+                <Link href="/productos/nuevo" className="text-xs font-semibold text-brand-ink">
                   Crear producto
                 </Link>
               }
@@ -538,23 +538,23 @@ export default function DashboardPage() {
                 <div key={category.id}>
                   <div className="mb-1.5 flex items-center justify-between gap-3">
                     <div className="flex min-w-0 items-center gap-2.5">
-                      <span className="grid size-7 shrink-0 place-items-center rounded-lg bg-slate-50 text-slate-500 ring-1 ring-slate-100">
+                      <span className="grid size-7 shrink-0 place-items-center rounded-lg bg-muted text-muted-foreground ring-1 ring-border">
                         <CategoryGlyph label={category.label} className="size-3.5" />
                       </span>
-                      <span className="truncate text-xs font-semibold text-slate-700">
+                      <span className="truncate text-xs font-semibold text-foreground/80">
                         {category.label}
                       </span>
-                      <span className="shrink-0 rounded-full bg-slate-100 px-1.5 py-0.5 text-[10px] font-semibold text-slate-500">
+                      <span className="shrink-0 rounded-full bg-muted px-1.5 py-0.5 text-[10px] font-semibold text-muted-foreground">
                         {category.count}
                       </span>
                     </div>
-                    <span className="shrink-0 text-[10.5px] font-medium text-slate-400">
+                    <span className="shrink-0 text-[10.5px] font-medium text-muted-foreground">
                       {formatNumber(category.units)} uds.
                     </span>
                   </div>
-                  <div className="h-1.5 overflow-hidden rounded-full bg-slate-100">
+                  <div className="h-1.5 overflow-hidden rounded-full bg-muted">
                     <div
-                      className="h-full rounded-full bg-[#5B21B6] transition-all duration-500"
+                      className="h-full rounded-full bg-[#2563EB] transition-all duration-500"
                       style={{ width: `${Math.max(4, (category.count / maxCategoryCount) * 100)}%` }}
                     />
                   </div>
@@ -578,12 +578,12 @@ export default function DashboardPage() {
               role="img"
               aria-label={`${published.length} publicados, ${drafts.length} en borrador, ${archived.length} archivados`}
             >
-              <div className="absolute inset-[18px] grid place-items-center rounded-full bg-white text-center shadow-inner">
+              <div className="absolute inset-[18px] grid place-items-center rounded-full bg-card text-center shadow-inner">
                 <div>
-                  <p className="font-heading text-2xl font-bold leading-none text-slate-900">
+                  <p className="font-heading text-2xl font-bold leading-none text-foreground">
                     {products.length}
                   </p>
-                  <p className="mt-1 text-[9.5px] font-semibold uppercase tracking-[0.14em] text-slate-400">
+                  <p className="mt-1 text-[9.5px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
                     productos
                   </p>
                 </div>
@@ -597,24 +597,24 @@ export default function DashboardPage() {
                 { label: 'Archivados', count: archived.length, dot: 'bg-amber-500' },
               ].map((row) => (
                 <div key={row.label} className="flex items-center justify-between gap-3 text-xs">
-                  <span className="flex items-center gap-2 text-slate-600">
+                  <span className="flex items-center gap-2 text-muted-foreground">
                     <span className={cn('size-2 rounded-full', row.dot)} />
                     {row.label}
                   </span>
-                  <span className="font-bold tabular-nums text-slate-900">{row.count}</span>
+                  <span className="font-bold tabular-nums text-foreground">{row.count}</span>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="mt-5 flex items-center justify-between gap-3 rounded-xl border border-slate-100 bg-slate-50/70 px-3 py-2.5">
-            <p className="text-[10.5px] text-slate-500">
-              <span className="font-bold text-slate-900">{lowStock.length}</span>{' '}
+          <div className="mt-5 flex items-center justify-between gap-3 rounded-xl border border-border bg-muted/70 px-3 py-2.5">
+            <p className="text-[10.5px] text-muted-foreground">
+              <span className="font-bold text-foreground">{lowStock.length}</span>{' '}
               {lowStock.length === 1 ? 'producto requiere' : 'productos requieren'} reposición
             </p>
             <Link
               href="/productos?stock=low"
-              className="text-[10.5px] font-semibold text-[#5B21B6] transition hover:text-[#5B21B6]"
+              className="text-[10.5px] font-semibold text-brand-ink transition hover:text-brand-ink"
             >
               Revisar
             </Link>
@@ -631,7 +631,7 @@ export default function DashboardPage() {
           action={
             <Link
               href="/productos?stock=low"
-              className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#5B21B6] transition hover:text-[#5B21B6]"
+              className="inline-flex items-center gap-1 text-[11px] font-semibold text-brand-ink transition hover:text-brand-ink"
             >
               Ver todos
               <ArrowUpRight className="size-3.5" aria-hidden="true" />
@@ -648,22 +648,22 @@ export default function DashboardPage() {
               />
             </div>
           ) : (
-            <ul className="divide-y divide-slate-100">
+            <ul className="divide-y divide-border">
               {lowStock.slice(0, 5).map((product) => (
                 <li key={product.id}>
                   <Link
                     href={`/productos/${product.id}`}
-                    className="flex items-center gap-3 px-5 py-3 transition hover:bg-slate-50/80 sm:px-6"
+                    className="flex items-center gap-3 px-5 py-3 transition hover:bg-muted/80 sm:px-6"
                   >
                     <ProductThumb src={product.image} alt={product.name} className="size-10 shrink-0" />
                     <div className="min-w-0 flex-1">
-                      <p className="truncate text-xs font-semibold text-slate-900">{product.name}</p>
-                      <p className="mt-0.5 font-mono text-[10px] text-slate-400">
+                      <p className="truncate text-xs font-semibold text-foreground">{product.name}</p>
+                      <p className="mt-0.5 font-mono text-[10px] text-muted-foreground">
                         {product.sku} · mínimo {product.minStock}
                       </p>
                     </div>
                     <StockBadge stock={product.stock} minStock={product.minStock} compact />
-                    <ArrowUpRight className="size-4 shrink-0 text-slate-300" aria-hidden="true" />
+                    <ArrowUpRight className="size-4 shrink-0 text-muted-foreground/60" aria-hidden="true" />
                   </Link>
                 </li>
               ))}
@@ -678,7 +678,7 @@ export default function DashboardPage() {
           action={
             <Link
               href="/actividad"
-              className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#5B21B6] transition hover:text-[#5B21B6]"
+              className="inline-flex items-center gap-1 text-[11px] font-semibold text-brand-ink transition hover:text-brand-ink"
             >
               Ver todo
               <ArrowUpRight className="size-3.5" aria-hidden="true" />
@@ -710,10 +710,10 @@ export default function DashboardPage() {
                       <Icon className="size-4" aria-hidden="true" />
                     </span>
                     <div className="min-w-0 flex-1">
-                      <p className="line-clamp-1 text-[11.5px] font-semibold text-slate-800">
+                      <p className="line-clamp-1 text-[11.5px] font-semibold text-foreground">
                         {entry.productName}
                       </p>
-                      <p className="mt-0.5 text-[10px] text-slate-400">
+                      <p className="mt-0.5 text-[10px] text-muted-foreground">
                         {entry.detail ?? meta.label} · {formatDateTime(entry.at)}
                       </p>
                     </div>
@@ -725,7 +725,7 @@ export default function DashboardPage() {
                     {product ? (
                       <Link
                         href={`/productos/${product.id}`}
-                        className="flex items-center gap-3 rounded-lg transition hover:text-[#5B21B6]"
+                        className="flex items-center gap-3 rounded-lg transition hover:text-brand-ink"
                       >
                         {content}
                       </Link>
