@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "pnpm --filter \"./apps/**\" dev",
     "dev:web": "pnpm --filter fj-solutions-web dev",
+    "dev:store": "pnpm --filter fj-solutions-store dev",
     "dev:admin": "pnpm --filter fj-solutions-admin dev",
+    "dev:academy": "pnpm --filter fj-solutions-academy dev",
+    "dev:links": "pnpm --filter fj-solutions-links dev",
     "dev:api": "pnpm --filter fj-solutions-backend dev",
     "build": "pnpm --filter \"./apps/**\" build",
     "build:contracts": "pnpm --filter @fj-solutions/contracts build",
