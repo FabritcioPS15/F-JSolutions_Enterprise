@@ -1,16 +1,8 @@
-import type { Metadata } from 'next'
-import { ProductDetail } from '@/components/product-detail'
+import { permanentRedirect } from 'next/navigation'
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
-  const { slug } = await params
-
-  return {
-    title: 'Producto | FJ Tech Solutions',
-  }
-}
+const storeAppUrl = process.env.NEXT_PUBLIC_STORE_APP_URL ?? 'http://localhost:3006'
 
 export default async function ProductoDetallePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-
-  return <ProductDetail slug={slug} />
+  permanentRedirect(`${storeAppUrl}/productos/${encodeURIComponent(slug)}`)
 }

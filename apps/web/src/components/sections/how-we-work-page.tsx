@@ -29,6 +29,7 @@ import { EditorialHero } from '@/components/heroes'
 import { HeroAction } from '@/components/heroes/hero-primitives'
 import { ProcessSequence } from '@/components/ui/process-sequence'
 import { EMPRESA } from '@/lib/constants'
+import { storeUrl } from '@/lib/store-url'
 
 const CONTAINER = 'mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8'
 
@@ -170,8 +171,8 @@ const engagementModels = [
       'Facturación empresarial con crédito corporativo',
       'Atención en Lima y envíos a nivel nacional',
     ],
-    ctaText: 'Explorar catálogo',
-    ctaHref: '/productos',
+    ctaText: 'Explorar tienda',
+    ctaHref: storeUrl('/productos'),
   },
 ]
 

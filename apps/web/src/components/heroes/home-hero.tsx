@@ -39,6 +39,7 @@ import {
 } from '@/components/heroes/hero-visuals'
 import { CorporateHero } from '@/components/heroes/corporate-hero'
 import { SpotlightHero } from '@/components/heroes/spotlight-hero'
+import { storeUrl } from '@/lib/store-url'
 import { cn } from '@/lib/utils'
 
 /* ─── Visual especializada para el slide de Equipamiento & Hardware ─────── */
@@ -208,7 +209,7 @@ const HERO_SLIDES: HeroSlide[] = [
   },
   {
     id: 'equipos',
-    tabLabel: 'Equipos & Catálogo',
+    tabLabel: 'Equipos & Tienda',
     title: (
       <>
         Equipos y tecnología para <HeroAccent>cada área</HeroAccent> de tu empresa.
@@ -217,8 +218,8 @@ const HERO_SLIDES: HeroSlide[] = [
     description:
       'Laptops corporativas, computadoras de alto rendimiento, servidores y periféricos de las marcas líderes mundiales. Compra inteligente con garantía directa, factura electrónica y asesoría especializada.',
     primaryAction: {
-      label: 'Ver catálogo de productos',
-      href: '/productos',
+      label: 'Ver tienda de productos',
+      href: storeUrl('/productos'),
     },
     secondaryAction: {
       label: 'Cotizar equipamiento',

@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { ChevronDown } from 'lucide-react'
 import { EMPRESA } from '@/lib/constants'
+import { storeUrl } from '@/lib/store-url'
 import { cn } from '@/lib/utils'
 
 // ─── Tipos y Estructura de Navegación (4 Columnas) ───────────────────────────
@@ -21,14 +22,14 @@ interface FooterColumn {
 
 const FOOTER_COLUMNS: FooterColumn[] = [
   {
-    title: 'Productos y equipos TI',
+    title: 'Tienda de equipos TI',
     links: [
-      { label: 'Computadoras y laptops', href: '/productos?categoria=PC y Servidores' },
-      { label: 'Componentes y periféricos', href: '/productos?categoria=Componentes' },
-      { label: 'Monitores y pantallas', href: '/productos?categoria=Monitores' },
-      { label: 'Accesorios tecnológicos', href: '/productos?categoria=Accesorios' },
-      { label: 'Equipos de redes e infraestructura', href: '/productos?categoria=Redes' },
-      { label: 'Ver todos los productos', href: '/productos' },
+      { label: 'Computadoras y laptops', href: storeUrl('/productos?categoria=PC y Servidores') },
+      { label: 'Componentes y periféricos', href: storeUrl('/productos?categoria=Componentes') },
+      { label: 'Monitores y pantallas', href: storeUrl('/productos?categoria=Monitores') },
+      { label: 'Accesorios tecnológicos', href: storeUrl('/productos?categoria=Accesorios') },
+      { label: 'Equipos de redes e infraestructura', href: storeUrl('/productos?categoria=Redes') },
+      { label: 'Ver toda la tienda', href: storeUrl('/productos') },
     ],
   },
   {

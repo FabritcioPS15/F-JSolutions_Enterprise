@@ -23,6 +23,7 @@ type ApiResponse = {
     requiresTwoFactor?: boolean
     method?: TwoFactorMethod
     email?: string
+    user?: { permissions?: string[] }
   }
 }
 
@@ -37,6 +38,12 @@ type Challenge = {
 }
 
 const RESEND_COOLDOWN_SECONDS = 30
+
+// Las cuentas de empresa no tienen dashboard: su panel es su página.
+function landingFor(permissions?: string[]) {
+  const list = permissions ?? []
+  return !list.includes('dashboard.view') && list.includes('links.view') ? '/links' : '/'
+}
 
 export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
   const router = useRouter()
@@ -134,7 +141,7 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
         return
       }
 
-      router.replace('/')
+      router.replace(landingFor(body.data?.user?.permissions))
       router.refresh()
     } catch {
       setError('No se pudo conectar con el servidor. Verifica tu conexión e inténtalo de nuevo.')
@@ -183,7 +190,7 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
         return
       }
 
-      router.replace('/')
+      router.replace(landingFor(body.data?.user?.permissions))
       router.refresh()
     } catch {
       setError('No se pudo conectar con el servidor. Verifica tu conexión e inténtalo de nuevo.')

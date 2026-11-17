@@ -31,6 +31,7 @@ import { EnhancedHeader } from '@/components/layout/enhanced-header'
 import { ServiceHero } from '@/components/heroes'
 import { FaqAccordion } from '@/components/ui/faq-accordion'
 import { ProcessSequence } from '@/components/ui/process-sequence'
+import { storeUrl } from '@/lib/store-url'
 
 type ServiceItem = {
   icon: LucideIcon
@@ -348,10 +349,10 @@ export function ServicesPage() {
                   Me interesa alquilar <ArrowRight className="size-4" />
                 </Link>
                 <Link
-                  href="/productos"
+                  href={storeUrl('/productos')}
                   className="inline-flex h-11 items-center gap-2 rounded-xl border border-border bg-card px-5 text-sm font-bold text-foreground transition hover:border-[#2563EB] hover:text-blue-ink"
                 >
-                  Ver equipos en venta
+                  Ver equipos en la tienda
                 </Link>
               </div>
             </div>

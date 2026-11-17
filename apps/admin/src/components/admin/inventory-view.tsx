@@ -26,9 +26,7 @@ import { useAdmin } from '@/components/admin/admin-provider'
 import { ExportMenu } from '@/components/admin/export-menu'
 import { Modal } from '@/components/admin/modal'
 import { ProductThumb } from '@/components/admin/product-thumb'
-import { PurchasingPanel } from '@/components/admin/purchasing-panel'
 import { RowActions } from '@/components/admin/row-actions'
-import { StockCountPanel } from '@/components/admin/stock-count-panel'
 import { useToast } from '@/components/admin/toast'
 import {
   EmptyState,
@@ -54,7 +52,6 @@ import {
   inventoryMovementDescriptions,
   inventoryMovementLabels,
   inventoryReasons,
-  locationKindLabels,
   movementDelta,
   movementSourceLabels,
   stockLabels,
@@ -250,7 +247,10 @@ export function InventoryView() {
     return {
       units,
       cost,
+      value: cost,
       retail,
+      low,
+      out,
       margin: retail > 0 ? ((retail - cost) / retail) * 100 : 0,
       committed,
       atRisk,

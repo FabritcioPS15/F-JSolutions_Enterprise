@@ -12,7 +12,7 @@ export type Access = {
   permissions: string[]
 }
 
-const panelRoles: AdminUserRole[] = ['superadmin', 'admin', 'ventas', 'soporte', 'consulta']
+const panelRoles: AdminUserRole[] = ['superadmin', 'admin', 'ventas', 'soporte', 'consulta', 'empresa']
 
 export function accessFromSession(user: SessionUser | null | undefined): Access {
   const role = panelRoles.includes(user?.role as AdminUserRole)
@@ -41,6 +41,8 @@ export function createCan(access: Access): CanFunction {
 // Cada ruta del panel pertenece a un módulo del catálogo de permisos.
 export const moduleByHref: Record<string, string> = {
   '/': 'dashboard',
+  '/notificaciones': 'dashboard',
+  '/links': 'links',
   '/reportes': 'reports',
   '/actividad': 'audit',
   '/productos': 'products',

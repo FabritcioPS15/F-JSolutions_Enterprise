@@ -34,6 +34,7 @@ import { HeroAction } from '@/components/heroes/hero-primitives'
 import { FaqAccordion } from '@/components/ui/faq-accordion'
 import { ProcessSequence } from '@/components/ui/process-sequence'
 import { EMPRESA } from '@/lib/constants'
+import { storeUrl } from '@/lib/store-url'
 
 const CONTAINER = 'mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8'
 
@@ -223,8 +224,8 @@ const capabilities = [
     title: 'Suministro tecnológico',
     copy: 'Equipos corporativos con asesoría técnica, configuración inicial y despliegue por sede.',
     points: ['Laptops y desktops', 'Componentes y periféricos', 'Compras por volumen'],
-    href: '/productos',
-    cta: 'Explorar catálogo',
+    href: storeUrl('/productos'),
+    cta: 'Explorar tienda',
   },
 ]
 

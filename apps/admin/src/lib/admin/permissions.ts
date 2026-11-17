@@ -45,6 +45,7 @@ const moduleLabels: Record<string, string> = {
   complaints: 'Libro de reclamaciones',
   services: 'Servicios TI',
   projects: 'Proyectos web',
+  links: 'AllMyLinks',
   users: 'Usuarios',
   roles: 'Roles y permisos',
   settings: 'Configuración',
@@ -81,6 +82,7 @@ export const rolePermissions: Record<AdminUserRole, string[]> = {
     complaints: ['view', 'update', 'reply'],
     services: ['view', 'create', 'update', 'publish'],
     projects: ['view', 'update', 'manage-deployments'],
+    links: ['view', 'create', 'update', 'delete', 'publish'],
     users: ['view'],
     roles: ['view'],
     settings: ['view', 'update'],
@@ -119,6 +121,9 @@ export const rolePermissions: Record<AdminUserRole, string[]> = {
     services: ['view'],
     projects: ['view', 'manage-deployments'],
     audit: ['view'],
+  }),
+  empresa: grant({
+    links: ['view', 'update'],
   }),
   consulta: viewOnlyKeys(permissionCatalog),
 }

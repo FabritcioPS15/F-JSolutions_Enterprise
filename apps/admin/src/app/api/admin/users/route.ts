@@ -48,6 +48,7 @@ export async function POST(request: NextRequest) {
     status: patch.status ?? 'active',
     twoFactorEnabled: patch.twoFactorEnabled ?? false,
     password: patch.password,
+    linkProfileId: patch.linkProfileId,
   }
 
   try {

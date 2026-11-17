@@ -28,6 +28,7 @@ import { HomeHero } from '@/components/heroes'
 import { ProductCard } from '@/components/cards/product-card'
 import { categories } from '@/lib/catalog'
 import { getFeaturedProducts } from '@/lib/product-feed'
+import { storeUrl } from '@/lib/store-url'
 import { cn } from '@/lib/utils'
 import { useQuote } from '@/lib/use-quote'
 
@@ -164,7 +165,7 @@ export function LandingPage() {
         <div className="mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
           <div className="grid gap-3.5 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
             <Reveal className="h-full">
-              <Feature icon={<Package />} title="Catálogo de productos" copy="Explora equipos y componentes" onClick={() => { window.location.href = '/productos' }} />
+              <Feature icon={<Package />} title="Tienda de productos" copy="Explora equipos y componentes" onClick={() => { window.location.href = storeUrl('/productos') }} />
             </Reveal>
             <Reveal className="h-full" delay={70}>
               <Feature icon={<BarChart3 />} title="Comparar productos" copy="Elige con confianza" />
@@ -212,8 +213,8 @@ export function LandingPage() {
                 </div>
               )}
             </div>
-            <a href="/productos" className="group inline-flex h-10 items-center gap-2 rounded-lg border border-border bg-card px-4 text-sm font-semibold text-foreground transition hover:border-[#155eef]/40 hover:text-blue-ink">
-              Ver catálogo completo <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-0.5" />
+            <a href={storeUrl('/productos')} className="group inline-flex h-10 items-center gap-2 rounded-lg border border-border bg-card px-4 text-sm font-semibold text-foreground transition hover:border-[#155eef]/40 hover:text-blue-ink">
+              Ver toda la tienda <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-0.5" />
             </a>
             <div className="flex items-center gap-1.5">
               <span className="mr-1 hidden text-xs font-semibold text-muted-foreground sm:inline">

@@ -1,60 +1,67 @@
 import { Globe, ShieldCheck } from 'lucide-react'
 import { FaInstagram } from 'react-icons/fa'
 import { TikTokIcon, WhatsAppIcon } from '@/components/social-icons'
-import { PROFILE_INFO } from '@/lib/links-data'
+import type { LinkProfile } from '@/lib/link-profiles'
 
-export function SocialFooter() {
+export function SocialFooter({ profile }: { profile: LinkProfile }) {
+  const socials = [
+    {
+      key: 'whatsapp',
+      href: profile.socials.whatsapp,
+      label: 'WhatsApp',
+      icon: <WhatsAppIcon className="size-4" />,
+      hover: 'hover:border-emerald-500/40 hover:text-emerald-500',
+    },
+    {
+      key: 'tiktok',
+      href: profile.socials.tiktok,
+      label: 'TikTok',
+      icon: <TikTokIcon className="size-4" />,
+      hover: 'hover:border-pink-500/40 hover:text-pink-500',
+    },
+    {
+      key: 'instagram',
+      href: profile.socials.instagram,
+      label: 'Instagram',
+      icon: <FaInstagram className="size-4" />,
+      hover: 'hover:border-purple-500/40 hover:text-purple-500',
+    },
+    {
+      key: 'website',
+      href: profile.socials.website,
+      label: 'Web',
+      icon: <Globe className="size-4" />,
+      hover: 'hover:border-blue-500/40 hover:text-blue-500',
+    },
+  ].filter((social) => Boolean(social.href))
+
   return (
-    <footer className="mt-10 mb-6 flex flex-col items-center text-center">
-      {/* Social quick icons */}
-      <div className="flex items-center gap-4 text-slate-400">
-        <a
-          href="https://wa.me/51923055963"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex size-10 items-center justify-center rounded-full border border-white/5 bg-slate-900/60 transition hover:text-emerald-400 hover:border-emerald-500/30"
-          aria-label="WhatsApp"
-        >
-          <WhatsAppIcon className="size-4" />
-        </a>
-        <a
-          href="https://tiktok.com/@fjsolutions.pe"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex size-10 items-center justify-center rounded-full border border-white/5 bg-slate-900/60 transition hover:text-pink-400 hover:border-pink-500/30"
-          aria-label="TikTok"
-        >
-          <TikTokIcon className="size-4" />
-        </a>
-        <a
-          href="https://instagram.com/fjsolutions.pe"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex size-10 items-center justify-center rounded-full border border-white/5 bg-slate-900/60 transition hover:text-purple-400 hover:border-purple-500/30"
-          aria-label="Instagram"
-        >
-          <FaInstagram className="size-4" />
-        </a>
-        <a
-          href="https://fjsolutions.com.pe"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex size-10 items-center justify-center rounded-full border border-white/5 bg-slate-900/60 transition hover:text-blue-400 hover:border-blue-500/30"
-          aria-label="Web"
-        >
-          <Globe className="size-4" />
-        </a>
+    <footer className="mb-6 mt-10 flex flex-col items-center text-center">
+      {socials.length > 0 && (
+        <div className="flex items-center gap-4 text-[var(--page-ink-muted)]">
+          {socials.map((social) => (
+            <a
+              key={social.key}
+              href={social.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`flex size-10 items-center justify-center rounded-full border border-[var(--page-border)] bg-[var(--page-card)] transition ${social.hover}`}
+              aria-label={social.label}
+            >
+              {social.icon}
+            </a>
+          ))}
+        </div>
+      )}
+
+      <div className="mt-6 flex items-center gap-1.5 text-[11px] font-semibold text-[var(--page-ink-muted)]">
+        <ShieldCheck className="size-3.5 text-[var(--page-accent-ink)]" />
+        <span>{profile.name} · All My Links</span>
       </div>
 
-      {/* Brand footer note */}
-      <div className="mt-6 flex items-center gap-1.5 text-[11px] font-semibold text-slate-500">
-        <ShieldCheck className="size-3.5 text-blue-400" />
-        <span>F&J Solutions Enterprise · All My Links</span>
-      </div>
-
-      <p className="mt-1 text-[10px] text-slate-600">
-        Lima, Perú · RUC & Marca Registrada
-      </p>
+      {profile.footerNote && (
+        <p className="mt-1 text-[10px] text-[var(--page-ink-muted)] opacity-80">{profile.footerNote}</p>
+      )}
     </footer>
   )
 }

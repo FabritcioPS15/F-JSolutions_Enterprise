@@ -16,6 +16,7 @@ import {
   Wrench,
 } from 'lucide-react'
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
+import { storeUrl } from '@/lib/store-url'
 import { useQuote } from '@/lib/use-quote'
 import {
   popularSearches,
@@ -191,10 +192,10 @@ export function SearchPage() {
                 </p>
               </div>
               <Link
-                href={`/productos?q=${encodeURIComponent(q)}`}
+                href={storeUrl(`/productos?q=${encodeURIComponent(q)}`)}
                 className="inline-flex h-10 items-center gap-2 rounded-xl border border-border bg-card px-4 text-xs font-bold text-muted-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink"
               >
-                Buscar en el catálogo <ArrowUpRight className="size-3.5" />
+                Buscar en la tienda <ArrowUpRight className="size-3.5" />
               </Link>
             </div>
 
@@ -226,10 +227,10 @@ export function SearchPage() {
 
                 <div className="mt-6 flex flex-wrap justify-center gap-2">
                   <Link
-                    href="/productos"
+                    href={storeUrl('/productos')}
                     className="inline-flex h-10 items-center gap-2 rounded-xl bg-[#2563EB] px-4 text-xs font-bold text-white transition hover:bg-[#1D4ED8]"
                   >
-                    Ver catálogo <ArrowRight className="size-3.5" />
+                    Ver tienda <ArrowRight className="size-3.5" />
                   </Link>
                   <Link
                     href="/servicios"

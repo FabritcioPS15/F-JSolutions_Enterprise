@@ -143,235 +143,229 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#172554] via-[#1E1B4B] to-[#0B1220] px-6 py-7 text-white shadow-xl shadow-slate-900/10 sm:px-8 sm:py-9">
+      {/* ── Banner Principal de Operaciones (Enterprise Slate) ── */}
+      <section className="relative overflow-hidden rounded-3xl border border-slate-800/80 bg-[#0A0E17] px-6 py-7 text-white shadow-xl shadow-black/25 sm:px-8 sm:py-8">
         <div
-          className="pointer-events-none absolute inset-0 opacity-[0.12]"
+          className="pointer-events-none absolute inset-0 opacity-[0.08]"
           style={{
             backgroundImage:
-              'linear-gradient(to right, rgba(148,163,184,.35) 1px, transparent 1px), linear-gradient(to bottom, rgba(148,163,184,.35) 1px, transparent 1px)',
-            backgroundSize: '38px 38px',
+              'linear-gradient(to right, rgba(255,255,255,.2) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,.2) 1px, transparent 1px)',
+            backgroundSize: '32px 32px',
           }}
           aria-hidden="true"
         />
         <div
-          className="pointer-events-none absolute -right-24 -top-24 size-72 rounded-full bg-white/[0.06] blur-3xl"
+          className="pointer-events-none absolute -right-20 -top-20 size-72 rounded-full bg-[#2563EB]/15 blur-3xl"
           aria-hidden="true"
         />
         <div
-          className="pointer-events-none absolute -bottom-32 left-1/3 size-72 rounded-full bg-white/[0.04] blur-3xl"
+          className="pointer-events-none absolute -bottom-24 left-1/4 size-72 rounded-full bg-cyan-500/10 blur-3xl"
           aria-hidden="true"
         />
 
-        <div className="relative flex flex-col gap-7 lg:flex-row lg:items-end lg:justify-between">
+        <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-2xl">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.06] px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground/60">
-              <Sparkles className="size-3" aria-hidden="true" />
-              {settings.storeName} · Administración
-            </span>
-            <h1 className="mt-4 font-heading text-2xl font-bold leading-tight tracking-tight sm:text-[32px]">
-              Tu catálogo, bajo control.
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-500/30 bg-blue-500/10 px-3 py-1 text-[10.5px] font-bold uppercase tracking-[0.16em] text-blue-400">
+                <span className="size-1.5 rounded-full bg-blue-400 shadow-[0_0_8px_rgba(96,165,250,0.8)]" />
+                {settings.storeName} Enterprise
+              </span>
+              <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[10.5px] font-medium text-slate-400">
+                Panel de Control Unificado
+              </span>
+            </div>
+
+            <h1 className="mt-3 font-heading text-2xl font-bold leading-tight tracking-tight sm:text-[30px]">
+              Centro de Control Operativo
             </h1>
-            <p className="mt-2 max-w-xl text-sm leading-relaxed text-muted-foreground">
-              Revisa el estado del catálogo, la actividad reciente y los productos que necesitan
-              atención. El resumen comercial y de atención se calcula sobre los datos que muestra el
-              panel.
+            <p className="mt-1.5 max-w-xl text-xs sm:text-sm leading-relaxed text-slate-400">
+              Gestión centralizada de cotizaciones comerciales, inventario crítico, clientes y
+              solicitudes de soporte técnico en tiempo real.
             </p>
-            <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-[11px] font-medium text-muted-foreground">
+
+            <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-[11px] font-medium text-slate-400">
               <span className="inline-flex items-center gap-1.5">
-                <Package className="size-3.5" aria-hidden="true" />
-                {products.length} productos
+                <Package className="size-3.5 text-blue-400" aria-hidden="true" />
+                <strong className="text-white">{products.length}</strong> productos
               </span>
               <span className="inline-flex items-center gap-1.5">
-                <FolderTree className="size-3.5" aria-hidden="true" />
-                {categories.length} categorías
+                <FileText className="size-3.5 text-blue-400" aria-hidden="true" />
+                <strong className="text-white">{openQuotes}</strong> cotizaciones abiertas
               </span>
               <span className="inline-flex items-center gap-1.5">
-                <Tags className="size-3.5" aria-hidden="true" />
-                {brands.length} marcas
+                <Users className="size-3.5 text-blue-400" aria-hidden="true" />
+                <strong className="text-white">{activeClients}</strong> clientes activos
               </span>
             </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-2.5">
             <Link
-              href="/productos/nuevo"
-              className="inline-flex h-11 items-center gap-2 rounded-xl bg-card px-5 text-xs font-bold text-foreground shadow-lg shadow-black/20 transition hover:bg-muted"
+              href="/cotizaciones"
+              className="inline-flex h-10 items-center gap-2 rounded-xl bg-[#2563EB] px-4 text-xs font-bold text-white shadow-md shadow-[#2563EB]/25 transition hover:bg-[#1D4ED8]"
             >
-              <PackagePlus className="size-4" aria-hidden="true" />
+              <FileText className="size-3.5" aria-hidden="true" />
+              Ver cotizaciones
+            </Link>
+            <Link
+              href="/productos/nuevo"
+              className="inline-flex h-10 items-center gap-2 rounded-xl border border-slate-700 bg-slate-800/80 px-4 text-xs font-bold text-slate-200 transition hover:bg-slate-700 hover:text-white"
+            >
+              <PackagePlus className="size-3.5" aria-hidden="true" />
               Nuevo producto
             </Link>
             <a
               href={`${storeUrl}/productos`}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex h-11 items-center gap-2 rounded-xl border border-white/15 bg-white/[0.06] px-5 text-xs font-bold text-white backdrop-blur transition hover:bg-white/10"
+              className="inline-flex h-10 items-center gap-1.5 rounded-xl border border-white/10 bg-white/[0.03] px-3.5 text-xs font-semibold text-slate-300 transition hover:bg-white/10 hover:text-white"
             >
-              Ver catálogo público
-              <ArrowRight className="size-3.5" aria-hidden="true" />
+              Tienda
+              <ArrowUpRight className="size-3.5" aria-hidden="true" />
             </a>
           </div>
         </div>
       </section>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-6">
-        <StatCard
-          label="Productos"
-          value={formatNumber(products.length)}
-          helper="Total registrado en el catálogo"
-          icon={Package}
-          href="/productos"
-        />
-        <StatCard
-          label="Publicados"
-          value={formatNumber(published.length)}
-          helper={`${Math.round((published.length / total) * 100)}% del catálogo`}
-          icon={CheckCircle2}
-          href="/productos?status=active"
-        />
-        <StatCard
-          label="Borradores"
-          value={formatNumber(drafts.length)}
-          helper="En preparación, ocultos al público"
-          icon={FileEdit}
-          href="/productos?status=draft"
-        />
-        <StatCard
-          label="Archivados"
-          value={formatNumber(archived.length)}
-          helper="Fuera de circulación"
-          icon={Archive}
-          href="/productos?status=archived"
-        />
-        <StatCard
-          label="Categorías"
-          value={formatNumber(categories.length)}
-          helper={`${formatNumber(subcategoryCount)} subcategorías`}
-          icon={FolderTree}
-          href="/categorias"
-        />
-        <StatCard
-          label="Marcas"
-          value={formatNumber(brands.length)}
-          helper="Marcas registradas"
-          icon={Tags}
-          href="/marcas"
-        />
-      </div>
-
-      <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-        {[
-          {
-            href: '/productos/nuevo',
-            title: 'Crear producto',
-            text: 'Agrega una nueva ficha al catálogo.',
-            icon: PackagePlus,
-          },
-          {
-            href: '/categorias',
-            title: 'Gestionar categorías',
-            text: 'Organiza la taxonomía del catálogo.',
-            icon: FolderTree,
-          },
-          {
-            href: '/marcas',
-            title: 'Gestionar marcas',
-            text: 'Mantén las marcas actualizadas.',
-            icon: Tags,
-          },
-        ].map((action) => {
-          const Icon = action.icon
-          return (
-            <Link
-              key={action.href}
-              href={action.href}
-              className="group flex items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-xs transition hover:-translate-y-0.5 hover:border-input hover:shadow-md"
-            >
-              <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-muted text-muted-foreground ring-1 ring-border/70">
-                <Icon className="size-[18px]" aria-hidden="true" />
-              </span>
-              <span className="min-w-0">
-                <span className="block text-xs font-bold text-foreground">{action.title}</span>
-                <span className="mt-0.5 block text-[10.5px] text-muted-foreground">{action.text}</span>
-              </span>
-              <ArrowUpRight
-                className="ml-auto size-4 shrink-0 text-muted-foreground/60 transition group-hover:text-muted-foreground"
-                aria-hidden="true"
-              />
-            </Link>
-          )
-        })}
-        <a
-          href={`${storeUrl}/productos`}
-          target="_blank"
-          rel="noreferrer"
-          className="group flex items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-xs transition hover:-translate-y-0.5 hover:border-input hover:shadow-md"
-        >
-          <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-muted text-muted-foreground ring-1 ring-border/70">
-            <ArrowUpRight className="size-[18px]" aria-hidden="true" />
+      {/* ── Action Center: Bandeja de Acción Inmediata (Modelo 3) ── */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="grid size-6 place-items-center rounded-lg bg-[#2563EB]/15 text-[#2563EB]">
+              <Sparkles className="size-3.5" />
+            </span>
+            <h2 className="text-xs font-bold uppercase tracking-[0.16em] text-muted-foreground">
+              Bandeja de Acción Operativa
+            </h2>
+          </div>
+          <span className="text-[11px] font-medium text-muted-foreground">
+            {openQuotes + lowStock.length + newRequests > 0
+              ? `${openQuotes + lowStock.length + newRequests} asuntos que requieren atención`
+              : 'Operación al día'}
           </span>
-          <span className="min-w-0">
-            <span className="block text-xs font-bold text-foreground">Ver catálogo público</span>
-            <span className="mt-0.5 block text-[10.5px] text-muted-foreground">Abre la tienda en otra pestaña.</span>
-          </span>
-          <ArrowUpRight
-            className="ml-auto size-4 shrink-0 text-muted-foreground/60 transition group-hover:text-muted-foreground"
-            aria-hidden="true"
-          />
-        </a>
-      </div>
+        </div>
 
-      <div className="grid gap-3 sm:grid-cols-3">
-        {[
-          {
-            href: '/solicitudes',
-            label: 'Consultas nuevas',
-            value: newRequests,
-            hint: 'Mensajes sin revisar en la mesa de ayuda',
-            icon: Inbox,
-          },
-          {
-            href: '/cotizaciones',
-            label: 'Cotizaciones abiertas',
-            value: openQuotes,
-            hint: 'Borradores y enviadas por responder',
-            icon: FileText,
-          },
-          {
-            href: '/clientes',
-            label: 'Clientes activos',
-            value: activeClients,
-            hint: 'Cuentas con actividad comercial',
-            icon: Users,
-          },
-        ].map((item) => {
-          const Icon = item.icon
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="group flex items-center gap-3 rounded-2xl border border-border/80 bg-card p-4 shadow-xs transition hover:-translate-y-0.5 hover:border-brand-ink/30 hover:shadow-md"
-            >
-              <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-muted text-muted-foreground ring-1 ring-border/70">
-                <Icon className="size-[18px]" aria-hidden="true" />
-              </span>
-              <span className="min-w-0 flex-1">
-                <span className="block text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
-                  {item.label}
+        <div className="grid gap-3.5 sm:grid-cols-2 lg:grid-cols-4">
+          {/* Alerta 1: Cotizaciones pendientes */}
+          <Link
+            href="/cotizaciones"
+            className="group relative flex flex-col justify-between rounded-2xl border border-blue-500/20 bg-blue-500/[0.04] p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-blue-500/40 hover:bg-blue-500/[0.08] hover:shadow-md hover:shadow-blue-500/5"
+          >
+            <div>
+              <div className="flex items-center justify-between gap-2">
+                <span className="inline-flex items-center gap-1 rounded-md bg-blue-500/15 px-2 py-0.5 text-[10px] font-bold text-blue-600 dark:text-blue-400">
+                  <FileText className="size-3" />
+                  Comercial
                 </span>
-                <span className="mt-1 flex items-baseline gap-2">
-                  <span className="font-heading text-xl font-bold leading-none text-foreground">
-                    {item.value}
-                  </span>
-                  <span className="truncate text-[10px] text-muted-foreground">{item.hint}</span>
+                <span className="font-heading text-lg font-bold text-foreground">
+                  {openQuotes}
                 </span>
-              </span>
-              <ArrowUpRight
-                className="size-4 shrink-0 text-muted-foreground/60 transition group-hover:text-muted-foreground"
-                aria-hidden="true"
-              />
-            </Link>
-          )
-        })}
+              </div>
+              <p className="mt-2 text-xs font-bold text-foreground">
+                Cotizaciones por atender
+              </p>
+              <p className="mt-0.5 text-[11px] leading-relaxed text-muted-foreground">
+                {openQuotes === 1
+                  ? '1 cotización en borrador o revisión'
+                  : `${openQuotes} cotizaciones pendientes de emitir`}
+              </p>
+            </div>
+            <span className="mt-3 inline-flex items-center gap-1 text-[11px] font-semibold text-[#2563EB] group-hover:underline">
+              Revisar cotizaciones
+              <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
+            </span>
+          </Link>
+
+          {/* Alerta 2: Stock bajo o agotado */}
+          <Link
+            href="/productos?stock=low"
+            className="group relative flex flex-col justify-between rounded-2xl border border-amber-500/20 bg-amber-500/[0.04] p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-amber-500/40 hover:bg-amber-500/[0.08] hover:shadow-md hover:shadow-amber-500/5"
+          >
+            <div>
+              <div className="flex items-center justify-between gap-2">
+                <span className="inline-flex items-center gap-1 rounded-md bg-amber-500/15 px-2 py-0.5 text-[10px] font-bold text-amber-700 dark:text-amber-400">
+                  <AlertTriangle className="size-3" />
+                  Almacén
+                </span>
+                <span className="font-heading text-lg font-bold text-foreground">
+                  {lowStock.length}
+                </span>
+              </div>
+              <p className="mt-2 text-xs font-bold text-foreground">
+                Stock crítico o agotado
+              </p>
+              <p className="mt-0.5 text-[11px] leading-relaxed text-muted-foreground">
+                {lowStock.length === 1
+                  ? '1 producto requiere reposición'
+                  : `${lowStock.length} productos bajo el mínimo`}
+              </p>
+            </div>
+            <span className="mt-3 inline-flex items-center gap-1 text-[11px] font-semibold text-amber-600 dark:text-amber-400 group-hover:underline">
+              Gestionar reposición
+              <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
+            </span>
+          </Link>
+
+          {/* Alerta 3: Consultas mesa de ayuda */}
+          <Link
+            href="/solicitudes"
+            className="group relative flex flex-col justify-between rounded-2xl border border-purple-500/20 bg-purple-500/[0.04] p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-purple-500/40 hover:bg-purple-500/[0.08] hover:shadow-md hover:shadow-purple-500/5"
+          >
+            <div>
+              <div className="flex items-center justify-between gap-2">
+                <span className="inline-flex items-center gap-1 rounded-md bg-purple-500/15 px-2 py-0.5 text-[10px] font-bold text-purple-700 dark:text-purple-400">
+                  <Inbox className="size-3" />
+                  Soporte
+                </span>
+                <span className="font-heading text-lg font-bold text-foreground">
+                  {newRequests}
+                </span>
+              </div>
+              <p className="mt-2 text-xs font-bold text-foreground">
+                Mesa de ayuda
+              </p>
+              <p className="mt-0.5 text-[11px] leading-relaxed text-muted-foreground">
+                {newRequests === 1
+                  ? '1 mensaje nuevo sin responder'
+                  : `${newRequests} solicitudes nuevas de clientes`}
+              </p>
+            </div>
+            <span className="mt-3 inline-flex items-center gap-1 text-[11px] font-semibold text-purple-600 dark:text-purple-400 group-hover:underline">
+              Atender solicitudes
+              <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
+            </span>
+          </Link>
+
+          {/* Alerta 4: Clientes y Cuentas */}
+          <Link
+            href="/clientes"
+            className="group relative flex flex-col justify-between rounded-2xl border border-emerald-500/20 bg-emerald-500/[0.04] p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-emerald-500/40 hover:bg-emerald-500/[0.08] hover:shadow-md hover:shadow-emerald-500/5"
+          >
+            <div>
+              <div className="flex items-center justify-between gap-2">
+                <span className="inline-flex items-center gap-1 rounded-md bg-emerald-500/15 px-2 py-0.5 text-[10px] font-bold text-emerald-700 dark:text-emerald-400">
+                  <Users className="size-3" />
+                  Clientes
+                </span>
+                <span className="font-heading text-lg font-bold text-foreground">
+                  {activeClients}
+                </span>
+              </div>
+              <p className="mt-2 text-xs font-bold text-foreground">
+                Cuentas activas
+              </p>
+              <p className="mt-0.5 text-[11px] leading-relaxed text-muted-foreground">
+                {summary.clients.newThisMonth > 0
+                  ? `${summary.clients.newThisMonth} clientes nuevos este mes`
+                  : `${clients.length} cuentas en el directorio`}
+              </p>
+            </div>
+            <span className="mt-3 inline-flex items-center gap-1 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 group-hover:underline">
+              Ver directorio
+              <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
+            </span>
+          </Link>
+        </div>
       </div>
 
       {summaryError && (
@@ -380,34 +374,35 @@ export default function DashboardPage() {
         </div>
       )}
 
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      {/* ── KPIs Ejecutivos Principales ── */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard
-          label="Cotizaciones"
-          value={formatNumber(summary.quotes.total)}
-          helper={`${formatNumber(summary.quotes.open)} abiertas · ${formatCurrency(penAmount?.total ?? 0, 'PEN')}`}
+          label="Volumen comercial"
+          value={formatCurrency(penAmount?.total ?? 0, 'PEN')}
+          helper={`${formatNumber(summary.quotes.total)} cotizaciones registradas`}
           icon={FileText}
           href="/cotizaciones"
         />
         <StatCard
-          label="Conversión"
+          label="Tasa de conversión"
           value={`${summary.quotes.conversionRate}%`}
           helper={`${formatNumber(summary.quotes.approved)} aprobadas de ${formatNumber(summary.quotes.decided)} decididas`}
           icon={CheckCircle2}
           href="/reportes"
         />
         <StatCard
-          label="Solicitudes"
-          value={formatNumber(summary.requests.total)}
-          helper={`${formatNumber(summary.requests.open)} pendientes · ${summary.requests.avgResolutionHours ?? '—'} h promedio`}
-          icon={Inbox}
-          href="/solicitudes"
+          label="Salud del catálogo"
+          value={`${Math.round(publishedPct)}%`}
+          helper={`${formatNumber(published.length)} publicados de ${formatNumber(products.length)}`}
+          icon={Package}
+          href="/productos"
         />
         <StatCard
-          label="Clientes"
-          value={formatNumber(summary.clients.total)}
-          helper={`${formatNumber(summary.clients.active)} activos · ${formatNumber(summary.clients.newThisMonth)} nuevos este mes`}
-          icon={Users}
-          href="/clientes"
+          label="SLA de respuesta"
+          value={summary.requests.avgResolutionHours ? `${summary.requests.avgResolutionHours} h` : 'Óptimo'}
+          helper={`${formatNumber(summary.requests.total)} solicitudes atendidas`}
+          icon={Inbox}
+          href="/solicitudes"
         />
       </div>
 

@@ -1,4 +1,5 @@
 import { getServicesByCategory } from './services'
+import { storeUrl } from './store-url'
 
 // ─── Navegación Principal ──────────────────────────────────────────────────────────────────
 
@@ -21,7 +22,7 @@ const infrastructureServicePaths = getServicesByCategory('Infraestructura TI').m
 
 export const mainNav: MainNavItem[] = [
   { label: 'Inicio', href: '/' },
-  { label: 'Tienda', href: '/productos', hasMegaMenu: true },
+  { label: 'Tienda', href: storeUrl('/productos'), hasMegaMenu: true },
   {
     label: 'Servicios TI',
     href: '/servicios',
@@ -59,9 +60,9 @@ export const storeCategories = [
     label: 'PC y Servidores',
     icon: 'Cpu',
     items: [
-      { label: 'PCs de Escritorio', href: '/productos?categoria=PC y Servidores' },
-      { label: 'Servidores', href: '/productos?categoria=PC y Servidores' },
-      { label: 'Mini PCs', href: '/productos?categoria=PC y Servidores' },
+      { label: 'PCs de Escritorio', href: storeUrl('/productos?categoria=PC y Servidores') },
+      { label: 'Servidores', href: storeUrl('/productos?categoria=PC y Servidores') },
+      { label: 'Mini PCs', href: storeUrl('/productos?categoria=PC y Servidores') },
     ],
   },
   {
@@ -69,16 +70,16 @@ export const storeCategories = [
     label: 'Laptops',
     icon: 'Laptop',
     items: [
-      { label: 'Laptops', href: '/productos?categoria=Laptops', subItems: [
-        { label: 'Lenovo', href: '/productos?categoria=Laptops&marca=Lenovo' },
-        { label: 'Dell', href: '/productos?categoria=Laptops&marca=Dell' },
-        { label: 'HP', href: '/productos?categoria=Laptops&marca=HP' },
-        { label: 'ASUS', href: '/productos?categoria=Laptops&marca=ASUS' },
-        { label: 'Acer', href: '/productos?categoria=Laptops&marca=Acer' },
-        { label: 'MSI', href: '/productos?categoria=Laptops&marca=MSI' },
+      { label: 'Laptops', href: storeUrl('/productos?categoria=Laptops'), subItems: [
+        { label: 'Lenovo', href: storeUrl('/productos?categoria=Laptops&marca=Lenovo') },
+        { label: 'Dell', href: storeUrl('/productos?categoria=Laptops&marca=Dell') },
+        { label: 'HP', href: storeUrl('/productos?categoria=Laptops&marca=HP') },
+        { label: 'ASUS', href: storeUrl('/productos?categoria=Laptops&marca=ASUS') },
+        { label: 'Acer', href: storeUrl('/productos?categoria=Laptops&marca=Acer') },
+        { label: 'MSI', href: storeUrl('/productos?categoria=Laptops&marca=MSI') },
       ]},
-      { label: 'Laptops Empresariales', href: '/productos?categoria=Laptops' },
-      { label: 'Laptops Gaming', href: '/productos?categoria=Laptops' },
+      { label: 'Laptops Empresariales', href: storeUrl('/productos?categoria=Laptops') },
+      { label: 'Laptops Gaming', href: storeUrl('/productos?categoria=Laptops') },
     ],
   },
   {
@@ -86,17 +87,17 @@ export const storeCategories = [
     label: 'Componentes',
     icon: 'Cpu',
     items: [
-      { label: 'Procesadores', href: '/productos?categoria=Componentes', subItems: [
-        { label: 'Intel', href: '/productos?categoria=Componentes&marca=Intel' },
-        { label: 'AMD', href: '/productos?categoria=Componentes&marca=AMD' },
+      { label: 'Procesadores', href: storeUrl('/productos?categoria=Componentes'), subItems: [
+        { label: 'Intel', href: storeUrl('/productos?categoria=Componentes&marca=Intel') },
+        { label: 'AMD', href: storeUrl('/productos?categoria=Componentes&marca=AMD') },
       ]},
-      { label: 'Tarjetas Gráficas', href: '/productos?categoria=Componentes', subItems: [
-        { label: 'NVIDIA', href: '/productos?categoria=Componentes&marca=NVIDIA' },
-        { label: 'ASUS', href: '/productos?categoria=Componentes&marca=ASUS' },
-        { label: 'MSI', href: '/productos?categoria=Componentes&marca=MSI' },
+      { label: 'Tarjetas Gráficas', href: storeUrl('/productos?categoria=Componentes'), subItems: [
+        { label: 'NVIDIA', href: storeUrl('/productos?categoria=Componentes&marca=NVIDIA') },
+        { label: 'ASUS', href: storeUrl('/productos?categoria=Componentes&marca=ASUS') },
+        { label: 'MSI', href: storeUrl('/productos?categoria=Componentes&marca=MSI') },
       ]},
-      { label: 'Placas Madre', href: '/productos?categoria=Componentes' },
-      { label: 'Fuentes de Poder', href: '/productos?categoria=Cables y Energía' },
+      { label: 'Placas Madre', href: storeUrl('/productos?categoria=Componentes') },
+      { label: 'Fuentes de Poder', href: storeUrl('/productos?categoria=Cables y Energía') },
     ],
   },
   {
@@ -104,14 +105,14 @@ export const storeCategories = [
     label: 'Monitores',
     icon: 'Monitor',
     items: [
-      { label: 'Monitores', href: '/productos?categoria=Monitores', subItems: [
-        { label: 'LG', href: '/productos?categoria=Monitores&marca=LG' },
-        { label: 'Samsung', href: '/productos?categoria=Monitores&marca=Samsung' },
-        { label: 'Dell', href: '/productos?categoria=Monitores&marca=Dell' },
-        { label: 'ASUS', href: '/productos?categoria=Monitores&marca=ASUS' },
+      { label: 'Monitores', href: storeUrl('/productos?categoria=Monitores'), subItems: [
+        { label: 'LG', href: storeUrl('/productos?categoria=Monitores&marca=LG') },
+        { label: 'Samsung', href: storeUrl('/productos?categoria=Monitores&marca=Samsung') },
+        { label: 'Dell', href: storeUrl('/productos?categoria=Monitores&marca=Dell') },
+        { label: 'ASUS', href: storeUrl('/productos?categoria=Monitores&marca=ASUS') },
       ]},
-      { label: 'Gaming', href: '/productos?categoria=Monitores' },
-      { label: 'Profesionales', href: '/productos?categoria=Monitores' },
+      { label: 'Gaming', href: storeUrl('/productos?categoria=Monitores') },
+      { label: 'Profesionales', href: storeUrl('/productos?categoria=Monitores') },
     ],
   },
   {
@@ -119,17 +120,17 @@ export const storeCategories = [
     label: 'Periféricos',
     icon: 'MousePointer2',
     items: [
-      { label: 'Teclados', href: '/productos?categoria=Periféricos', subItems: [
-        { label: 'Logitech', href: '/productos?categoria=Periféricos&marca=Logitech' },
-        { label: 'Redragon', href: '/productos?categoria=Periféricos&marca=Redragon' },
-        { label: 'Razer', href: '/productos?categoria=Periféricos&marca=Razer' },
+      { label: 'Teclados', href: storeUrl('/productos?categoria=Periféricos'), subItems: [
+        { label: 'Logitech', href: storeUrl('/productos?categoria=Periféricos&marca=Logitech') },
+        { label: 'Redragon', href: storeUrl('/productos?categoria=Periféricos&marca=Redragon') },
+        { label: 'Razer', href: storeUrl('/productos?categoria=Periféricos&marca=Razer') },
       ]},
-      { label: 'Mouse', href: '/productos?categoria=Periféricos', subItems: [
-        { label: 'Logitech', href: '/productos?categoria=Periféricos&marca=Logitech' },
-        { label: 'Redragon', href: '/productos?categoria=Periféricos&marca=Redragon' },
+      { label: 'Mouse', href: storeUrl('/productos?categoria=Periféricos'), subItems: [
+        { label: 'Logitech', href: storeUrl('/productos?categoria=Periféricos&marca=Logitech') },
+        { label: 'Redragon', href: storeUrl('/productos?categoria=Periféricos&marca=Redragon') },
       ]},
-      { label: 'Auriculares', href: '/productos?categoria=Audio y Video' },
-      { label: 'Webcams', href: '/productos?categoria=Accesorios' },
+      { label: 'Auriculares', href: storeUrl('/productos?categoria=Audio y Video') },
+      { label: 'Webcams', href: storeUrl('/productos?categoria=Accesorios') },
     ],
   },
   {
@@ -137,14 +138,14 @@ export const storeCategories = [
     label: 'Almacenamiento',
     icon: 'HardDrive',
     items: [
-      { label: 'SSD', href: '/productos?categoria=Almacenamiento', subItems: [
-        { label: 'Kingston', href: '/productos?categoria=Almacenamiento&marca=Kingston' },
-        { label: 'Samsung', href: '/productos?categoria=Almacenamiento&marca=Samsung' },
-        { label: 'Crucial', href: '/productos?categoria=Almacenamiento&marca=Crucial' },
-        { label: 'WD', href: '/productos?categoria=Almacenamiento&marca=WD' },
+      { label: 'SSD', href: storeUrl('/productos?categoria=Almacenamiento'), subItems: [
+        { label: 'Kingston', href: storeUrl('/productos?categoria=Almacenamiento&marca=Kingston') },
+        { label: 'Samsung', href: storeUrl('/productos?categoria=Almacenamiento&marca=Samsung') },
+        { label: 'Crucial', href: storeUrl('/productos?categoria=Almacenamiento&marca=Crucial') },
+        { label: 'WD', href: storeUrl('/productos?categoria=Almacenamiento&marca=WD') },
       ]},
-      { label: 'HDD', href: '/productos?categoria=Almacenamiento' },
-      { label: 'NAS', href: '/productos?categoria=Almacenamiento' },
+      { label: 'HDD', href: storeUrl('/productos?categoria=Almacenamiento') },
+      { label: 'NAS', href: storeUrl('/productos?categoria=Almacenamiento') },
     ],
   },
   {
@@ -152,12 +153,12 @@ export const storeCategories = [
     label: 'Redes',
     icon: 'Network',
     items: [
-      { label: 'Routers', href: '/productos?categoria=Redes', subItems: [
-        { label: 'TP-Link', href: '/productos?categoria=Redes&marca=TP-Link' },
-        { label: 'Ubiquiti', href: '/productos?categoria=Redes&marca=Ubiquiti' },
+      { label: 'Routers', href: storeUrl('/productos?categoria=Redes'), subItems: [
+        { label: 'TP-Link', href: storeUrl('/productos?categoria=Redes&marca=TP-Link') },
+        { label: 'Ubiquiti', href: storeUrl('/productos?categoria=Redes&marca=Ubiquiti') },
       ]},
-      { label: 'Switches', href: '/productos?categoria=Redes' },
-      { label: 'Access Points', href: '/productos?categoria=Redes' },
+      { label: 'Switches', href: storeUrl('/productos?categoria=Redes') },
+      { label: 'Access Points', href: storeUrl('/productos?categoria=Redes') },
     ],
   },
   {
@@ -165,12 +166,12 @@ export const storeCategories = [
     label: 'Impresión',
     icon: 'Printer',
     items: [
-      { label: 'Impresoras', href: '/productos?categoria=Impresoras', subItems: [
-        { label: 'HP', href: '/productos?categoria=Impresoras&marca=HP' },
-        { label: 'Epson', href: '/productos?categoria=Impresoras&marca=Epson' },
-        { label: 'Brother', href: '/productos?categoria=Impresoras&marca=Brother' },
+      { label: 'Impresoras', href: storeUrl('/productos?categoria=Impresoras'), subItems: [
+        { label: 'HP', href: storeUrl('/productos?categoria=Impresoras&marca=HP') },
+        { label: 'Epson', href: storeUrl('/productos?categoria=Impresoras&marca=Epson') },
+        { label: 'Brother', href: storeUrl('/productos?categoria=Impresoras&marca=Brother') },
       ]},
-      { label: 'Multifuncionales', href: '/productos?categoria=Impresoras' },
+      { label: 'Multifuncionales', href: storeUrl('/productos?categoria=Impresoras') },
     ],
   },
   {
@@ -178,23 +179,23 @@ export const storeCategories = [
     label: 'Cables y Energía',
     icon: 'Zap',
     items: [
-      { label: 'UPS', href: '/productos?categoria=Cables y Energía', subItems: [
-        { label: 'Forza', href: '/productos?categoria=Cables y Energía&marca=Forza' },
-        { label: 'APC', href: '/productos?categoria=Cables y Energía&marca=APC' },
+      { label: 'UPS', href: storeUrl('/productos?categoria=Cables y Energía'), subItems: [
+        { label: 'Forza', href: storeUrl('/productos?categoria=Cables y Energía&marca=Forza') },
+        { label: 'APC', href: storeUrl('/productos?categoria=Cables y Energía&marca=APC') },
       ]},
-      { label: 'Regletas', href: '/productos?categoria=Cables y Energía' },
-      { label: 'Accesorios', href: '/productos?categoria=Accesorios' },
+      { label: 'Regletas', href: storeUrl('/productos?categoria=Cables y Energía') },
+      { label: 'Accesorios', href: storeUrl('/productos?categoria=Accesorios') },
     ],
   },
 ]
 
 export const featuredBrands = [
-  { name: 'Intel', href: '/productos?marca=intel' },
-  { name: 'AMD', href: '/productos?marca=amd' },
-  { name: 'NVIDIA', href: '/productos?marca=nvidia' },
-  { name: 'Dell', href: '/productos?marca=dell' },
-  { name: 'HP', href: '/productos?marca=hp' },
-  { name: 'Lenovo', href: '/productos?marca=lenovo' },
+  { name: 'Intel', href: storeUrl('/productos?marca=Intel') },
+  { name: 'AMD', href: storeUrl('/productos?marca=AMD') },
+  { name: 'NVIDIA', href: storeUrl('/productos?marca=NVIDIA') },
+  { name: 'Dell', href: storeUrl('/productos?marca=Dell') },
+  { name: 'HP', href: storeUrl('/productos?marca=HP') },
+  { name: 'Lenovo', href: storeUrl('/productos?marca=Lenovo') },
 ]
 
 // ─── Menús de Servicios ──────────────────────────────────────────────────────────────────

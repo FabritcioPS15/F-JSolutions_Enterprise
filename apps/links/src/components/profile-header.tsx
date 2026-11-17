@@ -1,34 +1,39 @@
 'use client'
 
-import { CheckCircle2, Share2, Sparkles, MapPin } from 'lucide-react'
-import { PROFILE_INFO } from '@/lib/links-data'
+import { CheckCircle2, MapPin, Share2 } from 'lucide-react'
+import type { LinkProfile } from '@/lib/link-profiles'
 
-export function ProfileHeader() {
+export function ProfileHeader({ profile }: { profile: LinkProfile }) {
   async function handleShare() {
+    const url = window.location.href
     if (typeof navigator !== 'undefined' && navigator.share) {
       try {
         await navigator.share({
-          title: PROFILE_INFO.name,
-          text: PROFILE_INFO.bio,
-          url: window.location.href,
+          title: profile.name,
+          text: profile.bio,
+          url,
         })
       } catch {
         // Ignorar cancelación del usuario
       }
-    } else {
-      navigator.clipboard.writeText(window.location.href)
+      return
+    }
+    try {
+      await navigator.clipboard.writeText(url)
       alert('¡Enlace copiado al portapapeles!')
+    } catch {
+      // Sin permiso de portapapeles no hay una alternativa silenciosa.
     }
   }
 
   return (
     <header className="flex flex-col items-center text-center">
       {/* Share floating button */}
-      <div className="w-full flex justify-end">
+      <div className="flex w-full justify-end">
         <button
           type="button"
           onClick={handleShare}
-          className="flex size-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-300 hover:text-white hover:bg-white/10 transition"
+          className="flex size-9 items-center justify-center rounded-full border border-[var(--page-border)] bg-[var(--page-card)] text-[var(--page-ink-muted)] transition hover:border-[var(--accent-border)] hover:bg-[var(--accent-soft)] hover:text-[var(--page-ink)]"
           aria-label="Compartir perfil"
           title="Compartir perfil"
         >
@@ -38,35 +43,57 @@ export function ProfileHeader() {
 
       {/* Avatar */}
       <div className="relative mt-2">
-        <div className="relative flex size-24 items-center justify-center rounded-full bg-gradient-to-tr from-[#5B21B6] via-[#7C3AED] to-[#A78BFA] p-1 shadow-2xl shadow-[#5B21B6]/40">
-          <div className="flex size-full items-center justify-center rounded-full bg-[#0B0F19] text-white font-black text-2xl tracking-tighter">
-            F&J
+        <div className="relative flex size-24 items-center justify-center rounded-full bg-[linear-gradient(135deg,var(--accent),var(--accent-light))] p-1 shadow-[0_25px_60px_-18px_var(--accent-glow)]">
+          <div className="flex size-full items-center justify-center overflow-hidden rounded-full bg-[var(--page-surface-solid)] text-2xl font-black tracking-tighter text-[var(--page-ink)]">
+            {profile.avatarUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={profile.avatarUrl}
+                alt={profile.name}
+                className="size-full rounded-full object-cover"
+              />
+            ) : (
+              profile.initials || 'FJ'
+            )}
           </div>
         </div>
-        <div
-          className="absolute -bottom-1 -right-1 flex size-7 items-center justify-center rounded-full bg-blue-500 text-white shadow-md ring-4 ring-[#07090E]"
-          title="Empresa Verificada"
-        >
-          <CheckCircle2 className="size-4" />
-        </div>
+        {profile.verified && (
+          <div
+            className="absolute -bottom-1 -right-1 flex size-7 items-center justify-center rounded-full bg-blue-500 text-white shadow-md ring-4 ring-[var(--page-surface-solid)]"
+            title="Empresa verificada"
+          >
+            <CheckCircle2 className="size-4" />
+          </div>
+        )}
       </div>
 
       {/* Name and Handle */}
-      <h1 className="mt-4 font-heading text-xl font-black tracking-tight text-white flex items-center justify-center gap-1.5">
-        <span>{PROFILE_INFO.name}</span>
+      <h1 className="font-heading mt-4 flex items-center justify-center gap-1.5 text-xl font-black tracking-tight text-[var(--page-ink)]">
+        <span>{profile.name}</span>
       </h1>
-      <p className="text-xs font-semibold text-[#A78BFA] mt-0.5">{PROFILE_INFO.handle}</p>
+      {profile.handle && (
+        <p className="mt-0.5 text-xs font-semibold text-[var(--page-accent-ink)]">{profile.handle}</p>
+      )}
 
       {/* Bio */}
-      <p className="mt-3 max-w-sm text-xs leading-relaxed text-slate-300">
-        {PROFILE_INFO.bio}
-      </p>
+      {profile.bio && (
+        <p className="mt-3 max-w-sm text-xs leading-relaxed text-[var(--page-ink-soft)]">{profile.bio}</p>
+      )}
+
+      {profile.location && (
+        <p className="mt-2 inline-flex items-center gap-1 text-[11px] font-medium text-[var(--page-ink-muted)]">
+          <MapPin className="size-3" aria-hidden="true" />
+          {profile.location}
+        </p>
+      )}
 
       {/* Status Live Pill */}
-      <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-[11px] font-bold text-emerald-400">
-        <span className="size-2 rounded-full bg-emerald-400 animate-ping" />
-        <span>Atención en línea disponible</span>
-      </div>
+      {profile.statusEnabled && profile.statusText && (
+        <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-[var(--status-border)] bg-[var(--status-bg)] px-3 py-1 text-[11px] font-bold text-[var(--status-ink)]">
+          <span className="size-2 animate-ping rounded-full bg-[var(--status-dot)]" />
+          <span>{profile.statusText}</span>
+        </div>
+      )}
     </header>
   )
 }

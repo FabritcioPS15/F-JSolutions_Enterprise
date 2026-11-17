@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { ArrowRight, Minus, Plus, ShoppingCart, Trash2, X } from 'lucide-react'
 import type { QuoteItem } from '@/lib/quote'
 import { QuantityInput } from '@/components/ui/quantity-input'
+import { storeUrl } from '@/lib/store-url'
 
 type QuotePanelProps = {
   items: QuoteItem[]
@@ -61,11 +62,11 @@ export function QuotePanel({
               Explora nuestro catálogo y agrega los equipos que necesitas para tu hogar u oficina.
             </p>
             <Link
-              href="/productos"
+              href={storeUrl('/productos')}
               onClick={onClose}
               className="mt-6 inline-flex h-10 items-center gap-2 rounded-lg bg-[#2563EB] px-5 text-sm font-bold text-white transition hover:bg-[#1D4ED8]"
             >
-              Ver catálogo <ArrowRight className="size-4" />
+              Ir a la tienda <ArrowRight className="size-4" />
             </Link>
           </div>
         ) : (

@@ -2,139 +2,98 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { GraduationCap, Menu, X, ArrowUpRight, Sparkles, BookOpen } from 'lucide-react'
+import { GraduationCap, Menu, X, ArrowUpRight } from 'lucide-react'
+
+const NAV_LINKS = [
+  { href: '#programas', label: 'Programas' },
+  { href: '#metodologia', label: 'Metodología' },
+  { href: '#docentes', label: 'Docentes' },
+  { href: '#testimonios', label: 'Egresados' },
+]
 
 export function AcademyHeader({ onOpenEnroll }: { onOpenEnroll: () => void }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-800/80 bg-[#0B0F19]/90 backdrop-blur-md">
-      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        {/* Brand */}
-        <Link href="/" className="group flex items-center gap-3">
-          <div className="flex size-11 items-center justify-center rounded-xl bg-gradient-to-tr from-[#5B21B6] to-[#7C3AED] text-white shadow-lg shadow-[#5B21B6]/30 transition group-hover:scale-105">
-            <GraduationCap className="size-6" />
+    <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <Link href="/" className="flex items-center gap-2.5">
+          <div className="grid size-9 place-items-center rounded-lg bg-blue-600 text-white">
+            <GraduationCap className="size-5" />
           </div>
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="font-heading text-lg font-black tracking-tight text-white">
-                F&J <span className="text-[#A78BFA]">ACADEMY</span>
-              </span>
-              <span className="rounded-full border border-[#5B21B6]/40 bg-[#5B21B6]/20 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[#C4B5FD]">
-                Instituto TI
-              </span>
-            </div>
-            <p className="text-[11px] text-slate-400">Powered by F&J Solutions Enterprise</p>
+          <div className="leading-tight">
+            <p className="text-[15px] font-semibold tracking-tight text-slate-900">
+              F&amp;J Academy
+            </p>
+            <p className="text-[11px] text-slate-500">Instituto de tecnología</p>
           </div>
         </Link>
 
-        {/* Desktop Nav */}
-        <nav className="hidden items-center gap-8 md:flex">
-          <a
-            href="#programas"
-            className="text-xs font-semibold uppercase tracking-wider text-slate-300 transition hover:text-white"
-          >
-            Programas & Carreras
-          </a>
-          <a
-            href="#metodologia"
-            className="text-xs font-semibold uppercase tracking-wider text-slate-300 transition hover:text-white"
-          >
-            Metodología F&J
-          </a>
-          <a
-            href="#docentes"
-            className="text-xs font-semibold uppercase tracking-wider text-slate-300 transition hover:text-white"
-          >
-            Docentes
-          </a>
-          <a
-            href="#testimonios"
-            className="text-xs font-semibold uppercase tracking-wider text-slate-300 transition hover:text-white"
-          >
-            Egresados
-          </a>
+        <nav className="hidden items-center gap-7 md:flex">
+          {NAV_LINKS.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              className="text-[13px] font-medium text-slate-600 transition hover:text-slate-900"
+            >
+              {link.label}
+            </a>
+          ))}
         </nav>
 
-        {/* Actions */}
-        <div className="hidden items-center gap-3 md:flex">
+        <div className="hidden items-center gap-4 md:flex">
           <a
             href="https://fjsolutions.com.pe"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 transition hover:text-white"
+            className="inline-flex items-center gap-1 text-[13px] font-medium text-slate-500 transition hover:text-slate-900"
           >
-            <span>Ir a F&J Empresa</span>
+            F&amp;J Empresa
             <ArrowUpRight className="size-3.5" />
           </a>
-
           <button
             type="button"
             onClick={onOpenEnroll}
-            className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#5B21B6] to-[#7C3AED] px-5 py-2.5 text-xs font-bold text-white shadow-lg shadow-[#5B21B6]/25 transition hover:brightness-110 active:scale-95"
+            className="inline-flex h-9 items-center rounded-lg bg-blue-600 px-4 text-[13px] font-semibold text-white transition hover:bg-blue-700"
           >
-            <Sparkles className="size-3.5" />
-            <span>Postular / Inscribirme</span>
+            Inscribirme
           </button>
         </div>
 
-        {/* Mobile menu button */}
         <button
           type="button"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="grid size-10 place-items-center rounded-xl border border-slate-800 bg-slate-900 text-slate-300 md:hidden"
+          className="grid size-9 place-items-center rounded-lg border border-slate-200 text-slate-600 md:hidden"
           aria-label="Abrir menú"
         >
-          {mobileMenuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+          {mobileMenuOpen ? <X className="size-4" /> : <Menu className="size-4" />}
         </button>
       </div>
 
-      {/* Mobile Nav dropdown */}
       {mobileMenuOpen && (
-        <div className="border-b border-slate-800 bg-[#0B0F19] px-6 py-6 md:hidden">
-          <div className="flex flex-col gap-4">
-            <a
-              href="#programas"
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-sm font-semibold text-slate-200"
-            >
-              Programas & Carreras
-            </a>
-            <a
-              href="#metodologia"
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-sm font-semibold text-slate-200"
-            >
-              Metodología F&J
-            </a>
-            <a
-              href="#docentes"
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-sm font-semibold text-slate-200"
-            >
-              Docentes
-            </a>
-            <a
-              href="#testimonios"
-              onClick={() => setMobileMenuOpen(false)}
-              className="text-sm font-semibold text-slate-200"
-            >
-              Egresados
-            </a>
-
-            <div className="mt-2 flex flex-col gap-3 pt-3 border-t border-slate-800">
-              <button
-                type="button"
-                onClick={() => {
-                  setMobileMenuOpen(false)
-                  onOpenEnroll()
-                }}
-                className="w-full rounded-xl bg-gradient-to-r from-[#5B21B6] to-[#7C3AED] py-3 text-center text-xs font-bold text-white"
+        <div className="border-t border-slate-200 bg-white px-4 py-4 md:hidden">
+          <div className="flex flex-col gap-1">
+            {NAV_LINKS.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className="rounded-lg px-2 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
               >
-                Postular / Inscribirme
-              </button>
-            </div>
+                {link.label}
+              </a>
+            ))}
           </div>
+          <button
+            type="button"
+            onClick={() => {
+              setMobileMenuOpen(false)
+              onOpenEnroll()
+            }}
+            className="mt-2 w-full rounded-lg bg-blue-600 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700"
+          >
+            Inscribirme
+          </button>
         </div>
       )}
     </header>

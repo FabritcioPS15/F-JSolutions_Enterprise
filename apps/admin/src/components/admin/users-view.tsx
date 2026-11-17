@@ -213,6 +213,8 @@ export function UsersView() {
       role: draft.role,
       status: draft.status,
       twoFactorEnabled: draft.twoFactorEnabled,
+      // La vinculación AllMyLinks se conserva al editar cuentas de empresa.
+      linkProfileId: editing && editing !== 'new' ? editing.linkProfileId ?? null : undefined,
     }
 
     setSaving(true)
@@ -778,6 +780,10 @@ export function UsersView() {
                 value={draft.role}
                 onChange={(event) => update('role', event.target.value as AdminUserRole)}
               >
+                {!roleOrder.includes(draft.role) && (
+                  // Las cuentas de empresa se crean desde su página AllMyLinks.
+                  <option value={draft.role}>{roleLabels[draft.role]}</option>
+                )}
                 {roleOrder.map((item) => (
                   <option key={item} value={item}>
                     {roleLabels[item]}

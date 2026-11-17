@@ -26,6 +26,7 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 import { useFavorites } from '@/lib/use-favorites'
+import { storeUrl } from '@/lib/store-url'
 import type { Product } from '@/lib/catalog'
 
 type ProductCardProps = {
@@ -86,7 +87,7 @@ export function ProductCard({ product, onAddToQuote }: ProductCardProps) {
 
   return (
     <Link
-      href={`/productos/${product.slug}`}
+      href={storeUrl(`/productos/${product.slug}`)}
       className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-[#2563EB]/40 hover:shadow-lg"
     >
       {/* Contenedor de Imagen ampliado */}

@@ -1,5 +1,6 @@
 import { categories as catalogCategories, products as catalogProducts } from './catalog'
 import { getServicePathFor, serviceDefinitions, type ServiceCategory } from './services'
+import { storeUrl } from './store-url'
 
 export type SiteSearchType = 'product' | 'system' | 'service' | 'category' | 'page' | 'legal'
 
@@ -110,8 +111,8 @@ const staticPages: StaticPage[] = [
     keywords: ['inicio', 'home', 'portada', 'fj', 'f&j', 'sistemas', 'tecnologia'],
   },
   {
-    title: 'Catálogo de productos',
-    href: '/productos',
+    title: 'Tienda de productos',
+    href: storeUrl('/productos'),
     description: 'Laptops, computadoras, monitores, redes, impresoras y más.',
     keywords: [
       'productos',
@@ -263,7 +264,7 @@ function buildIndex(): SiteSearchEntry[] {
     type: 'product',
     title: product.name,
     description: `${product.brand} · ${product.category}`,
-    href: `/productos/${product.slug}`,
+    href: storeUrl(`/productos/${product.slug}`),
     image: product.image,
     keywords: [
       product.brand,
@@ -296,7 +297,7 @@ function buildIndex(): SiteSearchEntry[] {
     type: 'category',
     title: category,
     description: 'Categoría del catálogo',
-    href: `/productos?categoria=${encodeURIComponent(category)}`,
+    href: storeUrl(`/productos?categoria=${encodeURIComponent(category)}`),
     keywords: ['categoria', category],
   }))
 
@@ -391,7 +392,7 @@ export function searchSiteGrouped(
 export const popularSearches = ['web', 'laptops', 'redes', 'soporte', 'impresoras', 'software']
 
 export const quickSearchLinks = [
-  { label: 'Catálogo', href: '/productos', description: 'Equipos y accesorios' },
+  { label: 'Tienda', href: storeUrl('/productos'), description: 'Equipos y accesorios' },
   { label: 'Servicios TI', href: '/servicios', description: 'Soporte e infraestructura' },
   { label: 'Desarrollo de software', href: '/sistemas', description: 'Sistemas web, ERP y API' },
 ]

@@ -926,7 +926,7 @@ function normalizeRequest(raw: Record<string, unknown>): ServiceRequest {
   }
 }
 
-const adminUserRoles = ['superadmin', 'admin', 'ventas', 'soporte', 'consulta'] as const
+const adminUserRoles = ['superadmin', 'admin', 'ventas', 'soporte', 'consulta', 'empresa'] as const
 const adminUserStatuses = ['active', 'invited', 'disabled'] as const
 const orderStatuses = [
   'pending',
@@ -961,6 +961,7 @@ function normalizeUser(raw: Record<string, unknown>): AdminUser {
     lastLoginAt: raw.lastLoginAt ? String(raw.lastLoginAt) : undefined,
     createdAt: String(raw.createdAt ?? new Date().toISOString()),
     updatedAt: String(raw.updatedAt ?? new Date().toISOString()),
+    linkProfileId: raw.linkProfileId ? String(raw.linkProfileId) : null,
   }
 }
 

@@ -1,17 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import {
-  Calendar,
-  Check,
-  Clock,
-  GraduationCap,
-  Sparkles,
-  Users,
-  Layers,
-  ArrowRight,
-  BookOpen,
-} from 'lucide-react'
+import { Calendar, Check, Clock, Layers } from 'lucide-react'
 import { CATEGORIES, COURSES, type Course, type CourseCategory } from '@/lib/academy-data'
 
 export function ProgramsGrid({ onSelectCourse }: { onSelectCourse: (course: Course) => void }) {
@@ -23,23 +13,23 @@ export function ProgramsGrid({ onSelectCourse }: { onSelectCourse: (course: Cour
   })
 
   return (
-    <section id="programas" className="relative py-20 bg-slate-950/60 border-t border-slate-900">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Section title */}
-        <div className="flex flex-col items-center text-center">
-          <span className="rounded-full border border-[#5B21B6]/60 bg-[#1E1B4B]/40 px-3.5 py-1 text-[11px] font-bold uppercase tracking-wider text-[#C4B5FD]">
-            Programas Académicos 2026 - 2027
-          </span>
-          <h2 className="mt-4 font-heading text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-            Especializaciones Diseñadas para la Industria
-          </h2>
-          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate-400">
-            Cada programa está estructurado con el mismo stack tecnológico y estándares de calidad
-            que exigimos en los proyectos corporativos de F&J Solutions Enterprise.
-          </p>
+    <section id="programas" className="bg-slate-50 py-16 sm:py-20">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+          <div className="max-w-2xl">
+            <p className="text-xs font-semibold uppercase tracking-wider text-blue-600">
+              Programas académicos
+            </p>
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
+              Especializaciones diseñadas para la industria
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-slate-600">
+              Los mismos estándares técnicos que aplicamos en los proyectos corporativos de F&amp;J
+              Solutions, ordenados en programas cortos y prácticos.
+            </p>
+          </div>
 
-          {/* Category filter pills */}
-          <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
+          <div className="flex flex-wrap gap-2">
             {CATEGORIES.map((cat) => {
               const active = activeCategory === cat.id
               return (
@@ -47,10 +37,10 @@ export function ProgramsGrid({ onSelectCourse }: { onSelectCourse: (course: Cour
                   key={cat.id}
                   type="button"
                   onClick={() => setActiveCategory(cat.id)}
-                  className={`rounded-full px-4 py-2 text-xs font-bold transition-all ${
+                  className={`rounded-full px-3.5 py-1.5 text-xs font-medium transition ${
                     active
-                      ? 'bg-gradient-to-r from-[#5B21B6] to-[#7C3AED] text-white shadow-lg shadow-[#5B21B6]/25'
-                      : 'border border-slate-800 bg-slate-900/80 text-slate-400 hover:border-slate-700 hover:text-slate-200'
+                      ? 'bg-slate-900 text-white'
+                      : 'border border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:text-slate-900'
                   }`}
                 >
                   {cat.label}
@@ -60,73 +50,60 @@ export function ProgramsGrid({ onSelectCourse }: { onSelectCourse: (course: Cour
           </div>
         </div>
 
-        {/* Courses grid */}
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((course) => (
             <article
               key={course.id}
-              className="group relative flex flex-col justify-between overflow-hidden rounded-3xl border border-slate-800/90 bg-slate-900/60 p-6 shadow-xl transition-all duration-300 hover:-translate-y-1 hover:border-[#5B21B6]/60 hover:shadow-2xl hover:shadow-[#5B21B6]/15 backdrop-blur-md"
+              className="flex flex-col justify-between rounded-xl border border-slate-200 bg-white p-5 transition hover:border-slate-300 hover:shadow-sm"
             >
-              {/* Header badges */}
               <div>
                 <div className="flex items-center justify-between gap-2">
-                  <span className="rounded-lg bg-slate-800/90 px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-300">
+                  <span className="rounded-md bg-blue-50 px-2 py-0.5 text-[11px] font-medium text-blue-700">
                     {course.categoryLabel}
                   </span>
                   {course.badge && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-amber-500/20 to-orange-500/20 px-2.5 py-0.5 text-[10px] font-bold text-amber-300 border border-amber-500/30">
-                      <Sparkles className="size-3" />
+                    <span className="rounded-md bg-slate-100 px-2 py-0.5 text-[11px] font-medium text-slate-600">
                       {course.badge}
                     </span>
                   )}
                 </div>
 
-                {/* Course Title */}
-                <h3 className="mt-4 font-heading text-lg font-bold text-white transition group-hover:text-[#C4B5FD] leading-snug">
+                <h3 className="mt-3 text-[15px] font-semibold leading-snug text-slate-900">
                   {course.title}
                 </h3>
-
-                <p className="mt-2.5 text-xs leading-relaxed text-slate-400">
+                <p className="mt-2 text-xs leading-relaxed text-slate-600">
                   {course.shortDescription}
                 </p>
 
-                {/* Meta list */}
-                <div className="mt-5 grid grid-cols-2 gap-2.5 rounded-xl border border-slate-800/70 bg-slate-950/40 p-3 text-[11px] text-slate-300">
-                  <div className="flex items-center gap-2">
-                    <Clock className="size-3.5 text-[#A78BFA]" />
-                    <span>{course.duration} ({course.hours}h)</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Layers className="size-3.5 text-[#A78BFA]" />
-                    <span>{course.level}</span>
-                  </div>
-                  <div className="col-span-2 flex items-center gap-2">
-                    <Calendar className="size-3.5 text-[#A78BFA]" />
-                    <span>Inicio: <strong className="text-white">{course.nextStartDate}</strong></span>
-                  </div>
+                <div className="mt-4 grid grid-cols-2 gap-2 rounded-lg border border-slate-200 bg-slate-50 p-3 text-[11px] text-slate-600">
+                  <span className="flex items-center gap-1.5">
+                    <Clock className="size-3.5 text-slate-400" />
+                    {course.duration} ({course.hours}h)
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <Layers className="size-3.5 text-slate-400" />
+                    {course.level}
+                  </span>
+                  <span className="col-span-2 flex items-center gap-1.5">
+                    <Calendar className="size-3.5 text-slate-400" />
+                    Inicio: <strong className="font-medium text-slate-900">{course.nextStartDate}</strong>
+                  </span>
                 </div>
 
-                {/* Syllabus preview */}
-                <div className="mt-5">
-                  <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-                    Módulos destacados:
-                  </p>
-                  <ul className="mt-2 space-y-1 text-xs text-slate-300">
-                    {course.syllabus.slice(0, 3).map((item, idx) => (
-                      <li key={idx} className="flex items-start gap-2">
-                        <Check className="size-3.5 shrink-0 text-emerald-400 mt-0.5" />
-                        <span className="truncate">{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+                <ul className="mt-4 space-y-1.5">
+                  {course.syllabus.slice(0, 3).map((item) => (
+                    <li key={item} className="flex items-start gap-2 text-xs text-slate-600">
+                      <Check className="mt-0.5 size-3.5 shrink-0 text-blue-600" />
+                      <span className="truncate">{item}</span>
+                    </li>
+                  ))}
+                </ul>
 
-                {/* Technologies */}
-                <div className="mt-5 flex flex-wrap gap-1.5">
+                <div className="mt-4 flex flex-wrap gap-1.5">
                   {course.technologies.map((tech) => (
                     <span
                       key={tech}
-                      className="rounded-md border border-slate-800 bg-slate-950/70 px-2 py-0.5 text-[10px] font-medium text-slate-400"
+                      className="rounded-md border border-slate-200 px-2 py-0.5 text-[10px] font-medium text-slate-500"
                     >
                       {tech}
                     </span>
@@ -134,25 +111,21 @@ export function ProgramsGrid({ onSelectCourse }: { onSelectCourse: (course: Cour
                 </div>
               </div>
 
-              {/* Footer with Price and Action */}
-              <div className="mt-8 border-t border-slate-800/80 pt-5">
-                <div className="flex items-baseline justify-between mb-4">
-                  <div>
-                    <span className="text-[11px] text-slate-400">Inversión:</span>
-                    <div className="flex items-baseline gap-2">
-                      <span className="font-heading text-xl font-bold text-white">
-                        S/ {course.pricePEN}
+              <div className="mt-6 border-t border-slate-200 pt-4">
+                <div className="mb-4 flex items-baseline justify-between">
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-lg font-semibold text-slate-900">
+                      S/ {course.pricePEN}
+                    </span>
+                    {course.discountPercent && (
+                      <span className="text-xs text-slate-400 line-through">
+                        S/ {Math.round(course.pricePEN / (1 - course.discountPercent / 100))}
                       </span>
-                      {course.discountPercent && (
-                        <span className="text-xs text-slate-500 line-through">
-                          S/ {Math.round(course.pricePEN / (1 - course.discountPercent / 100))}
-                        </span>
-                      )}
-                    </div>
+                    )}
                   </div>
                   {course.discountPercent && (
-                    <span className="rounded-lg bg-emerald-500/10 border border-emerald-500/20 px-2 py-1 text-[10px] font-bold text-emerald-400">
-                      -{course.discountPercent}% Beca
+                    <span className="rounded-md bg-emerald-50 px-2 py-0.5 text-[11px] font-medium text-emerald-700">
+                      -{course.discountPercent}% beca
                     </span>
                   )}
                 </div>
@@ -160,10 +133,9 @@ export function ProgramsGrid({ onSelectCourse }: { onSelectCourse: (course: Cour
                 <button
                   type="button"
                   onClick={() => onSelectCourse(course)}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#5B21B6] to-[#7C3AED] py-2.5 text-xs font-bold text-white shadow-lg shadow-[#5B21B6]/20 transition hover:brightness-110 active:scale-98"
+                  className="w-full rounded-lg border border-slate-300 py-2 text-xs font-semibold text-slate-700 transition hover:border-blue-600 hover:bg-blue-600 hover:text-white"
                 >
-                  <BookOpen className="size-3.5" />
-                  <span>Ver Plan de Estudios & Inscribirme</span>
+                  Ver temario e inscribirme
                 </button>
               </div>
             </article>

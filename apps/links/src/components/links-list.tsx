@@ -1,47 +1,36 @@
 'use client'
 
-import { useState } from 'react'
 import {
+  Calendar,
   Code2,
   Globe,
   GraduationCap,
+  Mail,
   MessageCircle,
-  Share2,
+  Phone,
   ShoppingBag,
-  Sparkles,
   UserPlus,
   Video,
   Wrench,
   ChevronRight,
   type LucideIcon,
 } from 'lucide-react'
-import {
-  LINK_CATEGORIES,
-  QUICK_LINKS,
-  PROFILE_INFO,
-  type LinkCategory,
-  type QuickLink,
-} from '@/lib/links-data'
 import { FaInstagram } from 'react-icons/fa'
 import { TikTokIcon, WhatsAppIcon } from '@/components/social-icons'
+import type { LinkProfile, ProfileLink } from '@/lib/link-profiles'
 
 const badgeColorStyles = {
-  emerald: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
-  amber: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
-  purple: 'bg-purple-500/20 text-purple-300 border-purple-500/30',
-  blue: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
+  emerald:
+    'bg-[var(--badge-emerald-bg)] text-[var(--badge-emerald-ink)] border-[var(--badge-emerald-border)]',
+  amber: 'bg-[var(--badge-amber-bg)] text-[var(--badge-amber-ink)] border-[var(--badge-amber-border)]',
+  purple: 'bg-[var(--accent-soft)] text-[var(--page-accent-ink)] border-[var(--accent-border)]',
+  blue: 'bg-[var(--badge-blue-bg)] text-[var(--badge-blue-ink)] border-[var(--badge-blue-border)]',
 }
 
-function renderIcon(iconKey: string, isHighlight: boolean) {
-  if (iconKey === 'Instagram') {
-    return <FaInstagram className="size-5" />
-  }
-  if (iconKey === 'Video') {
-    return <TikTokIcon className="size-5" />
-  }
-  if (iconKey === 'MessageCircle') {
-    return <WhatsAppIcon className="size-5" />
-  }
+function renderIcon(iconKey: string) {
+  if (iconKey === 'Instagram') return <FaInstagram className="size-5" />
+  if (iconKey === 'Video') return <TikTokIcon className="size-5" />
+  if (iconKey === 'MessageCircle') return <WhatsAppIcon className="size-5" />
 
   const map: Record<string, LucideIcon> = {
     ShoppingBag,
@@ -50,134 +39,131 @@ function renderIcon(iconKey: string, isHighlight: boolean) {
     Wrench,
     Globe,
     UserPlus,
+    Mail,
+    Phone,
+    Calendar,
   }
 
   const Icon = map[iconKey] || Globe
   return <Icon className="size-5" />
 }
 
-export function LinksList() {
-  const [activeCategory, setActiveCategory] = useState<LinkCategory>('all')
-
-  const filtered = QUICK_LINKS.filter((item) => {
-    if (activeCategory === 'all') return true
-    return item.category === activeCategory
-  })
-
-  function downloadVCard() {
-    const vcard = `BEGIN:VCARD
+function downloadVCard(profile: LinkProfile) {
+  const vcard = `BEGIN:VCARD
 VERSION:3.0
-N:Solutions Enterprise;F&J;;;
-FN:F&J Solutions Enterprise
-ORG:F&J Solutions Enterprise
-TITLE:Soluciones Tecnológicas Corporativas
-TEL;TYPE=CELL,VOICE:${PROFILE_INFO.phone}
-EMAIL;TYPE=PREF,INTERNET:${PROFILE_INFO.email}
-URL:${PROFILE_INFO.website}
-ADR;TYPE=WORK:;;Lima;Lima;;;Peru
-NOTE:Hardware, Desarrollo de Software, Ciberseguridad e Instituto Tecnológico F&J Academy.
+N:;${profile.name};;;
+FN:${profile.name}
+ORG:${profile.name}
+TEL;TYPE=CELL,VOICE:${profile.phone}
+EMAIL;TYPE=PREF,INTERNET:${profile.email}
+URL:${profile.website}
+ADR;TYPE=WORK:;;${profile.location};;;;
+NOTE:${profile.bio.replace(/\n/g, ' ')}
 END:VCARD`
 
-    const blob = new Blob([vcard], { type: 'text/vcard;charset=utf-8' })
-    const url = URL.createObjectURL(blob)
-    const link = document.createElement('a')
-    link.href = url
-    link.setAttribute('download', 'FJ_Solutions_Enterprise.vcf')
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-    URL.revokeObjectURL(url)
-  }
+  const blob = new Blob([vcard], { type: 'text/vcard;charset=utf-8' })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.setAttribute('download', `${profile.slug || 'contacto'}.vcf`)
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  URL.revokeObjectURL(url)
+}
 
-  function handleLinkClick(item: QuickLink, e: React.MouseEvent) {
-    if (item.onClickAction === 'vcard') {
-      e.preventDefault()
-      downloadVCard()
+async function sharePage(profile: LinkProfile) {
+  const url = window.location.href
+  if (typeof navigator !== 'undefined' && navigator.share) {
+    try {
+      await navigator.share({ title: profile.name, text: profile.bio, url })
+    } catch {
+      // El usuario canceló el diálogo nativo.
+    }
+    return
+  }
+  try {
+    await navigator.clipboard.writeText(url)
+    alert('¡Enlace copiado al portapapeles!')
+  } catch {
+    // Sin permiso de portapapeles no hay una alternativa silenciosa.
+  }
+}
+
+export function LinksList({ profile }: { profile: LinkProfile }) {
+  function handleLinkClick(link: ProfileLink, event: React.MouseEvent) {
+    if (link.action === 'vcard') {
+      event.preventDefault()
+      downloadVCard(profile)
+    }
+    if (link.action === 'share') {
+      event.preventDefault()
+      void sharePage(profile)
     }
   }
 
   return (
     <div className="mt-6 w-full">
-      {/* Category Pills */}
-      <div className="flex items-center justify-center gap-1.5 overflow-x-auto pb-2 scrollbar-none">
-        {LINK_CATEGORIES.map((cat) => {
-          const isSelected = activeCategory === cat.id
-          return (
-            <button
-              key={cat.id}
-              type="button"
-              onClick={() => setActiveCategory(cat.id)}
-              className={`rounded-full px-3 py-1.5 text-[11px] font-bold transition-all shrink-0 ${
-                isSelected
-                  ? 'bg-gradient-to-r from-[#5B21B6] to-[#7C3AED] text-white shadow-md shadow-[#5B21B6]/30'
-                  : 'border border-white/5 bg-slate-900/60 text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              {cat.label}
-            </button>
-          )
-        })}
-      </div>
+      {profile.links.length === 0 ? (
+        <p className="rounded-2xl border border-[var(--page-border)] bg-[var(--page-card)] px-4 py-8 text-center text-xs text-[var(--page-ink-muted)]">
+          Esta página aún no tiene enlaces publicados.
+        </p>
+      ) : (
+        <div className="flex flex-col gap-3">
+          {profile.links.map((item) => {
+            const isHighlight = item.highlight
 
-      {/* Links Stack */}
-      <div className="mt-4 flex flex-col gap-3">
-        {filtered.map((item) => {
-          const isHighlight = item.highlight
-
-          return (
-            <a
-              key={item.id}
-              href={item.url}
-              target={item.onClickAction ? undefined : '_blank'}
-              rel="noopener noreferrer"
-              onClick={(e) => handleLinkClick(item, e)}
-              className={`group glass-button relative flex items-center justify-between gap-3.5 rounded-2xl p-4 transition-all duration-200 ${
-                isHighlight
-                  ? 'border-[#7C3AED]/40 bg-gradient-to-r from-[#1E1B4B]/80 via-slate-900/80 to-[#1E1B4B]/80 shadow-lg shadow-[#5B21B6]/20'
-                  : ''
-              }`}
-            >
-              <div className="flex items-center gap-3.5 min-w-0">
-                <div
-                  className={`flex size-11 shrink-0 items-center justify-center rounded-xl transition group-hover:scale-105 ${
-                    isHighlight
-                      ? 'bg-gradient-to-tr from-[#5B21B6] to-[#7C3AED] text-white shadow-md shadow-[#5B21B6]/30'
-                      : 'border border-white/10 bg-slate-800/80 text-slate-300'
-                  }`}
-                >
-                  {renderIcon(item.icon, Boolean(isHighlight))}
-                </div>
-
-                <div className="min-w-0 text-left">
-                  <div className="flex items-center gap-2">
-                    <p className="font-heading text-xs font-bold text-white group-hover:text-[#DDD6FE] transition truncate">
-                      {item.title}
-                    </p>
-                  </div>
-                  {item.subtitle && (
-                    <p className="text-[11px] text-slate-400 truncate mt-0.5">
-                      {item.subtitle}
-                    </p>
-                  )}
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2 shrink-0">
-                {item.badge && (
-                  <span
-                    className={`rounded-full border px-2 py-0.5 text-[9px] font-black uppercase tracking-wider ${
-                      badgeColorStyles[item.badgeColor ?? 'purple']
+            return (
+              <a
+                key={item.id}
+                href={item.url}
+                target={item.action ? undefined : '_blank'}
+                rel="noopener noreferrer"
+                onClick={(event) => handleLinkClick(item, event)}
+                className={`group glass-button relative flex items-center justify-between gap-3.5 rounded-2xl p-4 transition-all duration-200 ${
+                  isHighlight ? 'link-highlight' : ''
+                }`}
+              >
+                <div className="flex min-w-0 items-center gap-3.5">
+                  <div
+                    className={`flex size-11 shrink-0 items-center justify-center rounded-xl transition group-hover:scale-105 ${
+                      isHighlight
+                        ? 'bg-[linear-gradient(135deg,var(--accent),var(--accent-light))] text-white shadow-[0_10px_25px_-8px_var(--accent-glow)]'
+                        : 'border border-[var(--page-border-strong)] bg-[var(--page-card)] text-[var(--page-ink-soft)]'
                     }`}
                   >
-                    {item.badge}
-                  </span>
-                )}
-                <ChevronRight className="size-4 text-slate-500 transition group-hover:translate-x-0.5 group-hover:text-white" />
-              </div>
-            </a>
-          )
-        })}
-      </div>
+                    {renderIcon(item.icon)}
+                  </div>
+
+                  <div className="min-w-0 text-left">
+                    <p className="font-heading truncate text-xs font-bold text-[var(--page-ink)] transition group-hover:text-[var(--page-accent-ink)]">
+                      {item.title}
+                    </p>
+                    {item.subtitle && (
+                      <p className="mt-0.5 truncate text-[11px] text-[var(--page-ink-muted)]">
+                        {item.subtitle}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex shrink-0 items-center gap-2">
+                  {item.badge && (
+                    <span
+                      className={`rounded-full border px-2 py-0.5 text-[9px] font-black uppercase tracking-wider ${
+                        badgeColorStyles[item.badgeColor] ?? badgeColorStyles.purple
+                      }`}
+                    >
+                      {item.badge}
+                    </span>
+                  )}
+                  <ChevronRight className="size-4 text-[var(--page-ink-muted)] transition group-hover:translate-x-0.5 group-hover:text-[var(--page-ink)]" />
+                </div>
+              </a>
+            )
+          })}
+        </div>
+      )}
     </div>
   )
 }

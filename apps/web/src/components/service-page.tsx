@@ -23,6 +23,7 @@ import {
   SupportVisual,
 } from '@/components/heroes'
 import { getServicesByCategory, type ServiceDefinition } from '@/lib/services'
+import { storeUrl } from '@/lib/store-url'
 
 type ServicePageProps = {
   kind: 'cotizador' | 'soporte' | 'sistemas' | 'infraestructura'
@@ -245,7 +246,7 @@ export function ServicePage({
           primaryLabel="Solicitar cotización"
           primaryHref="#solicitud"
           secondaryLabel="Ver productos"
-          secondaryHref="/productos"
+          secondaryHref={storeUrl('/productos')}
         />
       )}
 

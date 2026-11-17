@@ -1,4 +1,4 @@
-import { Award, Briefcase, Server, Users, ShieldCheck, Cpu } from 'lucide-react'
+import { Award, Briefcase, Server, Users, Cpu, ShieldCheck } from 'lucide-react'
 import { PILLARS } from '@/lib/academy-data'
 
 const iconMap = {
@@ -10,62 +10,49 @@ const iconMap = {
 
 export function AcademyMethodology() {
   return (
-    <section id="metodologia" className="relative py-20 overflow-hidden">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Banner de Respaldo F&J Enterprise */}
-        <div className="relative overflow-hidden rounded-3xl border border-[#5B21B6]/40 bg-gradient-to-r from-[#1E1B4B] via-[#2E1065] to-[#0F172A] p-8 sm:p-12 shadow-2xl">
-          <div
-            className="pointer-events-none absolute -right-20 -bottom-20 size-80 rounded-full bg-[#7C3AED]/15 blur-3xl"
-            aria-hidden="true"
-          />
+    <section id="metodologia" className="border-b border-slate-200 bg-white py-16 sm:py-20">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div className="grid gap-8 rounded-xl border border-slate-200 bg-slate-50 p-6 sm:p-10 lg:grid-cols-[1fr_auto] lg:items-center">
+          <div className="max-w-2xl">
+            <p className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-blue-600">
+              <ShieldCheck className="size-4" />
+              Respaldo empresarial
+            </p>
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
+              ¿Por qué formarte en F&amp;J Academy?
+            </h2>
+            <p className="mt-3 text-sm leading-relaxed text-slate-600">
+              La mayoría de institutos enseña teoría que el mercado ya no usa. Aquí los temarios los
+              dictan los mismos líderes técnicos que desarrollan software, gestionan servidores e
+              implementan infraestructura para empresas en todo el Perú.
+            </p>
+          </div>
 
-          <div className="relative flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
-            <div className="max-w-2xl">
-              <div className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-white">
-                <ShieldCheck className="size-3.5 text-emerald-400" />
-                Respaldo Empresarial Garantizado
-              </div>
-              <h3 className="mt-4 font-heading text-2xl font-black text-white sm:text-3xl">
-                ¿Por qué formarte en F&J Academy?
-              </h3>
-              <p className="mt-3 text-sm leading-relaxed text-slate-300">
-                La mayoría de institutos enseñan teoría que ya no se usa en el mercado. En F&J Academy
-                los temarios son dictados por los mismos líderes técnicos que desarrollan software,
-                gestionan servidores e implementan infraestructura para corporaciones en todo el Perú.
-              </p>
+          <div className="grid grid-cols-2 gap-3 lg:w-72">
+            <div className="rounded-lg border border-slate-200 bg-white p-4 text-center">
+              <p className="text-xl font-semibold text-slate-900">100%</p>
+              <p className="mt-0.5 text-[11px] text-slate-500">Práctico con código real</p>
             </div>
-
-            <div className="grid grid-cols-2 gap-4 shrink-0">
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-center">
-                <p className="font-heading text-2xl font-black text-white">100%</p>
-                <p className="text-[11px] text-slate-300 mt-1">Práctico con código real</p>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-center">
-                <p className="font-heading text-2xl font-black text-white">Bolsa F&J</p>
-                <p className="text-[11px] text-slate-300 mt-1">Pasantías remuneradas</p>
-              </div>
+            <div className="rounded-lg border border-slate-200 bg-white p-4 text-center">
+              <p className="text-xl font-semibold text-slate-900">Bolsa F&amp;J</p>
+              <p className="mt-0.5 text-[11px] text-slate-500">Pasantías remuneradas</p>
             </div>
           </div>
         </div>
 
-        {/* Pilares */}
-        <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {PILLARS.map((pillar) => {
             const Icon = iconMap[pillar.icon as keyof typeof iconMap] || Cpu
             return (
               <div
                 key={pillar.title}
-                className="flex flex-col rounded-2xl border border-slate-800 bg-slate-900/40 p-6 transition hover:border-[#5B21B6]/50"
+                className="rounded-xl border border-slate-200 bg-white p-5 transition hover:border-slate-300"
               >
-                <div className="flex size-12 items-center justify-center rounded-xl bg-[#5B21B6]/20 text-[#C4B5FD] border border-[#5B21B6]/30">
-                  <Icon className="size-6" />
+                <div className="grid size-9 place-items-center rounded-lg bg-blue-50 text-blue-600">
+                  <Icon className="size-4" />
                 </div>
-                <h4 className="mt-4 font-heading text-base font-bold text-white">
-                  {pillar.title}
-                </h4>
-                <p className="mt-2 text-xs leading-relaxed text-slate-400">
-                  {pillar.description}
-                </p>
+                <h3 className="mt-3 text-sm font-semibold text-slate-900">{pillar.title}</h3>
+                <p className="mt-1.5 text-xs leading-relaxed text-slate-600">{pillar.description}</p>
               </div>
             )
           })}

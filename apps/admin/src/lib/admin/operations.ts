@@ -98,6 +98,7 @@ export const roleLabels: Record<AdminUserRole, string> = {
   ventas: 'Ventas',
   soporte: 'Soporte',
   consulta: 'Solo lectura',
+  empresa: 'Empresa',
 }
 
 export const userStatusLabels: Record<AdminUserStatus, string> = {

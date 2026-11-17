@@ -1,12 +1,10 @@
 import type { MetadataRoute } from 'next'
-import { products } from '@/lib/catalog'
 import { getStoreServiceCatalog } from '@/lib/service-offerings'
 import { getServicePathFor } from '@/lib/services'
 import { SITE_URL } from '@/lib/site'
 
 const staticRoutes: { path: string; priority: number; changeFrequency: MetadataRoute.Sitemap[number]['changeFrequency'] }[] = [
   { path: '/', priority: 1, changeFrequency: 'weekly' },
-  { path: '/productos', priority: 0.9, changeFrequency: 'daily' },
   { path: '/servicios', priority: 0.9, changeFrequency: 'weekly' },
   { path: '/soporte-ti', priority: 0.8, changeFrequency: 'monthly' },
   { path: '/infraestructura-ti', priority: 0.8, changeFrequency: 'monthly' },
@@ -43,12 +41,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }))
 
-  const productPages: MetadataRoute.Sitemap = products.map((product) => ({
-    url: `${SITE_URL}/productos/${product.slug}`,
-    lastModified,
-    changeFrequency: 'weekly',
-    priority: 0.6,
-  }))
-
-  return [...pages, ...services, ...productPages]
+  return [...pages, ...services]
 }

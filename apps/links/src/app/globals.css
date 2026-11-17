@@ -8,21 +8,27 @@ html, body {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Glassmorphism link style */
+/* Los colores del botón dependen del fondo elegido por la empresa. */
 .glass-button {
-  background: rgba(17, 24, 39, 0.7);
+  background: var(--page-card, rgba(17, 24, 39, 0.7));
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--page-border, rgba(255, 255, 255, 0.08));
+  box-shadow: var(--page-shadow, 0 4px 20px -2px rgba(0, 0, 0, 0.5));
 }
 
 .glass-button:hover {
-  background: rgba(30, 41, 59, 0.85);
-  border-color: rgba(139, 92, 246, 0.35);
+  background: var(--page-card-hover, rgba(30, 41, 59, 0.85));
+  border-color: var(--accent-border, rgba(139, 92, 246, 0.35));
   transform: translateY(-2px);
 }
 
 .glass-button:active {
   transform: scale(0.98);
+}
+
+.link-highlight {
+  border-color: var(--accent-border);
+  background: linear-gradient(90deg, var(--accent-soft), var(--page-card), var(--accent-soft));
+  box-shadow: 0 16px 40px -24px var(--accent-glow);
 }

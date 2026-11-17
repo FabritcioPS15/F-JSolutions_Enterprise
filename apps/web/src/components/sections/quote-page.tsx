@@ -35,6 +35,7 @@ import {
 import { useAccount } from '@/lib/use-account'
 import { useQuote } from '@/lib/use-quote'
 import { buildQuoteWhatsAppUrl, downloadQuotePdf } from '@/lib/quote-export'
+import { storeUrl } from '@/lib/store-url'
 
 type QuoteFormData = {
   contactName: string
@@ -364,8 +365,8 @@ export function QuotePage() {
               <button type="button" onClick={resetQuote} className="hover:text-blue-ink">
                 Nueva cotización
               </button>
-              <Link href="/productos" className="hover:text-blue-ink">
-                Seguir explorando
+              <Link href={storeUrl('/productos')} className="hover:text-blue-ink">
+                Seguir en la tienda
               </Link>
             </div>
           </div>
@@ -653,13 +654,13 @@ export function QuotePage() {
                   </span>
                   <p className="mt-3 text-sm font-bold">Tu cotización está vacía</p>
                   <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                    Explora el catálogo y agrega los equipos que necesitas.
+                    Explora la tienda y agrega los equipos que necesitas.
                   </p>
                   <Link
-                    href="/productos"
+                    href={storeUrl('/productos')}
                     className="mt-4 inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-[#2563EB] text-xs font-bold text-white transition hover:bg-[#1D4ED8]"
                   >
-                    Ir al catálogo <ArrowRight className="size-3.5" />
+                    Ir a la tienda <ArrowRight className="size-3.5" />
                   </Link>
                 </div>
               ) : (
@@ -780,7 +781,7 @@ export function QuotePage() {
                       <Trash2 className="size-3" /> Vaciar
                     </button>
                     <Link
-                      href="/productos"
+                      href={storeUrl('/productos')}
                       className="inline-flex h-8 items-center gap-1.5 rounded-lg px-2 text-[10px] font-bold text-blue-ink transition hover:bg-tint-blue"
                     >
                       <ChevronLeft className="size-3" /> Agregar más

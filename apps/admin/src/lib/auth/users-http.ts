@@ -59,6 +59,8 @@ export function parseUserBody(value: unknown): Partial<ManagedUserInput> {
   if (typeof raw.status === 'string') patch.status = raw.status as AdminUserStatus
   if (typeof raw.twoFactorEnabled === 'boolean') patch.twoFactorEnabled = raw.twoFactorEnabled
   if (typeof raw.password === 'string' && raw.password.length > 0) patch.password = raw.password
+  if (typeof raw.linkProfileId === 'string' && raw.linkProfileId.trim()) patch.linkProfileId = raw.linkProfileId.trim()
+  if (raw.linkProfileId === null) patch.linkProfileId = null
   return patch
 }
 

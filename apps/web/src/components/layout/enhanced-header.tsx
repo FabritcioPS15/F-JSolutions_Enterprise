@@ -58,6 +58,7 @@ import {
 } from '@/lib/site-search'
 import { mainNav, storeCategories, featuredBrands, itServicesMenu, infrastructureMenu, softwareDevMenu, companyMenu } from '@/lib/navigation'
 import { ThemeToggle } from '@/components/theme/theme-toggle'
+import { storeUrl } from '@/lib/store-url'
 
 // ─── Types ───────────────────────────────────────────────────────────────────────────────
 
@@ -284,7 +285,7 @@ function MobileStoreMenu({ onClose }: { onClose: () => void }) {
               <div className="overflow-hidden">
                 <div className="border-t border-border px-3 pb-3 pt-2">
                   <Link
-                    href={category.items[0]?.href || '/productos'}
+                    href={category.items[0]?.href || storeUrl('/productos')}
                     onClick={onClose}
                     className="mb-2 flex items-center justify-between rounded-md bg-tint-blue px-2.5 py-1.5 text-xs font-bold text-blue-ink transition-colors hover:bg-blue-ink/15"
                   >
@@ -349,11 +350,11 @@ function MobileStoreMenu({ onClose }: { onClose: () => void }) {
       </div>
 
       <Link
-        href="/productos"
+        href={storeUrl('/productos')}
         onClick={onClose}
         className="mt-2 flex items-center justify-center gap-2 rounded-lg bg-[#2563EB] px-3 py-2 text-xs font-bold text-white shadow-xs transition hover:bg-[#1D4ED8]"
       >
-        <span>Ver todos los productos</span>
+        <span>Ir a la tienda</span>
         <ArrowRight className="size-3.5" />
       </Link>
     </div>
@@ -390,7 +391,7 @@ function StoreMegaMenu({ onClose }: { onClose: () => void }) {
               return (
                 <Link
                   key={category.id}
-                  href={category.items[0]?.href || '/productos'}
+                  href={category.items[0]?.href || storeUrl('/productos')}
                   onMouseEnter={() => setActiveCategory(category.id)}
                   onFocus={() => setActiveCategory(category.id)}
                   onClick={onClose}
@@ -433,7 +434,7 @@ function StoreMegaMenu({ onClose }: { onClose: () => void }) {
               {active.label}
             </h3>
             <Link
-              href={active.items[0]?.href || '/productos'}
+              href={active.items[0]?.href || storeUrl('/productos')}
               onClick={onClose}
               className="text-[11px] font-bold text-blue-ink transition-colors hover:text-blue-ink"
             >
@@ -491,11 +492,11 @@ function StoreMegaMenu({ onClose }: { onClose: () => void }) {
 
           <div className="mt-3 border-t border-border pt-3">
             <Link
-              href="/productos"
+              href={storeUrl('/productos')}
               onClick={onClose}
               className="flex items-center gap-1.5 px-2 text-xs font-bold text-blue-ink transition-colors hover:text-blue-ink"
             >
-              Ver todo
+              Ver toda la tienda
               <ArrowRight className="size-3.5" />
             </Link>
           </div>
@@ -686,8 +687,8 @@ function SearchAutocomplete({
         group: 'Categorías',
         type: 'category' as const,
         label: category,
-        sublabel: 'Categoría del catálogo',
-        href: `/productos?categoria=${encodeURIComponent(category)}`,
+        sublabel: 'Categoría de la tienda',
+        href: storeUrl(`/productos?categoria=${encodeURIComponent(category)}`),
       }))
 
       const quickLinks: DropdownItem[] = quickSearchLinks.map((link) => ({
@@ -1161,7 +1162,11 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
     e.preventDefault()
     const term = query.trim()
     if (menuOpen) markMobileNavigation()
-    router.push(term ? `/buscar?q=${encodeURIComponent(term)}` : '/productos')
+    if (!term) {
+      window.location.href = storeUrl('/productos')
+      return
+    }
+    router.push(`/buscar?q=${encodeURIComponent(term)}`)
   }
 
   const isPathActive = (href: string) => {
@@ -1458,7 +1463,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                         isOpen={openMobileSection === 'store'}
                         onToggle={() => toggleMobile('store')}
                         active={active}
-                        badge="Catálogo"
+                        badge="Tienda"
                         icon={Store}
                         count={storeCategories.length}
                       >

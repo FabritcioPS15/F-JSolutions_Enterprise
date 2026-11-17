@@ -8,13 +8,14 @@ import {
   HeroSection,
   HeroTitle,
 } from '@/components/heroes/hero-primitives'
+import { storeUrl } from '@/lib/store-url'
 
 const capabilities = [
   {
     icon: Laptop,
     label: 'Equipos y licencias',
-    hint: 'Catálogo corporativo',
-    href: '/productos',
+    hint: 'Tienda corporativa',
+    href: storeUrl('/productos'),
   },
   {
     icon: Server,

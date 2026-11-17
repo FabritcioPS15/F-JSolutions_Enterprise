@@ -30,6 +30,8 @@ export type ManagedUser = {
   lastLoginAt: string | null
   createdAt: string
   updatedAt: string
+  /** Página AllMyLinks de la cuenta de empresa. */
+  linkProfileId: string | null
 }
 
 export type SessionUser = {
@@ -45,4 +47,5 @@ export type SessionUser = {
   lastLoginAt: string | null
   createdAt: string
   updatedAt: string
+  linkProfileId?: string | null
 }

@@ -11,7 +11,7 @@ export type Course = {
   level: CourseLevel
   duration: string
   hours: number
-  modality: 'En vivo Online' | 'Híbrido' | 'Presencial'
+  modality: 'En vivo Online' | 'Híbrido' | 'Presencial' | 'Presencial / Laboratorio'
   featured?: boolean
   badge?: string
   certification: string

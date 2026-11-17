@@ -4,6 +4,7 @@ import path from 'node:path'
 import { isEmail } from '@fj-solutions/contracts/domain'
 import { roleLabels } from '@/lib/admin/operations'
 import { rolePermissions } from '@/lib/admin/permissions'
+import { getLinkProfile } from '@/lib/links/store'
 import type { AdminUserRole, AdminUserStatus } from '@/lib/admin/types'
 import {
   SEEDED_ADMIN_ID,
@@ -31,6 +32,7 @@ export type ManagedUserInput = {
   status: AdminUserStatus
   twoFactorEnabled: boolean
   password?: string
+  linkProfileId?: string | null
 }
 
 export class ManagedUserError extends Error {
@@ -44,7 +46,7 @@ export class ManagedUserError extends Error {
 
 const STORE_DIR = path.join(process.cwd(), '.data')
 const STORE_PATH = path.join(STORE_DIR, 'admin-users.json')
-const ROLES: AdminUserRole[] = ['superadmin', 'admin', 'ventas', 'soporte', 'consulta']
+const ROLES: AdminUserRole[] = ['superadmin', 'admin', 'ventas', 'soporte', 'consulta', 'empresa']
 const STATUSES: AdminUserStatus[] = ['active', 'invited', 'disabled']
 
 let queue: Promise<unknown> = Promise.resolve()
@@ -113,6 +115,7 @@ function ensureSeeded(store: StoreFile) {
       lastLoginAt: null,
       createdAt: now,
       updatedAt: now,
+      linkProfileId: null,
     })
     return
   }
@@ -137,6 +140,7 @@ function toPublic(user: StoredUser): ManagedUser {
     lastLoginAt: user.lastLoginAt,
     createdAt: user.createdAt,
     updatedAt: user.updatedAt,
+    linkProfileId: user.linkProfileId ?? null,
   }
 }
 
@@ -155,7 +159,7 @@ function verifyPassword(password: string, stored: string | null) {
   return expected.length === actual.length && timingSafeEqual(expected, actual)
 }
 
-function validate(input: ManagedUserInput, requirePassword: boolean) {
+async function validate(input: ManagedUserInput, requirePassword: boolean) {
   const name = input.name?.trim() ?? ''
   const email = input.email?.trim().toLowerCase() ?? ''
   const phone = input.phone?.trim() ?? ''
@@ -174,6 +178,18 @@ function validate(input: ManagedUserInput, requirePassword: boolean) {
     passwordHash = hashPassword(input.password as string)
   }
 
+  let linkProfileId: string | null = null
+  if (input.role === 'empresa') {
+    const requested = input.linkProfileId?.trim() ?? ''
+    if (!requested) {
+      throw new ManagedUserError('Selecciona la página AllMyLinks que administrará la empresa.')
+    }
+    if (!(await getLinkProfile(requested))) {
+      throw new ManagedUserError('La página AllMyLinks asignada ya no existe.', 409)
+    }
+    linkProfileId = requested
+  }
+
   return {
     name,
     email,
@@ -182,6 +198,7 @@ function validate(input: ManagedUserInput, requirePassword: boolean) {
     status: input.status,
     twoFactorEnabled: Boolean(input.twoFactorEnabled),
     passwordHash,
+    linkProfileId,
   }
 }
 
@@ -195,8 +212,8 @@ export function listManagedUsers() {
 }
 
 export function createManagedUser(input: ManagedUserInput) {
-  return withStore((store) => {
-    const data = validate(input, true)
+  return withStore(async (store) => {
+    const data = await validate(input, true)
     assertUniqueEmail(store, data.email)
     const now = new Date().toISOString()
     const user: StoredUser = {
@@ -212,6 +229,7 @@ export function createManagedUser(input: ManagedUserInput) {
       lastLoginAt: null,
       createdAt: now,
       updatedAt: now,
+      linkProfileId: data.linkProfileId,
     }
     store.users.push(user)
     return toPublic(user)
@@ -219,7 +237,7 @@ export function createManagedUser(input: ManagedUserInput) {
 }
 
 export function updateManagedUser(id: string, patch: Partial<ManagedUserInput>) {
-  return withStore((store) => {
+  return withStore(async (store) => {
     const user = store.users.find((item) => item.id === id)
     if (!user) throw new ManagedUserError('El usuario no existe.', 404)
     if (user.seeded) {
@@ -229,7 +247,7 @@ export function updateManagedUser(id: string, patch: Partial<ManagedUserInput>) 
       )
     }
 
-    const data = validate(
+    const data = await validate(
       {
         name: patch.name ?? user.name,
         email: patch.email ?? user.email,
@@ -238,6 +256,7 @@ export function updateManagedUser(id: string, patch: Partial<ManagedUserInput>) 
         status: patch.status ?? user.status,
         twoFactorEnabled: patch.twoFactorEnabled ?? user.twoFactorEnabled,
         password: patch.password,
+        linkProfileId: patch.linkProfileId ?? user.linkProfileId ?? null,
       },
       false,
     )
@@ -249,6 +268,7 @@ export function updateManagedUser(id: string, patch: Partial<ManagedUserInput>) 
     user.role = data.role
     user.status = data.status
     user.twoFactorEnabled = data.twoFactorEnabled
+    user.linkProfileId = data.linkProfileId
     if (data.passwordHash) user.passwordHash = data.passwordHash
     user.updatedAt = new Date().toISOString()
     return toPublic(user)
@@ -323,6 +343,7 @@ export function managedSessionUser(id: string): Promise<SessionUser | null> {
       lastLoginAt: user.lastLoginAt,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
+      linkProfileId: user.linkProfileId ?? null,
     }
   })
 }

@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import {
   BarChart3,
-  Bell,
   BookOpenCheck,
   Boxes,
   ChevronRight,
@@ -13,9 +12,12 @@ import {
   FileText,
   FolderTree,
   Globe2,
+  Headphones,
   History,
   Inbox,
   LayoutDashboard,
+  LayoutGrid,
+  Link2,
   Loader2,
   LogOut,
   Menu,
@@ -27,6 +29,7 @@ import {
   Settings,
   ShieldCheck,
   ShieldX,
+  ShoppingCart,
   SlidersHorizontal,
   Tags,
   Truck,
@@ -39,11 +42,22 @@ import { cn } from '@/lib/utils'
 import { useAdmin } from '@/components/admin/admin-provider'
 import { EmptyState, btnSecondary } from '@/components/admin/ui'
 import { ThemeToggle } from '@/components/theme/theme-toggle'
+import { CommandPalette } from '@/components/admin/command-palette'
+import { NotificationsMenu } from '@/components/admin/notifications-menu'
 import { permissionModules } from '@/lib/admin/permissions'
 import { getStockState } from '@/lib/admin/format'
 import { openOrderStatuses } from '@/lib/admin/operations'
 import type { SessionUser } from '@/lib/auth/types'
 import { moduleByHref, moduleForPathname } from '@/lib/admin/access'
+
+type NavArea =
+  | 'general'
+  | 'ventas'
+  | 'clientes'
+  | 'atencion'
+  | 'catalogo'
+  | 'servicios'
+  | 'sistema'
 
 type NavItem = {
   href: string
@@ -53,12 +67,25 @@ type NavItem = {
   badge?: number
   badgeHint?: string
   badgeTone?: 'amber' | 'blue'
+  area?: NavArea
 }
 
 type NavSection = {
   label: string
   items: NavItem[]
 }
+
+const navAreaOptions: { key: NavArea; label: string; short: string; icon: LucideIcon }[] = [
+  { key: 'general', label: 'General', short: 'General', icon: LayoutGrid },
+  { key: 'ventas', label: 'Ventas', short: 'Ventas', icon: ShoppingCart },
+  { key: 'clientes', label: 'Clientes', short: 'Clientes', icon: Users },
+  { key: 'atencion', label: 'Atención al cliente', short: 'Atención', icon: Headphones },
+  { key: 'catalogo', label: 'Catálogo', short: 'Catálogo', icon: Package },
+  { key: 'servicios', label: 'Servicios TI', short: 'Servicios', icon: Wrench },
+  { key: 'sistema', label: 'Sistema', short: 'Sistema', icon: ShieldCheck },
+]
+
+const allNavAreas = navAreaOptions.map((area) => area.key)
 
 const storeUrl = process.env.NEXT_PUBLIC_STORE_URL ?? 'http://localhost:3000'
 
@@ -89,6 +116,7 @@ function getBreadcrumb(pathname: string) {
   if (pathname.startsWith('/servicios/') && pathname.endsWith('/editar')) {
     return { section: 'Servicios TI', title: 'Editar servicio' }
   }
+  if (pathname === '/links') return { section: 'General', title: 'AllMyLinks' }
   if (pathname === '/reportes') return { section: 'General', title: 'Reportes' }
   if (pathname === '/actividad') return { section: 'General', title: 'Actividad reciente' }
   if (pathname === '/inventario') return { section: 'Operaciones', title: 'Inventario' }
@@ -124,11 +152,25 @@ export function AdminShell({
   } = useAdmin()
   const [open, setOpen] = useState(false)
   const [collapsed, setCollapsed] = useState(false)
+  const [areaFilter, setAreaFilter] = useState<NavArea[]>([])
   const [profileOpen, setProfileOpen] = useState(false)
   const [loggingOut, setLoggingOut] = useState(false)
+  const [commandOpen, setCommandOpen] = useState(false)
   const [search, setSearch] = useState('')
   const profileRef = useRef<HTMLDivElement>(null)
   const initials = getInitials(user.name)
+
+  // Atajo global Ctrl + K / Cmd + K para el Command Palette
+  useEffect(() => {
+    function handleGlobalKeyDown(e: KeyboardEvent) {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault()
+        setCommandOpen((prev) => !prev)
+      }
+    }
+    window.addEventListener('keydown', handleGlobalKeyDown)
+    return () => window.removeEventListener('keydown', handleGlobalKeyDown)
+  }, [])
 
   useEffect(() => {
     try {
@@ -142,6 +184,11 @@ export function AdminShell({
     setOpen(false)
     setProfileOpen(false)
   }, [pathname])
+
+  // La cuenta de empresa no tiene resumen: su panel es su página pública.
+  useEffect(() => {
+    if (pathname === '/' && !can('dashboard') && can('links')) router.replace('/links')
+  }, [pathname, can, router])
 
   useEffect(() => {
     if (!open) return
@@ -180,6 +227,27 @@ export function AdminShell({
     })
   }
 
+  // Las áreas de la columna izquierda son un filtro acumulable: sin selección
+  // se ven todas las secciones y cada área muestra solo sus propios enlaces.
+  const areaFilterActive = areaFilter.length > 0
+
+  function toggleArea(area: NavArea) {
+    setAreaFilter((prev) =>
+      prev.includes(area)
+        ? prev.filter((item) => item !== area)
+        : allNavAreas.filter((item) => item === area || prev.includes(item))
+    )
+  }
+
+  function areaRailClass(active: boolean) {
+    return cn(
+      'relative flex w-full flex-col items-center gap-1 rounded-xl px-1 py-2 text-[9.5px] font-semibold leading-tight transition',
+      active
+        ? 'bg-[#2563EB]/20 text-white ring-1 ring-[#3B82F6]/35'
+        : 'text-slate-400 hover:bg-white/[0.05] hover:text-white'
+    )
+  }
+
   function handleSearch(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const term = search.trim()
@@ -215,36 +283,20 @@ export function AdminShell({
     {
       label: 'General',
       items: [
-        { href: '/', label: 'Resumen', icon: LayoutDashboard, exact: true },
-        { href: '/reportes', label: 'Reportes', icon: BarChart3 },
-        { href: '/actividad', label: 'Actividad reciente', icon: History },
+        { href: '/', label: 'Resumen', icon: LayoutDashboard, exact: true, area: 'general' },
+        { href: '/reportes', label: 'Reportes y métricas', icon: BarChart3, area: 'general' },
+        { href: '/actividad', label: 'Actividad reciente', icon: History, area: 'general' },
+        { href: '/links', label: 'AllMyLinks', icon: Link2, area: 'general' },
       ],
     },
     {
-      label: 'Catálogo',
-      items: [
-        {
-          href: '/productos',
-          label: 'Productos',
-          icon: Package,
-          badge: lowStockCount,
-          badgeHint:
-            lowStockCount === 1
-              ? '1 producto requiere reposición'
-              : `${lowStockCount} productos requieren reposición`,
-        },
-        { href: '/categorias', label: 'Categorías', icon: FolderTree },
-        { href: '/marcas', label: 'Marcas', icon: Tags },
-        { href: '/atributos', label: 'Atributos y especificaciones', icon: SlidersHorizontal },
-      ],
-    },
-    {
-      label: 'Comercial',
+      label: 'Ventas & Clientes',
       items: [
         {
           href: '/cotizaciones',
           label: 'Cotizaciones',
           icon: FileText,
+          area: 'ventas',
           badge: pendingQuoteCount,
           badgeHint:
             pendingQuoteCount === 1
@@ -252,27 +304,11 @@ export function AdminShell({
               : `${pendingQuoteCount} cotizaciones por atender`,
           badgeTone: 'blue',
         },
-        { href: '/clientes', label: 'Clientes', icon: Users },
-        {
-          href: '/solicitudes',
-          label: 'Mesa de ayuda',
-          icon: Inbox,
-          badge: newRequestCount,
-          badgeHint:
-            newRequestCount === 1
-              ? '1 mensaje nuevo'
-              : `${newRequestCount} mensajes nuevos`,
-        },
-        { href: '/reclamaciones', label: 'Libro de reclamaciones', icon: BookOpenCheck },
-      ],
-    },
-    {
-      label: 'Operaciones',
-      items: [
         {
           href: '/pedidos',
           label: 'Pedidos y entregas',
           icon: PackageCheck,
+          area: 'ventas',
           badge: openOrderCount,
           badgeHint:
             openOrderCount === 1
@@ -280,24 +316,71 @@ export function AdminShell({
               : `${openOrderCount} pedidos en ruta de entrega`,
           badgeTone: 'blue',
         },
-        { href: '/inventario', label: 'Inventario', icon: Boxes },
-        { href: '/servicios', label: 'Servicios TI', icon: Wrench },
-        { href: '/proyectos', label: 'Proyectos web', icon: Globe2 },
-        { href: '/proveedores', label: 'Proveedores', icon: Truck },
+        { href: '/clientes', label: 'Directorio de clientes', icon: Users, area: 'clientes' },
+        {
+          href: '/solicitudes',
+          label: 'Mesa de ayuda',
+          icon: Inbox,
+          area: 'atencion',
+          badge: newRequestCount,
+          badgeHint:
+            newRequestCount === 1
+              ? '1 mensaje nuevo'
+              : `${newRequestCount} mensajes nuevos`,
+        },
+        {
+          href: '/reclamaciones',
+          label: 'Reclamaciones',
+          icon: BookOpenCheck,
+          area: 'atencion',
+        },
       ],
     },
     {
-      label: 'Administración',
+      label: 'Catálogo & Almacén',
       items: [
-        { href: '/usuarios', label: 'Usuarios y permisos', icon: ShieldCheck },
-        { href: '/configuracion', label: 'Configuración', icon: Settings },
+        {
+          href: '/productos',
+          label: 'Productos',
+          icon: Package,
+          area: 'catalogo',
+          badge: lowStockCount,
+          badgeHint:
+            lowStockCount === 1
+              ? '1 producto requiere reposición'
+              : `${lowStockCount} productos requieren reposición`,
+        },
+        { href: '/inventario', label: 'Inventario y stock', icon: Boxes, area: 'catalogo' },
+        { href: '/categorias', label: 'Categorías', icon: FolderTree, area: 'catalogo' },
+        { href: '/marcas', label: 'Marcas', icon: Tags, area: 'catalogo' },
+        {
+          href: '/atributos',
+          label: 'Atributos técnicos',
+          icon: SlidersHorizontal,
+          area: 'catalogo',
+        },
+        { href: '/proveedores', label: 'Proveedores', icon: Truck, area: 'catalogo' },
+      ],
+    },
+    {
+      label: 'Servicios & Proyectos',
+      items: [
+        { href: '/servicios', label: 'Servicios TI', icon: Wrench, area: 'servicios' },
+        { href: '/proyectos', label: 'Proyectos web', icon: Globe2, area: 'servicios' },
+      ],
+    },
+    {
+      label: 'Sistema & Control',
+      items: [
+        { href: '/usuarios', label: 'Usuarios y roles', icon: ShieldCheck, area: 'sistema' },
+        { href: '/configuracion', label: 'Configuración', icon: Settings, area: 'sistema' },
       ],
     },
   ]
 
   // El sidebar lista solo lo que el rol puede ver. Es la misma matriz que revisa
   // el BFF antes de reenviar a la API, así que ocultar no es la única barrera.
-  const visibleSections = sections
+  const permittedSections = sections
     .map((section) => ({
       ...section,
       items: section.items.filter((item) => {
@@ -306,6 +389,19 @@ export function AdminShell({
       }),
     }))
     .filter((section) => section.items.length > 0)
+
+  const totalNavItems = permittedSections.reduce((sum, section) => sum + section.items.length, 0)
+
+  const visibleSections = permittedSections
+    .map((section) => ({
+      ...section,
+      items: section.items.filter(
+        (item) => !areaFilterActive || (item.area && areaFilter.includes(item.area))
+      ),
+    }))
+    .filter((section) => section.items.length > 0)
+
+  const visibleNavItems = visibleSections.reduce((sum, section) => sum + section.items.length, 0)
 
   // Entrar directo por URL también está cubierto: si falta el permiso de lectura
   // se muestra el bloqueo en lugar de la pantalla pedida.
@@ -329,15 +425,58 @@ export function AdminShell({
       <aside
         data-surface="dark"
         className={cn(
-          'fixed inset-y-0 left-0 z-50 flex w-[272px] flex-col border-r border-white/5 bg-gradient-to-b from-[#172554] via-[#1E1B4B] to-[#0B1220] text-muted-foreground/60 transition-[transform,width] duration-300 ease-out lg:translate-x-0',
+          'fixed inset-y-0 left-0 z-50 flex w-[356px] max-w-full border-r border-slate-800/80 bg-[#090D16] text-slate-400 transition-[transform,width] duration-300 ease-out lg:translate-x-0',
           open ? 'translate-x-0' : '-translate-x-full',
-          collapsed && 'lg:w-[76px]'
+          collapsed && 'lg:w-[160px]'
         )}
         aria-label="Navegación principal"
       >
         <div
+          className="flex w-[84px] shrink-0 flex-col border-r border-slate-800/80 bg-[#070A0F]"
+          role="group"
+          aria-label="Filtrar menú por área"
+        >
+          <div className="flex-1 space-y-1 overflow-y-auto px-2 pb-3 pt-4 scrollbar-thin">
+            {navAreaOptions.map((area) => {
+              const AreaIcon = area.icon
+              const active = areaFilter.includes(area.key)
+              return (
+                <button
+                  key={area.key}
+                  type="button"
+                  onClick={() => toggleArea(area.key)}
+                  aria-pressed={active}
+                  aria-label={`Filtrar por ${area.label}`}
+                  title={area.label}
+                  className={areaRailClass(active)}
+                >
+                  <AreaIcon className="size-4 shrink-0" aria-hidden="true" />
+                  <span className="w-full truncate text-center">{area.short}</span>
+                </button>
+              )
+            })}
+          </div>
+          {areaFilterActive && (
+            <button
+              type="button"
+              onClick={() => setAreaFilter([])}
+              aria-label="Quitar filtro de áreas"
+              className="shrink-0 border-t border-slate-800/80 px-2 py-2 text-center transition hover:bg-white/[0.04]"
+            >
+              <span className="block text-[10px] font-bold tabular-nums text-slate-300">
+                {visibleNavItems}/{totalNavItems}
+              </span>
+              <span className="block text-[8.5px] font-semibold uppercase tracking-[0.12em] text-slate-500">
+                Ver todo
+              </span>
+            </button>
+          )}
+        </div>
+
+        <div className="flex min-w-0 flex-1 flex-col">
+        <div
           className={cn(
-            'relative flex h-20 shrink-0 items-center border-b border-white/[0.06] px-4',
+            'relative flex h-20 shrink-0 items-center border-b border-slate-800/80 bg-[#080B12] px-4',
             collapsed ? 'justify-center px-2' : 'justify-between'
           )}
         >
@@ -356,7 +495,7 @@ export function AdminShell({
               src="/logo.png"
               alt="F&J Systems"
               className={cn(
-                'h-12 w-auto shrink-0 object-contain brightness-0 invert transition-transform duration-200 group-hover:scale-105',
+                'h-11 w-auto shrink-0 object-contain brightness-0 invert transition-transform duration-200 group-hover:scale-105',
                 collapsed && 'lg:h-7'
               )}
             />
@@ -366,7 +505,7 @@ export function AdminShell({
             type="button"
             onClick={toggleCollapsed}
             className={cn(
-              'hidden size-8 shrink-0 place-items-center rounded-lg text-muted-foreground transition hover:bg-white/10 hover:text-white lg:grid',
+              'hidden size-8 shrink-0 place-items-center rounded-lg text-slate-400 transition hover:bg-slate-800 hover:text-white lg:grid',
               collapsed && 'lg:hidden'
             )}
             aria-label="Contraer menú lateral"
@@ -378,19 +517,19 @@ export function AdminShell({
           <button
             type="button"
             onClick={() => setOpen(false)}
-            className="grid size-8 shrink-0 place-items-center rounded-lg text-muted-foreground transition hover:bg-white/10 hover:text-white lg:hidden"
+            className="grid size-8 shrink-0 place-items-center rounded-lg text-slate-400 transition hover:bg-slate-800 hover:text-white lg:hidden"
             aria-label="Cerrar menú"
           >
             <X className="size-4" />
           </button>
         </div>
 
-        <nav className="flex-1 overflow-y-auto px-3 py-5 scrollbar-thin">
+        <nav className="flex-1 overflow-y-auto px-3 py-4 scrollbar-thin">
           {collapsed && (
             <button
               type="button"
               onClick={toggleCollapsed}
-              className="mx-auto mb-4 hidden size-8 place-items-center rounded-lg text-muted-foreground transition hover:bg-white/10 hover:text-white lg:grid"
+              className="mx-auto mb-4 hidden size-8 place-items-center rounded-lg text-slate-400 transition hover:bg-slate-800 hover:text-white lg:grid"
               aria-label="Expandir menú lateral"
               title="Expandir menú"
             >
@@ -398,16 +537,16 @@ export function AdminShell({
             </button>
           )}
           {visibleSections.map((section) => (
-            <div key={section.label} className="mb-6 last:mb-0">
+            <div key={section.label} className="mb-5 last:mb-0">
               <p
                 className={cn(
-                  'mb-2 px-3 text-[9.5px] font-bold uppercase tracking-[0.22em] text-muted-foreground',
+                  'mb-2 px-3 text-[9.5px] font-bold uppercase tracking-[0.2em] text-slate-500',
                   collapsed && 'lg:hidden'
                 )}
               >
                 {section.label}
               </p>
-              {collapsed && <div className="mb-2 hidden h-px bg-white/[0.06] lg:block" aria-hidden="true" />}
+              {collapsed && <div className="mb-2 hidden h-px bg-slate-800/80 lg:block" aria-hidden="true" />}
               <ul className="space-y-0.5">
                 {section.items.map((item) => {
                   const Icon = item.icon
@@ -422,25 +561,25 @@ export function AdminShell({
                         title={collapsed ? item.label : undefined}
                         aria-current={active ? 'page' : undefined}
                         className={cn(
-                          'group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-[13px] font-medium transition-all',
+                          'group relative flex items-center gap-3 rounded-xl px-3 py-2 text-[12.5px] font-medium transition-all duration-150',
                           collapsed && 'lg:justify-center lg:px-0',
                           active
-                            ? 'bg-[#2563EB]/35 text-white shadow-inner ring-1 ring-[#60A5FA]/25'
-                            : 'text-muted-foreground hover:bg-[#2563EB]/15 hover:text-white'
+                            ? 'bg-[#2563EB]/20 text-white font-semibold shadow-xs ring-1 ring-[#3B82F6]/35'
+                            : 'text-slate-400 hover:bg-white/[0.05] hover:text-white'
                         )}
                       >
                         {active && (
                           <span
                             className={cn(
-                              'absolute -left-3 top-1/2 h-5 w-1 -translate-y-1/2 rounded-r-full bg-[#60A5FA]',
+                              'absolute -left-3 top-1/2 h-5 w-1 -translate-y-1/2 rounded-r-full bg-[#3B82F6] shadow-[0_0_8px_rgba(59,130,246,0.6)]',
                               collapsed && 'lg:hidden'
                             )}
                           />
                         )}
                         <Icon
                           className={cn(
-                            'size-[18px] shrink-0 transition-colors',
-                            active ? 'text-white' : 'text-muted-foreground group-hover:text-muted-foreground/60'
+                            'size-4.5 shrink-0 transition-colors',
+                            active ? 'text-[#60A5FA]' : 'text-slate-500 group-hover:text-slate-300'
                           )}
                           aria-hidden="true"
                         />
@@ -450,8 +589,8 @@ export function AdminShell({
                             className={cn(
                               'ml-auto rounded-full px-1.5 py-0.5 text-[10px] font-bold tabular-nums ring-1 ring-inset',
                               item.badgeTone === 'blue'
-                                ? 'bg-[#60A5FA]/15 text-[#93C5FD] ring-[#60A5FA]/20'
-                                : 'bg-amber-400/15 text-amber-300 ring-amber-400/20',
+                                ? 'bg-[#3B82F6]/15 text-[#93C5FD] ring-[#3B82F6]/30'
+                                : 'bg-amber-400/15 text-amber-300 ring-amber-400/30',
                               collapsed && 'lg:hidden'
                             )}
                             title={item.badgeHint ?? `${item.badge} pendientes`}
@@ -469,40 +608,41 @@ export function AdminShell({
           ))}
         </nav>
 
-        <div className="shrink-0 space-y-3 border-t border-white/[0.06] p-4">
+        <div className="shrink-0 space-y-2.5 border-t border-slate-800/80 bg-[#070A0F] p-3.5">
           <div
             className={cn(
-              'rounded-2xl bg-white/[0.035] px-3 py-2.5 ring-1 ring-inset ring-white/[0.06]',
+              'rounded-xl border border-slate-800/80 bg-slate-900/60 px-3 py-2',
               collapsed && 'lg:hidden'
             )}
           >
-            <p className="truncate text-xs font-semibold text-slate-200">{settings.legalName}</p>
-            <p className="mt-0.5 font-mono text-[11px] tabular-nums tracking-tight text-muted-foreground">
+            <p className="truncate text-[11.5px] font-semibold text-slate-200">{settings.legalName}</p>
+            <p className="mt-0.5 font-mono text-[10.5px] tabular-nums text-slate-400">
               RUC {settings.ruc}
             </p>
           </div>
 
           <div
             className={cn(
-              'flex items-center gap-3 rounded-2xl px-1 py-0.5',
+              'flex items-center gap-3 rounded-xl px-1.5 py-1',
               collapsed && 'lg:justify-center lg:px-0'
             )}
           >
-            <span className="grid size-9 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[#2563EB] to-[#172554] text-[11px] font-bold text-white ring-1 ring-white/10">
+            <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-gradient-to-br from-[#2563EB] to-[#1D4ED8] text-[11px] font-bold text-white shadow-xs">
               {initials}
             </span>
             <div className={cn('min-w-0', collapsed && 'lg:hidden')}>
               <p className="truncate text-xs font-semibold text-white">{user.name}</p>
-              <p className="truncate text-[10.5px] text-muted-foreground">{user.roleName}</p>
+              <p className="truncate text-[10.5px] text-slate-400">{user.roleName}</p>
             </div>
           </div>
+        </div>
         </div>
       </aside>
 
       <div
         className={cn(
           'flex min-h-screen flex-col transition-[padding] duration-300',
-          collapsed ? 'lg:pl-[76px]' : 'lg:pl-[272px]'
+          collapsed ? 'lg:pl-[160px]' : 'lg:pl-[356px]'
         )}
       >
         <header className="sticky top-0 z-30 border-b border-border/80 bg-card/85 backdrop-blur-lg">
@@ -527,31 +667,44 @@ export function AdminShell({
               </nav>
             </div>
 
-            <form onSubmit={handleSearch} className="ml-auto hidden min-w-0 md:block md:w-64 lg:w-80" role="search">
-              <div className="relative">
-                <Search
-                  className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
-                  aria-hidden="true"
-                />
-                <input
-                  value={search}
-                  onChange={(event) => setSearch(event.target.value)}
-                  placeholder="Buscar productos o SKU…"
-                  aria-label="Buscador global de productos"
-                  className="h-9 w-full rounded-xl border border-border bg-muted/70 pl-9 pr-3 text-xs text-foreground outline-none transition placeholder:text-muted-foreground focus:border-[#2563EB] focus:bg-card focus:ring-4 focus:ring-[#2563EB]/10"
-                />
+            {/* Buscador interactivo y Command Palette Trigger (Ctrl + K) */}
+            <button
+              type="button"
+              onClick={() => setCommandOpen(true)}
+              className="ml-auto hidden min-w-0 items-center justify-between gap-3 rounded-xl border border-border bg-muted/60 px-3 py-1.5 text-xs text-muted-foreground shadow-xs transition hover:border-[#2563EB]/40 hover:bg-card hover:text-foreground md:flex md:w-64 lg:w-80"
+              aria-label="Abrir buscador y comandos (Ctrl + K)"
+            >
+              <div className="flex items-center gap-2 truncate">
+                <Search className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
+                <span className="truncate">Buscar productos, SKU, cotizaciones…</span>
               </div>
-            </form>
+              <kbd className="inline-flex shrink-0 items-center gap-0.5 rounded border border-border bg-card px-1.5 py-0.5 font-mono text-[10px] font-bold text-muted-foreground shadow-2xs">
+                <span className="text-[9px]">Ctrl</span> K
+              </kbd>
+            </button>
 
             <div className="ml-auto flex shrink-0 items-center gap-2 md:ml-0">
-              <Link
-                href="/productos?stock=low"
-                className="hidden items-center gap-2 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-[11px] font-semibold text-warning-ink transition hover:bg-amber-500/15 sm:inline-flex"
-                title="Ver productos con stock bajo"
+              {/* Botón rápido Command en móvil */}
+              <button
+                type="button"
+                onClick={() => setCommandOpen(true)}
+                className="grid size-9 place-items-center rounded-xl border border-border bg-card text-muted-foreground shadow-xs transition hover:bg-muted md:hidden"
+                aria-label="Buscar con Command Palette"
               >
-                <Bell className="size-3.5" aria-hidden="true" />
-                {lowStockCount} por reponer
-              </Link>
+                <Search className="size-4" />
+              </button>
+
+              {/* Centro de notificaciones */}
+              <NotificationsMenu
+                counts={{
+                  quotes: pendingQuoteCount,
+                  products: lowStockCount,
+                  orders: openOrderCount,
+                  requests: newRequestCount,
+                  complaints: 0,
+                }}
+                can={can}
+              />
 
               <a
                 href={storeUrl}
@@ -669,6 +822,8 @@ export function AdminShell({
           </p>
         </footer>
       </div>
+
+      <CommandPalette open={commandOpen} onClose={() => setCommandOpen(false)} />
     </div>
   )
 }

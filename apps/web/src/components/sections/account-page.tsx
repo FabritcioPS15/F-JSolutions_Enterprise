@@ -45,6 +45,7 @@ import { useAccount } from '@/lib/use-account'
 import { useFavorites } from '@/lib/use-favorites'
 import { useQuote } from '@/lib/use-quote'
 import { buildQuoteWhatsAppUrl, downloadQuotePdf } from '@/lib/quote-export'
+import { storeUrl } from '@/lib/store-url'
 
 type Tab = 'perfil' | 'favoritos' | 'cotizaciones'
 type FavoriteSort = 'name' | 'brand'
@@ -661,10 +662,10 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
 
               <div className="mt-2 space-y-1 border-t border-border pt-2">
                 <Link
-                  href="/productos"
+                  href={storeUrl('/productos')}
                   className={`flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold text-muted-foreground transition hover:bg-muted hover:text-blue-ink ${FOCUS_RING}`}
                 >
-                  <ShoppingCart className="size-3.5" /> Ver catálogo
+                  <ShoppingCart className="size-3.5" /> Ir a la tienda
                 </Link>
                 <Link
                   href="/cotizacion"
@@ -1005,14 +1006,14 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                   <div>
                     <h2 className="text-xl font-bold">Productos favoritos</h2>
                     <p className="mt-1 text-sm text-muted-foreground">
-                      Los equipos que guardaste con el corazón desde el catálogo.
+                      Los equipos que guardaste con el corazón desde la tienda.
                     </p>
                   </div>
                   <Link
-                    href="/productos"
+                    href={storeUrl('/productos')}
                     className={`inline-flex h-10 items-center gap-2 rounded-xl border border-border bg-card px-4 text-xs font-bold text-muted-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink ${FOCUS_RING}`}
                   >
-                    Explorar catálogo <ArrowRight className="size-3.5" />
+                    Explorar tienda <ArrowRight className="size-3.5" />
                   </Link>
                 </div>
 
@@ -1108,7 +1109,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                               key={product.id}
                               className="flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition hover:border-[#2563EB]/30 hover:shadow-lg hover:shadow-black/5"
                             >
-                              <Link href={`/productos/${product.slug}`} className="block bg-muted p-4">
+                              <Link href={storeUrl(`/productos/${product.slug}`)} className="block bg-muted p-4">
                                 <img
                                   src={product.image}
                                   alt={product.name}
@@ -1121,7 +1122,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                                   {product.brand} / {product.category}
                                 </p>
                                 <Link
-                                  href={`/productos/${product.slug}`}
+                                  href={storeUrl(`/productos/${product.slug}`)}
                                   className={`mt-1.5 line-clamp-2 text-sm font-bold leading-5 hover:text-blue-ink ${FOCUS_RING}`}
                                 >
                                   {product.name}
@@ -1203,7 +1204,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                       </>
                     )}
                     <Link
-                      href="/productos"
+                      href={storeUrl('/productos')}
                       className={`inline-flex h-10 items-center gap-2 rounded-xl bg-[#2563EB] px-4 text-xs font-bold text-white transition hover:bg-[#1D4ED8] ${FOCUS_RING}`}
                     >
                       Nueva cotización <ArrowRight className="size-3.5" />
@@ -1545,10 +1546,10 @@ function EmptyState({
       <p className="mt-5 text-base font-bold">{title}</p>
       <p className="mt-2 max-w-md text-sm leading-6 text-muted-foreground">{description}</p>
       <Link
-        href="/productos"
+        href={storeUrl('/productos')}
         className="mt-6 inline-flex h-10 items-center gap-2 rounded-xl bg-[#2563EB] px-5 text-xs font-bold text-white transition hover:bg-[#1D4ED8]"
       >
-        Ver productos <ArrowRight className="size-3.5" />
+        Ir a la tienda <ArrowRight className="size-3.5" />
       </Link>
     </div>
   )

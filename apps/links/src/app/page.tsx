@@ -1,26 +1,42 @@
-import { ProfileHeader } from '@/components/profile-header'
-import { LinksList } from '@/components/links-list'
-import { SocialFooter } from '@/components/social-footer'
+import type { Metadata } from 'next'
+import { notFound } from 'next/navigation'
+import { ProfilePage } from '@/components/profile-page'
+import { findLinkProfile } from '@/lib/link-profiles'
 
-export default function LinksPage() {
-  return (
-    <div className="relative min-h-screen bg-[#07090E] text-slate-100 flex flex-col items-center justify-between px-4 py-8 sm:py-12 selection:bg-[#5B21B6] selection:text-white overflow-x-hidden">
-      {/* Background glow effects */}
-      <div
-        className="pointer-events-none fixed -top-32 left-1/2 -z-10 h-96 w-96 -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_center,rgba(91,33,182,0.25),transparent_65%)] blur-3xl"
-        aria-hidden="true"
-      />
-      <div
-        className="pointer-events-none fixed -bottom-32 left-1/2 -z-10 h-96 w-96 -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_center,rgba(124,58,237,0.15),transparent_65%)] blur-3xl"
-        aria-hidden="true"
-      />
+export const dynamic = 'force-dynamic'
 
-      {/* Main Column (Max width mobile friendly) */}
-      <main className="w-full max-w-md flex-1 flex flex-col items-center">
-        <ProfileHeader />
-        <LinksList />
-        <SocialFooter />
-      </main>
-    </div>
-  )
+export async function generateMetadata(): Promise<Metadata> {
+  const profile = await findLinkProfile()
+  if (!profile) return { title: 'All My Links' }
+  const title = `${profile.name} | All My Links`
+  const description = profile.bio || 'Todos nuestros enlaces oficiales en un solo lugar.'
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: 'profile',
+      images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: profile.name }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images: ['/opengraph-image'],
+    },
+  }
+}
+
+export default async function LinksPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>
+}) {
+  const params = await searchParams
+  const preview = params.preview === '1'
+  const profile = await findLinkProfile()
+  if (!profile || (!profile.published && !preview)) notFound()
+
+  return <ProfilePage profile={profile} />
 }

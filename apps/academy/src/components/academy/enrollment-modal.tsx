@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { X, CheckCircle2, MessageSquare, Send, Sparkles, BookOpen, Clock, Award } from 'lucide-react'
+import { X, MessageSquare, Clock, Award } from 'lucide-react'
 import { COURSES, type Course } from '@/lib/academy-data'
 
 export function EnrollmentModal({
@@ -21,7 +21,7 @@ export function EnrollmentModal({
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
 
-    const text = `¡Hola F&J Academy! 👋\n\nMi nombre es *${name.trim() || 'un estudiante interesado'}*.\nQuiero solicitar informes e inscripción para el programa:\n📚 *${activeCourse.title}*\n\n📧 Correo: ${email || 'No especificado'}\n📱 Teléfono: ${phone || 'No especificado'}\n\n¿Tienen vacantes disponibles y facilidades de pago? ¡Gracias!`
+    const text = `Hola F&J Academy, soy ${name.trim() || 'un estudiante interesado'}.\nQuiero informes e inscripción para:\n${activeCourse.title}\n\nCorreo: ${email || 'No especificado'}\nTeléfono: ${phone || 'No especificado'}\n\n¿Tienen vacantes y facilidades de pago?`
 
     const whatsappUrl = `https://wa.me/51923055963?text=${encodeURIComponent(text)}`
     window.open(whatsappUrl, '_blank')
@@ -29,79 +29,69 @@ export function EnrollmentModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in-0 duration-200">
-      <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl border border-slate-700 bg-[#0B0F19] p-6 sm:p-8 shadow-2xl text-slate-200 scrollbar-thin">
-        {/* Close Button */}
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4">
+      <div className="relative max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-2xl border border-slate-200 bg-white p-6 shadow-xl sm:p-7">
         <button
           type="button"
           onClick={onClose}
-          className="absolute right-5 top-5 grid size-9 place-items-center rounded-xl border border-slate-800 bg-slate-900 text-slate-400 hover:text-white hover:bg-slate-800 transition"
-          aria-label="Cerrar modal"
+          className="absolute right-4 top-4 grid size-8 place-items-center rounded-lg border border-slate-200 text-slate-500 transition hover:bg-slate-50 hover:text-slate-900"
+          aria-label="Cerrar"
         >
           <X className="size-4" />
         </button>
 
-        {/* Header */}
-        <div className="pr-10">
-          <div className="inline-flex items-center gap-1.5 rounded-full bg-[#5B21B6]/20 border border-[#5B21B6]/40 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#C4B5FD]">
-            <Sparkles className="size-3" />
-            Admisiones F&J Academy
-          </div>
-          <h3 className="mt-3 font-heading text-xl sm:text-2xl font-black text-white">
-            Inscripción y Solicitud de Beca
-          </h3>
-          <p className="mt-1 text-xs text-slate-400">
-            Completa tus datos para recibir el temario detallado, horarios y reservar tu vacante con descuento especial.
+        <div className="pr-8">
+          <p className="text-[11px] font-semibold uppercase tracking-wider text-blue-600">
+            Admisiones
+          </p>
+          <h2 className="mt-1 text-xl font-semibold tracking-tight text-slate-900">
+            Solicitud de información y beca
+          </h2>
+          <p className="mt-1 text-xs text-slate-600">
+            Completa tus datos para recibir el temario, horarios y reservar tu vacante.
           </p>
         </div>
 
-        {/* Course selection */}
-        <div className="mt-6">
-          <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
-            Programa de tu interés:
+        <div className="mt-5">
+          <label className="mb-1.5 block text-xs font-medium text-slate-700" htmlFor="course-select">
+            Programa de interés
           </label>
           <select
+            id="course-select"
             value={selectedCourseId}
             onChange={(e) => setSelectedCourseId(e.target.value)}
-            className="w-full rounded-xl border border-slate-700 bg-slate-900 px-3.5 py-2.5 text-xs font-semibold text-white outline-none focus:border-[#7C3AED]"
+            className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-medium text-slate-900 outline-none transition focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
           >
             {COURSES.map((c) => (
               <option key={c.id} value={c.id}>
-                {c.title} — (S/ {c.pricePEN})
+                {c.title} — S/ {c.pricePEN}
               </option>
             ))}
           </select>
         </div>
 
-        {/* Selected course quick info */}
-        <div className="mt-4 rounded-2xl border border-slate-800 bg-slate-950/60 p-4 text-xs space-y-2">
-          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800 pb-2">
-            <span className="font-semibold text-white">{activeCourse.categoryLabel}</span>
-            <span className="text-[#A78BFA] font-bold">Inicio: {activeCourse.nextStartDate}</span>
+        <div className="mt-3 rounded-lg border border-slate-200 bg-slate-50 p-3.5 text-xs">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <span className="font-medium text-slate-900">{activeCourse.categoryLabel}</span>
+            <span className="text-slate-600">Inicio: {activeCourse.nextStartDate}</span>
           </div>
-
-          <div className="flex items-center gap-4 text-slate-400 text-[11px]">
+          <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-slate-600">
             <span className="flex items-center gap-1">
-              <Clock className="size-3 text-[#A78BFA]" />
+              <Clock className="size-3 text-slate-400" />
               {activeCourse.duration} ({activeCourse.hours}h)
             </span>
             <span className="flex items-center gap-1">
-              <Award className="size-3 text-emerald-400" />
+              <Award className="size-3 text-slate-400" />
               {activeCourse.certification}
             </span>
           </div>
-
-          <p className="text-[11px] text-slate-400 pt-1">
-            <strong>Temario clave:</strong> {activeCourse.syllabus.join(' · ')}
-          </p>
         </div>
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-          <div className="grid gap-4 sm:grid-cols-2">
+        <form onSubmit={handleSubmit} className="mt-5 space-y-3.5">
+          <div className="grid gap-3.5 sm:grid-cols-2">
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                Nombre y Apellido *
+              <label className="mb-1.5 block text-xs font-medium text-slate-700">
+                Nombre y apellido *
               </label>
               <input
                 required
@@ -109,13 +99,13 @@ export function EnrollmentModal({
                 placeholder="Ej. Juan Pérez"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full rounded-xl border border-slate-700 bg-slate-900 px-3.5 py-2.5 text-xs text-white outline-none focus:border-[#7C3AED]"
+                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-xs text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-                WhatsApp / Teléfono *
+              <label className="mb-1.5 block text-xs font-medium text-slate-700">
+                WhatsApp o teléfono *
               </label>
               <input
                 required
@@ -123,36 +113,34 @@ export function EnrollmentModal({
                 placeholder="Ej. 987 654 321"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="w-full rounded-xl border border-slate-700 bg-slate-900 px-3.5 py-2.5 text-xs text-white outline-none focus:border-[#7C3AED]"
+                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-xs text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">
-              Correo Electrónico (opcional)
+            <label className="mb-1.5 block text-xs font-medium text-slate-700">
+              Correo electrónico (opcional)
             </label>
             <input
               type="email"
               placeholder="juan@ejemplo.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-xl border border-slate-700 bg-slate-900 px-3.5 py-2.5 text-xs text-white outline-none focus:border-[#7C3AED]"
+              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-xs text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
             />
           </div>
 
-          <div className="pt-2">
-            <button
-              type="submit"
-              className="flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-500 py-3.5 text-xs font-bold text-white shadow-xl shadow-emerald-900/30 transition hover:brightness-110 active:scale-98"
-            >
-              <MessageSquare className="size-4" />
-              <span>Contactar a Asesor Académico por WhatsApp</span>
-            </button>
-            <p className="mt-2 text-center text-[10px] text-slate-500">
-              Respuesta en menos de 10 minutos. Te enviaremos el brochure y cupón de descuento.
-            </p>
-          </div>
+          <button
+            type="submit"
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700"
+          >
+            <MessageSquare className="size-4" />
+            Consultar por WhatsApp
+          </button>
+          <p className="text-center text-[11px] text-slate-500">
+            Respuesta en menos de 10 minutos. Te enviamos el brochure y el cupón de descuento.
+          </p>
         </form>
       </div>
     </div>
