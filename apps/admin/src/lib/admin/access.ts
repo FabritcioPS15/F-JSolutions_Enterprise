@@ -60,6 +60,10 @@ export const moduleByHref: Record<string, string> = {
   '/proyectos': 'projects',
   '/usuarios': 'users',
   '/roles': 'roles',
+  '/areas': 'settings',
+  '/auditoria': 'audit',
+  '/seguridad': 'settings',
+  '/integraciones': 'settings',
   '/configuracion': 'settings',
 }
 

@@ -13,8 +13,8 @@ type PageProps = {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
   const profile = await findLinkProfile(slug)
-  if (!profile) return { title: 'Página no encontrada | All My Links' }
-  const title = `${profile.name} | All My Links`
+  if (!profile) return { title: 'Página no encontrada | Linkeador' }
+  const title = `${profile.name} | Linkeador`
   const description = profile.bio || 'Todos nuestros enlaces oficiales en un solo lugar.'
   const image = `/e/${profile.slug}/opengraph-image`
   return {

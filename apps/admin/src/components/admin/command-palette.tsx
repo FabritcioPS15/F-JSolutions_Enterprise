@@ -71,7 +71,7 @@ export function CommandPalette({
       { title: 'Resumen general (Dashboard)', href: '/', icon: LayoutDashboard, group: 'Navegación' },
       { title: 'Reportes y analítica', href: '/reportes', icon: BarChart3, group: 'Navegación' },
       { title: 'Actividad reciente', href: '/actividad', icon: History, group: 'Navegación' },
-      { title: 'Páginas AllMyLinks por empresa', href: '/links', icon: Link2, group: 'Navegación' },
+      { title: 'Linkeador: páginas de enlaces', href: '/links', icon: Link2, group: 'Navegación' },
       { title: 'Catálogo de productos', href: '/productos', icon: Package, group: 'Navegación' },
       { title: 'Inventario y control de stock', href: '/inventario', icon: Boxes, group: 'Navegación' },
       { title: 'Categorías del catálogo', href: '/categorias', icon: FolderTree, group: 'Navegación' },

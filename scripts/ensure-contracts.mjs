@@ -1,24 +1,24 @@
-// Compila @fj-solutions/contracts solo si su salida no existe.
-// Los scripts predev/prebuild de las apps lo invocan para que un clon limpio
-// funcione sin ejecutar manualmente la compilación del paquete compartido.
+// Los scripts predev/prebuild comparten este bloqueo para compilar los contratos.
 
-import { existsSync, openSync, closeSync, unlinkSync } from 'node:fs'
+import { existsSync, openSync, closeSync, readdirSync, statSync, unlinkSync } from 'node:fs'
 import { spawnSync } from 'node:child_process'
 import { setTimeout as delay } from 'node:timers/promises'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-const contractOutputs = [
-  path.join(root, 'packages/contracts/dist/index.d.ts'),
-  path.join(root, 'packages/contracts/dist/admin.d.ts'),
-  path.join(root, 'packages/contracts/dist/domain.d.ts'),
-  path.join(root, 'packages/contracts/dist/permissions.d.ts'),
-  path.join(root, 'packages/contracts/dist/customer-accounts.d.ts'),
-]
+const sourceDir = path.join(root, 'packages/contracts/src')
+const outputDir = path.join(root, 'packages/contracts/dist')
 const lockFile = path.join(root, 'packages/contracts/.build.lock')
 
-const isBuilt = () => contractOutputs.every((file) => existsSync(file))
+const isBuilt = () => readdirSync(sourceDir).filter((file) => file.endsWith('.ts')).every((file) => {
+  const sourceTime = statSync(path.join(sourceDir, file)).mtimeMs
+  const name = file.slice(0, -3)
+  return ['.js', '.d.ts'].every((extension) => {
+    const output = path.join(outputDir, `${name}${extension}`)
+    return existsSync(output) && statSync(output).mtimeMs >= sourceTime
+  })
+})
 
 if (isBuilt()) process.exit(0)
 
@@ -39,8 +39,10 @@ try {
 
 try {
   const result = spawnSync(
-    process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm',
-    ['--filter', '@fj-solutions/contracts', 'build'],
+    process.platform === 'win32' ? 'cmd.exe' : 'pnpm',
+    process.platform === 'win32'
+      ? ['/d', '/s', '/c', 'pnpm --filter @fj-solutions/contracts build']
+      : ['--filter', '@fj-solutions/contracts', 'build'],
     { cwd: root, stdio: 'inherit' }
   )
   process.exitCode = result.status ?? 1

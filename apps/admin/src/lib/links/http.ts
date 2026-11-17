@@ -5,7 +5,7 @@ import type { SessionUser } from '@/lib/auth/types'
 import { LinkProfileError } from './store'
 
 // Las cuentas de empresa solo administran la página que se les asignó; el resto
-// de roles con permiso sobre AllMyLinks ven todas las páginas.
+// de roles con permiso sobre Linkeador ven todas las páginas.
 export type LinkProfilesScope = 'all' | 'own'
 
 type Guarded =
@@ -13,11 +13,11 @@ type Guarded =
   | { ok: false; response: NextResponse }
 
 const actionMessages: Record<string, string> = {
-  view: 'Tu rol no puede consultar las páginas AllMyLinks.',
-  create: 'Tu rol no puede crear páginas AllMyLinks.',
-  update: 'Tu rol no puede editar las páginas AllMyLinks.',
-  delete: 'Tu rol no puede eliminar páginas AllMyLinks.',
-  publish: 'Tu rol no puede publicar páginas AllMyLinks.',
+  view: 'Tu rol no puede consultar las páginas Linkeador.',
+  create: 'Tu rol no puede crear páginas Linkeador.',
+  update: 'Tu rol no puede editar las páginas Linkeador.',
+  delete: 'Tu rol no puede eliminar páginas Linkeador.',
+  publish: 'Tu rol no puede publicar páginas Linkeador.',
 }
 
 export async function guardLinkProfiles(
@@ -62,7 +62,7 @@ export function linkProfilesFailure(error: unknown) {
   }
   console.error('[admin/link-profiles]', error)
   return NextResponse.json(
-    { success: false, message: 'No se pudo completar la operación con las páginas AllMyLinks.' },
+    { success: false, message: 'No se pudo completar la operación con las páginas Linkeador.' },
     { status: 500 }
   )
 }

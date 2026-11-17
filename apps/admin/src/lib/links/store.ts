@@ -217,7 +217,7 @@ async function readStore(): Promise<StoreFile> {
       return { version: 1, profiles: [seedProfile()] }
     }
     console.error('[admin/links] No se pudo leer el almacén de páginas:', error)
-    throw new LinkProfileError('No se pudo leer el almacén de páginas AllMyLinks.', 500)
+    throw new LinkProfileError('No se pudo leer el almacén de páginas Linkeador.', 500)
   }
 }
 
@@ -254,7 +254,14 @@ function normalizeUrl(raw: string, allowHash: boolean): string | null {
   const value = raw.trim()
   if (!value) return null
   if (value === '#') return allowHash ? '#' : null
-  if (/^(https?:\/\/|mailto:|tel:)/i.test(value)) return value
+  if (/^https?:\/\//i.test(value)) {
+    try {
+      return new URL(value).hostname ? value : null
+    } catch {
+      return null
+    }
+  }
+  if (/^(mailto:|tel:)/i.test(value)) return value
   if (value.startsWith('/')) return value
   if (/^[\w-]+(\.[\w-]+)+([/?#].*)?$/i.test(value)) return `https://${value}`
   return null
@@ -506,7 +513,7 @@ export function deleteLinkProfile(id: string) {
     const index = store.profiles.findIndex((profile) => profile.id === id)
     if (index === -1) throw new LinkProfileError('La página ya no existe.', 404)
     if (store.profiles.length === 1) {
-      throw new LinkProfileError('Debe existir al menos una página AllMyLinks.', 400)
+      throw new LinkProfileError('Debe existir al menos una página Linkeador.', 400)
     }
     store.profiles.splice(index, 1)
   })

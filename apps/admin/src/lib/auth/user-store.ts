@@ -182,10 +182,10 @@ async function validate(input: ManagedUserInput, requirePassword: boolean) {
   if (input.role === 'empresa') {
     const requested = input.linkProfileId?.trim() ?? ''
     if (!requested) {
-      throw new ManagedUserError('Selecciona la página AllMyLinks que administrará la empresa.')
+      throw new ManagedUserError('Selecciona la página Linkeador que administrará la empresa.')
     }
     if (!(await getLinkProfile(requested))) {
-      throw new ManagedUserError('La página AllMyLinks asignada ya no existe.', 409)
+      throw new ManagedUserError('La página Linkeador asignada ya no existe.', 409)
     }
     linkProfileId = requested
   }

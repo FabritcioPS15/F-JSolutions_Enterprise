@@ -4,7 +4,7 @@
   "private": true,
   "packageManager": "pnpm@12.3.4",
   "scripts": {
-    "dev": "pnpm --filter \"./apps/**\" dev",
+    "dev": "node scripts/dev.mjs",
     "dev:web": "pnpm --filter fj-solutions-web dev",
     "dev:store": "pnpm --filter fj-solutions-store dev",
     "dev:admin": "pnpm --filter fj-solutions-admin dev",
@@ -22,6 +22,7 @@
   },
   "devDependencies": {
     "@prisma/client": "^5.22.0",
+    "concurrently": "^9.2.5",
     "dotenv-cli": "^11.1.0",
     "prisma": "5.22.0"
   }

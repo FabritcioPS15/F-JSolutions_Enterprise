@@ -90,14 +90,17 @@ pnpm db:generate
 
 ### Desarrollo
 ```bash
-# IMPORTANTE: Ejecutar siempre desde la raíz del proyecto
-# cd C:\Users\Sistemas\Downloads\fj_solutions
+# Ejecutar todos los servicios desde la raíz o desde apps/
+pnpm run dev
 
-# Ejecutar todos los servicios
-pnpm dev
-
-# Solo tienda pública
+# Los mensajes aparecen identificados por servicio y color.
+# Solo web o store
 pnpm dev:web
+pnpm dev:store
+
+# Solo academia o linkeador
+pnpm dev:academy
+pnpm dev:links
 
 # Solo panel de administración
 pnpm dev:admin
@@ -185,8 +188,11 @@ compilan automáticamente si falta.
 
 ## 🌐 Puertos
 
-- **Tienda Pública**: http://localhost:3000
+- **Web**: http://localhost:3000
+- **Store**: http://localhost:3006
 - **Panel Admin**: http://localhost:3002
+- **Academia**: http://localhost:3004
+- **Linkeador**: http://localhost:3005
 - **API Backend**: http://localhost:4000
 - **PostgreSQL**: localhost:5432
 - **Redis**: localhost:6379

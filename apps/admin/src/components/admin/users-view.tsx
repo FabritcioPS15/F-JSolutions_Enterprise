@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
+import Link from 'next/link'
 import {
   KeyRound,
   Pencil,
@@ -298,11 +299,15 @@ export function UsersView() {
   return (
     <div className="space-y-5">
       <PageHeader
-        eyebrow="Administración"
-        title="Usuarios y permisos"
-        description="Cuentas con acceso al panel, su rol y lo que cada rol puede hacer dentro de FJ Systems. No hay registro público: solo el superadministrador crea usuarios."
+        eyebrow="Sistema"
+        title="Usuarios"
+        description="Gestión de cuentas con acceso al panel, roles operativos asignados y estado de autenticación."
         actions={
           <>
+            <Link href="/roles" className={btnSecondary}>
+              <KeyRound className="size-4" aria-hidden="true" />
+              Roles y permisos
+            </Link>
             <ExportMenu
               build={() => usersDataset(filtered)}
               nouns={['usuario', 'usuarios']}
@@ -563,8 +568,13 @@ export function UsersView() {
 
       <SectionCard
         title="Matriz de roles y permisos"
-        description="Es la referencia que sigue el panel para mostrar u ocultar acciones. Los cambios se aplican asignando el rol a cada usuario."
+        description="Referencia rápida de permisos por módulo. Para auditar o explorar en detalle cada rol, visita la sección dedicada."
         icon={KeyRound}
+        action={
+          <Link href="/roles" className={btnSecondary}>
+            Explorador de roles ➔
+          </Link>
+        }
       >
         <div className="-mx-4 overflow-x-auto px-4">
           <table className="w-full min-w-[900px] text-left">

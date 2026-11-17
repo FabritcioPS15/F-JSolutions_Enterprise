@@ -1,0 +1,944 @@
+'use client'
+
+import { useEffect, useMemo, useRef, useState } from 'react'
+import Link from 'next/link'
+import {
+  Archive,
+  ArchiveRestore,
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+  Copy,
+  Eye,
+  EyeOff,
+  LayoutGrid,
+  List,
+  PackageSearch,
+  Pencil,
+  Plus,
+  RotateCcw,
+  Search,
+  Trash2,
+  X,
+} from 'lucide-react'
+import { useAdmin } from '@/components/admin/admin-provider'
+import { ConfirmDialog } from '@/components/admin/confirm-dialog'
+import { ExportMenu } from '@/components/admin/export-menu'
+import { ProductThumb } from '@/components/admin/product-thumb'
+import { RowActions } from '@/components/admin/row-actions'
+import { useToast } from '@/components/admin/toast'
+import {
+  EmptyState,
+  FilterSelect,
+  PageHeader,
+  Select,
+  StatusBadge,
+  StatusToggle,
+  StockBadge,
+  btnGhost,
+  btnPrimary,
+  btnSecondary,
+  iconButton,
+  inputClass,
+  tableClass,
+  tableHeadRowClass,
+} from '@/components/admin/ui'
+import { productsDataset } from '@/lib/admin/excel-exports'
+import {
+  formatCurrency,
+  formatDate,
+  getMargin,
+  getStockState,
+} from '@/lib/admin/format'
+import type { AdminProduct, ProductStatus } from '@/lib/admin/types'
+import { cn } from '@/lib/utils'
+
+export type StockFilter = 'all' | 'replenish' | 'out' | 'ok'
+export type StatusFilter = 'all' | ProductStatus
+
+type PageSize = 8 | 12 | 24 | 48
+type BulkAction = 'publish' | 'unpublish' | 'archive' | 'delete'
+
+const sortOptions = [
+  { value: 'recent', label: 'Actualizados recientemente' },
+  { value: 'created', label: 'Creados recientemente' },
+  { value: 'name', label: 'Nombre A–Z' },
+  { value: 'price-asc', label: 'Precio: menor a mayor' },
+  { value: 'price-desc', label: 'Precio: mayor a menor' },
+  { value: 'stock-asc', label: 'Stock: menor primero' },
+]
+
+const pageSizes: PageSize[] = [8, 12, 24, 48]
+
+const bulkButton =
+  'inline-flex h-8 items-center gap-1.5 rounded-lg border border-border bg-card px-2.5 text-[11px] font-semibold text-foreground/80 transition hover:bg-muted'
+
+function matchStock(product: AdminProduct, filter: StockFilter) {
+  if (filter === 'all') return true
+  if (product.status === 'archived') return false
+  const state = getStockState(product)
+  if (filter === 'replenish') return state !== 'ok'
+  return state === filter
+}
+
+function SelectionCheckbox({
+  checked,
+  indeterminate = false,
+  onChange,
+  label,
+}: {
+  checked: boolean
+  indeterminate?: boolean
+  onChange: () => void
+  label: string
+}) {
+  const ref = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    if (ref.current) ref.current.indeterminate = indeterminate
+  }, [indeterminate])
+
+  return (
+    <input
+      ref={ref}
+      type="checkbox"
+      checked={checked}
+      onChange={onChange}
+      aria-label={label}
+      className="size-4 shrink-0 cursor-pointer rounded border-input accent-[#2563EB]"
+    />
+  )
+}
+
+export function ProductsView({
+  initialStock = 'all',
+  initialQuery = '',
+  initialStatus = 'all',
+}: {
+  initialStock?: StockFilter
+  initialQuery?: string
+  initialStatus?: StatusFilter
+}) {
+  const {
+    products,
+    categories,
+    brands,
+    settings,
+    toggleProductStatus,
+    setProductStatus,
+    deleteProduct,
+    duplicateProduct,
+    bulkSetStatus,
+    bulkDeleteProducts,
+  } = useAdmin()
+  const toast = useToast()
+
+  const [query, setQuery] = useState(initialQuery)
+  const [category, setCategory] = useState('all')
+  const [brand, setBrand] = useState('all')
+  const [status, setStatus] = useState<StatusFilter>(initialStatus)
+  const [stock, setStock] = useState<StockFilter>(initialStock)
+  const [sort, setSort] = useState('recent')
+  const [view, setView] = useState<'table' | 'grid'>('table')
+  const [page, setPage] = useState(1)
+  const [pageSize, setPageSize] = useState<PageSize>(8)
+  const [selected, setSelected] = useState<string[]>([])
+  const [deleteTarget, setDeleteTarget] = useState<AdminProduct | null>(null)
+  const [bulkConfirm, setBulkConfirm] = useState<{ action: 'archive' | 'delete'; count: number } | null>(
+    null
+  )
+
+  useEffect(() => {
+    setPage(1)
+  }, [query, category, brand, status, stock, sort, pageSize])
+
+  const filtered = useMemo(() => {
+    const term = query.trim().toLowerCase()
+    const list = products.filter((product) => {
+      const matchesTerm =
+        !term ||
+        product.name.toLowerCase().includes(term) ||
+        product.sku.toLowerCase().includes(term) ||
+        (product.internalCode ?? '').toLowerCase().includes(term) ||
+        (product.model ?? '').toLowerCase().includes(term) ||
+        product.brand.toLowerCase().includes(term) ||
+        product.category.toLowerCase().includes(term) ||
+        (product.subcategory ?? '').toLowerCase().includes(term)
+
+      const matchesCategory = category === 'all' || product.category === category
+      const matchesBrand = brand === 'all' || product.brand === brand
+      const matchesStatus = status === 'all' || product.status === status
+
+      return (
+        matchesTerm &&
+        matchesCategory &&
+        matchesBrand &&
+        matchesStatus &&
+        matchStock(product, stock)
+      )
+    })
+
+    return [...list].sort((a, b) => {
+      if (sort === 'name') return a.name.localeCompare(b.name, 'es')
+      if (sort === 'price-asc') return a.price - b.price
+      if (sort === 'price-desc') return b.price - a.price
+      if (sort === 'stock-asc') return a.stock - b.stock
+      if (sort === 'created') return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+    })
+  }, [products, query, category, brand, status, stock, sort])
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize))
+  const currentPage = Math.min(page, totalPages)
+  const visible = filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize)
+
+  const visibleIds = visible.map((product) => product.id)
+  const allVisibleSelected =
+    visibleIds.length > 0 && visibleIds.every((id) => selected.includes(id))
+  const someVisibleSelected = visibleIds.some((id) => selected.includes(id))
+  const selectedVisibleCount = selected.filter((id) => visibleIds.includes(id)).length
+
+  const hasFilters =
+    query !== '' ||
+    category !== 'all' ||
+    brand !== 'all' ||
+    status !== 'all' ||
+    stock !== 'all'
+
+  function resetFilters() {
+    setQuery('')
+    setCategory('all')
+    setBrand('all')
+    setStatus('all')
+    setStock('all')
+    setSort('recent')
+  }
+
+  function toggleSelected(id: string) {
+    setSelected((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    )
+  }
+
+  function toggleVisibleSelection() {
+    setSelected((prev) => {
+      if (allVisibleSelected) return prev.filter((id) => !visibleIds.includes(id))
+      return Array.from(new Set([...prev, ...visibleIds]))
+    })
+  }
+
+  function handleToggle(product: AdminProduct) {
+    if (product.status === 'archived') return
+    toggleProductStatus(product.id)
+    toast.success(
+      product.status === 'active' ? 'Producto movido a borradores' : 'Producto publicado',
+      product.name
+    )
+  }
+
+  function handleArchive(product: AdminProduct) {
+    setProductStatus(product.id, 'archived')
+    toast.info('Producto archivado', `${product.name} salió del catálogo activo.`)
+  }
+
+  function handleRestore(product: AdminProduct) {
+    setProductStatus(product.id, 'draft')
+    toast.success('Producto restaurado', `${product.name} volvió como borrador.`)
+  }
+
+  function handleDuplicate(product: AdminProduct) {
+    const copy = duplicateProduct(product.id)
+    if (copy) toast.success('Producto duplicado', `Se creó “${copy.name}” como borrador.`)
+  }
+
+  function handleDelete() {
+    if (!deleteTarget) return
+    deleteProduct(deleteTarget.id)
+    setSelected((prev) => prev.filter((id) => id !== deleteTarget.id))
+    toast.success('Producto eliminado', deleteTarget.name)
+    setDeleteTarget(null)
+  }
+
+  function runBulk(action: BulkAction) {
+    const ids = [...selected]
+    if (ids.length === 0) return
+    const count = ids.length
+
+    if (action === 'publish') {
+      bulkSetStatus(ids, 'active')
+      toast.success('Productos publicados', `${count} ${count === 1 ? 'producto' : 'productos'} visibles en la tienda.`)
+    } else if (action === 'unpublish') {
+      bulkSetStatus(ids, 'draft')
+      toast.info('Productos retirados', `${count} ${count === 1 ? 'producto pasó' : 'productos pasaron'} a borrador.`)
+    } else if (action === 'archive') {
+      bulkSetStatus(ids, 'archived')
+      toast.info('Productos archivados', `${count} ${count === 1 ? 'producto' : 'productos'} fuera del catálogo activo.`)
+    } else {
+      bulkDeleteProducts(ids)
+      toast.success('Productos eliminados', `${count} ${count === 1 ? 'producto' : 'productos'} eliminados del catálogo.`)
+    }
+
+    setSelected([])
+    setBulkConfirm(null)
+  }
+
+  return (
+    <div className="space-y-5">
+      <PageHeader
+        eyebrow="Catálogo"
+        title="Productos"
+        description="Administra precios, inventario, publicación y contenido de todo el catálogo."
+        actions={
+          <>
+            <ExportMenu
+              build={() => productsDataset(filtered, settings.currency)}
+              nouns={['producto', 'productos']}
+              disabled={filtered.length === 0}
+            />
+            <Link href="/productos/nuevo" className={btnPrimary}>
+              <Plus className="size-4" aria-hidden="true" />
+              Nuevo producto
+            </Link>
+          </>
+        }
+      />
+
+      <div className="rounded-2xl border border-border/80 bg-card p-4 shadow-xs">
+        <div className="flex flex-col gap-3 xl:flex-row xl:items-center xl:justify-between">
+          <div className="relative w-full min-w-0 xl:flex-1">
+            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+            <input
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Buscar por nombre, SKU o código interno…"
+              className={cn(inputClass, 'pl-9 pr-9')}
+              aria-label="Buscar productos"
+            />
+            {query && (
+              <button
+                type="button"
+                onClick={() => setQuery('')}
+                className="absolute right-2.5 top-1/2 grid size-5 -translate-y-1/2 place-items-center rounded-md text-muted-foreground transition hover:bg-muted hover:text-foreground/80"
+                aria-label="Limpiar búsqueda"
+              >
+                <X className="size-3.5" />
+              </button>
+            )}
+          </div>
+
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 xl:flex xl:shrink-0 xl:items-center">
+            <FilterSelect
+              label="Categoría"
+              value={category}
+              onChange={setCategory}
+              ariaLabel="Filtrar por categoría"
+              align="right"
+              searchable
+              searchPlaceholder="Buscar categoría…"
+              className="sm:w-full xl:w-48"
+              options={[
+                { value: 'all', label: 'Todas', count: products.length },
+                ...categories.map((item) => ({
+                  value: item.label,
+                  label: item.label,
+                  count: products.filter((product) => product.category === item.label).length,
+                })),
+              ]}
+            />
+
+            <FilterSelect
+              label="Marca"
+              value={brand}
+              onChange={setBrand}
+              ariaLabel="Filtrar por marca"
+              align="right"
+              searchable
+              searchPlaceholder="Buscar marca…"
+              className="sm:w-full xl:w-44"
+              options={[
+                { value: 'all', label: 'Todas', count: products.length },
+                ...[...brands]
+                  .sort((a, b) => a.order - b.order || a.name.localeCompare(b.name))
+                  .map((item) => ({
+                    value: item.name,
+                    label: item.status === 'inactive' ? `${item.name} · Inactiva` : item.name,
+                    count: products.filter((product) => product.brand === item.name).length,
+                  })),
+              ]}
+            />
+
+            <FilterSelect
+              label="Estado"
+              value={status}
+              onChange={(next) => setStatus(next as StatusFilter)}
+              ariaLabel="Filtrar por estado"
+              align="right"
+              className="sm:w-full xl:w-44"
+              options={[
+                { value: 'all', label: 'Todos', count: products.length },
+                {
+                  value: 'active',
+                  label: 'Publicados',
+                  count: products.filter((product) => product.status === 'active').length,
+                },
+                {
+                  value: 'draft',
+                  label: 'Borradores',
+                  count: products.filter((product) => product.status === 'draft').length,
+                },
+                {
+                  value: 'archived',
+                  label: 'Archivados',
+                  count: products.filter((product) => product.status === 'archived').length,
+                },
+              ]}
+            />
+
+            <FilterSelect
+              label="Stock"
+              value={stock}
+              onChange={(next) => setStock(next as StockFilter)}
+              ariaLabel="Filtrar por stock"
+              align="right"
+              className="sm:w-full xl:w-40"
+              options={[
+                { value: 'all', label: 'Todo' },
+                { value: 'replenish', label: 'Requiere reposición' },
+                { value: 'out', label: 'Sin stock' },
+                { value: 'ok', label: 'Stock saludable' },
+              ]}
+            />
+
+            <FilterSelect
+              label="Orden"
+              value={sort}
+              onChange={setSort}
+              ariaLabel="Ordenar productos"
+              align="right"
+              className="sm:w-full xl:w-48"
+              options={sortOptions.map((option) => ({
+                value: option.value,
+                label: option.label,
+              }))}
+            />
+
+            {hasFilters && (
+              <button
+                type="button"
+                onClick={resetFilters}
+                className="inline-flex h-10 items-center justify-center gap-1.5 rounded-xl border border-border bg-card px-3 text-xs font-semibold text-muted-foreground transition hover:bg-muted"
+                title="Limpiar filtros"
+              >
+                <RotateCcw className="size-3.5" aria-hidden="true" />
+                Limpiar
+              </button>
+            )}
+          </div>
+        </div>
+
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-3">
+          <p className="text-[11px] font-medium text-muted-foreground">
+            <span className="font-bold text-foreground">{filtered.length}</span>{' '}
+            {filtered.length === 1 ? 'producto' : 'productos'}
+            {hasFilters ? ' con los filtros aplicados' : ' en el catálogo'}
+          </p>
+
+          <div className="flex items-center gap-1 rounded-lg bg-muted p-1">
+            <button
+              type="button"
+              onClick={() => setView('table')}
+              className={cn(
+                'inline-flex size-7 items-center justify-center rounded-md transition',
+                view === 'table'
+                  ? 'bg-card text-foreground shadow-xs'
+                  : 'text-muted-foreground hover:text-foreground'
+              )}
+              aria-label="Vista de tabla"
+              aria-pressed={view === 'table'}
+            >
+              <List className="size-3.5" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setView('grid')}
+              className={cn(
+                'inline-flex size-7 items-center justify-center rounded-md transition',
+                view === 'grid'
+                  ? 'bg-card text-foreground shadow-xs'
+                  : 'text-muted-foreground hover:text-foreground'
+              )}
+              aria-label="Vista de tarjetas"
+              aria-pressed={view === 'grid'}
+            >
+              <LayoutGrid className="size-3.5" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {selected.length > 0 && (
+        <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-brand-ink/30 bg-tint-brand/70 px-4 py-3">
+          <p className="text-xs font-semibold text-[#172554]">
+            {selected.length} {selected.length === 1 ? 'producto seleccionado' : 'productos seleccionados'}
+            {selectedVisibleCount !== selected.length && (
+              <span className="ml-1 font-medium text-brand-ink/70">
+                ({selectedVisibleCount} en esta página)
+              </span>
+            )}
+          </p>
+          <div className="flex flex-wrap items-center gap-1.5">
+            <button type="button" className={bulkButton} onClick={() => runBulk('publish')}>
+              <CheckCircle2 className="size-3.5" aria-hidden="true" />
+              Publicar
+            </button>
+            <button type="button" className={bulkButton} onClick={() => runBulk('unpublish')}>
+              <EyeOff className="size-3.5" aria-hidden="true" />
+              Retirar
+            </button>
+            <button
+              type="button"
+              className={bulkButton}
+              onClick={() => setBulkConfirm({ action: 'archive', count: selected.length })}
+            >
+              <Archive className="size-3.5" aria-hidden="true" />
+              Archivar
+            </button>
+            <button
+              type="button"
+              className={cn(bulkButton, 'border-red-500/30 text-danger-ink hover:bg-red-500/10')}
+              onClick={() => setBulkConfirm({ action: 'delete', count: selected.length })}
+            >
+              <Trash2 className="size-3.5" aria-hidden="true" />
+              Eliminar
+            </button>
+            <button
+              type="button"
+              className="ml-1 grid size-8 place-items-center rounded-lg text-brand-ink transition hover:bg-brand-soft"
+              onClick={() => setSelected([])}
+              aria-label="Cancelar selección"
+            >
+              <X className="size-4" />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {filtered.length === 0 ? (
+        <EmptyState
+          icon={PackageSearch}
+          title={products.length === 0 ? 'Tu catálogo está vacío' : 'Sin resultados'}
+          description={
+            products.length === 0
+              ? 'Crea tu primer producto para empezar a construir el catálogo de FJ Systems.'
+              : 'No encontramos productos con esos criterios. Prueba limpiando los filtros o usando otro término.'
+          }
+          action={
+            products.length === 0 ? (
+              <Link href="/productos/nuevo" className={btnPrimary}>
+                <Plus className="size-4" aria-hidden="true" />
+                Crear producto
+              </Link>
+            ) : (
+              <button type="button" onClick={resetFilters} className={btnSecondary}>
+                <RotateCcw className="size-4" aria-hidden="true" />
+                Limpiar filtros
+              </button>
+            )
+          }
+        />
+      ) : (
+        <>
+          <div
+            className={cn(
+              'overflow-hidden rounded-2xl border border-border/80 bg-card shadow-xs',
+              view === 'grid' ? 'hidden' : 'hidden lg:block'
+            )}
+          >
+            <div className="overflow-x-auto scrollbar-light">
+              <table className={tableClass}>
+                <thead>
+                  <tr className={tableHeadRowClass}>
+                    <th scope="col" className="w-10 px-4 py-3">
+                      <SelectionCheckbox
+                        checked={allVisibleSelected}
+                        indeterminate={someVisibleSelected && !allVisibleSelected}
+                        onChange={toggleVisibleSelection}
+                        label="Seleccionar productos de esta página"
+                      />
+                    </th>
+                    <th scope="col" className="min-w-[210px] px-4 py-3">Producto</th>
+                    <th scope="col" className="px-4 py-3">SKU</th>
+                    <th scope="col" className="px-4 py-3">Marca</th>
+                    <th scope="col" className="px-4 py-3">Categoría</th>
+                    <th scope="col" className="px-4 py-3 text-right">Precio</th>
+                    <th scope="col" className="px-4 py-3">Stock</th>
+                    <th scope="col" className="px-4 py-3">Estado</th>
+                    <th scope="col" className="hidden px-4 py-3 2xl:table-cell">Actualizado</th>
+                    <th scope="col" className="whitespace-nowrap px-5 py-3 text-right">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border">
+                  {visible.map((product) => {
+                    const margin = getMargin(product)
+                    const isSelected = selected.includes(product.id)
+                    return (
+                      <tr
+                        key={product.id}
+                        className={cn(
+                          'group transition-colors hover:bg-muted/70',
+                          isSelected && 'bg-tint-brand/40'
+                        )}
+                      >
+                        <td className="px-4 py-3">
+                          <SelectionCheckbox
+                            checked={isSelected}
+                            onChange={() => toggleSelected(product.id)}
+                            label={`Seleccionar ${product.name}`}
+                          />
+                        </td>
+                        <td className="min-w-[210px] px-4 py-3">
+                          <div className="flex items-center gap-3">
+                            <Link href={`/productos/${product.id}`} className="shrink-0">
+                              <ProductThumb
+                                src={product.image}
+                                alt={product.imageAlt || product.name}
+                                className="size-11"
+                              />
+                            </Link>
+                            <div className="min-w-0">
+                              <Link
+                                href={`/productos/${product.id}`}
+                                className="line-clamp-1 text-[12.5px] font-semibold text-foreground transition hover:text-brand-ink"
+                                title={product.name}
+                              >
+                                {product.name}
+                              </Link>
+                              <p className="mt-0.5 truncate text-[11px] text-muted-foreground">
+                                {product.model ?? product.internalCode ?? 'Sin código de modelo'}
+                              </p>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-4 py-3">
+                          <p className="font-mono text-[10.5px] text-muted-foreground">{product.sku}</p>
+                          {product.internalCode && (
+                            <p className="mt-0.5 font-mono text-[10px] text-muted-foreground">
+                              {product.internalCode}
+                            </p>
+                          )}
+                        </td>
+                        <td className="px-4 py-3">
+                          <p className="text-[12.5px] font-semibold text-foreground/80">{product.brand}</p>
+                        </td>
+                        <td className="px-4 py-3">
+                          <p className="max-w-[150px] truncate text-[12.5px] font-semibold text-foreground/80">
+                            {product.category || 'Sin categoría'}
+                          </p>
+                          <p className="mt-0.5 max-w-[150px] truncate text-[11px] text-muted-foreground">
+                            {product.subcategory ?? 'Sin subcategoría'}
+                          </p>
+                        </td>
+                        <td className="px-4 py-3 text-right">
+                          <p className="whitespace-nowrap text-[12.5px] font-bold tabular-nums text-foreground">
+                            {product.price > 0
+                              ? formatCurrency(product.price, settings.currency)
+                              : 'A cotizar'}
+                          </p>
+                          {product.price > 0 && !product.showPrice ? (
+                            <p className="mt-0.5 text-[10px] font-medium text-warning-ink">
+                              Oculto en tienda
+                            </p>
+                          ) : margin !== null ? (
+                            <p
+                              className={cn(
+                                'mt-0.5 text-[10px] font-medium',
+                                margin >= 20 ? 'text-success-ink' : 'text-warning-ink'
+                              )}
+                            >
+                              Margen {margin.toFixed(0)}%
+                            </p>
+                          ) : null}
+                        </td>
+                        <td className="px-4 py-3">
+                          <StockBadge stock={product.stock} minStock={product.minStock} compact />
+                        </td>
+                        <td className="px-4 py-3">
+                          <div className="flex items-center gap-2">
+                            {product.status !== 'archived' && (
+                              <StatusToggle
+                                active={product.status === 'active'}
+                                onToggle={() => handleToggle(product)}
+                                label={`Cambiar estado de ${product.name}`}
+                              />
+                            )}
+                            <StatusBadge status={product.status} />
+                          </div>
+                        </td>
+                        <td className="hidden whitespace-nowrap px-4 py-3 text-[11px] text-muted-foreground 2xl:table-cell">
+                          {formatDate(product.updatedAt)}
+                        </td>
+                        <td className="whitespace-nowrap px-5 py-3 text-right">
+                          <RowActions
+                            label={`Acciones para ${product.name}`}
+                            title={product.name}
+                            items={[
+                              { key: 'view', label: 'Ver detalle', icon: Eye, href: `/productos/${product.id}` },
+                              {
+                                key: 'edit',
+                                label: 'Editar producto',
+                                icon: Pencil,
+                                href: `/productos/${product.id}/editar`,
+                              },
+                              {
+                                key: 'duplicate',
+                                label: 'Duplicar producto',
+                                icon: Copy,
+                                onSelect: () => handleDuplicate(product),
+                              },
+                              product.status === 'archived'
+                                ? {
+                                    key: 'restore',
+                                    label: 'Restaurar como borrador',
+                                    icon: ArchiveRestore,
+                                    onSelect: () => handleRestore(product),
+                                  }
+                                : {
+                                    key: 'archive',
+                                    label: 'Archivar producto',
+                                    icon: Archive,
+                                    onSelect: () => handleArchive(product),
+                                  },
+                              {
+                                key: 'delete',
+                                label: 'Eliminar producto',
+                                icon: Trash2,
+                                tone: 'danger',
+                                onSelect: () => setDeleteTarget(product),
+                              },
+                            ]}
+                          />
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div
+            className={cn(
+              'grid gap-4 sm:grid-cols-2',
+              view === 'grid' ? 'xl:grid-cols-3 2xl:grid-cols-4' : 'lg:hidden'
+            )}
+          >
+            {visible.map((product) => {
+              const margin = getMargin(product)
+              const isSelected = selected.includes(product.id)
+              return (
+                <article
+                  key={product.id}
+                  className={cn(
+                    'group flex flex-col overflow-hidden rounded-2xl border bg-card shadow-xs transition hover:-translate-y-0.5 hover:border-brand-ink/30 hover:shadow-md',
+                    isSelected ? 'border-brand-ink/40 ring-2 ring-[#2563EB]/10' : 'border-border/80'
+                  )}
+                >
+                  <div className="relative">
+                    <Link href={`/productos/${product.id}`} className="block">
+                      <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted p-4">
+                        <ProductThumb
+                          src={product.image}
+                          alt={product.imageAlt || product.name}
+                          className="size-full object-contain"
+                        />
+                      </div>
+                    </Link>
+                    <div className="absolute left-3 top-3 flex flex-col items-start gap-1.5">
+                      <StatusBadge status={product.status} />
+                      {product.featured && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-slate-900 px-2 py-0.5 text-[9.5px] font-bold uppercase tracking-wide text-white shadow-sm">
+                          Destacado
+                        </span>
+                      )}
+                    </div>
+                    <div className="absolute right-3 top-3">
+                      <StockBadge stock={product.stock} minStock={product.minStock} compact />
+                    </div>
+                  </div>
+
+                  <div className="flex flex-1 flex-col p-4">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
+                      {product.brand}
+                    </p>
+                    <Link
+                      href={`/productos/${product.id}`}
+                      className="mt-1 line-clamp-2 min-h-[38px] font-heading text-[13.5px] font-bold leading-snug text-foreground transition hover:text-brand-ink"
+                    >
+                      {product.name}
+                    </Link>
+                    <p className="mt-1 truncate text-[10.5px] text-muted-foreground">
+                      {product.category || 'Sin categoría'}
+                      {product.subcategory ? ` · ${product.subcategory}` : ''}
+                    </p>
+
+                    <div className="mt-3 flex items-end justify-between gap-2">
+                      <div>
+                        <p className="text-sm font-bold tabular-nums text-foreground">
+                          {product.price > 0 ? formatCurrency(product.price, settings.currency) : 'A cotizar'}
+                        </p>
+                        <p className="mt-0.5 font-mono text-[9.5px] text-muted-foreground">
+                          {product.sku}
+                          {product.internalCode ? ` · ${product.internalCode}` : ''}
+                        </p>
+                      </div>
+                      {product.price > 0 && !product.showPrice ? (
+                        <span className="rounded-md bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-warning-ink">
+                          Precio oculto
+                        </span>
+                      ) : margin !== null ? (
+                        <span className="rounded-md bg-emerald-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-success-ink">
+                          {margin.toFixed(0)}% margen
+                        </span>
+                      ) : null}
+                    </div>
+
+                    <div className="mt-4 flex flex-wrap items-center gap-1.5 border-t border-border pt-3">
+                      <SelectionCheckbox
+                        checked={isSelected}
+                        onChange={() => toggleSelected(product.id)}
+                        label={`Seleccionar ${product.name}`}
+                      />
+                      <Link
+                        href={`/productos/${product.id}/editar`}
+                        className="inline-flex h-8 flex-1 items-center justify-center gap-1.5 rounded-lg border border-border bg-card text-[11px] font-semibold text-foreground/80 transition hover:bg-muted"
+                      >
+                        <Pencil className="size-3.5" aria-hidden="true" />
+                        Editar
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => handleDuplicate(product)}
+                        className={cn(iconButton, 'border border-border bg-card')}
+                        title="Duplicar"
+                        aria-label={`Duplicar ${product.name}`}
+                      >
+                        <Copy className="size-3.5" />
+                      </button>
+                      {product.status === 'archived' ? (
+                        <button
+                          type="button"
+                          onClick={() => handleRestore(product)}
+                          className={cn(iconButton, 'border border-border bg-card')}
+                          title="Restaurar como borrador"
+                          aria-label={`Restaurar ${product.name}`}
+                        >
+                          <ArchiveRestore className="size-3.5" />
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => handleArchive(product)}
+                          className={cn(iconButton, 'border border-border bg-card')}
+                          title="Archivar"
+                          aria-label={`Archivar ${product.name}`}
+                        >
+                          <Archive className="size-3.5" />
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => setDeleteTarget(product)}
+                        className={cn(
+                          iconButton,
+                          'border border-border bg-card hover:bg-red-500/10 hover:text-danger-ink'
+                        )}
+                        title="Eliminar"
+                        aria-label={`Eliminar ${product.name}`}
+                      >
+                        <Trash2 className="size-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                </article>
+              )
+            })}
+          </div>
+
+          <div className="flex flex-col items-center justify-between gap-3 rounded-2xl border border-border/80 bg-card px-4 py-3 shadow-xs sm:flex-row">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+              <p className="text-[11px] text-muted-foreground">
+                Mostrando{' '}
+                <span className="font-semibold text-foreground">
+                  {(currentPage - 1) * pageSize + 1}–
+                  {Math.min(currentPage * pageSize, filtered.length)}
+                </span>{' '}
+                de <span className="font-semibold text-foreground">{filtered.length}</span>
+              </p>
+              <label className="flex items-center gap-2 text-[11px] text-muted-foreground">
+                Filas por página
+                <Select
+                  value={String(pageSize)}
+                  onChange={(event) => setPageSize(Number(event.target.value) as PageSize)}
+                  aria-label="Filas por página"
+                  className="h-8 w-[74px] text-xs"
+                >
+                  {pageSizes.map((size) => (
+                    <option key={size} value={size}>
+                      {size}
+                    </option>
+                  ))}
+                </Select>
+              </label>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setPage((prev) => Math.max(1, prev - 1))}
+                disabled={currentPage === 1}
+                className={cn(btnGhost, 'border border-border bg-card disabled:opacity-40')}
+              >
+                <ChevronLeft className="size-4" aria-hidden="true" />
+                Anterior
+              </button>
+              <span className="inline-flex h-9 min-w-9 items-center justify-center rounded-lg bg-slate-900 px-2 text-[11px] font-bold tabular-nums text-white">
+                {currentPage} / {totalPages}
+              </span>
+              <button
+                type="button"
+                onClick={() => setPage((prev) => Math.min(totalPages, prev + 1))}
+                disabled={currentPage === totalPages}
+                className={cn(btnGhost, 'border border-border bg-card disabled:opacity-40')}
+              >
+                Siguiente
+                <ChevronRight className="size-4" aria-hidden="true" />
+              </button>
+            </div>
+          </div>
+        </>
+      )}
+
+      <ConfirmDialog
+        open={Boolean(deleteTarget)}
+        title="Eliminar producto"
+        description={`Esta acción quitará “${deleteTarget?.name ?? ''}” del catálogo local. No se puede deshacer.`}
+        confirmLabel="Eliminar definitivamente"
+        onConfirm={handleDelete}
+        onClose={() => setDeleteTarget(null)}
+      />
+
+      <ConfirmDialog
+        open={Boolean(bulkConfirm)}
+        title={bulkConfirm?.action === 'delete' ? 'Eliminar productos' : 'Archivar productos'}
+        description={
+          bulkConfirm?.action === 'delete'
+            ? `Se eliminarán ${bulkConfirm?.count ?? 0} productos del catálogo local. No se puede deshacer.`
+            : `Se archivarán ${bulkConfirm?.count ?? 0} productos y saldrán del catálogo activo. Puedes restaurarlos después.`
+        }
+        confirmLabel={bulkConfirm?.action === 'delete' ? 'Eliminar definitivamente' : 'Archivar productos'}
+        destructive={bulkConfirm?.action === 'delete'}
+        onConfirm={() => bulkConfirm && runBulk(bulkConfirm.action)}
+        onClose={() => setBulkConfirm(null)}
+      />
+    </div>
+  )
+}

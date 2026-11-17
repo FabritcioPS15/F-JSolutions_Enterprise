@@ -7,6 +7,7 @@ import {
   Bell,
   BookOpenCheck,
   CheckCircle2,
+  ChevronRight,
   FileText,
   Inbox,
   Package,
@@ -39,10 +40,7 @@ const toneStyles = {
   amber: 'bg-amber-500/10 text-warning-ink ring-amber-500/25',
 } as const
 
-const countStyles = {
-  brand: 'bg-[#2563EB]/10 text-[#2563EB]',
-  amber: 'bg-amber-500/15 text-warning-ink',
-} as const
+const countBadgeClass = 'grid size-[19px] shrink-0 place-items-center rounded-full bg-rose-500 text-[10px] font-bold leading-none text-white aspect-square shadow-xs'
 
 export function NotificationsMenu({
   counts,
@@ -142,7 +140,7 @@ export function NotificationsMenu({
       >
         <Bell className="size-4" aria-hidden="true" />
         {total > 0 && (
-          <span className="absolute -right-0.5 -top-0.5 grid h-4 min-w-4 place-items-center rounded-full bg-[#2563EB] px-1 text-[9px] font-bold leading-none text-white ring-2 ring-card">
+          <span className="absolute -right-1 -top-1 grid size-[19px] shrink-0 place-items-center rounded-full bg-rose-500 text-[9.5px] font-bold leading-none text-white ring-2 ring-card aspect-square shadow-xs">
             {total > 99 ? '99+' : total}
           </span>
         )}
@@ -160,7 +158,7 @@ export function NotificationsMenu({
                 {total > 0 ? `${total} ${total === 1 ? 'asunto pendiente' : 'asuntos pendientes'}` : 'Todo al día'}
               </p>
             </div>
-            <span className="grid size-8 place-items-center rounded-xl bg-tint-brand text-brand-ink ring-1 ring-inset ring-[#2563EB]/20">
+            <span className="grid size-8 place-items-center rounded-xl bg-rose-500/10 text-rose-500 ring-1 ring-inset ring-rose-500/20">
               <Bell className="size-4" aria-hidden="true" />
             </span>
           </div>
@@ -184,7 +182,8 @@ export function NotificationsMenu({
                     key={item.key}
                     href={item.href}
                     role="menuitem"
-                    className="flex items-start gap-3 rounded-xl px-2.5 py-2.5 transition hover:bg-muted"
+                    onClick={() => setOpen(false)}
+                    className="group flex items-start gap-3 rounded-xl px-2.5 py-2.5 transition hover:bg-muted"
                   >
                     <span
                       className={cn(
@@ -197,19 +196,15 @@ export function NotificationsMenu({
                     <span className="min-w-0 flex-1">
                       <span className="flex items-center justify-between gap-2">
                         <span className="truncate text-xs font-semibold text-foreground">{item.label}</span>
-                        <span
-                          className={cn(
-                            'shrink-0 rounded-full px-1.5 py-0.5 text-[10.5px] font-bold',
-                            countStyles[item.tone]
-                          )}
-                        >
-                          {item.count}
+                        <span className={countBadgeClass}>
+                          {item.count > 99 ? '99+' : item.count}
                         </span>
                       </span>
                       <span className="mt-0.5 block text-[10.5px] text-muted-foreground">
                         {item.description}
                       </span>
                     </span>
+                    <ChevronRight className="size-4 shrink-0 self-center text-muted-foreground/50 transition group-hover:translate-x-0.5 group-hover:text-foreground" aria-hidden="true" />
                   </Link>
                 )
               })
@@ -220,6 +215,7 @@ export function NotificationsMenu({
             <Link
               href="/notificaciones"
               role="menuitem"
+              onClick={() => setOpen(false)}
               className="flex items-center justify-center rounded-xl px-3 py-2 text-[11px] font-semibold text-[#2563EB] transition hover:bg-muted"
             >
               Ver todas las notificaciones

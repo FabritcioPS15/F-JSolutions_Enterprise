@@ -56,7 +56,7 @@ export function SocialFooter({ profile }: { profile: LinkProfile }) {
 
       <div className="mt-6 flex items-center gap-1.5 text-[11px] font-semibold text-[var(--page-ink-muted)]">
         <ShieldCheck className="size-3.5 text-[var(--page-accent-ink)]" />
-        <span>{profile.name} · All My Links</span>
+        <span>{profile.name} · Linkeador</span>
       </div>
 
       {profile.footerNote && (

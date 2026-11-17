@@ -48,29 +48,33 @@ omites la contraseña se usa un valor de desarrollo y el seed lo advierte.
 
 ## Ejecutar el Proyecto
 
-5. **Opción A: Ejecutar todo junto**:
+5. **Opción A: Ejecutar todo junto** desde la raíz o desde `apps/`:
 ```bash
-pnpm dev
+pnpm run dev
 ```
+
+Los seis servicios arrancan en paralelo y sus mensajes se identifican con etiquetas y colores. Si alguno indica que su puerto está ocupado, detén la instancia anterior antes de volver a iniciarlo.
 
 6. **Opción B: Ejecutar servicios individuales**:
 ```bash
-# Terminal 1 - Tienda pública
-pnpm dev:web
-
-# Terminal 2 - Panel de administración
-pnpm dev:admin
-
-# Terminal 3 - API Backend
-pnpm dev:api
+# Ejecuta cada comando en una terminal distinta:
+pnpm dev:web       # Web
+pnpm dev:store     # Store
+pnpm dev:admin     # Panel de administración
+pnpm dev:academy   # Academia
+pnpm dev:links     # Linkeador
+pnpm dev:api       # API Backend
 ```
 
 ## Acceso a las Aplicaciones
 
-- **Tienda Pública**: http://localhost:3000
+- **Web**: http://localhost:3000
+- **Store**: http://localhost:3006
 - **Panel Admin**: http://localhost:3002 (`/login` valida las credenciales en
   local, sin API ni PostgreSQL; por defecto `admin@fjsolutions.com.pe` /
   `Admin12345!`, o los valores de `SEED_ADMIN_EMAIL` / `SEED_ADMIN_PASSWORD`)
+- **Academia**: http://localhost:3004
+- **Linkeador**: http://localhost:3005
 - **API Backend**: http://localhost:4000
 
 ### Cuentas del panel

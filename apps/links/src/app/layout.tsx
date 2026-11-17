@@ -7,11 +7,11 @@ const LINKS_URL = (
 
 export const metadata: Metadata = {
   metadataBase: new URL(LINKS_URL),
-  title: 'F&J Solutions Enterprise | All My Links · Enlaces Oficiales',
+  title: 'F&J Solutions Enterprise | Linkeador · Enlaces Oficiales',
   description:
     'Enlaces directos a WhatsApp, Catálogo de Productos, Desarrollo de Software, F&J Academy, Instagram, TikTok y canales oficiales de F&J Solutions Enterprise.',
   openGraph: {
-    title: 'F&J Solutions Enterprise | All My Links',
+    title: 'F&J Solutions Enterprise | Linkeador',
     description: 'Hardware, Software, TI y F&J Academy en Perú.',
     type: 'profile',
   },

@@ -1,0 +1,1219 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Propuestas de sidebar · F&J Systems</title>
+<style>
+  :root {
+    color-scheme: light;
+    --page: #eef2f7;
+    --ink: #0f172a;
+    --muted: #64748b;
+    --line: #dbe3ee;
+    --card: #ffffff;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body { margin: 0; min-height: 100%; }
+
+  body {
+    background:
+      radial-gradient(circle at 12% 0%, rgba(37, 99, 235, .08), transparent 30%),
+      radial-gradient(circle at 88% 0%, rgba(99, 102, 241, .07), transparent 26%),
+      var(--page);
+    color: var(--ink);
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page-head {
+    max-width: 1460px;
+    margin: 0 auto;
+    padding: 40px 28px 20px;
+  }
+
+  .eyebrow {
+    margin: 0 0 8px;
+    color: #2563eb;
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+  }
+
+  .page-head h1 {
+    margin: 0;
+    font-size: clamp(24px, 3vw, 34px);
+    letter-spacing: -.035em;
+    line-height: 1.08;
+  }
+
+  .page-head .sub {
+    max-width: 760px;
+    margin: 10px 0 0;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  .hint {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-top: 16px;
+    padding: 7px 11px;
+    border: 1px solid rgba(37, 99, 235, .18);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .68);
+    color: #334155;
+    font-size: 11px;
+    font-weight: 600;
+    backdrop-filter: blur(8px);
+  }
+
+  .hint::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, .12);
+  }
+
+  .grid {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 24px;
+    max-width: 1460px;
+    margin: 0 auto;
+    padding: 12px 28px 48px;
+  }
+
+  .proposal {
+    flex: 1 1 640px;
+    min-width: 0;
+    max-width: 760px;
+  }
+
+  .caption {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 0 4px 12px;
+  }
+
+  .caption h2 {
+    margin: 0;
+    font-size: 15px;
+    letter-spacing: -.015em;
+  }
+
+  .caption p {
+    margin: 4px 0 0;
+    color: var(--muted);
+    font-size: 11.5px;
+    line-height: 1.5;
+    max-width: 520px;
+  }
+
+  .tag {
+    flex: 0 0 auto;
+    padding: 4px 9px;
+    border-radius: 999px;
+    background: #dbeafe;
+    color: #1d4ed8;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .tag.neutral {
+    background: #e2e8f0;
+    color: #475569;
+  }
+
+  .frame {
+    display: flex;
+    height: 760px;
+    overflow: hidden;
+    border: 1px solid rgba(148, 163, 184, .34);
+    border-radius: 20px;
+    background: #f8fafc;
+    box-shadow:
+      0 28px 60px -36px rgba(15, 23, 42, .38),
+      0 2px 8px rgba(15, 23, 42, .05);
+  }
+
+  /* ---------- Sidebar base ---------- */
+
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    width: 294px;
+    min-width: 294px;
+    height: 100%;
+    overflow: hidden;
+    color: var(--sb-text);
+    background: var(--sb-bg);
+    border-right: 1px solid var(--sb-border);
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    height: 72px;
+    flex: 0 0 72px;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--sb-border);
+  }
+
+  .logo {
+    display: grid;
+    place-items: center;
+    width: 37px;
+    height: 37px;
+    border-radius: 11px;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: -.02em;
+    box-shadow: 0 7px 18px rgba(37, 99, 235, .28);
+  }
+
+  .brand-copy { min-width: 0; }
+
+  .brand-name {
+    display: block;
+    color: #f8fafc;
+    font-size: 12.5px;
+    font-weight: 750;
+    letter-spacing: -.01em;
+    white-space: nowrap;
+  }
+
+  .brand-sub {
+    display: block;
+    margin-top: 2px;
+    color: #64748b;
+    font-size: 8.5px;
+    font-weight: 700;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .icon-btn {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    margin-left: auto;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: #64748b;
+    cursor: pointer;
+    transition: background .16s ease, color .16s ease;
+  }
+
+  .icon-btn:hover { background: var(--sb-hover); color: #e2e8f0; }
+
+  .i {
+    width: 16px;
+    height: 16px;
+    flex: 0 0 auto;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .search {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 0 0 auto;
+    margin: 14px 12px 8px;
+    padding: 8px 10px;
+    border: 1px solid var(--sb-border);
+    border-radius: 10px;
+    background: var(--sb-panel);
+    color: #64748b;
+    font-size: 10.5px;
+    cursor: text;
+    transition: border-color .16s ease, background .16s ease;
+  }
+
+  .search:hover { border-color: var(--sb-border-strong); }
+
+  .search .i { width: 14px; height: 14px; }
+
+  .search kbd {
+    margin-left: auto;
+    padding: 2px 5px;
+    border: 1px solid var(--sb-border);
+    border-radius: 5px;
+    color: #94a3b8;
+    font-family: inherit;
+    font-size: 8.5px;
+    font-weight: 700;
+  }
+
+  .nav {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 6px 10px 18px;
+  }
+
+  .nav::-webkit-scrollbar { width: 4px; }
+  .nav::-webkit-scrollbar-track { background: transparent; }
+  .nav::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    background: rgba(148, 163, 184, .18);
+  }
+
+  .group { margin-bottom: 3px; }
+
+  .group-head {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    width: 100%;
+    padding: 9px 10px;
+    border: 0;
+    border-radius: 9px;
+    background: transparent;
+    color: var(--sb-text);
+    font: inherit;
+    font-size: 11.5px;
+    font-weight: 650;
+    text-align: left;
+    cursor: pointer;
+    transition: background .16s ease, color .16s ease;
+  }
+
+  .group-head:hover { background: var(--sb-hover); color: var(--sb-strong); }
+  .group-head .i { width: 15px; height: 15px; color: var(--sb-icon); }
+  .group-head .chevron {
+    width: 13px;
+    height: 13px;
+    margin-left: auto;
+    color: #475569;
+    transition: transform .18s ease;
+  }
+  .group.open > .group-head { color: var(--sb-strong); }
+  .group.open > .group-head .i { color: var(--sb-accent); }
+  .group.open > .group-head .chevron { transform: rotate(90deg); color: var(--sb-accent); }
+
+  .group-body { display: none; }
+  .group.open > .group-body { display: block; }
+
+  .item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-height: 32px;
+    padding: 7px 10px;
+    border-radius: 8px;
+    color: var(--sb-text);
+    font-size: 11.5px;
+    font-weight: 500;
+    line-height: 1.25;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background .14s ease, color .14s ease;
+  }
+
+  .item:hover { background: var(--sb-hover); color: var(--sb-strong); }
+  .item .i { width: 14.5px; height: 14.5px; color: var(--sb-icon); }
+  .item .label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .item .count {
+    margin-left: auto;
+    padding: 1px 6px;
+    border-radius: 999px;
+    background: var(--sb-accent-soft);
+    color: var(--sb-accent-text);
+    font-size: 9px;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  .item .count.amber {
+    background: rgba(245, 158, 11, .12);
+    color: #fbbf24;
+  }
+
+  .user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 0 0 auto;
+    padding: 12px 14px;
+    border-top: 1px solid var(--sb-border);
+    background: var(--sb-footer);
+  }
+
+  .avatar {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    flex: 0 0 auto;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 800;
+  }
+
+  .user-copy { min-width: 0; flex: 1 1 auto; }
+  .user-copy strong {
+    display: block;
+    color: #e2e8f0;
+    font-size: 10.5px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .user-copy span {
+    display: block;
+    margin-top: 1px;
+    color: #64748b;
+    font-size: 9px;
+    white-space: nowrap;
+  }
+
+  /* ---------- Propuesta A ---------- */
+
+  .sb-a {
+    --sb-bg: #0b0f17;
+    --sb-panel: #0e1420;
+    --sb-footer: #080c12;
+    --sb-border: #1c2636;
+    --sb-border-strong: #2a3850;
+    --sb-hover: rgba(255, 255, 255, .045);
+    --sb-text: #94a3b8;
+    --sb-strong: #f8fafc;
+    --sb-icon: #64748b;
+    --sb-accent: #3b82f6;
+    --sb-accent-soft: rgba(59, 130, 246, .13);
+    --sb-accent-text: #93c5fd;
+  }
+
+  .sb-a .nav { padding-top: 10px; }
+  .sb-a .group { margin-bottom: 1px; }
+  .sb-a .group-body { padding: 1px 0 5px; }
+  .sb-a .item { margin-left: 17px; padding-left: 10px; }
+  .sb-a .item.active {
+    position: relative;
+    background: var(--sb-accent-soft);
+    color: #fff;
+    font-weight: 650;
+  }
+  .sb-a .item.active::before {
+    content: "";
+    position: absolute;
+    left: -7px;
+    top: 50%;
+    width: 3px;
+    height: 17px;
+    border-radius: 999px;
+    background: var(--sb-accent);
+    transform: translateY(-50%);
+  }
+  .sb-a .item.active .i { color: #93c5fd; }
+
+  /* ---------- Propuesta B ---------- */
+
+  .sb-b {
+    --sb-bg: #0d1117;
+    --sb-panel: #11161e;
+    --sb-footer: #0a0e14;
+    --sb-border: #1c2330;
+    --sb-border-strong: #2a3444;
+    --sb-hover: rgba(255, 255, 255, .04);
+    --sb-text: #94a3b8;
+    --sb-strong: #f8fafc;
+    --sb-icon: #526072;
+    --sb-accent: #60a5fa;
+    --sb-accent-soft: rgba(96, 165, 250, .10);
+    --sb-accent-text: #93c5fd;
+  }
+
+  .sb-b .nav { padding: 2px 8px 18px; }
+  .sb-b .group { margin: 0; }
+  .sb-b .group-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 15px 12px 5px;
+    color: #475569;
+    font-size: 8px;
+    font-weight: 800;
+    letter-spacing: .19em;
+    text-transform: uppercase;
+  }
+  .sb-b .group-label .i { width: 11px; height: 11px; color: #334155; }
+  .sb-b .item {
+    position: relative;
+    min-height: 30px;
+    padding: 6px 12px 6px 23px;
+    border-radius: 6px;
+    font-size: 11.5px;
+  }
+  .sb-b .item.active {
+    background: transparent;
+    color: var(--sb-strong);
+    font-weight: 650;
+  }
+  .sb-b .item.active::before {
+    content: "";
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--sb-accent);
+    box-shadow: 0 0 0 3px rgba(96, 165, 250, .11);
+    transform: translateY(-50%);
+  }
+  .sb-b .item.active .i { color: #93c5fd; }
+  .sb-b .item .count {
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+    color: #64748b;
+    font-size: 9.5px;
+    font-weight: 700;
+  }
+  .sb-b .item .count.amber { background: transparent; color: #fbbf24; }
+
+  /* ---------- Propuesta C ---------- */
+
+  .sb-c {
+    --sb-bg: #090d15;
+    --sb-panel: #0d1320;
+    --sb-footer: #070a10;
+    --sb-border: #1d2637;
+    --sb-border-strong: #2d3a52;
+    --sb-hover: rgba(255, 255, 255, .04);
+    --sb-text: #94a3b8;
+    --sb-strong: #f8fafc;
+    --sb-icon: #64748b;
+    --sb-accent: #6366f1;
+    --sb-accent-soft: rgba(99, 102, 241, .16);
+    --sb-accent-text: #a5b4fc;
+  }
+
+  .sb-c .nav { padding: 10px 11px 18px; }
+  .sb-c .group {
+    margin-bottom: 5px;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    transition: background .16s ease, border-color .16s ease;
+  }
+  .sb-c .group.open {
+    border-color: var(--sb-border);
+    background: rgba(255, 255, 255, .018);
+  }
+  .sb-c .group-head { padding: 10px 9px; border-radius: 11px; }
+  .sb-c .group.open > .group-head { background: rgba(255, 255, 255, .02); }
+  .sb-c .group-body {
+    position: relative;
+    padding: 1px 7px 8px 31px;
+  }
+  .sb-c .group-body::before {
+    content: "";
+    position: absolute;
+    left: 19px;
+    top: 0;
+    bottom: 12px;
+    width: 1px;
+    background: var(--sb-border);
+  }
+  .sb-c .item {
+    position: relative;
+    min-height: 32px;
+    padding: 7px 9px;
+    margin: 2px 0;
+    border-radius: 8px;
+    font-size: 11.5px;
+  }
+  .sb-c .item.active {
+    background: linear-gradient(90deg, rgba(99, 102, 241, .18), rgba(59, 130, 246, .05));
+    color: #fff;
+    font-weight: 650;
+    box-shadow: inset 0 0 0 1px rgba(99, 102, 241, .20);
+  }
+  .sb-c .item.active .i { color: var(--sb-accent-text); }
+  .sb-c .item.active::after {
+    content: "";
+    position: absolute;
+    right: 9px;
+    top: 50%;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--sb-accent);
+    transform: translateY(-50%);
+  }
+
+  /* ---------- Contenido de muestra ---------- */
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    flex: 1 1 auto;
+    overflow: hidden;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, .7), transparent 180px),
+      #f6f8fb;
+  }
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex: 0 0 auto;
+    height: 58px;
+    padding: 0 20px;
+    border-bottom: 1px solid var(--line);
+    background: rgba(255, 255, 255, .76);
+    backdrop-filter: blur(10px);
+  }
+
+  .crumb {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    min-width: 0;
+    color: #94a3b8;
+    font-size: 10.5px;
+    font-weight: 600;
+  }
+  .crumb strong {
+    overflow: hidden;
+    color: #0f172a;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .crumb .chev { color: #cbd5e1; font-size: 11px; }
+
+  .top-actions { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; }
+  .mini-search {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    width: 164px;
+    padding: 6px 9px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+    color: #94a3b8;
+    font-size: 9.5px;
+  }
+  .mini-search .i { width: 12px; height: 12px; }
+  .top-dot {
+    width: 26px;
+    height: 26px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: #fff;
+  }
+
+  .content-inner {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 24px 24px 30px;
+  }
+
+  .page-title h3 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 20px;
+    letter-spacing: -.03em;
+  }
+  .page-title p {
+    margin: 5px 0 0;
+    color: #64748b;
+    font-size: 11px;
+    line-height: 1.55;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 18px;
+  }
+
+  .stat {
+    padding: 13px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--card);
+    box-shadow: 0 1px 2px rgba(15, 23, 42, .03);
+  }
+  .stat small {
+    display: block;
+    color: #94a3b8;
+    font-size: 8px;
+    font-weight: 800;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+  .stat strong {
+    display: block;
+    margin-top: 7px;
+    color: #0f172a;
+    font-size: 18px;
+    letter-spacing: -.03em;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat span {
+    display: block;
+    margin-top: 3px;
+    color: #64748b;
+    font-size: 8.5px;
+  }
+
+  .panel {
+    margin-top: 12px;
+    padding: 14px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--card);
+  }
+  .panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #eef2f7;
+  }
+  .panel-head strong { color: #0f172a; font-size: 11px; }
+  .panel-head span { color: #94a3b8; font-size: 8.5px; font-weight: 700; }
+
+  .chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 7px;
+    height: 108px;
+    padding-top: 18px;
+  }
+  .chart i {
+    flex: 1 1 0;
+    border-radius: 4px 4px 2px 2px;
+    background: linear-gradient(180deg, #bfdbfe, #dbeafe);
+  }
+  .chart i:nth-child(3n) { background: linear-gradient(180deg, #93c5fd, #bfdbfe); }
+  .chart i:nth-child(5n) { background: linear-gradient(180deg, #2563eb, #60a5fa); }
+
+  @media (max-width: 720px) {
+    .page-head { padding: 28px 16px 12px; }
+    .grid { padding: 8px 16px 36px; }
+    .frame { height: 700px; }
+    .sidebar { width: 258px; min-width: 258px; }
+  }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/><path d="M9 21v-6h6v6"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 16v-5"/><path d="M12 16V7"/><path d="M17 16v-3"/></symbol>
+  <symbol id="i-activity" viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></symbol>
+  <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.07 0l2.12-2.12a5 5 0 0 0-7.07-7.07L10.7 5.23"/><path d="M14 11a5 5 0 0 0-7.07 0L4.8 13.12a5 5 0 0 0 7.07 7.07l1.41-1.41"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6"/><path d="M8 13h8"/><path d="M8 17h5"/></symbol>
+  <symbol id="i-order" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><path d="m9 14 2 2 4-4"/></symbol>
+  <symbol id="i-users" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol>
+  <symbol id="i-package" viewBox="0 0 24 24"><path d="m7.5 4.27 9 5.15"/><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></symbol>
+  <symbol id="i-boxes" viewBox="0 0 24 24"><path d="m21 8-9-5-9 5 9 5 9-5Z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></symbol>
+  <symbol id="i-tag" viewBox="0 0 24 24"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42Z"/><circle cx="7.5" cy="7.5" r=".5"/></symbol>
+  <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 21v-7"/><path d="M4 10V3"/><path d="M12 21v-9"/><path d="M12 8V3"/><path d="M20 21v-5"/><path d="M20 12V3"/><path d="M1 14h6"/><path d="M9 8h6"/><path d="M17 16h6"/></symbol>
+  <symbol id="i-truck" viewBox="0 0 24 24"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.62l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></symbol>
+  <symbol id="i-inbox" viewBox="0 0 24 24"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11Z"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></symbol>
+  <symbol id="i-wrench" viewBox="0 0 24 24"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76Z"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V5l8-3 8 3Z"/><path d="m9 12 2 2 4-4"/></symbol>
+  <symbol id="i-settings" viewBox="0 0 24 24"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2Z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+  <symbol id="i-collapse" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/><path d="m15 9-3 3 3 3"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></symbol>
+  <symbol id="i-more" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></symbol>
+</svg>
+
+<header class="page-head">
+  <p class="eyebrow">Panel de administración · propuestas</p>
+  <h1>Tres formas de ordenar el sidebar</h1>
+  <p class="sub">
+    Las tres usan la misma estructura y el mismo orden de categorías para que compares solo el diseño:
+    General, Comercial, Catálogo y almacén, Atención al cliente, Servicios TI y Sistema. Linkeador queda dentro de General.
+  </p>
+  <div class="hint">Haz clic en las categorías y en las opciones para probar el acordeón y el resaltado.</div>
+</header>
+
+<main class="grid">
+
+  <!-- ============ PROPUESTA A ============ -->
+  <section class="proposal">
+    <div class="caption">
+      <div>
+        <h2>A · Acordeón limpio</h2>
+        <p>Una sola columna. Solo la categoría actual está abierta; el resto queda como acceso directo. Menos ruido y más foco.</p>
+      </div>
+      <span class="tag">Recomendada</span>
+    </div>
+
+    <div class="frame">
+      <aside class="sidebar sb-a" aria-label="Propuesta A">
+        <div class="brand">
+          <div class="logo">FJ</div>
+          <div class="brand-copy">
+            <span class="brand-name">F&amp;J Systems</span>
+            <span class="brand-sub">Administración</span>
+          </div>
+          <button class="icon-btn" type="button" aria-label="Contraer menú">
+            <svg class="i"><use href="#i-collapse"/></svg>
+          </button>
+        </div>
+
+        <div class="search">
+          <svg class="i"><use href="#i-search"/></svg>
+          <span>Buscar en el panel…</span>
+          <kbd>Ctrl K</kbd>
+        </div>
+
+        <nav class="nav" data-accordion="single">
+          <div class="group open">
+            <button class="group-head" type="button" data-group-toggle>
+              <svg class="i"><use href="#i-home"/></svg>
+              <span class="label">General</span>
+              <svg class="i chevron"><use href="#i-chevron"/></svg>
+            </button>
+            <div class="group-body">
+              <a class="item active" href="#" data-label="Resumen"><svg class="i"><use href="#i-home"/></svg><span class="label">Resumen</span></a>
+              <a class="item" href="#" data-label="Reportes y métricas"><svg class="i"><use href="#i-chart"/></svg><span class="label">Reportes y métricas</span></a>
+              <a class="item" href="#" data-label="Actividad reciente"><svg class="i"><use href="#i-activity"/></svg><span class="label">Actividad reciente</span></a>
+              <a class="item" href="#" data-label="Linkeador"><svg class="i"><use href="#i-link"/></svg><span class="label">Linkeador</span></a>
+            </div>
+          </div>
+
+          <div class="group">
+            <button class="group-head" type="button" data-group-toggle>
+              <svg class="i"><use href="#i-file"/></svg>
+              <span class="label">Comercial</span>
+              <svg class="i chevron"><use href="#i-chevron"/></svg>
+            </button>
+            <div class="group-body">
+              <a class="item" href="#" data-label="Cotizaciones"><svg class="i"><use href="#i-file"/></svg><span class="label">Cotizaciones</span><span class="count">1</span></a>
+              <a class="item" href="#" data-label="Pedidos y entregas"><svg class="i"><use href="#i-order"/></svg><span class="label">Pedidos y entregas</span><span class="count">4</span></a>
+              <a class="item" href="#" data-label="Directorio de clientes"><svg class="i"><use href="#i-users"/></svg><span class="label">Directorio de clientes</span></a>
+            </div>
+          </div>
+
+          <div class="group">
+            <button class="group-head" type="button" data-group-toggle>
+              <svg class="i"><use href="#i-package"/></svg>
+              <span class="label">Catálogo y almacén</span>
+              <svg class="i chevron"><use href="#i-chevron"/></svg>
+            </button>
+            <div class="group-body">
+              <a class="item" href="#" data-label="Productos"><svg class="i"><use href="#i-package"/></svg><span class="label">Productos</span><span class="count amber">9</span></a>
+              <a class="item" href="#" data-label="Inventario y stock"><svg class="i"><use href="#i-boxes"/></svg><span class="label">Inventario y stock</span></a>
+              <a class="item" href="#" data-label="Categorías"><svg class="i"><use href="#i-folder"/></svg><span class="label">Categorías</span></a>
+              <a class="item" href="#" data-label="Marcas"><svg class="i"><use href="#i-tag"/></svg><span class="label">Marcas</span></a>
+              <a class="item" href="#" data-label="Atributos técnicos"><svg class="i"><use href="#i-sliders"/></svg><span class="label">Atributos técnicos</span></a>
+              <a class="item" href="#" data-label="Proveedores"><svg class="i"><use href="#i-truck"/></svg><span class="label">Proveedores</span></a>
+            </div>
+          </div>
+
+          <div class="group">
+            <button class="group-head" type="button" data-group-toggle>
+              <svg class="i"><use href="#i-inbox"/></svg>
+              <span class="label">Atención al cliente</span>
+              <svg class="i chevron"><use href="#i-chevron"/></svg>
+            </button>
+            <div class="group-body">
+              <a class="item" href="#" data-label="Mesa de ayuda"><svg class="i"><use href="#i-inbox"/></svg><span class="label">Mesa de ayuda</span></a>
+              <a class="item" href="#" data-label="Reclamaciones"><svg class="i"><use href="#i-book"/></svg><span class="label">Reclamaciones</span></a>
+            </div>
+          </div>
+
+          <div class="group">
+            <button class="group-head" type="button" data-group-toggle>
+              <svg class="i"><use href="#i-wrench"/></svg>
+              <span class="label">Servicios TI</span>
+              <svg class="i chevron"><use href="#i-chevron"/></svg>
+            </button>
+            <div class="group-body">
+              <a class="item" href="#" data-label="Catálogo de servicios"><svg class="i"><use href="#i-wrench"/></svg><span class="label">Catálogo de servicios</span></a>
+              <a class="item" href="#" data-label="Proyectos web"><svg class="i"><use href="#i-globe"/></svg><span class="label">Proyectos web</span></a>
+            </div>
+          </div>
+
+          <div class="group">
+            <button class="group-head" type="button" data-group-toggle>
+              <svg class="i"><use href="#i-shield"/></svg>
+              <span class="label">Sistema</span>
+              <svg class="i chevron"><use href="#i-chevron"/></svg>
+            </button>
+            <div class="group-body">
+              <a class="item" href="#" data-label="Usuarios y roles"><svg class="i"><use href="#i-shield"/></svg><span class="label">Usuarios y roles</span></a>
+              <a class="item" href="#" data-label="Configuración"><svg class="i"><use href="#i-settings"/></svg><span class="label">Configuración</span></a>
+            </div>
+          </div>
+        </nav>
+
+        <div class="user">
+          <span class="avatar">AD</span>
+          <div class="user-copy"><strong>Ana Díaz</strong><span>Superadministradora</span></div>
+          <button class="icon-btn" type="button" aria-label="Más opciones"><svg class="i"><use href="#i-more"/></svg></button>
+        </div>
+      </aside>
+
+      <div class="content">
+        <div class="topbar">
+          <div class="crumb"><span>General</span><span class="chev">/</span><strong>Resumen general</strong></div>
+          <div class="top-actions">
+            <div class="mini-search"><svg class="i"><use href="#i-search"/></svg><span>Buscar…</span></div>
+            <div class="top-dot"></div>
+          </div>
+        </div>
+        <div class="content-inner">
+          <div class="page-title"><h3>Resumen general</h3><p>Vista rápida de la operación de F&amp;J Systems.</p></div>
+          <div class="stats">
+            <div class="stat"><small>Volumen comercial</small><strong>S/ 82,403</strong><span>5 cotizaciones registradas</span></div>
+            <div class="stat"><small>Pedidos abiertos</small><strong>4</strong><span>en ruta de entrega</span></div>
+            <div class="stat"><small>Stock crítico</small><strong>9</strong><span>productos por reponer</span></div>
+            <div class="stat"><small>Mesa de ayuda</small><strong>0</strong><span>solicitudes nuevas</span></div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><strong>Actividad comercial</strong><span>Últimos 7 días</span></div>
+            <div class="chart">
+              <i style="height:38%"></i><i style="height:54%"></i><i style="height:46%"></i><i style="height:72%"></i><i style="height:58%"></i><i style="height:88%"></i><i style="height:66%"></i><i style="height:79%"></i><i style="height:52%"></i><i style="height:91%"></i><i style="height:63%"></i><i style="height:76%"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PROPUESTA B ============ -->
+  <section class="proposal">
+    <div class="caption">
+      <div>
+        <h2>B · Compacta minimalista</h2>
+        <p>Todas las categorías visibles, filas densas y sin cajas ni anillos. Máxima visibilidad con el mínimo ruido visual.</p>
+      </div>
+      <span class="tag neutral">Densa</span>
+    </div>
+
+    <div class="frame">
+      <aside class="sidebar sb-b" aria-label="Propuesta B">
+        <div class="brand">
+          <div class="logo">FJ</div>
+          <div class="brand-copy">
+            <span class="brand-name">F&amp;J Systems</span>
+            <span class="brand-sub">Administración</span>
+          </div>
+          <button class="icon-btn" type="button" aria-label="Contraer menú">
+            <svg class="i"><use href="#i-collapse"/></svg>
+          </button>
+        </div>
+
+        <div class="search">
+          <svg class="i"><use href="#i-search"/></svg>
+          <span>Buscar en el panel…</span>
+          <kbd>Ctrl K</kbd>
+        </div>
+
+        <nav class="nav">
+          <div class="group">
+            <div class="group-label"><svg class="i"><use href="#i-home"/></svg>General</div>
+            <a class="item active" href="#" data-label="Resumen"><svg class="i"><use href="#i-home"/></svg><span class="label">Resumen</span></a>
+            <a class="item" href="#" data-label="Reportes y métricas"><svg class="i"><use href="#i-chart"/></svg><span class="label">Reportes y métricas</span></a>
+            <a class="item" href="#" data-label="Actividad reciente"><svg class="i"><use href="#i-activity"/></svg><span class="label">Actividad reciente</span></a>
+            <a class="item" href="#" data-label="Linkeador"><svg class="i"><use href="#i-link"/></svg><span class="label">Linkeador</span></a>
+          </div>
+
+          <div class="group">
+            <div class="group-label"><svg class="i"><use href="#i-file"/></svg>Comercial</div>
+            <a class="item" href="#" data-label="Cotizaciones"><svg class="i"><use href="#i-file"/></svg><span class="label">Cotizaciones</span><span class="count">1</span></a>
+            <a class="item" href="#" data-label="Pedidos y entregas"><svg class="i"><use href="#i-order"/></svg><span class="label">Pedidos y entregas</span><span class="count">4</span></a>
+            <a class="item" href="#" data-label="Directorio de clientes"><svg class="i"><use href="#i-users"/></svg><span class="label">Directorio de clientes</span></a>
+          </div>
+
+          <div class="group">
+            <div class="group-label"><svg class="i"><use href="#i-package"/></svg>Catálogo y almacén</div>
+            <a class="item" href="#" data-label="Productos"><svg class="i"><use href="#i-package"/></svg><span class="label">Productos</span><span class="count amber">9</span></a>
+            <a class="item" href="#" data-label="Inventario y stock"><svg class="i"><use href="#i-boxes"/></svg><span class="label">Inventario y stock</span></a>
+            <a class="item" href="#" data-label="Categorías"><svg class="i"><use href="#i-folder"/></svg><span class="label">Categorías</span></a>
+            <a class="item" href="#" data-label="Marcas"><svg class="i"><use href="#i-tag"/></svg><span class="label">Marcas</span></a>
+            <a class="item" href="#" data-label="Atributos técnicos"><svg class="i"><use href="#i-sliders"/></svg><span class="label">Atributos técnicos</span></a>
+            <a class="item" href="#" data-label="Proveedores"><svg class="i"><use href="#i-truck"/></svg><span class="label">Proveedores</span></a>
+          </div>
+
+          <div class="group">
+            <div class="group-label"><svg class="i"><use href="#i-inbox"/></svg>Atención al cliente</div>
+            <a class="item" href="#" data-label="Mesa de ayuda"><svg class="i"><use href="#i-inbox"/></svg><span class="label">Mesa de ayuda</span></a>
+            <a class="item" href="#" data-label="Reclamaciones"><svg class="i"><use href="#i-book"/></svg><span class="label">Reclamaciones</span></a>
+          </div>
+
+          <div class="group">
+            <div class="group-label"><svg class="i"><use href="#i-wrench"/></svg>Servicios TI</div>
+            <a class="item" href="#" data-label="Catálogo de servicios"><svg class="i"><use href="#i-wrench"/></svg><span class="label">Catálogo de servicios</span></a>
+            <a class="item" href="#" data-label="Proyectos web"><svg class="i"><use href="#i-globe"/></svg><span class="label">Proyectos web</span></a>
+          </div>
+
+          <div class="group">
+            <div class="group-label"><svg class="i"><use href="#i-shield"/></svg>Sistema</div>
+            <a class="item" href="#" data-label="Usuarios y roles"><svg class="i"><use href="#i-shield"/></svg><span class="label">Usuarios y roles</span></a>
+            <a class="item" href="#" data-label="Configuración"><svg class="i"><use href="#i-settings"/></svg><span class="label">Configuración</span></a>
+          </div>
+        </nav>
+
+        <div class="user">
+          <span class="avatar">AD</span>
+          <div class="user-copy"><strong>Ana Díaz</strong><span>Superadministradora</span></div>
+          <button class="icon-btn" type="button" aria-label="Más opciones"><svg class="i"><use href="#i-more"/></svg></button>
+        </div>
+      </aside>
+
+      <div class="content">
+        <div class="topbar">
+          <div class="crumb"><span>General</span><span class="chev">/</span><strong>Resumen general</strong></div>
+          <div class="top-actions">
+            <div class="mini-search"><svg class="i"><use href="#i-search"/></svg><span>Buscar…</span></div>
+            <div class="top-dot"></div>
+          </div>
+        </div>
+        <div class="content-inner">
+          <div class="page-title"><h3>Resumen general</h3><p>Vista rápida de la operación de F&amp;J Systems.</p></div>
+          <div class="stats">
+            <div class="stat"><small>Volumen comercial</small><strong>S/ 82,403</strong><span>5 cotizaciones registradas</span></div>
+            <div class="stat"><small>Pedidos abiertos</small><strong>4</strong><span>en ruta de entrega</span></div>
+            <div class="stat"><small>Stock crítico</small><strong>9</strong><span>productos por reponer</span></div>
+            <div class="stat"><small>Mesa de ayuda</small><strong>0</strong><span>solicitudes nuevas</span></div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><strong>Actividad comercial</strong><span>Últimos 7 días</span></div>
+            <div class="chart">
+              <i style="height:38%"></i><i style="height:54%"></i><i style="height:46%"></i><i style="height:72%"></i><i style="height:58%"></i><i style="height:88%"></i><i style="height:66%"></i><i style="height:79%"></i><i style="height:52%"></i><i style="height:91%"></i><i style="height:63%"></i><i style="height:76%"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PROPUESTA C ============ -->
+  <section class="proposal">
+    <div class="caption">
+      <div>
+        <h2>C · Jerarquía suave</h2>
+        <p>Grupos desplegables con guía vertical y una píldora sutil para la opción activa. Más elegante, manteniendo una sola columna.</p>
+      </div>
+      <span class="tag neutral">Premium</span>
+    </div>
+
+    <div class="frame">
+      <aside class="sidebar sb-c" aria-label="Propuesta C">
+        <div class="brand">
+          <div class="logo">FJ</div>
+          <div class="brand-copy">
+            <span class="brand-name">F&amp;J Systems</span>
+            <span class="brand-sub">Administración</span>
+          </div>
+          <button class="icon-btn" type="button" aria-label="Contraer menú">
+            <svg class="i"><use href="#i-collapse"/></svg>
+          </button>
+        </div>
+
+        <div class="search">
+          <svg class="i"><use href="#i-search"/></svg>
+          <span>Buscar en el panel…</span>
+          <kbd>Ctrl K</kbd>
+        </div>
+
+        <nav class="nav" data-accordion="single">
+          <div class="group open">
+            <button class="group-head" type="button" data-group-toggle>
+              <svg class="i"><use href="#i-home"/></svg>
+              <span class="label">General</span>
+              <svg class="i chevron"><use href="#i-chevron"/></svg>
+            </button>
+            <div class="group-body">
+              <a class="item active" href="#" data-label="Resumen"><svg class="i"><use href="#i-home"/></svg><span class="label">Resumen</span></a>
+              <a class="item" href="#" data-label="Reportes y métricas"><svg class="i"><use href="#i-chart"/></svg><span class="label">Reportes y métricas</span></a>
+              <a class="item" href="#" data-label="Actividad reciente"><svg class="i"><use href="#i-activity"/></svg><span class="label">Actividad reciente</span></a>
+              <a class="item" href="#" data-label="Linkeador"><svg class="i"><use href="#i-link"/></svg><span class="label">Linkeador</span></a>
+            </div>
+          </div>
+
+          <div class="group">
+            <button class="group-head" type="button" data-group-toggle>
+              <svg class="i"><use href="#i-file"/></svg>
+              <span class="label">Comercial</span>
+              <svg class="i chevron"><use href="#i-chevron"/></svg>
+            </button>
+            <div class="group-body">
+              <a class="item" href="#" data-label="Cotizaciones"><svg class="i"><use href="#i-file"/></svg><span class="label">Cotizaciones</span><span class="count">1</span></a>
+              <a class="item" href="#" data-label="Pedidos y entregas"><svg class="i"><use href="#i-order"/></svg><span class="label">Pedidos y entregas</span><span class="count">4</span></a>
+              <a class="item" href="#" data-label="Directorio de clientes"><svg class="i"><use href="#i-users"/></svg><span class="label">Directorio de clientes</span></a>
+            </div>
+          </div>
+
+          <div class="group">
+            <button class="group-head" type="button" data-group-toggle>
+              <svg class="i"><use href="#i-package"/></svg>
+              <span class="label">Catálogo y almacén</span>
+              <svg class="i chevron"><use href="#i-chevron"/></svg>
+            </button>
+            <div class="group-body">
+              <a class="item" href="#" data-label="Productos"><svg class="i"><use href="#i-package"/></svg><span class="label">Productos</span><span class="count amber">9</span></a>
+              <a class="item" href="#" data-label="Inventario y stock"><svg class="i"><use href="#i-boxes"/></svg><span class="label">Inventario y stock</span></a>
+              <a class="item" href="#" data-label="Categorías"><svg class="i"><use href="#i-folder"/></svg><span class="label">Categorías</span></a>
+              <a class="item" href="#" data-label="Marcas"><svg class="i"><use href="#i-tag"/></svg><span class="label">Marcas</span></a>
+              <a class="item" href="#" data-label="Atributos técnicos"><svg class="i"><use href="#i-sliders"/></svg><span class="label">Atributos técnicos</span></a>
+              <a class="item" href="#" data-label="Proveedores"><svg class="i"><use href="#i-truck"/></svg><span class="label">Proveedores</span></a>
+            </div>
+          </div>
+
+          <div class="group">
+            <button class="group-head" type="button" data-group-toggle>
+              <svg class="i"><use href="#i-inbox"/></svg>
+              <span class="label">Atención al cliente</span>
+              <svg class="i chevron"><use href="#i-chevron"/></svg>
+            </button>
+            <div class="group-body">
+              <a class="item" href="#" data-label="Mesa de ayuda"><svg class="i"><use href="#i-inbox"/></svg><span class="label">Mesa de ayuda</span></a>
+              <a class="item" href="#" data-label="Reclamaciones"><svg class="i"><use href="#i-book"/></svg><span class="label">Reclamaciones</span></a>
+            </div>
+          </div>
+
+          <div class="group">
+            <button class="group-head" type="button" data-group-toggle>
+              <svg class="i"><use href="#i-wrench"/></svg>
+              <span class="label">Servicios TI</span>
+              <svg class="i chevron"><use href="#i-chevron"/></svg>
+            </button>
+            <div class="group-body">
+              <a class="item" href="#" data-label="Catálogo de servicios"><svg class="i"><use href="#i-wrench"/></svg><span class="label">Catálogo de servicios</span></a>
+              <a class="item" href="#" data-label="Proyectos web"><svg class="i"><use href="#i-globe"/></svg><span class="label">Proyectos web</span></a>
+            </div>
+          </div>
+
+          <div class="group">
+            <button class="group-head" type="button" data-group-toggle>
+              <svg class="i"><use href="#i-shield"/></svg>
+              <span class="label">Sistema</span>
+              <svg class="i chevron"><use href="#i-chevron"/></svg>
+            </button>
+            <div class="group-body">
+              <a class="item" href="#" data-label="Usuarios y roles"><svg class="i"><use href="#i-shield"/></svg><span class="label">Usuarios y roles</span></a>
+              <a class="item" href="#" data-label="Configuración"><svg class="i"><use href="#i-settings"/></svg><span class="label">Configuración</span></a>
+            </div>
+          </div>
+        </nav>
+
+        <div class="user">
+          <span class="avatar">AD</span>
+          <div class="user-copy"><strong>Ana Díaz</strong><span>Superadministradora</span></div>
+          <button class="icon-btn" type="button" aria-label="Más opciones"><svg class="i"><use href="#i-more"/></svg></button>
+        </div>
+      </aside>
+
+      <div class="content">
+        <div class="topbar">
+          <div class="crumb"><span>General</span><span class="chev">/</span><strong>Resumen general</strong></div>
+          <div class="top-actions">
+            <div class="mini-search"><svg class="i"><use href="#i-search"/></svg><span>Buscar…</span></div>
+            <div class="top-dot"></div>
+          </div>
+        </div>
+        <div class="content-inner">
+          <div class="page-title"><h3>Resumen general</h3><p>Vista rápida de la operación de F&amp;J Systems.</p></div>
+          <div class="stats">
+            <div class="stat"><small>Volumen comercial</small><strong>S/ 82,403</strong><span>5 cotizaciones registradas</span></div>
+            <div class="stat"><small>Pedidos abiertos</small><strong>4</strong><span>en ruta de entrega</span></div>
+            <div class="stat"><small>Stock crítico</small><strong>9</strong><span>productos por reponer</span></div>
+            <div class="stat"><small>Mesa de ayuda</small><strong>0</strong><span>solicitudes nuevas</span></div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><strong>Actividad comercial</strong><span>Últimos 7 días</span></div>
+            <div class="chart">
+              <i style="height:38%"></i><i style="height:54%"></i><i style="height:46%"></i><i style="height:72%"></i><i style="height:58%"></i><i style="height:88%"></i><i style="height:66%"></i><i style="height:79%"></i><i style="height:52%"></i><i style="height:91%"></i><i style="height:63%"></i><i style="height:76%"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  document.querySelectorAll('[data-group-toggle]').forEach(function (head) {
+    head.addEventListener('click', function () {
+      var group = head.parentElement;
+      var nav = group.closest('.nav');
+      var isOpen = group.classList.contains('open');
+      if (nav && nav.dataset.accordion === 'single') {
+        nav.querySelectorAll('.group.open').forEach(function (openGroup) {
+          openGroup.classList.remove('open');
+        });
+        if (!isOpen) group.classList.add('open');
+      } else {
+        group.classList.toggle('open');
+      }
+    });
+  });
+
+  document.querySelectorAll('.item').forEach(function (item) {
+    item.addEventListener('click', function (event) {
+      event.preventDefault();
+      var frame = item.closest('.frame');
+      if (!frame) return;
+
+      frame.querySelectorAll('.sidebar .item.active').forEach(function (active) {
+        active.classList.remove('active');
+      });
+      item.classList.add('active');
+
+      var label = item.getAttribute('data-label') || item.textContent.trim();
+      var group = item.closest('.group');
+      var groupLabel = group ? group.querySelector('.group-head .label, .group-label') : null;
+      var section = groupLabel ? groupLabel.textContent.trim() : 'General';
+
+      var crumbSection = frame.querySelector('.crumb > span:first-child');
+      var crumbCurrent = frame.querySelector('.crumb strong');
+      var title = frame.querySelector('.page-title h3');
+      if (crumbSection) crumbSection.textContent = section;
+      if (crumbCurrent) crumbCurrent.textContent = label;
+      if (title) title.textContent = label;
+    });
+  });
+</script>
+
+</body>
+</html>

@@ -19,7 +19,10 @@ export async function GET() {
       guard.scope === 'own'
         ? profiles.filter((profile) => profile.id === guard.user.linkProfileId)
         : profiles
-    return NextResponse.json({ success: true, data: { profiles: visible, scope: guard.scope } })
+    const mainProfileId = visible.some((profile) => profile.id === profiles[0]?.id)
+      ? profiles[0].id
+      : null
+    return NextResponse.json({ success: true, data: { profiles: visible, scope: guard.scope, mainProfileId } })
   } catch (error) {
     return linkProfilesFailure(error)
   }

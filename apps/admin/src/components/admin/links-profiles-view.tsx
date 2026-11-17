@@ -204,7 +204,7 @@ function ProfilePagePreview({ draft }: { draft: LinkProfile }) {
             )}
           </div>
 
-          <p className={cn('mt-3 text-[8px]', textSoft)}>{draft.name || 'Empresa'} · All My Links</p>
+          <p className={cn('mt-3 text-[8px]', textSoft)}>{draft.name || 'Empresa'} · Linkeador</p>
           <p className={cn('text-[7px] opacity-70', textSoft)}>{domain}</p>
         </div>
       </div>
@@ -212,11 +212,11 @@ function ProfilePagePreview({ draft }: { draft: LinkProfile }) {
   )
 }
 
-function ShareLinkPreview({ draft }: { draft: LinkProfile }) {
+function ShareLinkPreview({ draft, publicUrl }: { draft: LinkProfile; publicUrl: string }) {
   const light = previewInk(draft.background, draft.tone) === 'light'
   const textMain = light ? 'text-white' : 'text-slate-900'
   const domain = linksBase.replace(/^https?:\/\//i, '')
-  const url = `${domain}/e/${draft.slug || 'sin-slug'}`
+  const url = publicUrl.replace(/^https?:\/\//i, '')
 
   return (
     <div className="rounded-2xl border border-border bg-[#0B141A] p-3">
@@ -250,7 +250,7 @@ function ShareLinkPreview({ draft }: { draft: LinkProfile }) {
           <div className="space-y-0.5 px-3 py-2">
             <p className="text-[8px] uppercase tracking-wide text-slate-400">{domain}</p>
             <p className="truncate text-[11px] font-semibold text-white">
-              {draft.name || 'Empresa'} | All My Links
+              {draft.name || 'Empresa'} | Linkeador
             </p>
             <p className="line-clamp-2 text-[9px] text-slate-400">
               {draft.bio || 'Todos nuestros enlaces oficiales en un solo lugar.'}
@@ -342,6 +342,7 @@ export function LinksProfilesView() {
   const canManageAccess = can('users', 'create')
 
   const [profiles, setProfiles] = useState<LinkProfile[] | null>(null)
+  const [mainProfileId, setMainProfileId] = useState<string | null>(null)
   const [draft, setDraft] = useState<LinkProfile | null>(null)
   const [baseline, setBaseline] = useState('')
   const [expandedLink, setExpandedLink] = useState<string | null>(null)
@@ -364,12 +365,13 @@ export function LinksProfilesView() {
       const payload = (await response.json()) as {
         success?: boolean
         message?: string
-        data?: { profiles?: LinkProfile[] }
+        data?: { profiles?: LinkProfile[]; mainProfileId: string | null }
       }
       if (!response.ok || !payload.data?.profiles) {
         throw new Error(payload.message ?? 'No se pudieron cargar las páginas.')
       }
       setProfiles(payload.data.profiles)
+      setMainProfileId(payload.data.mainProfileId)
     } catch (loadError) {
       setError(loadError instanceof Error ? loadError.message : 'No se pudieron cargar las páginas.')
     }
@@ -423,6 +425,8 @@ export function LinksProfilesView() {
   }, [profiles, draft])
 
   const dirty = draft ? JSON.stringify(draft) !== baseline : false
+  const isMainProfile = Boolean(draft?.id && mainProfileId === draft.id)
+  const publicUrl = isMainProfile ? linksBase : `${linksBase}/e/${draft?.slug || 'sin-slug'}`
 
   function update(patch: Partial<LinkProfile>) {
     setDraft((current) => (current ? { ...current, ...patch } : current))
@@ -521,19 +525,18 @@ export function LinksProfilesView() {
 
   async function copyPublicUrl() {
     if (!draft) return
-    const url = `${linksBase}/e/${draft.slug || 'sin-slug'}`
     try {
-      await navigator.clipboard.writeText(url)
-      toast.success('Enlace público copiado', url)
+      await navigator.clipboard.writeText(publicUrl)
+      toast.success('Enlace público copiado', publicUrl)
     } catch {
-      toast.error('No se pudo copiar', url)
+      toast.error('No se pudo copiar', publicUrl)
     }
   }
 
   function openPublicPage() {
     if (!draft) return
     const suffix = draft.published ? '' : '?preview=1'
-    window.open(`${linksBase}/e/${draft.slug || 'sin-slug'}${suffix}`, '_blank', 'noopener')
+    window.open(`${publicUrl}${suffix}`, '_blank', 'noopener')
   }
 
   async function handleSave() {
@@ -572,7 +575,7 @@ export function LinksProfilesView() {
       setDraft(cloneProfile(saved))
       setBaseline(JSON.stringify(saved))
       setSlugTouched(true)
-      toast.success(isNew ? 'Página creada' : 'Página actualizada', `/e/${saved.slug}`)
+      toast.success(isNew ? 'Página creada' : 'Página actualizada', saved.id === mainProfileId ? linksBase : `${linksBase}/e/${saved.slug}`)
     } catch (saveError) {
       const message = saveError instanceof Error ? saveError.message : 'No se pudo guardar la página.'
       setError(message)
@@ -595,6 +598,7 @@ export function LinksProfilesView() {
       if (!response.ok) throw new Error(payload.message ?? 'No se pudo eliminar la página.')
       const remaining = (profiles ?? []).filter((profile) => profile.id !== draft.id)
       setProfiles(remaining)
+      if (draft.id === mainProfileId) setMainProfileId(remaining[0]?.id ?? null)
       const next = remaining[0] ?? null
       setDraft(next ? cloneProfile(next) : null)
       setBaseline(next ? JSON.stringify(next) : '')
@@ -684,14 +688,14 @@ export function LinksProfilesView() {
     }
   }
 
-  if (profiles === null && !error) return <LoadingState label="Cargando páginas AllMyLinks…" />
+  if (profiles === null && !error) return <LoadingState label="Cargando páginas Linkeador…" />
 
   return (
     <div className="space-y-5">
       <PageHeader
         eyebrow="General"
-        title="AllMyLinks"
-        description="Crea una página de enlaces por empresa: identidad, colores, contacto y botones editables. Cada página se publica en /e/su-enlace."
+        title="Linkeador"
+        description="Personaliza la página principal del Linkeador: identidad, colores, contacto y enlaces. También puedes administrar páginas adicionales por empresa."
         actions={
           canCreate ? (
             <button type="button" onClick={startNew} className={btnPrimary}>
@@ -749,7 +753,7 @@ export function LinksProfilesView() {
                           )}
                         </span>
                         <span className="mt-0.5 block truncate text-[10.5px] text-muted-foreground">
-                          /e/{profile.slug} · {profile.links.length} enlaces
+                          {profile.id === mainProfileId ? 'Página principal' : `/e/${profile.slug}`} · {profile.links.length} enlaces
                         </span>
                       </span>
                       <span
@@ -788,7 +792,7 @@ export function LinksProfilesView() {
                   <p className="text-[11px] font-semibold text-muted-foreground">
                     Al compartir por WhatsApp o redes
                   </p>
-                  <ShareLinkPreview draft={draft} />
+                  <ShareLinkPreview draft={draft} publicUrl={publicUrl} />
                 </div>
                 <div className="space-y-2">
                   <p className="text-[11px] font-semibold text-muted-foreground">
@@ -803,7 +807,7 @@ export function LinksProfilesView() {
               title={draft.id ? draft.name || 'Página sin nombre' : 'Nueva página'}
               description={
                 draft.slug
-                  ? `Vista pública: ${linksBase}/e/${draft.slug}`
+                  ? `${isMainProfile ? 'Página principal' : 'Vista pública'}: ${publicUrl}`
                   : 'Completa el nombre para generar el enlace público.'
               }
               icon={Link2}
@@ -845,7 +849,7 @@ export function LinksProfilesView() {
                   label="Enlace público"
                   htmlFor="link-slug"
                   required
-                  hint={`${linksBase}/e/${draft.slug || '…'}`}
+                  hint={`${isMainProfile ? 'Enlace alternativo: ' : ''}${linksBase}/e/${draft.slug || '…'}`}
                 >
                   <input
                     id="link-slug"

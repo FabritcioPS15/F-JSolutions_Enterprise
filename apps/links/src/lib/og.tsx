@@ -189,7 +189,7 @@ export async function profileOgImage(profile: LinkProfile) {
               />
               {link}
             </div>
-            <span style={{ color: softInk, fontSize: 24, fontWeight: 700 }}>All My Links</span>
+            <span style={{ color: softInk, fontSize: 24, fontWeight: 700 }}>Linkeador</span>
           </div>
         </div>
       </div>

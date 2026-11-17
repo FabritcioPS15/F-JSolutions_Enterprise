@@ -45,7 +45,7 @@ const moduleLabels: Record<string, string> = {
   complaints: 'Libro de reclamaciones',
   services: 'Servicios TI',
   projects: 'Proyectos web',
-  links: 'AllMyLinks',
+  links: 'Linkeador',
   users: 'Usuarios',
   roles: 'Roles y permisos',
   settings: 'Configuración',

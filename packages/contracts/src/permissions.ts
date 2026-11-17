@@ -37,6 +37,7 @@ export const permissionCatalog: PermissionModule[] = [
   { key: 'complaints', actions: ['view', 'update', 'reply'] },
   { key: 'services', actions: ['view', 'create', 'update', 'delete', 'publish'] },
   { key: 'projects', actions: ['view', 'create', 'update', 'delete', 'manage-deployments'] },
+  { key: 'links', actions: ['view', 'create', 'update', 'delete', 'publish'] },
   { key: 'users', actions: ['view', 'create', 'update', 'delete'] },
   { key: 'roles', actions: ['view', 'update'] },
   { key: 'settings', actions: ['view', 'update'] },

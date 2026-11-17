@@ -7,8 +7,8 @@ export const dynamic = 'force-dynamic'
 
 export async function generateMetadata(): Promise<Metadata> {
   const profile = await findLinkProfile()
-  if (!profile) return { title: 'All My Links' }
-  const title = `${profile.name} | All My Links`
+  if (!profile) return { title: 'Linkeador' }
+  const title = `${profile.name} | Linkeador`
   const description = profile.bio || 'Todos nuestros enlaces oficiales en un solo lugar.'
   return {
     title,

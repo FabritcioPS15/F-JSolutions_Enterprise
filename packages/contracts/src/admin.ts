@@ -521,7 +521,7 @@ export type DeploymentInput = {
 
 // ─── Usuarios y permisos ─────────────────────────────────────────────────────
 
-export type AdminUserRole = 'superadmin' | 'admin' | 'ventas' | 'soporte' | 'consulta'
+export type AdminUserRole = 'superadmin' | 'admin' | 'ventas' | 'soporte' | 'consulta' | 'empresa'
 
 export type AdminUserStatus = 'active' | 'invited' | 'disabled'
 
@@ -535,6 +535,8 @@ export type AdminUser = {
   twoFactorEnabled: boolean
   /** Cuenta base del superadministrador: no se edita ni se elimina desde el panel. */
   seeded?: boolean
+  /** ID del perfil AllMyLinks/Linkeador vinculado a esta cuenta (solo rol empresa). */
+  linkProfileId?: string | null
   lastLoginAt?: string
   createdAt: string
   updatedAt: string
