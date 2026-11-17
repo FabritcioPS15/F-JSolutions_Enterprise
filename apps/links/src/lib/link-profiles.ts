@@ -89,6 +89,8 @@ function normalizeProfile(profile: LinkProfile): LinkProfile {
 
   return {
     ...profile,
+    // El perfil histórico de F&J se guardó sin avatar; su logo vive en public.
+    avatarUrl: profile.avatarUrl || (profile.slug === 'fjsolutions' ? '/logo.png' : ''),
     background,
     tone: profile.tone === 'light' || profile.tone === 'dark' ? profile.tone : 'auto',
   }
@@ -102,7 +104,7 @@ function fallbackProfile(): LinkProfile {
     handle: PROFILE_INFO.handle,
     bio: PROFILE_INFO.bio,
     initials: 'FJ',
-    avatarUrl: '',
+    avatarUrl: PROFILE_INFO.avatarUrl,
     verified: true,
     statusEnabled: true,
     statusText: 'Atención en línea disponible',

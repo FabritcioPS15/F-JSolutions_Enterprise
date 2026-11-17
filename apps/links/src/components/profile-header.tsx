@@ -43,14 +43,24 @@ export function ProfileHeader({ profile }: { profile: LinkProfile }) {
 
       {/* Avatar */}
       <div className="relative mt-2">
-        <div className="relative flex size-24 items-center justify-center rounded-full bg-[linear-gradient(135deg,var(--accent),var(--accent-light))] p-1 shadow-[0_25px_60px_-18px_var(--accent-glow)]">
-          <div className="flex size-full items-center justify-center overflow-hidden rounded-full bg-[var(--page-surface-solid)] text-2xl font-black tracking-tighter text-[var(--page-ink)]">
+        <div
+          className={`relative flex items-center justify-center bg-[linear-gradient(135deg,var(--accent),var(--accent-light))] p-1 shadow-[0_25px_60px_-18px_var(--accent-glow)] ${
+            profile.avatarUrl ? 'h-[104px] w-[188px] rounded-[30px]' : 'size-24 rounded-full'
+          }`}
+        >
+          <div
+            className={`flex size-full items-center justify-center overflow-hidden text-2xl font-black tracking-tighter text-[var(--page-ink)] ${
+              profile.avatarUrl
+                ? 'rounded-[26px] bg-white p-2.5'
+                : 'rounded-full bg-[var(--page-surface-solid)]'
+            }`}
+          >
             {profile.avatarUrl ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={profile.avatarUrl}
                 alt={profile.name}
-                className="size-full rounded-full object-cover"
+                className="size-full object-contain"
               />
             ) : (
               profile.initials || 'FJ'
