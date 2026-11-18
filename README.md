@@ -7,7 +7,7 @@ Estructura monorepo para el proyecto e-commerce de FJ Tech Solutions usando pnpm
 ```
 ecommerce/
 ├── apps/
-│   ├── web/                         # Tienda pública (Next.js)
+│   ├── sparktree_systems/           # Web pública (Next.js)
 │   │   └── src/
 │   │       ├── app/                # App Router
 │   │       ├── layouts/            # Layouts compartidos
@@ -20,7 +20,7 @@ ecommerce/
 │   │       ├── components/         # Componentes UI
 │   │       └── features/          # Features específicas
 │   │
-│   ├── admin/                       # Panel de administración (Next.js)
+│   ├── admin_sparktree/             # Panel de administración (Next.js)
 │   │   └── src/
 │   │       ├── app/                # App Router
 │   │       ├── layouts/            # Layouts del admin
@@ -38,6 +38,13 @@ ecommerce/
 │   │           ├── orders/         # Gestión de pedidos
 │   │           ├── media/          # Gestión de medios
 │   │           └── settings/       # Configuración general
+│   │
+│   ├── sparktree_academia/          # Academia (Next.js)
+│   ├── sparktree_tienda/            # Tienda (Next.js)
+│   ├── linkeador/                   # Página de enlaces (Next.js)
+│   ├── sparktree_studio/            # Studio (React + Vite)
+│   ├── sparktree_group/             # Carpeta reservada
+│   ├── sparktree_legal/             # Carpeta reservada
 │   │
 │   └── api/                         # Backend Node.js + TypeScript
 │       └── src/
@@ -98,9 +105,10 @@ pnpm run dev
 pnpm dev:web
 pnpm dev:store
 
-# Solo academia o linkeador
+# Solo academia, linkeador o studio
 pnpm dev:academy
 pnpm dev:links
+pnpm dev:studio
 
 # Solo panel de administración
 pnpm dev:admin
@@ -108,6 +116,8 @@ pnpm dev:admin
 # Solo API
 pnpm dev:api
 ```
+
+Studio requiere configurar `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY` (clave pública) en `apps/sparktree_studio/.env.local`. El formulario de contacto utiliza la función de Vercel `api/contact.ts` y la clave privada `RESEND_API_KEY` únicamente en el servidor; Vite por sí solo no ejecuta esa función.
 
 ### Build
 ```bash

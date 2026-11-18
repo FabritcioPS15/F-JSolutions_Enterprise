@@ -61,7 +61,7 @@ uploads/
 apps/api/data/*.json
 
 # Admin local user store (contraseñas hasheadas)
-apps/admin/.data/
+apps/admin_sparktree/.data/
 
 # Cuentas web de clientes y bandeja de correos local (hashes y enlaces)
 .data/

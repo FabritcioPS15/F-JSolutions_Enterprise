@@ -64,7 +64,7 @@ services:
   # Web Frontend (Tienda pública)
   web:
     build:
-      context: ./apps/web
+      context: ./apps/sparktree_systems
       dockerfile: Dockerfile
     container_name: fj-solutions-web
     restart: unless-stopped
@@ -84,7 +84,7 @@ services:
   # Admin Panel (Panel de administración)
   admin:
     build:
-      context: ./apps/admin
+      context: ./apps/admin_sparktree
       dockerfile: Dockerfile
     container_name: fj-solutions-admin
     restart: unless-stopped

@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: "Fira Sans", sans-serif;
+  }
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  #root, main {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+  
+  ::selection {
+    background-color: #000000;
+    color: #ffffff;
+  }
+  
+  ::-moz-selection {
+    background-color: #000000;
+    color: #ffffff;
+  }
+}
+
+body.menu-open {
+  overflow: hidden !important;
+  height: 100dvh !important;
+  touch-action: none;
+}
+
+.active-relieve {
+  color: #41f0a5 !important;
+  text-shadow: 
+    1px 1px 0px #000,
+    2px 2px 0px #000,
+    3px 3px 0px #000,
+    4px 4px 0px rgba(0,0,0,0.8),
+    6px 6px 15px rgba(0,0,0,0.3);
+  transform: none !important;
+  transition: all 0.3s ease;
+}
+
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 0 rgba(0,0,0,0); }
+  50% { box-shadow: 0 0 22px rgba(17,24,39,0.12); }
+}
+.mobile-glow {
+  animation: glowPulse 2.6s ease-in-out infinite;
+}
+
+@keyframes shineSweep {
+  0% { transform: translateX(-160%) skewX(-15deg); opacity: 0; }
+  35% { opacity: 0.55; }
+  65% { opacity: 0.18; }
+  100% { transform: translateX(220%) skewX(-15deg); opacity: 0; }
+}
+.mobile-shine::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(120deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.38) 50%, rgba(255,255,255,0) 100%);
+  filter: blur(0.5px);
+  animation: shineSweep 2.2s linear infinite;
+}
+
+.page-exit {
+  transition: opacity 0.4s ease;
+}
+.page-exit.exiting {
+  opacity: 0;
+}

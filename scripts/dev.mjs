@@ -29,7 +29,7 @@ class DevLogger extends Logger {
 
   logCommandText(text, command) {
     let startup = this.startup.get(command)
-    if (!startup && stripVTControlCharacters(text).includes('▲ Next.js')) {
+    if (!startup && /▲ Next\.js|\bVITE v/.test(stripVTControlCharacters(text))) {
       startup = { text: '', timer: setTimeout(() => this.flushStartup(command), 1500) }
       this.startup.set(command, startup)
     }
@@ -48,6 +48,7 @@ const commands = [
   { name: 'ADMIN', command: 'pnpm --filter fj-solutions-admin dev' },
   { name: 'ACADEMIA', command: 'pnpm --filter fj-solutions-academy dev' },
   { name: 'LINKEADOR', command: 'pnpm --filter fj-solutions-links dev' },
+  { name: 'STUDIO', command: 'pnpm --filter ./apps/sparktree_studio dev' },
   { name: 'API', command: 'pnpm --filter fj-solutions-backend dev' },
 ]
 
@@ -55,7 +56,7 @@ const logger = new DevLogger()
 const { commands: runningCommands, result } = concurrently(commands, {
   logger,
   padPrefix: true,
-  prefixColors: ['cyan', 'green', 'magenta', 'yellow', 'blue', 'red'],
+  prefixColors: ['cyan', 'green', 'magenta', 'yellow', 'blue', 'white', 'red'],
 })
 
 for (const command of runningCommands) {

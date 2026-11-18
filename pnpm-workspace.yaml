@@ -10,6 +10,14 @@ packages:
   - 'apps/*'
   - 'packages/*'
 
+packageExtensions:
+  next@16.4.3:
+    peerDependencies:
+      '@types/react': '*'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+
 allowBuilds:
   '@prisma/client': true
   '@prisma/engines': true

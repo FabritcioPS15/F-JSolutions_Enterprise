@@ -13,7 +13,7 @@ cuando la API no responde.
 
 ## Estado actual
 
-- App: `apps/admin` (Next.js App Router, TypeScript, Tailwind).
+- App: `apps/admin_sparktree` (Next.js App Router, TypeScript, Tailwind).
 - Autenticación: pantalla `/login` de dos pasos, Route Handlers
   `/api/auth/login`, `/api/auth/logout` y `/api/auth/2fa/*`, cookies de sesión
   `httpOnly` emitidas por el servidor Next (`fj_admin_access`,
@@ -397,7 +397,7 @@ pnpm db:seed
 - **Permisos**: se añadió el módulo `reports` con `reports.view` al seed y se
   asignó a los roles `ventas` y `soporte` (superadmin y admin lo heredan;
   `consulta` lo recibe por sus permisos de lectura).
-- **Proxy del panel**: `apps/admin/src/app/api/dashboard/[...path]` solo acepta
+- **Proxy del panel**: `apps/admin_sparktree/src/app/api/dashboard/[...path]` solo acepta
   `GET`, valida los segmentos (`summary` o `reports/{sales|helpdesk}`), inyecta el
   token en el servidor y conserva estado y tipo de respuesta.
 - **Resumen del panel**: las tarjetas de cotizaciones, conversión, solicitudes y
@@ -455,7 +455,7 @@ pnpm db:seed
   `/servicios/[id]/editar`) cubre identidad, slug automático, imagen, alcances,
   preguntas frecuentes, servicios relacionados, orden y estado; el enlace a la
   tienda se calcula según la categoría.
-- **Tienda**: `apps/web/src/lib/service-offerings.ts` consulta
+- **Tienda**: `apps/sparktree_systems/src/lib/service-offerings.ts` consulta
   `GET /services/public` con `revalidate: 60` y timeout de 2,5 s. Los servicios
   publicados se fusionan con las definiciones estáticas: reemplazan el contenido
   del mismo slug y añaden páginas nuevas; si la API no responde, la tienda sigue
@@ -592,7 +592,7 @@ pnpm db:seed
 
 - **Credenciales de desarrollo**: `/login` recibe desde el servidor el correo y
   la contraseña del seed solo cuando `NODE_ENV !== 'production'`
-  (`apps/admin/src/app/login/page.tsx`) y muestra un bloque “Acceso de
+  (`apps/admin_sparktree/src/app/login/page.tsx`) y muestra un bloque “Acceso de
   desarrollo” con un botón que rellena el formulario. En producción el bloque no
   se renderiza y las credenciales no se envían al navegador.
 - **Modelo de datos**: `database/schema.prisma` añade el enum `TwoFactorMethod`
@@ -619,7 +619,7 @@ pnpm db:seed
   10 minutos. Los códigos por correo vencen a los 10 minutos, admiten 5 intentos
   y se invalidan al consumirse o reenviarse. Los códigos de recuperación son 10,
   de un solo uso, y el correo del desafío se muestra enmascarado.
-- **BFF del panel**: `apps/admin/src/app/api/auth/login/route.ts` guarda el
+- **BFF del panel**: `apps/admin_sparktree/src/app/api/auth/login/route.ts` guarda el
   desafío en la cookie `fj_admin_2fa`; `.../2fa/verify/route.ts` crea la sesión y
   borra esa cookie; `.../2fa/resend/route.ts` reenvía el código; y
   `.../2fa/[[...path]]/route.ts` expone `status`, `setup`, `enable`, `disable` y

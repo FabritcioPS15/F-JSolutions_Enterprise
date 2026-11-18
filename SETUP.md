@@ -21,8 +21,8 @@ pnpm install
 ```
 
 Este comando instalará:
-- Dependencias de `apps/web`
-- Dependencias de `apps/admin`
+- Dependencias de `apps/sparktree_systems`
+- Dependencias de `apps/admin_sparktree`
 - Dependencias de `apps/api`
 - Dependencias de `packages/contracts`
 
@@ -82,7 +82,7 @@ pnpm dev:api       # API Backend
 No existe registro público: la cuenta base (superadministrador) se define por
 variables de entorno y, desde **Usuarios**, es la única que puede registrar
 nuevas cuentas con su contraseña inicial, rol y estado. Las cuentas creadas se
-guardan en `apps/admin/.data/admin-users.json` con la contraseña hasheada
+guardan en `apps/admin_sparktree/.data/admin-users.json` con la contraseña hasheada
 (scrypt); ese archivo está en `.gitignore` y no se versiona. Borrarlo reinicia
 el panel dejando solo la cuenta base.
 

@@ -1,0 +1,56 @@
+{
+  "name": "@sparktree/design-tokens",
+  "version": "1.0.0",
+  "description": "Design tokens y temas oficiales del ecosistema SparkTree",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "typesVersions": {
+    "*": {
+      "core": [
+        "./dist/core/index.d.ts"
+      ],
+      "themes": [
+        "./dist/themes/index.d.ts"
+      ],
+      "tailwind": [
+        "./dist/tailwind/preset.d.ts"
+      ],
+      "css": [
+        "./dist/css/generator.d.ts"
+      ]
+    }
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./core": {
+      "types": "./dist/core/index.d.ts",
+      "default": "./dist/core/index.js"
+    },
+    "./themes": {
+      "types": "./dist/themes/index.d.ts",
+      "default": "./dist/themes/index.js"
+    },
+    "./tailwind": {
+      "types": "./dist/tailwind/preset.d.ts",
+      "default": "./dist/tailwind/preset.js"
+    },
+    "./css": {
+      "types": "./dist/css/generator.d.ts",
+      "default": "./dist/css/generator.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.4",
+    "typescript": "^5.4.5"
+  }
+}

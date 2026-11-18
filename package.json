@@ -10,6 +10,7 @@
     "dev:admin": "pnpm --filter fj-solutions-admin dev",
     "dev:academy": "pnpm --filter fj-solutions-academy dev",
     "dev:links": "pnpm --filter fj-solutions-links dev",
+    "dev:studio": "pnpm --filter ./apps/sparktree_studio dev",
     "dev:api": "pnpm --filter fj-solutions-backend dev",
     "build": "pnpm --filter \"./apps/**\" build",
     "build:contracts": "pnpm --filter @fj-solutions/contracts build",

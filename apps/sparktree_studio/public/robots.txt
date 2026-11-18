@@ -1,0 +1,36 @@
+User-agent: *
+Allow: /
+
+# Prioritize important pages
+Allow: /$
+Allow: /services
+Allow: /services/web
+Allow: /services/seo
+Allow: /services/branding
+Allow: /services/bots
+Allow: /portfolio
+Allow: /blog
+Allow: /contact
+Allow: /nosotros
+
+# Allow blog posts
+Allow: /blog/
+
+# Block admin and development areas
+Disallow: /admin/
+Disallow: /PortfolioEditor
+Disallow: /api/
+Disallow: /_next/
+Disallow: /dist/
+Disallow: /node_modules/
+
+# Block dynamic parameters that shouldn't be indexed
+Disallow: /*?*
+Disallow: /*.json$
+Disallow: /*.xml$
+
+# Sitemap location
+Sitemap: https://sparktree.pe/sitemap.xml
+
+# Crawl delay (optional, adjust as needed)
+Crawl-delay: 1
