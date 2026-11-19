@@ -63,7 +63,7 @@ export function ProfileHeader({ profile }: { profile: LinkProfile }) {
                 className="size-full object-contain"
               />
             ) : (
-              profile.initials || 'FJ'
+              profile.initials || 'SP'
             )}
           </div>
         </div>

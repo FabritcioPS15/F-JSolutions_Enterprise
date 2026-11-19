@@ -3,9 +3,9 @@ import { Scale } from 'lucide-react'
 import { LegalPage, type LegalSection } from '@/components/legal-page'
 import { SITE_NAME } from '@/lib/site'
 
-const TITLE = 'Términos y condiciones | F&J Systems'
+const TITLE = 'Términos y condiciones | SparkTree Systems'
 const DESCRIPTION =
-  'Condiciones de uso del sitio web de F&J Systems y de la contratación de equipos, soporte técnico, infraestructura y desarrollo de software.'
+  'Condiciones de uso del sitio web de SparkTree Systems y de la contratación de equipos, soporte técnico, infraestructura y desarrollo de software.'
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -26,7 +26,7 @@ const sections: LegalSection[] = [
     id: 'objeto-y-alcance',
     title: 'Objeto y alcance',
     paragraphs: [
-      'Estos términos y condiciones regulan el acceso y uso del sitio web de F&J Systems, así como las cotizaciones, pedidos, compras y servicios contratados a través de nuestros canales de atención.',
+      'Estos términos y condiciones regulan el acceso y uso del sitio web de SparkTree Systems, así como las cotizaciones, pedidos, compras y servicios contratados a través de nuestros canales de atención.',
       'Al navegar en el sitio o solicitar una cotización aceptas las condiciones descritas en este documento. Si no estás de acuerdo con alguna de ellas, te pedimos no utilizar el sitio ni contratar nuestros servicios.',
     ],
   },
@@ -107,7 +107,7 @@ const sections: LegalSection[] = [
     id: 'propiedad-intelectual',
     title: 'Propiedad intelectual',
     paragraphs: [
-      'Los textos, diseño, logotipos, imágenes y demás contenidos del sitio son propiedad de F&J Systems o de sus licenciantes y están protegidos por la normativa de propiedad intelectual.',
+      'Los textos, diseño, logotipos, imágenes y demás contenidos del sitio son propiedad de SparkTree Systems o de sus licenciantes y están protegidos por la normativa de propiedad intelectual.',
       'Queda prohibida su reproducción, distribución o uso comercial sin autorización previa y por escrito. En los proyectos de desarrollo de software, la titularidad del código y los entregables se define en el contrato correspondiente.',
     ],
   },
@@ -143,7 +143,7 @@ export default function TerminosYCondicionesPage() {
       path="/terminos-y-condiciones"
       title="Términos y condiciones"
       description={DESCRIPTION}
-      intro="Estas condiciones explican cómo puedes usar nuestro sitio web y qué debes tener en cuenta al cotizar, comprar o contratar los servicios de F&J Systems."
+      intro="Estas condiciones explican cómo puedes usar nuestro sitio web y qué debes tener en cuenta al cotizar, comprar o contratar los servicios de SparkTree Systems."
       updatedLabel="1 de noviembre de 2026"
       updatedIso="2026-11-01"
       icon={Scale}

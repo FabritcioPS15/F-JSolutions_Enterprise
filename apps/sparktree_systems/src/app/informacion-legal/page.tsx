@@ -4,9 +4,9 @@ import { LegalPage, type LegalSection } from '@/components/legal-page'
 import { EMPRESA } from '@/lib/constants'
 import { SITE_NAME } from '@/lib/site'
 
-const TITLE = 'Información legal | F&J Systems'
+const TITLE = 'Información legal | SparkTree Systems'
 const DESCRIPTION =
-  'Datos de la empresa, canales de atención, facturación electrónica, libro de reclamaciones y demás información legal de F&J Systems.'
+  'Datos de la empresa, canales de atención, facturación electrónica, libro de reclamaciones y demás información legal de SparkTree Systems.'
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -38,7 +38,7 @@ const sections: LegalSection[] = [
     id: 'actividad-comercial',
     title: 'Actividad comercial',
     paragraphs: [
-      'F&J Systems comercializa equipos de cómputo y tecnología, brinda soporte técnico y mantenimiento, implementa infraestructura de redes y desarrolla sistemas de software para empresas.',
+      'SparkTree Systems comercializa equipos de cómputo y tecnología, brinda soporte técnico y mantenimiento, implementa infraestructura de redes y desarrolla sistemas de software para empresas.',
     ],
     list: [
       'Venta de laptops, computadoras, servidores, componentes y periféricos.',
@@ -82,7 +82,7 @@ const sections: LegalSection[] = [
     title: 'Marcas y propiedad intelectual',
     paragraphs: [
       'Las marcas, logotipos y nombres comerciales de terceros que aparecen en el sitio pertenecen a sus respectivos titulares y se utilizan únicamente con fines de identificación de productos.',
-      'El nombre F&J Systems, su logotipo, textos y diseño del sitio son propiedad de la empresa. Su reproducción requiere autorización previa y por escrito.',
+      'El nombre SparkTree Systems, su logotipo, textos y diseño del sitio son propiedad de la empresa. Su reproducción requiere autorización previa y por escrito.',
     ],
   },
   {

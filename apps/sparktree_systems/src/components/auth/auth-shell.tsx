@@ -42,12 +42,12 @@ export function AuthShell({ children }: { children: ReactNode }) {
           />
 
           <div className="relative flex items-center justify-between gap-4">
-            <Link href="/" className="inline-flex w-fit items-center" aria-label="F&J Systems · Inicio">
+            <Link href="/" className="inline-flex w-fit items-center" aria-label="SparkTree Systems · Inicio">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/images/logos/logo.png"
-                alt="F&J Systems"
-                className="h-10 w-auto object-contain brightness-0 invert sm:h-16 lg:h-20"
+                src="/brand/sparktree-horizontal.png"
+                alt="SparkTree Systems"
+                className="h-10 w-auto object-contain sm:h-16 lg:h-20"
               />
             </Link>
 
@@ -66,7 +66,7 @@ export function AuthShell({ children }: { children: ReactNode }) {
                 Cuenta de cliente
               </p>
               <h2 className="mt-3 font-heading text-2xl font-bold tracking-tight sm:text-3xl">
-                Tu operación con F&amp;J Systems en un solo lugar
+                Tu operación con SparkTree Systems en un solo lugar
               </h2>
               <p className="mt-3 text-sm leading-6 text-muted-foreground/60">
                 Crea tu cuenta para guardar tus cotizaciones, tus equipos favoritos y el historial de
@@ -84,7 +84,7 @@ export function AuthShell({ children }: { children: ReactNode }) {
           </div>
 
           <p className="relative mt-8 hidden text-[11px] text-muted-foreground sm:block">
-            © {new Date().getFullYear()} F&amp;J Systems. Todos los derechos reservados.
+            © {new Date().getFullYear()} SparkTree Systems. Todos los derechos reservados.
           </p>
         </aside>
 

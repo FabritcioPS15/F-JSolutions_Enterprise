@@ -65,7 +65,7 @@ const defaultDepartments: OrgDepartment[] = [
     code: 'TI-02',
     name: 'Ingeniería TI & Infraestructura',
     description: 'Redes empresariales, servidores, cableado estructurado, cloud y soporte perimetral.',
-    managerName: 'Ing. Sistemas F&J',
+    managerName: 'Ing. Sistemas SparkTree',
     managerEmail: 'soporte@fjsolutions.pe',
     managerPhone: '+51 923 055 963',
     memberCount: 5,
@@ -222,7 +222,7 @@ export function OrganizationAreasView() {
       <PageHeader
         eyebrow="Sistema"
         title="Áreas organizacionales"
-        description="Estructura de departamentos, unidades funcionales y líderes de área de F&J Solutions Enterprise."
+        description="Estructura de departamentos, unidades funcionales y líderes de área de SparkTree Group."
         actions={
           <button type="button" className={btnPrimary} onClick={handleOpenCreate}>
             <Plus className="size-4" aria-hidden="true" />

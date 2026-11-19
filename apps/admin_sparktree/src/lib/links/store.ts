@@ -101,7 +101,7 @@ function seedLinks(): ProfileLink[] {
     },
     {
       id: 'fj-academy',
-      title: 'F&J Academy — Cursos & Certificaciones TI',
+      title: 'SparkTree Academia — Cursos & Certificaciones TI',
       subtitle: 'Programación Full Stack, DevOps, Ciberseguridad e IA',
       url: academyAppUrl(),
       icon: 'GraduationCap',
@@ -146,7 +146,7 @@ function seedLinks(): ProfileLink[] {
     {
       id: 'sitio-web-oficial',
       title: 'Página Web Oficial',
-      subtitle: 'Conoce todo sobre F&J Solutions Enterprise',
+      subtitle: 'Conoce todo sobre SparkTree Group',
       url: 'https://fjsolutions.com.pe',
       icon: 'Globe',
       badge: '',
@@ -157,7 +157,7 @@ function seedLinks(): ProfileLink[] {
     {
       id: 'guardar-contacto',
       title: 'Guardar Contacto en tu Celular (VCard)',
-      subtitle: 'Agrega a F&J Solutions a tus contactos con 1 toque',
+      subtitle: 'Agrega a SparkTree Group a tus contactos con 1 toque',
       url: '#',
       icon: 'UserPlus',
       badge: '',
@@ -173,10 +173,10 @@ function seedProfile(): LinkProfile {
   return {
     id: 'fjsolutions',
     slug: 'fjsolutions',
-    name: 'F&J Solutions Enterprise',
+    name: 'SparkTree Group',
     handle: '@fjsolutions.pe',
     bio: 'Soluciones Tecnológicas Corporativas · Hardware, Desarrollo de Software & Soporte TI en Perú 🇵🇪',
-    initials: 'FJ',
+    initials: 'SG',
     avatarUrl: '',
     verified: true,
     statusEnabled: true,

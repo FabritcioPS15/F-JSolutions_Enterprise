@@ -7,16 +7,19 @@ const LINKS_URL = (
 
 export const metadata: Metadata = {
   metadataBase: new URL(LINKS_URL),
-  title: 'F&J Solutions Enterprise | Linkeador · Enlaces Oficiales',
+  title: 'SparkTree Group | Linkeador · Enlaces Oficiales',
   description:
-    'Enlaces directos a WhatsApp, Catálogo de Productos, Desarrollo de Software, F&J Academy, Instagram, TikTok y canales oficiales de F&J Solutions Enterprise.',
+    'Enlaces directos a WhatsApp, Catálogo de Productos, Desarrollo de Software, SparkTree Academia, Instagram, TikTok y canales oficiales de SparkTree Group.',
   openGraph: {
-    title: 'F&J Solutions Enterprise | Linkeador',
-    description: 'Hardware, Software, TI y F&J Academy en Perú.',
+    title: 'SparkTree Group | Linkeador',
+    description: 'Hardware, Software, TI y SparkTree Academia en Perú.',
     type: 'profile',
   },
   twitter: {
     card: 'summary_large_image',
+  },
+  icons: {
+    icon: [{ url: '/favicon.svg', type: 'image/svg+xml' }],
   },
 }
 

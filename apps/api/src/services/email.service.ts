@@ -45,7 +45,7 @@ function replyHtml(ticket: HelpdeskTicket, message: string) {
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;margin:0 auto;background:#ffffff;border:1px solid #e2e8f0;border-radius:16px;overflow:hidden;">
       <tr>
         <td style="background:#0f172a;padding:20px 24px;">
-          <p style="margin:0;font-size:16px;font-weight:700;color:#ffffff;">F&amp;J Systems</p>
+          <p style="margin:0;font-size:16px;font-weight:700;color:#ffffff;">SparkTree Systems</p>
           <p style="margin:4px 0 0;font-size:12px;color:#94a3b8;">Soporte y soluciones tecnológicas</p>
         </td>
       </tr>
@@ -172,7 +172,7 @@ export class EmailService {
       '',
       'Si no intentaste iniciar sesión, cambia tu contraseña de inmediato.',
       '',
-      'F&J Systems',
+      'SparkTree Systems',
     ].join('\n')
 
     const html = `<!doctype html>
@@ -181,7 +181,7 @@ export class EmailService {
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;margin:0 auto;background:#ffffff;border:1px solid #e2e8f0;border-radius:16px;overflow:hidden;">
       <tr>
         <td style="background:#0f172a;padding:20px 24px;">
-          <p style="margin:0;font-size:16px;font-weight:700;color:#ffffff;">F&amp;J Systems</p>
+          <p style="margin:0;font-size:16px;font-weight:700;color:#ffffff;">SparkTree Systems</p>
           <p style="margin:4px 0 0;font-size:12px;color:#94a3b8;">Verificación en dos pasos</p>
         </td>
       </tr>
@@ -201,7 +201,7 @@ export class EmailService {
       await this.transporter.sendMail({
         from: env.EMAIL_FROM,
         to: input.to,
-        subject: cleanHeader('Código de verificación — F&J Systems'),
+        subject: cleanHeader('Código de verificación — SparkTree Systems'),
         text,
         html,
       })

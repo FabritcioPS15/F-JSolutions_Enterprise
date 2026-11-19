@@ -21,7 +21,7 @@ export function EnrollmentModal({
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
 
-    const text = `Hola F&J Academy, soy ${name.trim() || 'un estudiante interesado'}.\nQuiero informes e inscripción para:\n${activeCourse.title}\n\nCorreo: ${email || 'No especificado'}\nTeléfono: ${phone || 'No especificado'}\n\n¿Tienen vacantes y facilidades de pago?`
+    const text = `Hola SparkTree Academia, soy ${name.trim() || 'un estudiante interesado'}.\nQuiero informes e inscripción para:\n${activeCourse.title}\n\nCorreo: ${email || 'No especificado'}\nTeléfono: ${phone || 'No especificado'}\n\n¿Tienen vacantes y facilidades de pago?`
 
     const whatsappUrl = `https://wa.me/51923055963?text=${encodeURIComponent(text)}`
     window.open(whatsappUrl, '_blank')

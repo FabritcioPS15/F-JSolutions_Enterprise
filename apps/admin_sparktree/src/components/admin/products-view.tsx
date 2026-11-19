@@ -529,7 +529,7 @@ export function ProductsView({
           title={products.length === 0 ? 'Tu catálogo está vacío' : 'Sin resultados'}
           description={
             products.length === 0
-              ? 'Crea tu primer producto para empezar a construir el catálogo de FJ Systems.'
+              ? 'Crea tu primer producto para empezar a construir el catálogo de SparkTree Systems.'
               : 'No encontramos productos con esos criterios. Prueba limpiando los filtros o usando otro término.'
           }
           action={

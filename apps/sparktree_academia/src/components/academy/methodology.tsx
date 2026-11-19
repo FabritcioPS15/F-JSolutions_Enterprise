@@ -19,7 +19,7 @@ export function AcademyMethodology() {
               Respaldo empresarial
             </p>
             <h2 className="mt-2 text-2xl font-semibold tracking-tight text-ink-900 sm:text-3xl">
-              ¿Por qué formarte en F&amp;J Academy?
+              ¿Por qué formarte en SparkTree Academia?
             </h2>
             <p className="mt-3 text-sm leading-relaxed text-ink-600">
               La mayoría de institutos enseña teoría que el mercado ya no usa. Aquí los temarios los
@@ -34,7 +34,7 @@ export function AcademyMethodology() {
               <p className="mt-0.5 text-[11px] text-ink-500">Práctico con código real</p>
             </div>
             <div className="rounded-lg border border-line bg-white p-4 text-center">
-              <p className="text-xl font-semibold text-ink-900">Bolsa F&amp;J</p>
+              <p className="text-xl font-semibold text-ink-900">Bolsa SparkTree</p>
               <p className="mt-0.5 text-[11px] text-ink-500">Pasantías remuneradas</p>
             </div>
           </div>

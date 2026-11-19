@@ -1,4 +1,4 @@
-import { GraduationCap, Mail, MapPin, Phone, ArrowUpRight } from 'lucide-react'
+import { Mail, MapPin, Phone, ArrowUpRight } from 'lucide-react'
 
 export function AcademyFooter() {
   return (
@@ -7,13 +7,19 @@ export function AcademyFooter() {
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <div className="flex items-center gap-2.5">
-              <div className="grid size-8 place-items-center rounded-lg bg-brand-600 text-white">
-                <GraduationCap className="size-4" />
+              <div className="grid size-8 place-items-center rounded-lg bg-brand-600">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/brand/sparktree-symbol.png"
+                  alt=""
+                  aria-hidden="true"
+                  className="h-4 w-auto object-contain"
+                />
               </div>
-              <span className="text-sm font-semibold text-ink-900">F&amp;J Academy</span>
+              <span className="text-sm font-semibold text-ink-900">SparkTree Academia</span>
             </div>
             <p className="mt-3 text-xs leading-relaxed">
-              Instituto de especialización tecnológica de F&amp;J Solutions Enterprise. Formación
+              Instituto de especialización tecnológica de SparkTree Group. Formación
               práctica en software, cloud, ciberseguridad e infraestructura.
             </p>
           </div>
@@ -30,7 +36,7 @@ export function AcademyFooter() {
           </div>
 
           <div>
-            <p className="text-xs font-semibold text-ink-900">Ecosistema F&amp;J</p>
+            <p className="text-xs font-semibold text-ink-900">Ecosistema SparkTree</p>
             <ul className="mt-3 space-y-2 text-xs">
               <li>
                 <a
@@ -39,7 +45,7 @@ export function AcademyFooter() {
                   rel="noreferrer"
                   className="inline-flex items-center gap-1 transition hover:text-ink-900"
                 >
-                  F&amp;J Solutions Enterprise <ArrowUpRight className="size-3" />
+                  SparkTree Group <ArrowUpRight className="size-3" />
                 </a>
               </li>
               <li><a href="#metodologia" className="transition hover:text-ink-900">Bolsa de trabajo</a></li>
@@ -68,8 +74,8 @@ export function AcademyFooter() {
         </div>
 
         <div className="mt-10 flex flex-col items-center justify-between gap-2 border-t border-line pt-5 text-[11px] text-ink-500 sm:flex-row">
-          <p>© {new Date().getFullYear()} F&amp;J Academy. Todos los derechos reservados.</p>
-          <p>Impulsado por F&amp;J Solutions Enterprise</p>
+          <p>© {new Date().getFullYear()} SparkTree Academia. Todos los derechos reservados.</p>
+          <p>Impulsado por SparkTree Group</p>
         </div>
       </div>
     </footer>

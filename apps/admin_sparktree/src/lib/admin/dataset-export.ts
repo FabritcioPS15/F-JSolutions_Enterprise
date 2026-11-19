@@ -219,7 +219,7 @@ async function downloadPdf(dataset: DatasetExport) {
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(7)
     doc.setTextColor('#A9A2C0')
-    doc.text('FJ Systems · Panel de administración', marginX, pageHeight - 7)
+    doc.text('SparkTree Systems · Panel de administración', marginX, pageHeight - 7)
     doc.text(`${page} / ${totalPages}`, pageWidth - marginX, pageHeight - 7, {
       align: 'right',
     })

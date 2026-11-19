@@ -80,7 +80,7 @@ const caseStudies: CaseStudy[] = [
     technologies: ['VLANs', 'Wi-Fi 6', 'PoE+ Switches', 'Cableado Cat6A', 'Firewall Hardware'],
     duration: '3 semanas',
     quote: {
-      text: 'F&J Systems ordenó nuestro caos de red en un fin de semana. No tuvimos ni una hora de corte en horario laboral.',
+      text: 'SparkTree Systems ordenó nuestro caos de red en un fin de semana. No tuvimos ni una hora de corte en horario laboral.',
       author: 'Carlos Meneses',
       role: 'Gerente de Administración y Finanzas',
     },
@@ -134,7 +134,7 @@ const caseStudies: CaseStudy[] = [
     technologies: ['React', 'Node.js', 'PostgreSQL', 'API Facturación SUNAT', 'AWS Cloud'],
     duration: '4 meses de desarrollo + soporte',
     quote: {
-      text: 'El sistema diseñado por F&J Systems eliminó los errores en despachos y nos dio visión exacta de la mercadería.',
+      text: 'El sistema diseñado por SparkTree Systems eliminó los errores en despachos y nos dio visión exacta de la mercadería.',
       author: 'Ricardo Alvarado',
       role: 'Director General',
     },
@@ -494,7 +494,7 @@ export function ProjectsPage() {
                   Evaluemos la infraestructura o software de tu empresa
                 </h2>
                 <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-                  Agenda una sesión de diagnóstico inicial sin costo con un especialista técnico de F&J Systems.
+                  Agenda una sesión de diagnóstico inicial sin costo con un especialista técnico de SparkTree Systems.
                   Revisamos tus requerimientos y te entregamos una propuesta clara con alcance y presupuesto cerrado.
                 </p>
               </div>

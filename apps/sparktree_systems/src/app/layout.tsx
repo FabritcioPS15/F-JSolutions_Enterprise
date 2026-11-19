@@ -26,24 +26,11 @@ const spaceGrotesk = Space_Grotesk({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: 'F&J Systems | Soluciones tecnológicas para empresas',
+  title: 'SparkTree Systems | Soluciones tecnológicas para empresas',
   description: 'Desarrollo de software, infraestructura TI y hardware corporativo para empresas que quieren avanzar.',
   generator: 'v0.app',
   icons: {
-    icon: [
-      {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
-    ],
+    icon: [{ url: '/favicon.svg', type: 'image/svg+xml' }],
     apple: '/apple-icon.png',
   },
 }

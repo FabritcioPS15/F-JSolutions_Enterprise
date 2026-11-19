@@ -196,7 +196,7 @@ export async function profileOgImage(profile: LinkProfile, baseUrl: string) {
                   style={{ width: '100%', height: '100%', objectFit: 'contain' }}
                 />
               ) : (
-                profile.initials || 'FJ'
+                profile.initials || 'SP'
               )}
             </div>
             <div style={{ display: 'flex', flexDirection: 'column' }}>

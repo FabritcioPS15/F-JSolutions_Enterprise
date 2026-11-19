@@ -292,7 +292,7 @@ const brandNames = [
   'JBL',
   'Redragon',
   'Acer',
-  'FJ Build',
+  'SparkTree Build',
 ]
 
 const brandDescriptions: Record<string, string> = {
@@ -305,7 +305,7 @@ const brandDescriptions: Record<string, string> = {
   Logitech: 'Periféricos y accesorios de productividad.',
   AMD: 'Procesadores y tarjetas gráficas.',
   NVIDIA: 'Tarjetas gráficas profesionales y gaming.',
-  'FJ Build': 'Equipos ensamblados y configurados por FJ Systems.',
+  'SparkTree Build': 'Equipos ensamblados y configurados por SparkTree Systems.',
 }
 
 const brands: Brand[] = brandNames.map((name, index) => ({
@@ -319,8 +319,8 @@ const brands: Brand[] = brandNames.map((name, index) => ({
 }))
 
 const settings: StoreSettings = {
-  storeName: 'FJ Systems',
-  legalName: 'FJ Systems S.A.C.',
+  storeName: 'SparkTree Store',
+  legalName: 'F&J Systems S.A.C.',
   ruc: '20601234567',
   email: 'ventas@fjsystems.pe',
   phone: '+51 999 888 777',
@@ -587,15 +587,15 @@ const products: SeedProduct[] = [
   {
     id: 'pc-gamer-fj-ryzen-7',
     slug: 'pc-gamer-fj-ryzen-7',
-    name: 'PC Gamer FJ Ryzen 7 + RTX 4060',
+    name: 'PC Gamer SparkTree Ryzen 7 + RTX 4060',
     description:
-      'PC de escritorio ensamblada por FJ Systems con componentes de alto rendimiento para gaming y creación de contenido.',
+      'PC de escritorio ensamblada por SparkTree Systems con componentes de alto rendimiento para gaming y creación de contenido.',
     category: 'PC y Servidores',
     subcategory: 'PCs de Escritorio y Torres',
     subSubcategory: 'PC Gamer Custom',
-    brand: 'FJ Build',
-    model: 'FJ-GAMER-R7-4060',
-    sku: 'FJ-R7-4060',
+    brand: 'SparkTree Build',
+    model: 'SPK-GAMER-R7-4060',
+    sku: 'SPK-R7-4060',
     price: 4299,
     cost: 3750,
     stock: 6,

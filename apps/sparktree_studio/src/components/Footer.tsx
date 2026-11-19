@@ -94,19 +94,19 @@ export default function Footer({ onNavigate, currentPage, isExiting = false }: F
             >
               {/* White Logo Base */}
               <img
-                src="/assets/sparktree-horizontal.png"
-                alt="SparkTree Logo"
+                src="/brand/sparktree-horizontal.png"
+                alt="SparkTree"
                 className="h-16 lg:h-20 w-auto object-contain brightness-110"
               />
               {/* Liquid Tint Overlay (Preserves Logo Details & Anti-aliasing) */}
               <div 
                 className="absolute inset-0 mix-blend-multiply pointer-events-none overflow-hidden"
                 style={{
-                  WebkitMaskImage: `url('/assets/sparktree-horizontal.png')`,
+                  WebkitMaskImage: `url('/brand/sparktree-horizontal.png')`,
                   WebkitMaskSize: 'contain',
                   WebkitMaskRepeat: 'no-repeat',
                   WebkitMaskPosition: 'center',
-                  maskImage: `url('/assets/sparktree-horizontal.png')`,
+                  maskImage: `url('/brand/sparktree-horizontal.png')`,
                   maskSize: 'contain',
                   maskRepeat: 'no-repeat',
                   maskPosition: 'center',

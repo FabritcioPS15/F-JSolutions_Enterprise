@@ -1,6 +1,6 @@
 // ─── Empresa ───────────────────────────────────────────────────────────────────
 export const EMPRESA = {
-  nombre: 'FJ Tech Solutions',
+  nombre: 'F&J Systems S.A.C.',
   tagline: 'Tecnologia que mueve tu empresa',
   ruc: '20XXXXXXXXX',
   telefono: '+51 999 888 777',

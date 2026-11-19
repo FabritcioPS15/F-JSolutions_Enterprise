@@ -356,8 +356,8 @@ export default function Header({ currentPage, onNavigate, isExiting = false }: H
             className={`transition-transform duration-300 hover:scale-105 ${isMounted ? 'animate-slide-in-top entrance-stagger-1' : 'opacity-0'}`}
           >
             <img
-              src="/assets/sparktree-horizontal.png"
-              alt="SparkTree Logo"
+              src="/brand/sparktree-horizontal.png"
+              alt="SparkTree Studio"
               className={`h-10 w-auto object-contain transition-all duration-300 ${shouldNavItemsBeWhite ? 'brightness-0 invert' : 'brightness-0'
                 }`}
             />
@@ -696,8 +696,8 @@ export default function Header({ currentPage, onNavigate, isExiting = false }: H
               className="transition-transform active:scale-95"
             >
               <img
-                src="/assets/sparktree-horizontal.png"
-                alt="SparkTree"
+                src="/brand/sparktree-horizontal.png"
+                alt="SparkTree Studio"
                 className="h-9 w-auto object-contain brightness-0"
               />
             </button>

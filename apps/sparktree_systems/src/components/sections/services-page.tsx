@@ -205,7 +205,7 @@ const stats = [
 
 const faqs = [
   {
-    q: '¿Cómo empieza un proyecto con FJ Tech?',
+    q: '¿Cómo empieza un proyecto con SparkTree?',
     a: 'Agendamos una conversación de diagnóstico sin costo. Revisamos tu necesidad, alcance y presupuesto, y en pocos días recibes una propuesta con etapas, entregables y costos.',
   },
   {

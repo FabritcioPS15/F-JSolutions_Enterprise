@@ -4,7 +4,7 @@ import { generateSecret, generateURI, verifySync } from 'otplib'
 import { env } from '../config/env'
 
 const ENCRYPTION_ALGORITHM = 'aes-256-gcm'
-const TOTP_ISSUER = 'F&J Systems'
+const TOTP_ISSUER = 'SparkTree Systems'
 const TOTP_PERIOD_SECONDS = 30
 const RECOVERY_CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
 const RECOVERY_CODE_COUNT = 10

@@ -180,7 +180,7 @@ const staticPages: StaticPage[] = [
   {
     title: 'Sobre nosotros',
     href: '/nosotros',
-    description: 'Trayectoria, valores y equipo técnico de F&J Systems.',
+    description: 'Trayectoria, valores y equipo técnico de SparkTree Systems.',
     keywords: ['empresa', 'nosotros', 'quienes somos', 'equipo', 'historia', 'fj'],
   },
   {

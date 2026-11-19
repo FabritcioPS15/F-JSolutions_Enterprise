@@ -223,7 +223,7 @@ export function ClientsView() {
       <PageHeader
         eyebrow="Comercial"
         title="Clientes"
-        description="Directorio de empresas y personas que reciben cotizaciones de FJ Systems."
+        description="Directorio de empresas y personas que reciben cotizaciones de SparkTree Systems."
         actions={
           <>
             <ExportMenu

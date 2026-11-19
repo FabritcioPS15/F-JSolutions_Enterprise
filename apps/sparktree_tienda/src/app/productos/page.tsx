@@ -3,7 +3,7 @@ import { Suspense } from 'react'
 import { CatalogPage } from '@/components/catalog-page'
 
 export const metadata: Metadata = {
-  title: 'Tienda de equipos TI | F&J Store',
+  title: 'Tienda de equipos TI | SparkTree Store',
   description:
     'Laptops, servidores, componentes, redes, impresoras y accesorios con garantía corporativa.',
 }

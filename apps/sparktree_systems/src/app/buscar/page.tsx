@@ -3,8 +3,8 @@ import { Suspense } from 'react'
 import { SearchPage } from '@/components/sections/search-page'
 
 export const metadata: Metadata = {
-  title: 'Buscar | F&J Systems',
-  description: 'Busca productos, servicios, desarrollo de software y secciones de F&J Systems.',
+  title: 'Buscar | SparkTree Systems',
+  description: 'Busca productos, servicios, desarrollo de software y secciones de SparkTree Systems.',
   robots: { index: false, follow: true },
 }
 

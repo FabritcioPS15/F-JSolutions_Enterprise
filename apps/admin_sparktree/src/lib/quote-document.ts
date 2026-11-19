@@ -101,7 +101,7 @@ const CELL_PADDING = 2
 const CONDITIONS_DEFAULT = {
   paymentTerms: 'Transferencia o depósito bancario contra confirmación del pedido.',
   deliveryTime: 'Coordinado con un asesor según disponibilidad del stock.',
-  warranty: 'Según condiciones del fabricante y políticas de F&J Solutions.',
+  warranty: 'Según condiciones del fabricante y políticas de SparkTree Group.',
 }
 
 function round2(value: number): number {
@@ -218,8 +218,8 @@ function drawWordmark(doc: jsPDF, x: number, y: number) {
   doc.setFont('helvetica', 'bold')
   doc.setFontSize(19)
   setText(doc, COLORS.navy)
-  doc.text('F&J', x, y + 8)
-  const width = doc.getTextWidth('F&J')
+  doc.text('SparkTree', x, y + 8)
+  const width = doc.getTextWidth('SparkTree')
   doc.setFontSize(8)
   setText(doc, COLORS.blue)
   doc.text('SYSTEMS', x + width + 1.2, y + 8)

@@ -11,7 +11,7 @@ export default function StoreHomePage() {
       <section className="py-14 text-center sm:py-20">
         <div className="inline-flex items-center gap-2 rounded-full border border-[#2563EB]/20 bg-tint-blue px-4 py-1.5 text-xs font-semibold text-blue-ink">
           <Sparkles className="size-3.5 text-[#F59E0B]" aria-hidden="true" />
-          <span>F&amp;J Store · Tienda especializada en hardware</span>
+          <span>SparkTree Store · Tienda especializada en hardware</span>
         </div>
 
         <h1 className="mx-auto mt-6 max-w-3xl font-heading text-4xl font-black leading-tight text-foreground sm:text-5xl">

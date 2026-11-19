@@ -5,10 +5,10 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import {
   ArrowRight,
+  ArrowUpRight,
   ChevronDown,
   Clock,
   FileText,
-  Headset,
   LayoutGrid,
   Mail,
   MapPin,
@@ -19,7 +19,7 @@ import {
   X,
 } from 'lucide-react'
 import { ThemeToggle } from '@/components/theme-toggle'
-import { COMPANY, CORPORATE_NAV, STORE_NAV, corporateUrl } from '@/lib/store-nav'
+import { COMPANY, ECOSYSTEM_NAV, GROUP_URL, STORE_NAV, corporateUrl } from '@/lib/store-nav'
 
 type StoreCategory = { value: string; label: string }
 
@@ -99,17 +99,21 @@ export function StoreHeader({ categories }: StoreHeaderProps) {
   const router = useRouter()
   const [menuOpen, setMenuOpen] = useState(false)
   const [categoriesOpen, setCategoriesOpen] = useState(false)
+  const [ecosystemOpen, setEcosystemOpen] = useState(false)
   const [topBarClosed, setTopBarClosed] = useState(false)
   const [mobileCategoriesOpen, setMobileCategoriesOpen] = useState(false)
   const [query, setQuery] = useState('')
   const categoriesRef = useRef<HTMLDivElement>(null)
+  const ecosystemRef = useRef<HTMLDivElement>(null)
 
   useOnClickOutside(categoriesRef, () => setCategoriesOpen(false))
+  useOnClickOutside(ecosystemRef, () => setEcosystemOpen(false))
 
   useEffect(() => {
     const handler = (event: KeyboardEvent) => {
       if (event.key !== 'Escape') return
       setCategoriesOpen(false)
+      setEcosystemOpen(false)
       setMenuOpen(false)
     }
     document.addEventListener('keydown', handler)
@@ -128,6 +132,7 @@ export function StoreHeader({ categories }: StoreHeaderProps) {
   useEffect(() => {
     setMenuOpen(false)
     setCategoriesOpen(false)
+    setEcosystemOpen(false)
     setMobileCategoriesOpen(false)
   }, [pathname])
 
@@ -171,8 +176,8 @@ export function StoreHeader({ categories }: StoreHeaderProps) {
             <span className="hidden items-center gap-1.5 md:flex">
               <Clock className="size-3.5 text-[#93C5FD]" /> {COMPANY.hours}
             </span>
-            <a href={corporateUrl('/')} className="transition hover:text-white">
-              Web corporativa
+            <a href={GROUP_URL} className="transition hover:text-white">
+              SparkTree Group
             </a>
             <a href={corporateUrl('/soporte-ti')} className="transition hover:text-white">
               Mesa de ayuda
@@ -191,17 +196,17 @@ export function StoreHeader({ categories }: StoreHeaderProps) {
 
       <div className="border-b border-border bg-card/90 backdrop-blur-xl shadow-[0_12px_32px_-20px_rgba(15,23,42,0.35)]">
         <div className="mx-auto flex max-w-[1280px] items-center gap-3 px-4 py-3.5 sm:px-6 lg:gap-6 lg:px-8">
-          <Link href="/" className="group flex shrink-0 items-center gap-3" aria-label="F&J Store · Inicio">
+          <Link href="/" className="group flex shrink-0 items-center gap-3" aria-label="SparkTree Store · Inicio">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/images/logos/logo.png"
-              alt="F&J Store"
-              className="h-10 w-auto object-contain transition-transform duration-200 group-hover:scale-105 dark:brightness-0 dark:invert sm:h-11"
+              src="/brand/sparktree-horizontal.png"
+              alt="SparkTree Store"
+              className="h-10 w-auto object-contain transition-transform duration-200 group-hover:scale-105 brightness-0 dark:brightness-100 sm:h-11"
             />
             <span className="hidden flex-col leading-tight xl:flex">
-              <span className="font-heading text-sm font-bold text-foreground">F&amp;J STORE</span>
+              <span className="font-heading text-sm font-bold text-foreground">TIENDA OFICIAL</span>
               <span className="text-[10px] font-medium text-muted-foreground">
-                Hardware &amp; equipamiento TI
+                SparkTree Store · Hardware &amp; equipamiento TI
               </span>
             </span>
           </Link>
@@ -209,7 +214,10 @@ export function StoreHeader({ categories }: StoreHeaderProps) {
           <div ref={categoriesRef} className="relative hidden lg:block">
             <button
               type="button"
-              onClick={() => setCategoriesOpen((value) => !value)}
+              onClick={() => {
+                setCategoriesOpen((value) => !value)
+                setEcosystemOpen(false)
+              }}
               aria-expanded={categoriesOpen}
               aria-haspopup="dialog"
               className={`flex h-10 shrink-0 items-center gap-2 rounded-xl border px-4 text-[14px] font-semibold transition-all ${
@@ -289,22 +297,65 @@ export function StoreHeader({ categories }: StoreHeaderProps) {
                 {link.label}
               </Link>
             ))}
-            {CORPORATE_NAV.map((link) => (
-              <a
-                key={link.href}
-                href={corporateUrl(link.href)}
-                className="border-b-2 border-transparent px-3 py-4 text-[14px] font-semibold text-muted-foreground transition-colors hover:text-blue-ink"
-              >
-                {link.label}
-              </a>
-            ))}
-            <a
-              href={corporateUrl('/contacto')}
-              className="ml-auto flex items-center gap-2 border-l border-border py-4 pl-6 text-[14px] font-bold text-foreground transition hover:text-blue-ink"
-            >
-              <Headset className="size-4 text-blue-ink" />
-              Asesoría gratuita
-            </a>
+            {ECOSYSTEM_NAV.length > 0 && (
+              <div ref={ecosystemRef} className="relative">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEcosystemOpen((value) => !value)
+                    setCategoriesOpen(false)
+                  }}
+                  aria-expanded={ecosystemOpen}
+                  aria-haspopup="menu"
+                  className={`flex items-center gap-1.5 border-b-2 px-3 py-4 text-[14px] font-semibold transition-colors ${
+                    ecosystemOpen
+                      ? 'border-[#2563EB] text-blue-ink'
+                      : 'border-transparent text-muted-foreground hover:text-blue-ink'
+                  }`}
+                >
+                  Ecosistema SparkTree
+                  <ChevronDown
+                    className={`size-3.5 transition-transform duration-200 ${ecosystemOpen ? 'rotate-180' : ''}`}
+                  />
+                </button>
+                {ecosystemOpen && (
+                  <div
+                    role="menu"
+                    aria-label="Otras empresas del grupo"
+                    className="absolute left-0 top-full z-50 w-[340px] rounded-2xl border border-border bg-card p-2 shadow-[0_8px_40px_rgba(15,23,42,0.10)]"
+                  >
+                    {ECOSYSTEM_NAV.map((unit) => (
+                      <a
+                        key={unit.name}
+                        href={unit.href}
+                        role="menuitem"
+                        className="group flex items-start gap-3 rounded-xl px-3 py-2.5 transition hover:bg-muted"
+                      >
+                        <span
+                          className="mt-1.5 size-2 shrink-0 rounded-full"
+                          style={{ backgroundColor: unit.accent }}
+                        />
+                        <span className="min-w-0">
+                          <span className="flex items-center gap-1 text-sm font-semibold text-foreground transition-colors group-hover:text-blue-ink">
+                            {unit.name}
+                            <ArrowUpRight className="size-3.5 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
+                          </span>
+                          <span className="block text-xs text-muted-foreground">{unit.tagline}</span>
+                        </span>
+                      </a>
+                    ))}
+                    <a
+                      href={GROUP_URL}
+                      role="menuitem"
+                      className="mt-1 flex items-center justify-between rounded-xl border-t border-border px-3 pb-1.5 pt-3 text-sm font-semibold text-blue-ink transition hover:text-brand-ink"
+                    >
+                      Ver SparkTree Group
+                      <ArrowUpRight className="size-4" />
+                    </a>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </nav>
       </div>
@@ -340,18 +391,28 @@ export function StoreHeader({ categories }: StoreHeaderProps) {
 
           <div className="mb-3 grid gap-1 border-t border-border pt-3">
             <p className="px-2 pb-1 text-[10.5px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
-              Web corporativa
+              Ecosistema SparkTree
             </p>
-            {CORPORATE_NAV.map((link) => (
+            {ECOSYSTEM_NAV.map((unit) => (
               <a
-                key={link.href}
-                href={corporateUrl(link.href)}
+                key={unit.name}
+                href={unit.href}
                 className="flex items-center justify-between rounded-xl px-4 py-2.5 text-sm font-medium text-foreground transition hover:bg-muted"
               >
-                {link.label}
+                <span className="flex items-center gap-2.5">
+                  <span className="size-2 rounded-full" style={{ backgroundColor: unit.accent }} />
+                  {unit.name}
+                </span>
                 <ArrowRight className="size-3.5 text-muted-foreground" />
               </a>
             ))}
+            <a
+              href={GROUP_URL}
+              className="flex items-center justify-between rounded-xl px-4 py-2.5 text-sm font-semibold text-blue-ink transition hover:bg-muted"
+            >
+              Ver SparkTree Group
+              <ArrowRight className="size-3.5" />
+            </a>
           </div>
 
           <div className="overflow-hidden rounded-xl border border-border">

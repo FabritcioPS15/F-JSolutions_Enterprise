@@ -21,7 +21,7 @@ const envSchema = z.object({
   SMTP_PORT: z.coerce.number().default(587),
   SMTP_USER: z.string().optional(),
   SMTP_PASS: z.string().optional(),
-  EMAIL_FROM: z.string().default('F&J Systems <no-reply@fjsolutions.pe>'),
+  EMAIL_FROM: z.string().default('SparkTree Systems <no-reply@fjsolutions.pe>'),
   FRONTEND_URL: z.string().url().default('http://localhost:3000'),
   MAX_FILE_SIZE_MB: z.coerce.number().default(5),
   UPLOAD_PATH: z.string().default('./uploads'),

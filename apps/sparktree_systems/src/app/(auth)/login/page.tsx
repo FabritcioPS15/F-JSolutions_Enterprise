@@ -7,7 +7,7 @@ import { oauthAvailability } from '@/lib/customer/oauth'
 import { getCustomerSession } from '@/lib/customer/session'
 
 export const metadata: Metadata = {
-  title: 'Iniciar sesión | F&J Systems',
+  title: 'Iniciar sesión | SparkTree Systems',
   description: 'Accede a tu cuenta de cliente para revisar tus cotizaciones y favoritos.',
   robots: { index: false, follow: true },
 }

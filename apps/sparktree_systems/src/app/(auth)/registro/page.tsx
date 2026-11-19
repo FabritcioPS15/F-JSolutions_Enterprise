@@ -5,7 +5,7 @@ import { oauthAvailability } from '@/lib/customer/oauth'
 import { getCustomerSession } from '@/lib/customer/session'
 
 export const metadata: Metadata = {
-  title: 'Crear cuenta | F&J Systems',
+  title: 'Crear cuenta | SparkTree Systems',
   description: 'Regístrate para guardar tus cotizaciones, favoritos y solicitudes de soporte.',
   robots: { index: false, follow: true },
 }

@@ -226,13 +226,13 @@ export function StoreFooter({ categories }: { categories: StoreCategory[] }) {
             <Link
               href="/"
               className={`group inline-flex items-center gap-3 rounded-lg ${FOCUS_STYLE}`}
-              aria-label="F&J Store · Inicio"
+              aria-label="SparkTree Store · Inicio"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/images/logos/logo.png"
-                alt="F&J Store"
-                className="h-16 w-auto object-contain brightness-0 invert transition-transform duration-200 group-hover:scale-105 motion-reduce:transition-none sm:h-20"
+                src="/brand/sparktree-horizontal.png"
+                alt="SparkTree Store"
+                className="h-16 w-auto object-contain transition-transform duration-200 group-hover:scale-105 motion-reduce:transition-none sm:h-20"
               />
             </Link>
 
@@ -292,7 +292,7 @@ export function StoreFooter({ categories }: { categories: StoreCategory[] }) {
 
         <div className="border-t border-white/10 pt-6 sm:pt-8">
           <div className="flex flex-col gap-4 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-            <p>&copy; {currentYear} F&amp;J Store · F&amp;J Systems. Todos los derechos reservados.</p>
+            <p>&copy; {currentYear} SparkTree Store. Todos los derechos reservados.</p>
 
             <ul className="grid grid-cols-2 gap-x-4 gap-y-1 sm:flex sm:flex-wrap sm:items-center sm:gap-x-5 sm:gap-y-2">
               {LEGAL_LINKS.map((item) => (

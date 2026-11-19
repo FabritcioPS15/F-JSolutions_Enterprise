@@ -964,7 +964,7 @@ export function ProductForm({
                       id="product-sku"
                       value={draft.sku}
                       onChange={(event) => setField('sku', event.target.value.toUpperCase())}
-                      placeholder="FJ-0001"
+                      placeholder="SPK-0001"
                       className={cn(inputClass, 'pl-9 font-mono text-xs uppercase')}
                       autoComplete="off"
                     />

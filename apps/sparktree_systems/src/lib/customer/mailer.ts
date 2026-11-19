@@ -24,7 +24,7 @@ export async function deliverVerificationEmail(email: VerificationEmail): Promis
       auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
     })
     await transport.sendMail({
-      from: process.env.EMAIL_FROM ?? 'F&J Systems <no-reply@fjsolutions.pe>',
+      from: process.env.EMAIL_FROM ?? 'SparkTree Systems <no-reply@fjsolutions.pe>',
       to: email.to,
       subject: email.subject,
       text: email.text,

@@ -360,14 +360,14 @@ export function SiteHeader({ quoteCount = 0, onQuoteClick }: SiteHeaderProps) {
           <Link
             href="/"
             className="flex shrink-0 items-center gap-3 group"
-            aria-label="F&J Systems · Inicio"
+            aria-label="SparkTree Systems · Inicio"
             onClick={() => { setMenuOpen(false); closeAll() }}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/images/logos/logo.png"
-              alt="F&J Systems"
-              className="h-10 sm:h-11 w-auto object-contain transition-transform duration-200 group-hover:scale-105 dark:brightness-0 dark:invert"
+              src="/brand/sparktree-horizontal.png"
+              alt="SparkTree Systems"
+              className="h-10 sm:h-11 w-auto object-contain transition-transform duration-200 group-hover:scale-105 brightness-0 dark:brightness-100"
             />
           </Link>
 

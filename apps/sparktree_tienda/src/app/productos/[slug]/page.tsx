@@ -31,10 +31,10 @@ type PageProps = { params: Promise<{ slug: string }> }
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
   const product = findProductBySlug(slug)
-  if (!product) return { title: 'Producto no encontrado | F&J Store' }
+  if (!product) return { title: 'Producto no encontrado | SparkTree Store' }
 
   return {
-    title: `${product.name} | F&J Store`,
+    title: `${product.name} | SparkTree Store`,
     description: product.description,
   }
 }
@@ -51,7 +51,7 @@ export default async function StoreProductPage({ params }: PageProps) {
     .filter((item) => item.category === product.category && item.id !== product.id)
     .slice(0, 4)
   const quoteMessage = encodeURIComponent(
-    `Hola F&J Solutions, quiero cotizar: ${product.name}${product.sku ? ` (SKU ${product.sku})` : ''}.`
+    `Hola SparkTree Group, quiero cotizar: ${product.name}${product.sku ? ` (SKU ${product.sku})` : ''}.`
   )
 
   return (

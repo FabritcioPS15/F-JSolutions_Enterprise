@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { GraduationCap, Menu, X, ArrowUpRight } from 'lucide-react'
+import { Menu, X, ArrowUpRight } from 'lucide-react'
 
 const NAV_LINKS = [
   { href: '#programas', label: 'Programas' },
@@ -18,12 +18,18 @@ export function AcademyHeader({ onOpenEnroll }: { onOpenEnroll: () => void }) {
     <header className="sticky top-0 z-50 border-b border-line bg-white/95 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-2.5">
-          <div className="grid size-9 place-items-center rounded-lg bg-brand-600 text-white">
-            <GraduationCap className="size-5" />
+          <div className="grid size-9 place-items-center rounded-lg bg-brand-600">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/brand/sparktree-symbol.png"
+              alt=""
+              aria-hidden="true"
+              className="h-5 w-auto object-contain"
+            />
           </div>
           <div className="leading-tight">
             <p className="text-[15px] font-semibold tracking-tight text-ink-900">
-              F&amp;J Academy
+              SparkTree Academia
             </p>
             <p className="text-[11px] text-ink-500">Instituto de tecnología</p>
           </div>
@@ -48,7 +54,7 @@ export function AcademyHeader({ onOpenEnroll }: { onOpenEnroll: () => void }) {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1 text-[13px] font-medium text-ink-500 transition hover:text-ink-900"
           >
-            F&amp;J Empresa
+            SparkTree Empresa
             <ArrowUpRight className="size-3.5" />
           </a>
           <button

@@ -841,7 +841,7 @@ export function LinksProfilesView() {
                     value={draft.name}
                     onChange={(event) => changeName(event.target.value)}
                     className={inputClass}
-                    placeholder="Ej. F&J Solutions Enterprise"
+                    placeholder="Ej. SparkTree Group"
                     disabled={!canEdit}
                   />
                 </Field>
@@ -932,7 +932,7 @@ export function LinksProfilesView() {
                     onChange={(event) => update({ initials: event.target.value.toUpperCase() })}
                     className={inputClass}
                     maxLength={4}
-                    placeholder="FJ"
+                    placeholder="SP"
                     disabled={!canEdit}
                   />
                 </Field>

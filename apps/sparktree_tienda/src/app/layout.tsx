@@ -23,15 +23,11 @@ const themeScript = `(function(){try{var t=localStorage.getItem('fj-theme');var 
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_STORE_APP_URL ?? 'http://localhost:3006'),
-  title: 'F&J Store | Tienda Oficial de Hardware & Equipamiento TI',
+  title: 'SparkTree Store | Tienda Oficial de Hardware & Equipamiento TI',
   description:
-    'Tienda oficial de F&J Solutions Enterprise. Servidores, Laptops, Equipos de Red Cisco/MikroTik, Componentes y Licencias con garantía corporativa.',
+    'Tienda oficial de SparkTree Group. Servidores, Laptops, Equipos de Red Cisco/MikroTik, Componentes y Licencias con garantía corporativa.',
   icons: {
-    icon: [
-      { url: '/icon-light-32x32.png', media: '(prefers-color-scheme: light)' },
-      { url: '/icon-dark-32x32.png', media: '(prefers-color-scheme: dark)' },
-      { url: '/icon.svg', type: 'image/svg+xml' },
-    ],
+    icon: [{ url: '/favicon.svg', type: 'image/svg+xml' }],
     apple: '/apple-icon.png',
   },
 }

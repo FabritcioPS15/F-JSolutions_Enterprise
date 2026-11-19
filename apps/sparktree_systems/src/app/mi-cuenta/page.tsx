@@ -4,9 +4,9 @@ import { AccountPage } from '@/components/sections/account-page'
 import { getCustomerSession } from '@/lib/customer/session'
 
 export const metadata: Metadata = {
-  title: 'Mi cuenta | F&J Systems',
+  title: 'Mi cuenta | SparkTree Systems',
   description:
-    'Administra tu perfil, tus productos favoritos y el historial de cotizaciones de F&J Systems.',
+    'Administra tu perfil, tus productos favoritos y el historial de cotizaciones de SparkTree Systems.',
   robots: { index: false, follow: false },
 }
 

@@ -40,7 +40,7 @@ export function OpsConsoleVisual() {
             </span>
             <div className="min-w-0">
               <p className="truncate text-[11px] font-bold text-foreground">Panel de operación</p>
-              <p className="truncate text-[9.5px] text-muted-foreground">Infraestructura y soporte F&amp;J</p>
+              <p className="truncate text-[9.5px] text-muted-foreground">Infraestructura y soporte SparkTree</p>
             </div>
           </div>
         </div>
@@ -454,7 +454,7 @@ export function SupportVisual() {
           <div className="mt-3 rounded-xl border border-brand-ink/30 bg-tint-brand p-3">
             <div className="flex items-center gap-2.5">
               <span className="grid size-9 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[#2A82C4] to-[#1769AA] font-heading text-[9px] font-bold text-white">
-                FJ
+                Sp
               </span>
               <div className="min-w-0 flex-1">
                 <p className="text-[10px] font-bold text-foreground">Especialista asignado</p>

@@ -4,7 +4,7 @@ import { SITE_NAME } from './site'
 
 export function getServiceMetadata(service: ServiceDefinition): Metadata {
   const path = getServicePathFor(service)
-  const title = `${service.title} | F&J Systems`
+  const title = `${service.title} | SparkTree Systems`
 
   return {
     title,
@@ -32,7 +32,7 @@ export function getServiceMetadata(service: ServiceDefinition): Metadata {
 
 export function getServiceNotFoundMetadata(): Metadata {
   return {
-    title: 'Servicio no encontrado | F&J Systems',
+    title: 'Servicio no encontrado | SparkTree Systems',
     robots: { index: false, follow: false },
   }
 }

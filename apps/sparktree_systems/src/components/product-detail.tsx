@@ -162,7 +162,7 @@ export function ProductDetail({ slug }: ProductDetailProps) {
     try {
       await navigator.share({
         title: product.name,
-        text: `${product.name} | F&J Systems`,
+        text: `${product.name} | SparkTree Systems`,
         url: shareUrl,
       })
       setShareOpen(false)
@@ -191,7 +191,7 @@ export function ProductDetail({ slug }: ProductDetailProps) {
   }
 
   const encodedUrl = encodeURIComponent(shareUrl)
-  const encodedText = encodeURIComponent(`${product.name} | F&J Systems`)
+  const encodedText = encodeURIComponent(`${product.name} | SparkTree Systems`)
   const shareLinks = [
     {
       label: 'WhatsApp',

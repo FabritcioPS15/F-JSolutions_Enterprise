@@ -3,7 +3,7 @@ import { timingSafeEqual } from 'node:crypto'
 // Cuenta base del panel: se configura con variables de entorno y no se guarda
 // en el almacén de usuarios para no duplicar credenciales.
 const DEFAULT_EMAIL = 'admin@fjsolutions.com.pe'
-const DEFAULT_NAME = 'Administrador F&J'
+const DEFAULT_NAME = 'Administrador SparkTree'
 const DEV_PASSWORD = 'Admin12345!'
 
 export const SEEDED_ADMIN_ID = 'usr_local_admin'

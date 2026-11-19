@@ -106,7 +106,7 @@ const defaultIntegrations: SystemIntegration[] = [
     id: 'int-webhooks',
     name: 'Webhooks & Automatizaciones',
     category: 'webhooks',
-    provider: 'F&J Event Dispatcher',
+    provider: 'SparkTree Event Dispatcher',
     description: 'Eventos salientes (orden creada, pago confirmado, cotización aprobada) para ERPs o sistemas externos.',
     status: 'connected',
     mode: 'production',

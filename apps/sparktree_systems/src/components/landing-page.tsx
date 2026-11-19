@@ -185,7 +185,7 @@ export function LandingPage() {
       <section id="productos" className="mx-auto max-w-[1280px] scroll-mt-20 sm:scroll-mt-24 px-4 py-8 sm:py-10 sm:px-6 lg:px-8">
         <Reveal className="relative z-20 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-ink sm:text-sm">Selección FJ Tech</p>
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-ink sm:text-sm">Selección SparkTree</p>
             <h2 className="mt-2 text-2xl font-bold tracking-[-0.05em] sm:text-3xl lg:text-4xl">Productos destacados</h2>
           </div>
           <div className="flex flex-wrap items-center gap-2">

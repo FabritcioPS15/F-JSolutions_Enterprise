@@ -5,7 +5,7 @@ import { getStoreServicesByCategory } from '@/lib/service-offerings'
 export const revalidate = 60
 
 export const metadata: Metadata = {
-  title: 'Infraestructura TI para empresas | F&J Systems',
+  title: 'Infraestructura TI para empresas | SparkTree Systems',
   description:
     'Redes, Wi-Fi, cableado estructurado, servidores y equipamiento tecnológico para empresas. Diseñamos e implementamos una infraestructura estable, segura y escalable.',
   alternates: { canonical: '/infraestructura-ti' },

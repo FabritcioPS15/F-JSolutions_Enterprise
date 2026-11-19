@@ -129,9 +129,9 @@ function areaForPath(path: string): NavArea | null {
 
 function getInitials(name: string) {
   const parts = name.trim().split(/\s+/).filter(Boolean)
-  if (parts.length === 0) return 'FJ'
+  if (parts.length === 0) return 'SP'
   const initials = parts.slice(0, 2).map((part) => part[0]?.toUpperCase() ?? '')
-  return initials.join('') || 'FJ'
+  return initials.join('') || 'SP'
 }
 
 function getBreadcrumb(pathname: string) {
@@ -647,14 +647,14 @@ export function AdminShell({
             href="/"
             onClick={() => setOpen(false)}
             className="group flex min-w-0 flex-1 items-center transition-transform duration-200"
-            aria-label="FJ Systems, inicio"
+            aria-label="SparkTree Admin, inicio"
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/logo.png"
-              alt="F&J Systems"
+              src="/brand/sparktree-horizontal.png"
+              alt="SparkTree Admin"
               className={cn(
-                'h-16 w-auto shrink-0 object-contain brightness-0 invert transition duration-200 group-hover:scale-105',
+                'h-16 w-auto shrink-0 object-contain transition duration-200 group-hover:scale-105',
                 collapsed && 'lg:h-12'
               )}
             />

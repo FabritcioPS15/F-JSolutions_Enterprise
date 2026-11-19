@@ -37,7 +37,7 @@ const faqsData: FAQItem[] = [
     id: 'gen-1',
     category: 'general',
     categoryLabel: 'General y Empresa',
-    q: '¿Cómo empieza un proyecto con F&J Systems?',
+    q: '¿Cómo empieza un proyecto con SparkTree Systems?',
     a: 'Iniciamos con una conversación de diagnóstico sin costo. Escuchamos tus necesidades operativas, evaluamos tu infraestructura actual y preparamos una propuesta técnica y comercial con alcance, cronograma y presupuesto cerrado.',
   },
   {

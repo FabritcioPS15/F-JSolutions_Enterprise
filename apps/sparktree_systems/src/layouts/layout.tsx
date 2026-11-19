@@ -18,7 +18,7 @@ const spaceGrotesk = Space_Grotesk({
 
 
 export const metadata: Metadata = {
-  title: 'F&J Systems | Tecnología que mueve',
+  title: 'SparkTree Systems | Tecnología que mueve',
   description: 'Desarrollo de software, infraestructura TI y hardware corporativo para empresas que quieren avanzar.',
   generator: 'v0.app',
   icons: {

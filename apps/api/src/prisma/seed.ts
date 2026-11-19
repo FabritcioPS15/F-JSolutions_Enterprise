@@ -166,8 +166,8 @@ const ROLES: RoleSeed[] = [
 ]
 
 const STORE_SETTING = {
-  storeName: 'FJ Systems',
-  legalName: 'FJ Systems S.A.C.',
+  storeName: 'SparkTree Store',
+  legalName: 'F&J Systems S.A.C.',
   ruc: '20601234567',
   email: 'ventas@fjsystems.pe',
   phone: '+51 999 888 777',
@@ -254,7 +254,7 @@ async function seedRolePermissions(
 
 async function seedSuperadmin(roles: Awaited<ReturnType<typeof seedRoles>>) {
   const email = (process.env.SEED_ADMIN_EMAIL ?? 'admin@fjsolutions.com.pe').toLowerCase()
-  const name = process.env.SEED_ADMIN_NAME ?? 'Administrador F&J'
+  const name = process.env.SEED_ADMIN_NAME ?? 'Administrador SparkTree'
   const providedPassword = process.env.SEED_ADMIN_PASSWORD
   const password = providedPassword ?? 'Admin12345!'
 
@@ -317,7 +317,7 @@ async function seedSequences() {
 }
 
 async function main() {
-  console.log('[seed] Iniciando datos base de F&J Systems...')
+  console.log('[seed] Iniciando datos base de SparkTree Systems...')
 
   const permissions = await seedPermissions()
   const roles = await seedRoles()

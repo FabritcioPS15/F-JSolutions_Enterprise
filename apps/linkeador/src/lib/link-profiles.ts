@@ -89,7 +89,7 @@ function normalizeProfile(profile: LinkProfile): LinkProfile {
 
   return {
     ...profile,
-    // El perfil histórico de F&J se guardó sin avatar; su logo vive en public.
+    // El perfil histórico de SparkTree se guardó sin avatar; su logo vive en public.
     avatarUrl: profile.avatarUrl || (profile.slug === 'fjsolutions' ? '/logo.png' : ''),
     background,
     tone: profile.tone === 'light' || profile.tone === 'dark' ? profile.tone : 'auto',
@@ -103,7 +103,7 @@ function fallbackProfile(): LinkProfile {
     name: PROFILE_INFO.name,
     handle: PROFILE_INFO.handle,
     bio: PROFILE_INFO.bio,
-    initials: 'FJ',
+    initials: 'SG',
     avatarUrl: PROFILE_INFO.avatarUrl,
     verified: true,
     statusEnabled: true,
@@ -147,7 +147,7 @@ export async function listLinkProfiles(): Promise<LinkProfile[]> {
     }
     return parsed.profiles.map(normalizeProfile)
   } catch {
-    // Sin archivo del panel se mantiene la página histórica de F&J.
+    // Sin archivo del panel se mantiene la página histórica de SparkTree.
     return [fallbackProfile()]
   }
 }

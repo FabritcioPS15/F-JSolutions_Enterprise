@@ -5,7 +5,7 @@ import { getStoreServicesByCategory } from '@/lib/service-offerings'
 export const revalidate = 60
 
 export const metadata: Metadata = {
-  title: 'Desarrollo de software a medida | F&J Systems',
+  title: 'Desarrollo de software a medida | SparkTree Systems',
   description:
     'Páginas web, sistemas a medida, ERP, automatización de procesos e integraciones para empresas. Desarrollo por etapas, con alcance claro y soporte posterior.',
   alternates: { canonical: '/sistemas' },

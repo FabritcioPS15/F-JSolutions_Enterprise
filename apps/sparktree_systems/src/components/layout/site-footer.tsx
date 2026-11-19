@@ -225,17 +225,17 @@ export function SiteFooter() {
         {/* ─── A. Cabecera del Footer: Logotipo oficial & Redes Sociales ─── */}
         <div className="flex flex-col gap-5 pb-8 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:pb-10 border-b border-[#17324A]/80">
           <div className="flex flex-wrap items-center gap-x-6 gap-y-4">
-            {/* Logotipo F&J Systems */}
+            {/* Logotipo SparkTree Systems */}
             <Link
               href="/"
               className={`group inline-flex items-center gap-3 ${FOCUS_STYLE} rounded-lg`}
-              aria-label="F&J Systems · Inicio"
+              aria-label="SparkTree Systems · Inicio"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/images/logos/logo.png"
-                alt="F&J Systems"
-                className="h-16 w-auto object-contain brightness-0 invert transition-transform duration-200 group-hover:scale-105 motion-reduce:transition-none sm:h-20"
+                src="/brand/sparktree-horizontal.png"
+                alt="SparkTree Systems"
+                className="h-16 w-auto object-contain transition-transform duration-200 group-hover:scale-105 motion-reduce:transition-none sm:h-20"
               />
             </Link>
 
@@ -302,7 +302,7 @@ export function SiteFooter() {
         <div className="border-t border-[#17324A]/80 pt-6 sm:pt-8">
           <div className="flex flex-col gap-4 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
             <p className="text-muted-foreground">
-              &copy; {currentYear} F&J Systems. Todos los derechos reservados.
+              &copy; {currentYear} SparkTree Systems. Todos los derechos reservados.
             </p>
 
             <ul className="grid grid-cols-2 gap-x-4 gap-y-1 sm:flex sm:flex-wrap sm:items-center sm:gap-x-5 sm:gap-y-2">

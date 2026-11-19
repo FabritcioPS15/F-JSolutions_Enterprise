@@ -4,8 +4,8 @@ import { prismaSettingsRepository } from '../repositories/prisma-settings.reposi
 import type { SettingsRepository, StoredSettings } from '../repositories/settings.repository'
 
 export const DEFAULT_SETTINGS: admin.StoreSettings = {
-  storeName: 'FJ Systems',
-  legalName: 'FJ Systems S.A.C.',
+  storeName: 'SparkTree Store',
+  legalName: 'F&J Systems S.A.C.',
   ruc: '20601234567',
   email: 'ventas@fjsystems.pe',
   phone: '+51 999 888 777',

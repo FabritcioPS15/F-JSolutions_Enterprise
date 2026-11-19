@@ -231,7 +231,7 @@ const capabilities = [
 
 const faqs = [
   {
-    q: '¿Cómo empieza un proyecto con F&J Systems?',
+    q: '¿Cómo empieza un proyecto con SparkTree Systems?',
     a: 'Agendamos una conversación de diagnóstico sin costo. Revisamos tu necesidad, el estado actual de tu operación y las prioridades reales. Con esa información preparamos una propuesta con alcance, etapas, entregables y costos.',
   },
   {
@@ -316,7 +316,7 @@ export function AboutPage() {
 
               <div className="mt-5 max-w-[62ch] space-y-4 text-sm leading-7 text-muted-foreground sm:text-[15px]">
                 <p>
-                  F&J Systems nació resolviendo necesidades concretas: equipos que fallaban, redes
+                  SparkTree Systems nació resolviendo necesidades concretas: equipos que fallaban, redes
                   que no alcanzaban y procesos que dependían de hojas de cálculo. Con los años, ese
                   trabajo se convirtió en una práctica integral de infraestructura, soporte y
                   desarrollo.
@@ -367,7 +367,7 @@ export function AboutPage() {
                   “La tecnología debe resolver, no complicar.”
                 </p>
                 <p className="mt-2 text-[10px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                  Principio de trabajo F&amp;J
+                  Principio de trabajo SparkTree
                 </p>
               </div>
             </div>
@@ -757,11 +757,11 @@ function CompanyCard() {
         <div className="relative">
           <div className="flex items-center gap-3">
             <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-[#2A82C4] to-[#1769AA] font-heading text-sm font-bold tracking-tight text-white shadow-[0_12px_24px_-12px_rgba(23,105,170,0.6)]">
-              FJ
+              Sp
             </span>
             <div className="min-w-0">
               <p className="font-heading text-sm font-bold tracking-[-0.02em] text-foreground">
-                F&amp;J Solutions
+                SparkTree Group
               </p>
               <p className="mt-0.5 truncate text-[10px] text-muted-foreground">
                 Tecnología empresarial · Lima, Perú

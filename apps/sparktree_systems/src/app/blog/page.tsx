@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
 
 export const metadata: Metadata = {
-  title: 'Blog | FJ Tech Solutions',
+  title: 'Blog | SparkTree Systems',
   description: 'Artículos y noticias sobre tecnología, soporte TI, ciberseguridad y más.',
 }
 

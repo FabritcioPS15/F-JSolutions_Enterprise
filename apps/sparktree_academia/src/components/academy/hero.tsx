@@ -5,7 +5,7 @@ import { STATS } from '@/lib/academy-data'
 
 const VALUE_PROPS = [
   'Certificación oficial empresarial',
-  'Bolsa laboral en F&J Solutions',
+  'Bolsa laboral en SparkTree Group',
   'Laboratorios y servidores dedicados',
 ]
 
@@ -21,7 +21,7 @@ export function AcademyHero({ onOpenEnroll }: { onOpenEnroll: () => void }) {
 
           <h1 className="mt-6 max-w-3xl text-3xl font-semibold tracking-tight text-ink-900 sm:text-5xl sm:leading-tight">
             Formación tecnológica práctica con respaldo de{' '}
-            <span className="text-brand-600">F&amp;J Solutions</span>
+            <span className="text-brand-600">SparkTree Group</span>
           </h1>
 
           <p className="mt-5 max-w-2xl text-[15px] leading-relaxed text-ink-600 sm:text-base">

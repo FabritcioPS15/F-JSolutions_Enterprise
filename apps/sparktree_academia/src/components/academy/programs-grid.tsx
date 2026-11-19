@@ -24,8 +24,8 @@ export function ProgramsGrid({ onSelectCourse }: { onSelectCourse: (course: Cour
               Especializaciones diseñadas para la industria
             </h2>
             <p className="mt-2 text-sm leading-relaxed text-ink-600">
-              Los mismos estándares técnicos que aplicamos en los proyectos corporativos de F&amp;J
-              Solutions, ordenados en programas cortos y prácticos.
+              Los mismos estándares técnicos que aplicamos en los proyectos corporativos de
+              SparkTree Group, ordenados en programas cortos y prácticos.
             </p>
           </div>
 

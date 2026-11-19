@@ -8,7 +8,7 @@ import { LoginTypewriter } from './login-typewriter'
 
 export const metadata: Metadata = {
   title: 'Iniciar sesión',
-  description: 'Acceso restringido al panel de administración de F&J Systems.',
+  description: 'Acceso restringido al panel de administración de SparkTree Systems.',
 }
 
 const HIGHLIGHTS = [
@@ -50,9 +50,9 @@ export default async function LoginPage() {
         <div className="relative z-10 flex items-center gap-5">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/logo.png"
-            alt="F&J Systems"
-            className="h-20 w-auto object-contain brightness-0 invert xl:h-24"
+            src="/brand/sparktree-horizontal.png"
+            alt="SparkTree Admin"
+            className="h-20 w-auto object-contain xl:h-24"
           />
           <span className="hidden items-center gap-3 xl:inline-flex">
             <span className="h-px w-7 bg-[#8876D9]/60" aria-hidden="true" />
@@ -73,7 +73,7 @@ export default async function LoginPage() {
           </h2>
 
           <p className="login-brand-lead mt-5 max-w-[26rem] text-[13.5px] leading-relaxed text-white/60">
-            Gestiona el inventario, los proyectos web y la mesa de ayuda de F&J Systems desde un
+            Gestiona el inventario, los proyectos web y la mesa de ayuda de SparkTree Systems desde un
             panel único, seguro y siempre disponible.
           </p>
 
@@ -104,7 +104,7 @@ export default async function LoginPage() {
         </div>
 
         <div className="relative z-10 flex items-center justify-between gap-4 text-[10.5px] text-white/40">
-          <p>© 2026 F&J Systems · Uso interno</p>
+          <p>© 2026 SparkTree Systems · Uso interno</p>
           <span className="inline-flex items-center gap-1.5">
             <span className="size-1.5 rounded-full bg-[#8876D9]/80" />
             Entorno local
@@ -130,9 +130,9 @@ export default async function LoginPage() {
           <div className="login-mobile-brand mb-6 flex flex-col items-center text-center sm:mb-7 lg:hidden">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/logo.png"
-              alt="F&J Systems"
-              className="h-16 w-auto object-contain brightness-0 invert drop-shadow-[0_12px_32px_rgba(0,0,0,0.35)] sm:h-20"
+              src="/brand/sparktree-horizontal.png"
+              alt="SparkTree Admin"
+              className="h-16 w-auto object-contain drop-shadow-[0_12px_32px_rgba(0,0,0,0.35)] sm:h-20"
             />
             <div className="mt-4 flex w-full items-center justify-center gap-3">
               <span className="h-px w-8 bg-white/25" aria-hidden="true" />
@@ -175,7 +175,7 @@ export default async function LoginPage() {
           </div>
 
           <p className="mt-6 text-center text-[10.5px] text-muted-foreground lg:hidden">
-            © 2026 F&J Systems · Uso interno
+            © 2026 SparkTree Systems · Uso interno
           </p>
         </div>
       </section>

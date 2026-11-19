@@ -393,7 +393,7 @@ export function CommandPalette({
             </span>
           </div>
           <span className="hidden sm:inline text-slate-500">
-            F&J Solutions Enterprise Command
+            SparkTree Group Command
           </span>
         </div>
       </div>

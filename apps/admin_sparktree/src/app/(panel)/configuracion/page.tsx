@@ -268,7 +268,7 @@ export default function ConfiguracionPage() {
                   value={draft.storeName}
                   onChange={(event) => update('storeName', event.target.value)}
                   className={inputClass}
-                  placeholder="FJ Systems"
+                  placeholder="SparkTree Store"
                   aria-invalid={Boolean(errors.storeName)}
                 />
               </Field>
@@ -278,7 +278,7 @@ export default function ConfiguracionPage() {
                   value={draft.legalName}
                   onChange={(event) => update('legalName', event.target.value)}
                   className={inputClass}
-                  placeholder="FJ Systems S.A.C."
+                  placeholder="F&J Systems S.A.C."
                 />
               </Field>
               <Field label="RUC" htmlFor="ruc" error={errors.ruc} hint="11 dígitos, sin espacios.">

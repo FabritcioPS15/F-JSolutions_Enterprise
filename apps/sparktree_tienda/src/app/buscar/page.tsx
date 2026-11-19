@@ -7,8 +7,8 @@ import { listCategories } from '@/lib/catalog-query'
 import { products } from '@/lib/catalog'
 
 export const metadata: Metadata = {
-  title: 'Buscar productos | F&J Store',
-  description: 'Busca laptops, servidores, redes, componentes y accesorios en la tienda de F&J.',
+  title: 'Buscar productos | SparkTree Store',
+  description: 'Busca laptops, servidores, redes, componentes y accesorios en la tienda de SparkTree.',
 }
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>

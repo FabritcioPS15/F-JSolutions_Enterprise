@@ -14,10 +14,13 @@ const themeScript = `(function(){try{var t=localStorage.getItem('fj-theme');var 
 
 export const metadata: Metadata = {
   title: {
-    default: 'FJ Systems · Administración',
-    template: '%s · FJ Systems',
+    default: 'SparkTree Systems · Administración',
+    template: '%s · SparkTree Systems',
   },
-  description: 'Panel de administración del catálogo de FJ Systems.',
+  description: 'Panel de administración del catálogo de SparkTree Systems.',
+  icons: {
+    icon: [{ url: '/favicon.svg', type: 'image/svg+xml' }],
+  },
 }
 
 export const viewport: Viewport = {

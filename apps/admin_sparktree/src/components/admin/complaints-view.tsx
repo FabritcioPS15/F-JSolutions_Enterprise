@@ -116,14 +116,14 @@ function firstName(name: string) {
 function responseTemplate(item: Complaint) {
   return `Hola ${firstName(item.consumer.name)}:
 
-Gracias por comunicarte con F&J Systems. Hemos revisado tu ${kindLabels[item.kind].toLowerCase()} con código ${item.code} respecto a ${item.item.description.toLowerCase()}.
+Gracias por comunicarte con SparkTree Systems. Hemos revisado tu ${kindLabels[item.kind].toLowerCase()} con código ${item.code} respecto a ${item.item.description.toLowerCase()}.
 
 [Describe aquí la solución o el acuerdo alcanzado]
 
 Quedamos atentos a cualquier consulta adicional.
 
 Saludos,
-Equipo de F&J Systems`
+Equipo de SparkTree Systems`
 }
 
 type StatusFilter = ComplaintStatus | 'all'

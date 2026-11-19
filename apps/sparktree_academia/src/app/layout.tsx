@@ -2,9 +2,9 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'F&J Academy | Instituto de Especialización Tecnológica & TI',
+  title: 'SparkTree Academia | Instituto de Especialización Tecnológica & TI',
   description:
-    'F&J Academy es el instituto de tecnología impulsado por F&J Solutions Enterprise. Formación práctica en Desarrollo Web Full Stack, DevOps, Cloud, Ciberseguridad e Inteligencia Artificial con proyectos reales.',
+    'SparkTree Academia es el instituto de tecnología impulsado por SparkTree Group. Formación práctica en Desarrollo Web Full Stack, DevOps, Cloud, Ciberseguridad e Inteligencia Artificial con proyectos reales.',
   keywords: [
     'instituto de tecnologia',
     'cursos de programacion peru',
@@ -14,6 +14,9 @@ export const metadata: Metadata = {
     'fj academy',
     'fj solutions',
   ],
+  icons: {
+    icon: [{ url: '/favicon.svg', type: 'image/svg+xml' }],
+  },
 }
 
 export default function RootLayout({

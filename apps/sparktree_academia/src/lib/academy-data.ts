@@ -50,7 +50,7 @@ export const COURSES: Course[] = [
     modality: 'En vivo Online',
     featured: true,
     badge: 'Más Solicitado',
-    certification: 'Certificación F&J Enterprise Certified Full Stack Developer',
+    certification: 'Certificación SparkTree Certified Full Stack Developer',
     syllabus: [
       'Arquitectura Web Moderna y TypeScript Avanzado',
       'React 19 Server Components y Next.js App Router',
@@ -66,7 +66,7 @@ export const COURSES: Course[] = [
     instructor: {
       name: 'Ing. Fabritcio Peña',
       role: 'Lead Software Architect',
-      company: 'F&J Solutions Enterprise',
+      company: 'SparkTree Group',
     },
   },
   {
@@ -82,7 +82,7 @@ export const COURSES: Course[] = [
     modality: 'En vivo Online',
     featured: true,
     badge: 'Alta Demanda',
-    certification: 'Certificación F&J Cloud & Infrastructure Specialist',
+    certification: 'Certificación SparkTree Cloud & Infrastructure Specialist',
     syllabus: [
       'Fundamentos de Arquitectura Cloud en AWS',
       'Contenedores avanzados con Docker & Docker Compose',
@@ -98,7 +98,7 @@ export const COURSES: Course[] = [
     instructor: {
       name: 'Ing. Carlos Mendoza',
       role: 'DevOps & Cloud Engineer',
-      company: 'F&J Solutions',
+      company: 'SparkTree Group',
     },
   },
   {
@@ -114,7 +114,7 @@ export const COURSES: Course[] = [
     modality: 'Híbrido',
     featured: false,
     badge: 'Especialización',
-    certification: 'Certificado Profesional de Seguridad Ofensiva F&J',
+    certification: 'Certificado Profesional de Seguridad Ofensiva SparkTree',
     syllabus: [
       'Fundamentos de Ethical Hacking y Metodología OWASP',
       'Escaneo y Análisis de Vulnerabilidades de Red',
@@ -130,7 +130,7 @@ export const COURSES: Course[] = [
     instructor: {
       name: 'MSc. Rodrigo Salazar',
       role: 'Cybersecurity Consultant',
-      company: 'F&J Solutions Enterprise',
+      company: 'SparkTree Group',
     },
   },
   {
@@ -145,7 +145,7 @@ export const COURSES: Course[] = [
     hours: 75,
     modality: 'Presencial / Laboratorio',
     featured: false,
-    certification: 'Certificado de Especialista en Redes & Infraestructura F&J',
+    certification: 'Certificado de Especialista en Redes & Infraestructura SparkTree',
     syllabus: [
       'Cableado estructurado y topologías de red',
       'Configuración de VLANs y Routing con Cisco & MikroTik',
@@ -161,7 +161,7 @@ export const COURSES: Course[] = [
     instructor: {
       name: 'Ing. David Paredes',
       role: 'Infrastructure Lead',
-      company: 'F&J Solutions Enterprise',
+      company: 'SparkTree Group',
     },
   },
   {
@@ -177,7 +177,7 @@ export const COURSES: Course[] = [
     modality: 'En vivo Online',
     featured: true,
     badge: 'Tecnología 2027',
-    certification: 'Certificación en Ingeniería de IA y Automatización F&J',
+    certification: 'Certificación en Ingeniería de IA y Automatización SparkTree',
     syllabus: [
       'Fundamentos de LLMs y Prompt Engineering Avanzado',
       'Construcción de Agentes con Function Calling y RAG',
@@ -193,7 +193,7 @@ export const COURSES: Course[] = [
     instructor: {
       name: 'Ing. Fabritcio Peña',
       role: 'AI & Software Director',
-      company: 'F&J Solutions Enterprise',
+      company: 'SparkTree Group',
     },
   },
 ]
@@ -207,8 +207,8 @@ export const STATS = [
 
 export const PILLARS = [
   {
-    title: 'Proyectos Reales de F&J Enterprise',
-    description: 'No te quedas en simples ejercicios de juguete: programas y configuras con retos basados en clientes reales y arquitecturas reales de F&J Solutions.',
+    title: 'Proyectos Reales de SparkTree',
+    description: 'No te quedas en simples ejercicios de juguete: programas y configuras con retos basados en clientes reales y arquitecturas reales de SparkTree Group.',
     icon: 'Briefcase',
   },
   {
@@ -218,7 +218,7 @@ export const PILLARS = [
   },
   {
     title: 'Bolsa de Trabajo y Pasantías',
-    description: 'Los alumnos destacados de la academia tienen acceso prioritario a convocatorias y vacantes laborales dentro del ecosistema F&J Solutions y empresas aliadas.',
+    description: 'Los alumnos destacados de la academia tienen acceso prioritario a convocatorias y vacantes laborales dentro del ecosistema SparkTree Group y empresas aliadas.',
     icon: 'Award',
   },
   {
@@ -233,7 +233,7 @@ export const TESTIMONIALS = [
     name: 'Álvaro Gutiérrez',
     role: 'Desarrollador Full Stack',
     company: 'Fintech Solutions',
-    comment: 'Llegué con conocimientos básicos y en 4 meses ya estaba construyendo aplicaciones completas con Next.js y PostgreSQL. La mentoría personalizada de los ingenieros de F&J marcó la diferencia total.',
+    comment: 'Llegué con conocimientos básicos y en 4 meses ya estaba construyendo aplicaciones completas con Next.js y PostgreSQL. La mentoría personalizada de los ingenieros de SparkTree marcó la diferencia total.',
     rating: 5,
   },
   {

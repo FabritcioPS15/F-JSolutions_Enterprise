@@ -36,7 +36,7 @@ export default function GroupPage() {
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-5 sm:px-8">
           <a href="/" aria-label="SparkTree Group, inicio">
             <Image
-              src="/sparktree-horizontal.png"
+              src="/brand/sparktree-horizontal.png"
               alt="SparkTree"
               width={322}
               height={86}

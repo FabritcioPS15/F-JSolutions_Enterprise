@@ -424,7 +424,7 @@ export function RegisterForm({ availability }: { availability: Availability }) {
                 onChange={(event) => update('marketingConsent', event.target.checked)}
                 className="mt-0.5 size-3.5 shrink-0 rounded border-input text-blue-ink focus:ring-[#1769AA]/30"
               />
-              <span>Quiero recibir novedades y promociones de F&amp;J Systems (opcional).</span>
+              <span>Quiero recibir novedades y promociones de SparkTree Systems (opcional).</span>
             </label>
           </div>
           {errors.terms && <p className="mt-1 text-[10px] font-semibold text-destructive">{errors.terms}</p>}

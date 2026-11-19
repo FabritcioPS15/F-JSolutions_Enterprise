@@ -1,9 +1,9 @@
 import type { Metadata } from 'next'
 import { ComplaintsBookPage } from '@/components/complaints/complaints-book-page'
 
-const TITLE = 'Libro de Reclamaciones Virtual | F&J Systems'
+const TITLE = 'Libro de Reclamaciones Virtual | SparkTree Systems'
 const DESCRIPTION =
-  'Registra tu reclamo o queja en línea y obtén tu constancia con código de seguimiento. Libro de Reclamaciones Virtual de F&J Systems conforme al Código de Protección y Defensa del Consumidor.'
+  'Registra tu reclamo o queja en línea y obtén tu constancia con código de seguimiento. Libro de Reclamaciones Virtual de SparkTree Systems conforme al Código de Protección y Defensa del Consumidor.'
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     title: TITLE,
     description: DESCRIPTION,
     url: '/libro-de-reclamaciones',
-    siteName: 'F&J Systems',
+    siteName: 'SparkTree Systems',
     locale: 'es_PE',
     type: 'website',
   },

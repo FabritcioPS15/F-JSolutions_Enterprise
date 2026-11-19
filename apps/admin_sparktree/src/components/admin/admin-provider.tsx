@@ -1496,7 +1496,7 @@ export function AdminProvider({
       const stored = window.localStorage.getItem(ADMIN_STORAGE_KEY)
       if (stored) setData(parseData(stored))
     } catch (error) {
-      console.warn('No se pudo leer el catálogo local de FJ Systems.', error)
+      console.warn('No se pudo leer el catálogo local de SparkTree Systems.', error)
     } finally {
       setHydrated(true)
     }

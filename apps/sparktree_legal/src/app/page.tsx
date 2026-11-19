@@ -43,7 +43,7 @@ export default function LegalHome() {
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-5 py-5 sm:px-8">
           <a href="#inicio" className="flex items-center">
             <Image
-              src="/sparktree-horizontal.png"
+              src="/brand/sparktree-horizontal.png"
               alt="SparkTree"
               width={322}
               height={86}
@@ -296,7 +296,7 @@ export default function LegalHome() {
           <div className="grid gap-10 md:grid-cols-[1.2fr_1fr_1fr]">
             <div>
               <Image
-                src="/sparktree-horizontal.png"
+                src="/brand/sparktree-horizontal.png"
                 alt="SparkTree"
                 width={322}
                 height={86}

@@ -56,7 +56,7 @@ import {
   searchSiteGrouped,
   type SiteSearchType,
 } from '@/lib/site-search'
-import { mainNav, storeCategories, featuredBrands, itServicesMenu, infrastructureMenu, softwareDevMenu, companyMenu } from '@/lib/navigation'
+import { mainNav, itServicesMenu, infrastructureMenu, softwareDevMenu, companyMenu } from '@/lib/navigation'
 import { ThemeToggle } from '@/components/theme/theme-toggle'
 import { storeUrl } from '@/lib/store-url'
 
@@ -219,287 +219,6 @@ function MobileAccordion({
       >
         <div className="overflow-hidden">
           <div className="border-t border-border bg-muted/70 p-2.5">{children}</div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-// ─── Componente: Tienda en el menú móvil ──────────────────────────────────────────────────
-
-function MobileStoreMenu({ onClose }: { onClose: () => void }) {
-  const [openCategory, setOpenCategory] = useState<string | null>(null)
-
-  const toggleCategory = (categoryId: string) => {
-    setOpenCategory((prev) => (prev === categoryId ? null : categoryId))
-  }
-
-  return (
-    <div className="space-y-1">
-      {storeCategories.map((category) => {
-        const Icon = getIcon(category.icon)
-        const isOpen = openCategory === category.id
-
-        return (
-          <div
-            key={category.id}
-            className={`rounded-xl transition-colors ${
-              isOpen ? 'border border-border bg-card shadow-xs' : 'hover:bg-card/80'
-            }`}
-          >
-            <button
-              type="button"
-              onClick={() => toggleCategory(category.id)}
-              aria-expanded={isOpen}
-              className="flex w-full items-center gap-2.5 px-2.5 py-2.5 text-left text-sm font-semibold text-foreground"
-            >
-              <span
-                className={`flex size-8 shrink-0 items-center justify-center rounded-lg border transition-colors ${
-                  isOpen
-                    ? 'border-[#1769AA]/25 bg-tint-blue text-blue-ink'
-                    : 'border-border bg-card text-muted-foreground'
-                }`}
-              >
-                <Icon className="size-3.5" />
-              </span>
-              <span className={`flex-1 truncate ${isOpen ? 'text-blue-ink' : ''}`}>
-                {category.label}
-              </span>
-              <span
-                className={`grid size-6 shrink-0 place-items-center rounded-full border transition-all duration-300 ${
-                  isOpen
-                    ? 'rotate-180 border-[#1769AA] bg-[#1769AA] text-white'
-                    : 'border-border bg-card text-muted-foreground'
-                }`}
-              >
-                <ChevronDown className="size-3" />
-              </span>
-            </button>
-
-            <div
-              className={`grid transition-all duration-300 ease-out ${
-                isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-              }`}
-              inert={!isOpen}
-            >
-              <div className="overflow-hidden">
-                <div className="border-t border-border px-3 pb-3 pt-2">
-                  <Link
-                    href={category.items[0]?.href || storeUrl('/productos')}
-                    onClick={onClose}
-                    className="mb-2 flex items-center justify-between rounded-md bg-tint-blue px-2.5 py-1.5 text-xs font-bold text-blue-ink transition-colors hover:bg-blue-ink/15"
-                  >
-                    <span>Ver todo en {category.label}</span>
-                    <ArrowRight className="size-3" />
-                  </Link>
-
-                  <div className="space-y-2">
-                    {category.items.map((item) => (
-                      <div key={item.label} className="space-y-1">
-                        <Link
-                          href={item.href}
-                          onClick={onClose}
-                          className="block rounded-md px-1.5 py-1 text-xs font-medium text-foreground/85 transition-colors hover:text-blue-ink"
-                        >
-                          {item.label}
-                        </Link>
-
-                        {item.subItems && item.subItems.length > 0 && (
-                          <div className="flex flex-wrap gap-1 pl-1">
-                            {item.subItems.map((subItem) => (
-                              <Link
-                                key={subItem.label}
-                                href={subItem.href}
-                                onClick={onClose}
-                                className="rounded-full border border-border bg-card px-2 py-0.5 text-[10px] font-medium text-muted-foreground transition-colors hover:border-[#1769AA]/40 hover:text-blue-ink"
-                              >
-                                {subItem.label}
-                              </Link>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )
-      })}
-
-      {/* Marcas destacadas en Tienda Móvil */}
-      <div className="pt-1.5">
-        <div className="rounded-lg border border-border bg-card p-2.5">
-          <p className="mb-1.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-            Marcas destacadas
-          </p>
-          <div className="flex flex-wrap gap-1">
-            {featuredBrands.map((brand) => (
-              <Link
-                key={brand.name}
-                href={brand.href}
-                onClick={onClose}
-                className="rounded-md border border-border bg-muted px-2 py-1 text-[11px] font-semibold text-foreground/85 transition-colors hover:border-[#1769AA]/40 hover:bg-tint-blue hover:text-blue-ink"
-              >
-                {brand.name}
-              </Link>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      <Link
-        href={storeUrl('/productos')}
-        onClick={onClose}
-        className="mt-2 flex items-center justify-center gap-2 rounded-lg bg-[#1769AA] px-3 py-2 text-xs font-bold text-white shadow-xs transition hover:bg-[#12568C]"
-      >
-        <span>Ir a la tienda</span>
-        <ArrowRight className="size-3.5" />
-      </Link>
-    </div>
-  )
-}
-
-// ─── Componente: Mega Menú de Tienda ───────────────────────────────────────────────────────
-
-function StoreMegaMenu({ onClose }: { onClose: () => void }) {
-  const ref = useRef<HTMLDivElement>(null)
-  const [activeCategory, setActiveCategory] = useState(storeCategories[0].id)
-  useOnClickOutside(ref, onClose)
-
-  const active = storeCategories.find((category) => category.id === activeCategory) ?? storeCategories[0]
-
-  return (
-    <div
-      ref={ref}
-      role="dialog"
-      aria-label="Categorías de productos"
-      className="absolute left-0 top-[calc(100%+4px)] z-[60] w-[980px] max-w-[calc(100vw-10rem)] overflow-hidden rounded-xl border border-border bg-card shadow-[0_12px_40px_rgba(15,23,42,0.12)] animate-in fade-in slide-in-from-top-2 duration-200"
-    >
-      <div className="flex">
-        {/* Categorías principales */}
-        <div className="w-[264px] shrink-0 border-r border-border p-4">
-          <h3 className="mb-2 px-2 text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
-            Categorías
-          </h3>
-          <div className="space-y-0.5">
-            {storeCategories.map((category) => {
-              const Icon = getIcon(category.icon)
-              const isActive = activeCategory === category.id
-
-              return (
-                <Link
-                  key={category.id}
-                  href={category.items[0]?.href || storeUrl('/productos')}
-                  onMouseEnter={() => setActiveCategory(category.id)}
-                  onFocus={() => setActiveCategory(category.id)}
-                  onClick={onClose}
-                  aria-current={isActive ? 'true' : undefined}
-                  className={`group flex items-center gap-2.5 rounded-lg px-2.5 py-2 transition-colors ${
-                    isActive ? 'bg-tint-blue' : 'hover:bg-muted'
-                  }`}
-                >
-                  <span
-                    className={`flex size-7 shrink-0 items-center justify-center rounded-md border transition-colors ${
-                      isActive
-                        ? 'border-[#1769AA]/20 bg-card text-blue-ink'
-                        : 'border-border bg-card text-muted-foreground group-hover:border-[#1769AA]/20 group-hover:text-blue-ink'
-                    }`}
-                  >
-                    <Icon className="size-3.5" />
-                  </span>
-                  <span
-                    className={`min-w-0 flex-1 truncate text-sm font-semibold ${
-                      isActive ? 'text-blue-ink' : 'text-foreground group-hover:text-blue-ink'
-                    }`}
-                  >
-                    {category.label}
-                  </span>
-                  <ChevronRight
-                    className={`size-3.5 shrink-0 transition-colors ${
-                      isActive ? 'text-blue-ink' : 'text-muted-foreground group-hover:text-blue-ink'
-                    }`}
-                  />
-                </Link>
-              )
-            })}
-          </div>
-        </div>
-
-        {/* Subcategorías de la categoría activa */}
-        <div className="min-w-0 flex-1 p-5">
-          <div className="flex items-center justify-between gap-3">
-            <h3 className="text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
-              {active.label}
-            </h3>
-            <Link
-              href={active.items[0]?.href || storeUrl('/productos')}
-              onClick={onClose}
-              className="text-[11px] font-bold text-blue-ink transition-colors hover:text-blue-ink"
-            >
-              Ver categoría
-            </Link>
-          </div>
-
-          <div className="mt-3 grid gap-x-6 gap-y-4 sm:grid-cols-2">
-            {active.items.map((item) => (
-              <div key={item.label}>
-                <Link
-                  href={item.href}
-                  onClick={onClose}
-                  className="block text-sm font-semibold text-foreground transition-colors hover:text-blue-ink"
-                >
-                  {item.label}
-                </Link>
-                {item.subItems && item.subItems.length > 0 && (
-                  <ul className="mt-1.5 space-y-0.5">
-                    {item.subItems.map((subItem) => (
-                      <li key={subItem.label}>
-                        <Link
-                          href={subItem.href}
-                          onClick={onClose}
-                          className="block rounded-md px-2 py-1 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-blue-ink"
-                        >
-                          {subItem.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Sidebar: Marcas destacadas */}
-        <div className="w-[190px] shrink-0 border-l border-border p-4">
-          <h3 className="mb-2 px-2 text-[10px] font-bold uppercase tracking-[0.14em] text-muted-foreground">
-            Marcas
-          </h3>
-          <div className="space-y-0.5">
-            {featuredBrands.map((brand) => (
-              <Link
-                key={brand.name}
-                href={brand.href}
-                onClick={onClose}
-                className="block rounded-md px-2 py-1.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-blue-ink"
-              >
-                {brand.name}
-              </Link>
-            ))}
-          </div>
-
-          <div className="mt-3 border-t border-border pt-3">
-            <Link
-              href={storeUrl('/productos')}
-              onClick={onClose}
-              className="flex items-center gap-1.5 px-2 text-xs font-bold text-blue-ink transition-colors hover:text-blue-ink"
-            >
-              Ver toda la tienda
-              <ArrowRight className="size-3.5" />
-            </Link>
-          </div>
         </div>
       </div>
     </div>
@@ -1034,6 +753,81 @@ function SearchAutocomplete({
   )
 }
 
+// ─── Componente: Aviso de redirección a la tienda ────────────────────────────────────────
+
+function StoreRedirectDialog({ onClose }: { onClose: () => void }) {
+  const storeHref = storeUrl('/productos')
+  const storeHost = useMemo(() => {
+    try {
+      return new URL(storeHref).host
+    } catch {
+      return 'SparkTree Store'
+    }
+  }, [storeHref])
+
+  return (
+    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
+      <div
+        className="absolute inset-0 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-200"
+        onClick={onClose}
+        aria-hidden="true"
+      />
+
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="store-redirect-title"
+        className="relative w-full max-w-md overflow-hidden rounded-2xl border border-border bg-card shadow-2xl animate-in fade-in zoom-in-95 duration-200"
+      >
+        <button
+          type="button"
+          onClick={onClose}
+          aria-label="Cerrar aviso"
+          className="absolute right-3 top-3 grid size-8 place-items-center rounded-lg text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+        >
+          <X className="size-4" />
+        </button>
+
+        <div className="px-6 pb-5 pt-6">
+          <span className="mb-4 grid size-12 place-items-center rounded-xl border border-[#1769AA]/25 bg-tint-blue text-blue-ink">
+            <Store className="size-6" />
+          </span>
+          <h2 id="store-redirect-title" className="text-lg font-bold text-foreground">
+            Te llevamos a SparkTree Store
+          </h2>
+          <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
+            Vas a salir de SparkTree Systems para entrar a nuestra tienda oficial de hardware y
+            equipamiento TI, donde podrás comparar precios, stock y cotizar productos.
+          </p>
+          <div className="mt-4 flex items-center gap-2 rounded-xl border border-border bg-muted/60 px-3 py-2 text-xs text-muted-foreground">
+            <Store className="size-3.5 shrink-0 text-blue-ink" />
+            <span className="truncate font-medium text-foreground">{storeHost}</span>
+            <span>· tienda oficial</span>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-2 border-t border-border bg-muted/40 px-6 py-4 sm:flex-row sm:justify-end">
+          <button
+            type="button"
+            onClick={onClose}
+            className="order-2 rounded-lg border border-border bg-card px-4 py-2.5 text-sm font-semibold text-foreground transition-colors hover:bg-muted sm:order-1"
+          >
+            Seguir aquí
+          </button>
+          <a
+            href={storeHref}
+            autoFocus
+            className="order-1 flex items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#1769AA] to-[#12568C] px-4 py-2.5 text-sm font-semibold text-white transition hover:from-[#12568C] hover:to-[#1769AA] sm:order-2"
+          >
+            Ir a la tienda
+            <ArrowUpRight className="size-4" />
+          </a>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // ─── Componente: Enhanced Header ─────────────────────────────────────────────────────────
 
 export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderProps) {
@@ -1042,10 +836,10 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
   const [menuOpen, setMenuOpen] = useState(false)
   const [openDropdown, setOpenDropdown] = useState<string | null>(null)
   const [openMobileSection, setOpenMobileSection] = useState<string | null>(null)
+  const [redirectOpen, setRedirectOpen] = useState(false)
   const [query, setQuery] = useState('')
   const [scrolled, setScrolled] = useState(false)
 
-  const storeRef = useRef<HTMLDivElement>(null)
   const servicesRef = useRef<HTMLDivElement>(null)
   const infrastructureRef = useRef<HTMLDivElement>(null)
   const softwareRef = useRef<HTMLDivElement>(null)
@@ -1056,7 +850,6 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
 
   const closeAll = () => setOpenDropdown(null)
 
-  useOnClickOutside(storeRef, () => { if (openDropdown === 'store') closeAll() })
   useOnClickOutside(servicesRef, () => { if (openDropdown === 'servicios-ti') closeAll() })
   useOnClickOutside(infrastructureRef, () => { if (openDropdown === 'infraestructura-ti') closeAll() })
   useOnClickOutside(softwareRef, () => { if (openDropdown === 'desarrollo-de-software') closeAll() })
@@ -1068,6 +861,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
         closeAll()
         setMenuOpen(false)
         setOpenMobileSection(null)
+        setRedirectOpen(false)
       }
     }
     document.addEventListener('keydown', handler)
@@ -1179,6 +973,14 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
     (item.activeExact ?? []).some((path) => pathname === path) ||
     (item.activeMatch ?? [item.href]).some(isPathActive)
 
+  const isExternalHref = (href: string) => /^https?:\/\//.test(href)
+
+  const openStoreRedirect = () => {
+    setMenuOpen(false)
+    setOpenMobileSection(null)
+    setRedirectOpen(true)
+  }
+
   const isAccountActive = isPathActive('/mi-cuenta')
   const isQuotePageActive = isPathActive('/cotizacion')
 
@@ -1202,14 +1004,14 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
             <Link
               href="/"
               className="flex shrink-0 items-center gap-2 sm:gap-3 group"
-              aria-label="F&J Systems · Inicio"
+              aria-label="SparkTree Systems · Inicio"
               onClick={() => { setMenuOpen(false); closeAll() }}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/images/logos/logo.png"
-                alt="F&J Systems"
-                className="h-12 sm:h-14 w-auto object-contain transition-transform duration-200 group-hover:scale-105 dark:brightness-0 dark:invert"
+                src="/brand/sparktree-horizontal.png"
+                alt="SparkTree Systems"
+                className="h-12 sm:h-14 w-auto object-contain transition-transform duration-200 group-hover:scale-105 brightness-0 dark:brightness-100"
               />
             </Link>
 
@@ -1283,7 +1085,6 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
               const active = isActive(link)
               const dropdownKey = link.label.toLowerCase().replace(/ /g, '-')
               const refMap: Record<string, React.RefObject<HTMLDivElement | null>> = {
-                tienda: storeRef,
                 'servicios-ti': servicesRef,
                 'infraestructura-ti': infrastructureRef,
                 'desarrollo-de-software': softwareRef,
@@ -1298,28 +1099,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
 
               return (
                 <div key={index} className="relative" ref={refMap[dropdownKey]}>
-                  {link.hasMegaMenu ? (
-                    <>
-                      <button
-                        type="button"
-                        onClick={() => toggle('store')}
-                        aria-expanded={openDropdown === 'store'}
-                        aria-haspopup="dialog"
-                        aria-current={active ? 'page' : undefined}
-                        className={`relative flex h-10 items-center gap-1.5 rounded-lg px-3 text-sm font-semibold transition-colors ${active
-                            ? 'text-blue-ink'
-                            : 'text-muted-foreground hover:text-blue-ink'
-                          }`}
-                      >
-                        {link.label}
-                        <ChevronDown
-                          className={`size-3.5 transition-transform duration-200 ${openDropdown === 'store' ? 'rotate-180' : ''}`}
-                        />
-                        {active && <ActiveIndicator />}
-                      </button>
-                      {openDropdown === 'store' && <StoreMegaMenu onClose={closeAll} />}
-                    </>
-                  ) : link.hasMenu ? (
+                  {link.hasMenu ? (
                     <>
                       <button
                         type="button"
@@ -1345,6 +1125,11 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                   ) : (
                     <Link
                       href={link.href}
+                      onClick={(event) => {
+                        if (!isExternalHref(link.href)) return
+                        event.preventDefault()
+                        openStoreRedirect()
+                      }}
                       aria-current={active ? 'page' : undefined}
                       className={`relative flex h-10 items-center rounded-lg px-3 text-sm font-semibold transition-colors ${active
                           ? 'text-blue-ink'
@@ -1398,7 +1183,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
             <Link
               href="/"
               className="inline-flex items-center gap-2.5 group"
-              aria-label="F&J Systems · Inicio"
+              aria-label="SparkTree Systems · Inicio"
               onClick={() => {
                 markMobileNavigation()
                 closeAll()
@@ -1406,9 +1191,9 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/images/logos/logo.png"
-                alt="F&J Systems"
-                className="h-11 sm:h-12 w-auto object-contain transition-transform duration-200 group-hover:scale-105 dark:brightness-0 dark:invert"
+                src="/brand/sparktree-horizontal.png"
+                alt="SparkTree Systems"
+                className="h-11 sm:h-12 w-auto object-contain transition-transform duration-200 group-hover:scale-105 brightness-0 dark:brightness-100"
               />
             </Link>
 
@@ -1457,19 +1242,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
 
                 return (
                   <div key={index}>
-                    {link.hasMegaMenu ? (
-                      <MobileAccordion
-                        label={link.label}
-                        isOpen={openMobileSection === 'store'}
-                        onToggle={() => toggleMobile('store')}
-                        active={active}
-                        badge="Tienda"
-                        icon={Store}
-                        count={storeCategories.length}
-                      >
-                        <MobileStoreMenu onClose={markMobileNavigation} />
-                      </MobileAccordion>
-                    ) : link.hasMenu ? (
+                    {link.hasMenu ? (
                       <MobileAccordion
                         label={link.label}
                         isOpen={isSectionOpen}
@@ -1549,7 +1322,14 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                     ) : (
                       <Link
                         href={link.href}
-                        onClick={markMobileNavigation}
+                        onClick={(event) => {
+                          if (isExternalHref(link.href)) {
+                            event.preventDefault()
+                            openStoreRedirect()
+                            return
+                          }
+                          markMobileNavigation()
+                        }}
                         className={`flex items-center justify-between rounded-xl border px-3.5 py-3 text-sm font-semibold transition-colors ${
                           active
                             ? 'border-[#1769AA]/40 bg-tint-blue text-blue-ink'
@@ -1647,6 +1427,8 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
         </div>
       </>
     )}
+
+    {redirectOpen && <StoreRedirectDialog onClose={() => setRedirectOpen(false)} />}
     </>
   )
 }

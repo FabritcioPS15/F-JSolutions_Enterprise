@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
 
 export const metadata: Metadata = {
-  title: 'Articulo | FJ Tech Solutions',
+  title: 'Articulo | SparkTree Systems',
 }
 
 export default function BlogPostPage({ params }: { params: { slug: string } }) {

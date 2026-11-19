@@ -110,14 +110,14 @@ function replyTemplate(item: ServiceRequest) {
   const firstName = item.name.trim().split(/\s+/)[0] ?? ''
   return `Hola ${firstName},
 
-Gracias por contactar a F&J Systems. Hemos recibido tu consulta "${item.topic}".
+Gracias por contactar a SparkTree Systems. Hemos recibido tu consulta "${item.topic}".
 
 
 
 Quedamos atentos a cualquier consulta adicional.
 
 Saludos,
-Equipo de F&J Systems`
+Equipo de SparkTree Systems`
 }
 
 export function RequestsView() {
@@ -864,7 +864,7 @@ export function RequestsView() {
         title="Responder por correo"
         description={
           detail
-            ? `La respuesta se enviará a ${detail.email} desde la plantilla de F&J Systems.`
+            ? `La respuesta se enviará a ${detail.email} desde la plantilla de SparkTree Systems.`
             : undefined
         }
         size="lg"

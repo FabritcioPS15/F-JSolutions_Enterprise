@@ -11,7 +11,7 @@ export type QuickLink = {
 }
 
 export const PROFILE_INFO = {
-  name: 'F&J Solutions Enterprise',
+  name: 'SparkTree Group',
   handle: '@fjsolutions.pe',
   bio: 'Soluciones Tecnológicas Corporativas · Hardware, Desarrollo de Software & Soporte TI en Perú 🇵🇪',
   status: '🟢 Atendiendo solicitudes en vivo',
@@ -53,7 +53,7 @@ export const QUICK_LINKS: QuickLink[] = [
   },
   {
     id: 'fj-academy',
-    title: 'F&J Academy — Cursos & Certificaciones TI',
+    title: 'SparkTree Academia — Cursos & Certificaciones TI',
     subtitle: 'Programación Full Stack, DevOps, Ciberseguridad e IA',
     url: 'http://localhost:3004',
     icon: 'GraduationCap',
@@ -85,14 +85,14 @@ export const QUICK_LINKS: QuickLink[] = [
   {
     id: 'sitio-web-oficial',
     title: 'Página Web Oficial',
-    subtitle: 'Conoce todo sobre F&J Solutions Enterprise',
+    subtitle: 'Conoce todo sobre SparkTree Group',
     url: 'https://fjsolutions.com.pe',
     icon: 'Globe',
   },
   {
     id: 'guardar-contacto',
     title: 'Guardar Contacto en tu Celular (VCard)',
-    subtitle: 'Agrega a F&J Solutions a tus contactos con 1 toque',
+    subtitle: 'Agrega a SparkTree Group a tus contactos con 1 toque',
     url: '#',
     icon: 'UserPlus',
     onClickAction: 'vcard',

@@ -4,9 +4,9 @@ import { LegalPage, type LegalSection } from '@/components/legal-page'
 import { EMPRESA } from '@/lib/constants'
 import { SITE_NAME } from '@/lib/site'
 
-const TITLE = 'Política de privacidad | F&J Systems'
+const TITLE = 'Política de privacidad | SparkTree Systems'
 const DESCRIPTION =
-  'Conoce qué datos personales recopila F&J Systems, con qué finalidad los usa, cuánto tiempo los conserva y cómo puedes ejercer tus derechos.'
+  'Conoce qué datos personales recopila SparkTree Systems, con qué finalidad los usa, cuánto tiempo los conserva y cómo puedes ejercer tus derechos.'
 
 export const metadata: Metadata = {
   title: TITLE,
