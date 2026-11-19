@@ -358,7 +358,7 @@ export default function Header({ currentPage, onNavigate, isExiting = false }: H
             <img
               src="/brand/sparktree-horizontal.png"
               alt="SparkTree Studio"
-              className={`h-10 w-auto object-contain transition-all duration-300 ${shouldNavItemsBeWhite ? 'brightness-0 invert' : 'brightness-0'
+              className={`h-10 sm:h-11 w-auto object-contain transition-all duration-300 ${shouldNavItemsBeWhite ? 'brightness-0 invert' : 'brightness-0'
                 }`}
             />
           </button>
@@ -698,7 +698,7 @@ export default function Header({ currentPage, onNavigate, isExiting = false }: H
               <img
                 src="/brand/sparktree-horizontal.png"
                 alt="SparkTree Studio"
-                className="h-9 w-auto object-contain brightness-0"
+                className="h-10 sm:h-11 w-auto object-contain brightness-0"
               />
             </button>
             <button

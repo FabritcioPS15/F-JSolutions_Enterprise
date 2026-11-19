@@ -41,7 +41,7 @@ export default function GroupPage() {
               width={322}
               height={86}
               priority
-              className="h-7 w-auto sm:h-8"
+              className="h-10 w-auto sm:h-11"
             />
           </a>
           <nav className="hidden items-center gap-7 text-sm text-white/65 md:flex">

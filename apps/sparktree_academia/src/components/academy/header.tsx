@@ -17,20 +17,15 @@ export function AcademyHeader({ onOpenEnroll }: { onOpenEnroll: () => void }) {
   return (
     <header className="sticky top-0 z-50 border-b border-line bg-white/95 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
-        <Link href="/" className="flex items-center gap-2.5">
-          <div className="grid size-9 place-items-center rounded-lg bg-brand-600">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/brand/sparktree-symbol.png"
-              alt=""
-              aria-hidden="true"
-              className="h-5 w-auto object-contain"
-            />
-          </div>
-          <div className="leading-tight">
-            <p className="text-[15px] font-semibold tracking-tight text-ink-900">
-              SparkTree Academia
-            </p>
+        <Link href="/" className="flex items-center gap-3">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/brand/sparktree-horizontal.png"
+            alt="SparkTree Academia"
+            className="h-10 w-auto object-contain brightness-0 sm:h-11"
+          />
+          <div className="hidden flex-col leading-tight sm:flex">
+            <p className="text-[13px] font-semibold tracking-tight text-ink-900">Academia</p>
             <p className="text-[11px] text-ink-500">Instituto de tecnología</p>
           </div>
         </Link>

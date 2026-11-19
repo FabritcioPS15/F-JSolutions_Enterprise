@@ -48,7 +48,7 @@ export default function LegalHome() {
               width={322}
               height={86}
               priority
-              className="h-7 w-auto sm:h-8"
+              className="h-10 w-auto sm:h-11"
             />
           </a>
           <nav className="hidden items-center gap-7 text-sm text-bone-200/80 md:flex">

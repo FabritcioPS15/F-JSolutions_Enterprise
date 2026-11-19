@@ -1011,7 +1011,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
               <img
                 src="/brand/sparktree-horizontal.png"
                 alt="SparkTree Systems"
-                className="h-12 sm:h-14 w-auto object-contain transition-transform duration-200 group-hover:scale-105 brightness-0 dark:brightness-100"
+                className="h-10 sm:h-11 w-auto object-contain transition-transform duration-200 group-hover:scale-105 brightness-0 dark:brightness-100"
               />
             </Link>
 
@@ -1193,7 +1193,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
               <img
                 src="/brand/sparktree-horizontal.png"
                 alt="SparkTree Systems"
-                className="h-11 sm:h-12 w-auto object-contain transition-transform duration-200 group-hover:scale-105 brightness-0 dark:brightness-100"
+                className="h-10 sm:h-11 w-auto object-contain transition-transform duration-200 group-hover:scale-105 brightness-0 dark:brightness-100"
               />
             </Link>
 
