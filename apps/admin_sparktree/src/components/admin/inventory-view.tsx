@@ -114,7 +114,7 @@ const columnLabels: Record<SortKey, string> = {
 const typeStyles: Record<InventoryMovementType, string> = {
   in: 'bg-emerald-500/10 text-success-ink ring-emerald-600/15',
   out: 'bg-red-500/10 text-danger-ink ring-red-600/15',
-  adjustment: 'bg-tint-brand text-brand-ink ring-[#60A5FA]/40',
+  adjustment: 'bg-tint-brand text-brand-ink ring-[#A99AF0]/40',
 }
 
 const typeIcons: Record<InventoryMovementType, LucideIcon> = {
@@ -896,7 +896,7 @@ function MovementModal({
                   className={cn(
                     'flex flex-col items-start gap-1 rounded-xl border p-3 text-left transition',
                     selected
-                      ? 'border-[#2563EB] bg-tint-brand ring-4 ring-[#2563EB]/10'
+                      ? 'border-[#5946A6] bg-tint-brand ring-4 ring-[#5946A6]/10'
                       : 'border-border bg-card hover:border-input hover:bg-muted'
                   )}
                 >

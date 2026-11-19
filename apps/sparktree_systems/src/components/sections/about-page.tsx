@@ -338,7 +338,7 @@ export function AboutPage() {
                     key={item}
                     className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-[11px] font-semibold text-muted-foreground"
                   >
-                    <span aria-hidden="true" className="size-1.5 rounded-full bg-[#2563EB]" />
+                    <span aria-hidden="true" className="size-1.5 rounded-full bg-[#1769AA]" />
                     {item}
                   </span>
                 ))}
@@ -349,9 +349,9 @@ export function AboutPage() {
               {values.map((value) => (
                 <div
                   key={value.title}
-                  className="group flex gap-3.5 rounded-2xl border border-border bg-card p-4 transition duration-300 hover:border-[#2563EB]/35 hover:shadow-[0_18px_40px_-30px_rgba(15,23,42,0.4)]"
+                  className="group flex gap-3.5 rounded-2xl border border-border bg-card p-4 transition duration-300 hover:border-[#1769AA]/35 hover:shadow-[0_18px_40px_-30px_rgba(15,23,42,0.4)]"
                 >
-                  <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-tint-blue text-blue-ink transition duration-300 group-hover:bg-[#2563EB] group-hover:text-white">
+                  <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-tint-blue text-blue-ink transition duration-300 group-hover:bg-[#1769AA] group-hover:text-white">
                     <value.icon aria-hidden="true" className="size-4.5" />
                   </span>
                   <div>
@@ -393,7 +393,7 @@ export function AboutPage() {
             </div>
             <Link
               href="/proyectos"
-              className="group inline-flex h-11 w-fit items-center gap-2 rounded-xl bg-[#2563EB] px-4 text-sm font-bold text-white transition hover:bg-[#1D4ED8]"
+              className="group inline-flex h-11 w-fit items-center gap-2 rounded-xl bg-[#1769AA] px-4 text-sm font-bold text-white transition hover:bg-[#12568C]"
             >
               Ver casos de éxito completos
               <ArrowRight
@@ -407,7 +407,7 @@ export function AboutPage() {
             {projects.map((project, index) => (
               <article
                 key={project.title}
-                className="group flex flex-col rounded-2xl border border-border bg-card p-5 transition duration-300 hover:-translate-y-0.5 hover:border-[#2563EB]/30 hover:shadow-[0_24px_50px_-38px_rgba(15,23,42,0.5)]"
+                className="group flex flex-col rounded-2xl border border-border bg-card p-5 transition duration-300 hover:-translate-y-0.5 hover:border-[#1769AA]/30 hover:shadow-[0_24px_50px_-38px_rgba(15,23,42,0.5)]"
               >
                 <div className="flex items-center justify-between gap-3">
                   <span className="inline-flex items-center gap-1.5 rounded-full bg-tint-blue px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.1em] text-blue-ink">
@@ -480,7 +480,7 @@ export function AboutPage() {
             </div>
             <Link
               href="/como-trabajamos"
-              className="group inline-flex h-11 w-fit items-center gap-2 rounded-xl border border-border bg-card px-4 text-sm font-bold text-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink"
+              className="group inline-flex h-11 w-fit items-center gap-2 rounded-xl border border-border bg-card px-4 text-sm font-bold text-foreground transition hover:border-[#1769AA]/40 hover:text-blue-ink"
             >
               Conocer metodología y garantías
               <ArrowRight
@@ -494,13 +494,13 @@ export function AboutPage() {
             {process.map((item, index) => (
               <div
                 key={item.step}
-                className="group relative flex flex-col rounded-2xl border border-border bg-card p-5 transition duration-300 hover:border-[#2563EB]/30 hover:shadow-[0_22px_46px_-36px_rgba(15,23,42,0.45)]"
+                className="group relative flex flex-col rounded-2xl border border-border bg-card p-5 transition duration-300 hover:border-[#1769AA]/30 hover:shadow-[0_22px_46px_-36px_rgba(15,23,42,0.45)]"
               >
                 <div className="flex items-center justify-between">
                   <span className="process-number font-mono text-[11px] font-bold tracking-[0.08em] text-muted-foreground">
                     {item.step}
                   </span>
-                  <span className="grid size-9 place-items-center rounded-xl bg-tint-blue text-blue-ink transition duration-300 group-hover:bg-[#2563EB] group-hover:text-white">
+                  <span className="grid size-9 place-items-center rounded-xl bg-tint-blue text-blue-ink transition duration-300 group-hover:bg-[#1769AA] group-hover:text-white">
                     <item.icon aria-hidden="true" className="size-4" />
                   </span>
                 </div>
@@ -569,9 +569,9 @@ export function AboutPage() {
             {capabilities.map((capability) => (
               <div
                 key={capability.title}
-                className="group flex flex-col rounded-2xl border border-border bg-card p-5 transition duration-300 hover:border-[#2563EB]/30 hover:shadow-[0_22px_46px_-36px_rgba(15,23,42,0.45)]"
+                className="group flex flex-col rounded-2xl border border-border bg-card p-5 transition duration-300 hover:border-[#1769AA]/30 hover:shadow-[0_22px_46px_-36px_rgba(15,23,42,0.45)]"
               >
-                <span className="grid size-11 place-items-center rounded-2xl bg-tint-blue text-blue-ink transition duration-300 group-hover:bg-[#2563EB] group-hover:text-white">
+                <span className="grid size-11 place-items-center rounded-2xl bg-tint-blue text-blue-ink transition duration-300 group-hover:bg-[#1769AA] group-hover:text-white">
                   <capability.icon aria-hidden="true" className="size-5" />
                 </span>
                 <h3 className="mt-4 font-heading text-sm font-bold text-foreground">
@@ -617,14 +617,14 @@ export function AboutPage() {
               <div className="mt-6 flex flex-wrap gap-2.5">
                 <Link
                   href="/preguntas-frecuentes"
-                  className="inline-flex h-11 items-center gap-2 rounded-xl bg-[#2563EB] px-4 text-sm font-bold text-white transition hover:bg-[#1D4ED8]"
+                  className="inline-flex h-11 items-center gap-2 rounded-xl bg-[#1769AA] px-4 text-sm font-bold text-white transition hover:bg-[#12568C]"
                 >
                   Ver centro de preguntas frecuentes
                   <ArrowRight aria-hidden="true" className="size-4" />
                 </Link>
                 <Link
                   href="/contacto"
-                  className="inline-flex h-11 items-center gap-2 rounded-xl border border-border bg-card px-4 text-sm font-bold text-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink"
+                  className="inline-flex h-11 items-center gap-2 rounded-xl border border-border bg-card px-4 text-sm font-bold text-foreground transition hover:border-[#1769AA]/40 hover:text-blue-ink"
                 >
                   Consultar al equipo
                 </Link>
@@ -654,14 +654,14 @@ export function AboutPage() {
       {/* Contacto */}
       <section id="contacto" className="scroll-mt-32 bg-card">
         <div className={`${CONTAINER} py-12 sm:py-14 lg:py-16`}>
-          <div className="relative overflow-hidden rounded-[28px] border border-[#2563EB]/15 bg-[linear-gradient(135deg,#F5F9FF_0%,#FFFFFF_48%,#F8FAFC_100%)] p-6 shadow-[0_30px_80px_-60px_rgba(15,23,42,0.5)] dark:bg-[linear-gradient(135deg,#101A2B_0%,#0E1626_48%,#0B1220_100%)] sm:p-8 lg:p-10">
+          <div className="relative overflow-hidden rounded-[28px] border border-[#1769AA]/15 bg-[linear-gradient(135deg,#F5F9FF_0%,#FFFFFF_48%,#F1F6FA_100%)] p-6 shadow-[0_30px_80px_-60px_rgba(15,23,42,0.5)] dark:bg-[linear-gradient(135deg,#101A2B_0%,#0E1626_48%,#102A43_100%)] sm:p-8 lg:p-10">
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute -right-24 -top-28 size-80 rounded-full bg-[#2563EB]/10 blur-3xl"
+              className="pointer-events-none absolute -right-24 -top-28 size-80 rounded-full bg-[#1769AA]/10 blur-3xl"
             />
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute -bottom-32 left-1/3 size-80 rounded-full bg-[#2563EB]/15 blur-3xl"
+              className="pointer-events-none absolute -bottom-32 left-1/3 size-80 rounded-full bg-[#1769AA]/15 blur-3xl"
             />
 
             <div className="relative grid gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-center lg:gap-12">
@@ -679,7 +679,7 @@ export function AboutPage() {
                 <div className="mt-6 flex flex-col gap-2.5 sm:flex-row sm:flex-wrap">
                   <Link
                     href="/contacto"
-                    className="group inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#2563EB] px-5 text-sm font-bold text-white shadow-[0_12px_28px_-14px_rgba(37,99,235,0.75)] transition hover:-translate-y-0.5 hover:bg-[#1D4ED8] sm:w-auto"
+                    className="group inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#1769AA] px-5 text-sm font-bold text-white shadow-[0_12px_28px_-14px_rgba(23,105,170,0.75)] transition hover:-translate-y-0.5 hover:bg-[#12568C] sm:w-auto"
                   >
                     Escribir al equipo
                     <ArrowRight
@@ -689,7 +689,7 @@ export function AboutPage() {
                   </Link>
                   <a
                     href={`tel:${EMPRESA.telefono.replace(/\s/g, '')}`}
-                    className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-border bg-card px-5 text-sm font-bold text-foreground transition hover:-translate-y-0.5 hover:border-[#2563EB]/45 hover:text-blue-ink sm:w-auto"
+                    className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-border bg-card px-5 text-sm font-bold text-foreground transition hover:-translate-y-0.5 hover:border-[#1769AA]/45 hover:text-blue-ink sm:w-auto"
                   >
                     <Phone aria-hidden="true" className="size-4" />
                     {EMPRESA.telefono}
@@ -756,7 +756,7 @@ function CompanyCard() {
         />
         <div className="relative">
           <div className="flex items-center gap-3">
-            <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-[#3B82F6] to-[#2563EB] font-heading text-sm font-bold tracking-tight text-white shadow-[0_12px_24px_-12px_rgba(37,99,235,0.6)]">
+            <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-[#2A82C4] to-[#1769AA] font-heading text-sm font-bold tracking-tight text-white shadow-[0_12px_24px_-12px_rgba(23,105,170,0.6)]">
               FJ
             </span>
             <div className="min-w-0">
@@ -830,7 +830,7 @@ function ContactChannel({
   return (
     <a
       href={href}
-      className="group flex items-center gap-3 rounded-xl border border-border bg-card px-3 py-2.5 transition hover:border-[#2563EB]/30 hover:bg-muted"
+      className="group flex items-center gap-3 rounded-xl border border-border bg-card px-3 py-2.5 transition hover:border-[#1769AA]/30 hover:bg-muted"
     >
       <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-tint-blue text-blue-ink">
         <Icon aria-hidden="true" className="size-3.5" />

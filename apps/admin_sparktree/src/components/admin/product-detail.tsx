@@ -213,7 +213,7 @@ export function ProductDetail({ id }: { id: string }) {
                     className={cn(
                       'size-16 shrink-0 overflow-hidden rounded-lg border bg-muted p-1 transition',
                       activeImage === index
-                        ? 'border-[#2563EB] ring-2 ring-[#2563EB]/20'
+                        ? 'border-[#5946A6] ring-2 ring-[#5946A6]/20'
                         : 'border-border hover:border-input'
                     )}
                   >

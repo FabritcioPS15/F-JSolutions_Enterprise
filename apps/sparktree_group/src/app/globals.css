@@ -1,0 +1,45 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-space-grotesk), var(--font-inter), ui-sans-serif, sans-serif;
+
+  --color-forest-950: #08160f;
+  --color-forest-900: #0b1e15;
+  --color-forest-800: #123b2a;
+  --color-forest-700: #205b40;
+  --color-forest-600: #3c8060;
+  --color-forest-500: #4f9674;
+  --color-forest-300: #86b79b;
+  --color-forest-200: #a5c9ae;
+  --color-sage-50: #f3f7f2;
+  --color-sage-100: #e7efe6;
+  --color-sage-200: #d0dec7;
+  --color-sage-500: #5a7568;
+  --color-sage-600: #4a6357;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 2rem;
+  }
+
+  body {
+    background-color: var(--color-sage-50);
+    color: var(--color-forest-800);
+  }
+
+  ::selection {
+    background-color: var(--color-forest-600);
+    color: white;
+  }
+}
+
+.hero-grid {
+  background-image:
+    linear-gradient(to right, rgb(255 255 255 / 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.05) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse at 65% 15%, black, transparent 70%);
+}

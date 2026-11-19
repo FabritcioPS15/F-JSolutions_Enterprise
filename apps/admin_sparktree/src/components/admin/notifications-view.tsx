@@ -67,7 +67,7 @@ const allAreas = areas.map((area) => area.key)
 const LIMIT = 5
 
 const toneStyles = {
-  brand: 'bg-tint-brand text-brand-ink ring-[#2563EB]/20',
+  brand: 'bg-tint-brand text-brand-ink ring-[#5946A6]/20',
   amber: 'bg-amber-500/10 text-warning-ink ring-amber-500/25',
 } as const
 
@@ -245,7 +245,7 @@ export function NotificationsView() {
     return cn(
       'inline-flex h-8 items-center gap-1.5 rounded-full border px-3 text-[11px] font-semibold transition',
       active
-        ? 'border-[#2563EB]/30 bg-tint-brand text-brand-ink shadow-xs'
+        ? 'border-[#5946A6]/30 bg-tint-brand text-brand-ink shadow-xs'
         : 'border-border bg-card text-muted-foreground hover:bg-muted hover:text-foreground'
     )
   }
@@ -293,14 +293,14 @@ export function NotificationsView() {
         className={cn(
           'flex items-center gap-3 rounded-2xl border px-5 py-4',
           total > 0
-            ? 'border-[#2563EB]/20 bg-gradient-to-r from-tint-brand to-card'
+            ? 'border-[#5946A6]/20 bg-gradient-to-r from-tint-brand to-card'
             : 'border-emerald-500/25 bg-emerald-500/10'
         )}
       >
         <span
           className={cn(
             'grid size-10 shrink-0 place-items-center rounded-xl text-white shadow-xs',
-            total > 0 ? 'bg-[#2563EB]' : 'bg-emerald-600'
+            total > 0 ? 'bg-[#5946A6]' : 'bg-emerald-600'
           )}
         >
           {total > 0 ? (
@@ -365,7 +365,7 @@ export function NotificationsView() {
                 action={
                   <Link
                     href={section.href}
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-2.5 py-1.5 text-[11px] font-semibold text-foreground/80 shadow-xs transition hover:border-[#2563EB]/40 hover:text-[#2563EB]"
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-card px-2.5 py-1.5 text-[11px] font-semibold text-foreground/80 shadow-xs transition hover:border-[#5946A6]/40 hover:text-[#5946A6]"
                   >
                     Ver módulo
                   </Link>
@@ -410,7 +410,7 @@ export function NotificationsView() {
                 {section.count > LIMIT && (
                   <Link
                     href={section.href}
-                    className="mt-1 block rounded-xl px-3 py-2 text-[11px] font-semibold text-[#2563EB] transition hover:bg-muted"
+                    className="mt-1 block rounded-xl px-3 py-2 text-[11px] font-semibold text-[#5946A6] transition hover:bg-muted"
                   >
                     +{section.count - LIMIT} más en el módulo
                   </Link>

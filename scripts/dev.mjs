@@ -43,13 +43,15 @@ class DevLogger extends Logger {
 }
 
 const commands = [
-  { name: 'WEB', command: 'pnpm --filter fj-solutions-web dev' },
+  { name: 'SYSTEMS', command: 'pnpm --filter fj-solutions-web dev' },
   { name: 'STORE', command: 'pnpm --filter fj-solutions-store dev' },
   { name: 'ADMIN', command: 'pnpm --filter fj-solutions-admin dev' },
   { name: 'ACADEMIA', command: 'pnpm --filter fj-solutions-academy dev' },
   { name: 'LINKEADOR', command: 'pnpm --filter fj-solutions-links dev' },
-  { name: 'STUDIO', command: 'pnpm --filter ./apps/sparktree_studio dev' },
+  { name: 'STUDIO', command: 'pnpm --filter sparktree-studio dev' },
   { name: 'API', command: 'pnpm --filter fj-solutions-backend dev' },
+  { name: 'LEGAL', command: 'pnpm --filter sparktree-legal dev' },
+  { name: 'GROUP', command: 'pnpm --filter sparktree-group dev' },
 ]
 
 const logger = new DevLogger()

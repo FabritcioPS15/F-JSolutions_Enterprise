@@ -142,9 +142,9 @@ export function ServicePage({
                 <Link
                   key={service.slug}
                   href={`/sistemas/${service.slug}`}
-                  className="group flex flex-col rounded-2xl border border-border bg-muted p-5 transition hover:border-[#2563EB]/30 hover:bg-card hover:shadow-lg hover:shadow-black/5"
+                  className="group flex flex-col rounded-2xl border border-border bg-muted p-5 transition hover:border-[#1769AA]/30 hover:bg-card hover:shadow-lg hover:shadow-black/5"
                 >
-                  <span className="grid size-9 place-items-center rounded-xl bg-card text-blue-ink shadow-sm transition group-hover:bg-[#2563EB] group-hover:text-white">
+                  <span className="grid size-9 place-items-center rounded-xl bg-card text-blue-ink shadow-sm transition group-hover:bg-[#1769AA] group-hover:text-white">
                     <Code2 className="size-4" />
                   </span>
                   <h3 className="mt-3 text-sm font-bold text-foreground">{service.title}</h3>
@@ -216,9 +216,9 @@ export function ServicePage({
                   <Link
                     key={service.slug}
                     href={`/servicios/${service.slug}`}
-                    className="group flex flex-col rounded-2xl border border-border bg-muted p-5 transition hover:border-[#2563EB]/30 hover:bg-card hover:shadow-lg hover:shadow-black/5"
+                    className="group flex flex-col rounded-2xl border border-border bg-muted p-5 transition hover:border-[#1769AA]/30 hover:bg-card hover:shadow-lg hover:shadow-black/5"
                   >
-                    <span className="grid size-9 place-items-center rounded-xl bg-card text-blue-ink shadow-sm transition group-hover:bg-[#2563EB] group-hover:text-white">
+                    <span className="grid size-9 place-items-center rounded-xl bg-card text-blue-ink shadow-sm transition group-hover:bg-[#1769AA] group-hover:text-white">
                       <Network className="size-4" />
                     </span>
                     <h3 className="mt-3 text-sm font-bold text-foreground">{service.title}</h3>
@@ -288,13 +288,13 @@ export function ServicePage({
             <div className="mt-6 flex flex-wrap gap-2">
               <a
                 href="tel:+51999888777"
-                className="inline-flex h-10 items-center gap-2 rounded-lg border border-border bg-card px-3.5 text-xs font-bold text-muted-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink"
+                className="inline-flex h-10 items-center gap-2 rounded-lg border border-border bg-card px-3.5 text-xs font-bold text-muted-foreground transition hover:border-[#1769AA]/40 hover:text-blue-ink"
               >
                 <Phone aria-hidden="true" className="size-3.5" /> +51 999 888 777
               </a>
               <a
                 href="mailto:ventas@fjsolutions.pe"
-                className="inline-flex h-10 items-center gap-2 rounded-lg border border-border bg-card px-3.5 text-xs font-bold text-muted-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink"
+                className="inline-flex h-10 items-center gap-2 rounded-lg border border-border bg-card px-3.5 text-xs font-bold text-muted-foreground transition hover:border-[#1769AA]/40 hover:text-blue-ink"
               >
                 <Mail aria-hidden="true" className="size-3.5" /> ventas@fjsolutions.pe
               </a>
@@ -318,7 +318,7 @@ export function ServicePage({
                   key={option}
                   className="flex cursor-pointer items-center gap-3 rounded-xl border border-border bg-card p-3.5 text-xs font-semibold text-foreground/85 transition hover:border-blue-ink/30 hover:bg-muted"
                 >
-                  <input type="checkbox" className="size-4 accent-[#2563EB]" />
+                  <input type="checkbox" className="size-4 accent-[#1769AA]" />
                   {option}
                 </label>
               ))}
@@ -328,7 +328,7 @@ export function ServicePage({
               Cuéntanos brevemente
               <span className="ml-1 font-normal text-muted-foreground">(opcional)</span>
               <textarea
-                className="mt-2 min-h-24 w-full resize-none rounded-xl border border-border px-3 py-2.5 text-sm font-normal outline-none transition placeholder:text-muted-foreground focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15"
+                className="mt-2 min-h-24 w-full resize-none rounded-xl border border-border px-3 py-2.5 text-sm font-normal outline-none transition placeholder:text-muted-foreground focus:border-[#1769AA] focus:ring-2 focus:ring-[#1769AA]/15"
                 placeholder="Describe tu necesidad, cantidades o fecha requerida..."
               />
             </label>
@@ -336,14 +336,14 @@ export function ServicePage({
             <div className="mt-4 flex flex-col gap-2 sm:flex-row">
               <Link
                 href="/cotizacion"
-                className="group inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-[#2563EB] px-4 text-sm font-bold text-white transition hover:bg-[#1D4ED8]"
+                className="group inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-[#1769AA] px-4 text-sm font-bold text-white transition hover:bg-[#12568C]"
               >
                 Continuar en el cotizador
                 <ArrowRight aria-hidden="true" className="size-4 transition-transform group-hover:translate-x-0.5" />
               </Link>
               <Link
                 href="/contacto"
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-border bg-card px-4 text-sm font-bold text-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink"
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-border bg-card px-4 text-sm font-bold text-foreground transition hover:border-[#1769AA]/40 hover:text-blue-ink"
               >
                 <Check aria-hidden="true" className="size-4" />
                 Hablar con un asesor

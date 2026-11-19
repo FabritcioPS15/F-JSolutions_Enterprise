@@ -25,10 +25,12 @@ import {
   Loader2,
   LogOut,
   Menu,
+  Network,
   Package,
   PackageCheck,
   PanelLeftClose,
   PanelLeftOpen,
+  Scale,
   Search,
   Settings,
   ShieldCheck,
@@ -53,8 +55,19 @@ import { getStockState } from '@/lib/admin/format'
 import { openOrderStatuses } from '@/lib/admin/operations'
 import type { SessionUser } from '@/lib/auth/types'
 import { moduleByHref, moduleForPathname } from '@/lib/admin/access'
+import {
+  LEGAL_CASES_UPDATED_EVENT,
+  countOpenLegalCases,
+} from '@/lib/admin/legal-cases'
 
-type NavArea = 'general' | 'catalogo' | 'servicios' | 'comercial' | 'atencion' | 'sistema'
+type NavArea =
+  | 'general'
+  | 'unidades'
+  | 'catalogo'
+  | 'servicios'
+  | 'comercial'
+  | 'atencion'
+  | 'sistema'
 
 type NavItem = {
   href: string
@@ -81,6 +94,8 @@ const areaPaths: { area: NavArea; path: string }[] = [
   { area: 'general', path: '/reportes' },
   { area: 'general', path: '/actividad' },
   { area: 'general', path: '/notificaciones' },
+  { area: 'unidades', path: '/unidades' },
+  { area: 'unidades', path: '/legal' },
   { area: 'catalogo', path: '/productos' },
   { area: 'catalogo', path: '/inventario' },
   { area: 'catalogo', path: '/categorias' },
@@ -124,6 +139,12 @@ function getBreadcrumb(pathname: string) {
   if (pathname === '/reportes') return { section: 'General', title: 'Reportes y métricas' }
   if (pathname === '/actividad') return { section: 'General', title: 'Actividad reciente' }
   if (pathname === '/notificaciones') return { section: 'General', title: 'Notificaciones' }
+  if (pathname === '/unidades') {
+    return { section: 'Unidades de negocio', title: 'Ecosistema SparkTree' }
+  }
+  if (pathname === '/legal') {
+    return { section: 'Unidades de negocio', title: 'Casos legales' }
+  }
   if (pathname === '/productos') return { section: 'Catálogo y almacén', title: 'Productos' }
   if (pathname === '/productos/nuevo') {
     return { section: 'Catálogo y almacén', title: 'Nuevo producto' }
@@ -172,6 +193,7 @@ function getBreadcrumb(pathname: string) {
   if (areaEntry) {
     const areaLabels: Record<NavArea, string> = {
       general: 'General',
+      unidades: 'Unidades de negocio',
       catalogo: 'Catálogo y almacén',
       servicios: 'Servicios TI',
       comercial: 'Comercial',
@@ -218,6 +240,7 @@ export function AdminShell({
   // que aparezca tanto en el sidebar como en la campanita de notificaciones.
   const canViewComplaints = can('complaints')
   const [complaintCount, setComplaintCount] = useState(0)
+  const [openLegalCases, setOpenLegalCases] = useState(0)
   const [profileOpen, setProfileOpen] = useState(false)
   const [loggingOut, setLoggingOut] = useState(false)
   const [commandOpen, setCommandOpen] = useState(false)
@@ -364,7 +387,7 @@ export function AdminShell({
     return cn(
       'group relative grid size-11 place-items-center rounded-xl transition',
       active
-        ? 'bg-[#6366F1]/15 text-[#A5B4FC] ring-1 ring-[#6366F1]/30'
+        ? 'bg-[#7A67C9]/15 text-[#C5BDF2] ring-1 ring-[#7A67C9]/30'
         : 'text-slate-500 hover:bg-white/[0.05] hover:text-white'
     )
   }
@@ -406,6 +429,13 @@ export function AdminShell({
     void loadComplaints()
   }, [loadComplaints, pathname])
 
+  useEffect(() => {
+    const sync = () => setOpenLegalCases(countOpenLegalCases())
+    sync()
+    window.addEventListener(LEGAL_CASES_UPDATED_EVENT, sync)
+    return () => window.removeEventListener(LEGAL_CASES_UPDATED_EVENT, sync)
+  }, [pathname])
+
   const lowStockCount = products.filter((product) => {
     if (product.status === 'archived') return false
     const state = getStockState(product)
@@ -428,6 +458,24 @@ export function AdminShell({
         { href: '/', label: 'Resumen', icon: LayoutDashboard, exact: true },
         { href: '/reportes', label: 'Reportes y métricas', icon: BarChart3 },
         { href: '/actividad', label: 'Actividad reciente', icon: History },
+      ],
+    },
+    {
+      area: 'unidades',
+      label: 'Unidades de negocio',
+      icon: Network,
+      items: [
+        { href: '/unidades', label: 'Ecosistema', icon: Network },
+        {
+          href: '/legal',
+          label: 'Casos legales',
+          icon: Scale,
+          badge: openLegalCases,
+          badgeHint:
+            openLegalCases === 1
+              ? '1 caso legal activo'
+              : `${openLegalCases} casos legales activos`,
+        },
       ],
     },
     {
@@ -583,7 +631,7 @@ export function AdminShell({
         ref={asideRef}
         data-surface="dark"
         className={cn(
-          'fixed inset-y-0 left-0 z-50 flex w-[316px] max-w-full flex-col overflow-x-hidden border-r border-slate-800/80 bg-[#090D16] text-slate-400 transition-[transform,width] duration-300 ease-out lg:translate-x-0',
+          'fixed inset-y-0 left-0 z-50 flex w-[316px] max-w-full flex-col overflow-x-hidden border-r border-slate-800/80 bg-[#0E0A1C] text-slate-400 transition-[transform,width] duration-300 ease-out lg:translate-x-0',
           open ? 'translate-x-0' : '-translate-x-full',
           collapsed && 'lg:w-[92px]'
         )}
@@ -646,7 +694,7 @@ export function AdminShell({
         >
           <Search className="size-3.5 shrink-0" aria-hidden="true" />
           <span className="truncate">Buscar en el panel…</span>
-          <kbd className="ml-auto rounded border border-slate-800 bg-[#090D16] px-1 py-0.5 font-mono text-[8.5px] font-bold text-slate-500">
+          <kbd className="ml-auto rounded border border-slate-800 bg-[#0E0A1C] px-1 py-0.5 font-mono text-[8.5px] font-bold text-slate-500">
             Ctrl K
           </kbd>
         </button>
@@ -695,7 +743,7 @@ export function AdminShell({
                     <SectionIcon
                       className={cn(
                         'size-[18px] shrink-0 transition-colors',
-                        isOpen ? 'text-[#A5B4FC]' : 'text-slate-500'
+                        isOpen ? 'text-[#C5BDF2]' : 'text-slate-500'
                       )}
                       aria-hidden="true"
                     />
@@ -720,7 +768,7 @@ export function AdminShell({
                     <ChevronRight
                       className={cn(
                         'size-3.5 shrink-0 transition-transform duration-200',
-                        isOpen ? 'rotate-90 text-[#A5B4FC]' : 'text-slate-600'
+                        isOpen ? 'rotate-90 text-[#C5BDF2]' : 'text-slate-600'
                       )}
                       aria-hidden="true"
                     />
@@ -748,7 +796,7 @@ export function AdminShell({
                                 className={cn(
                                   'group relative flex min-h-9 items-center gap-2.5 rounded-lg px-3 py-2 text-[13.5px] font-medium leading-tight transition-colors duration-150',
                                   active
-                                    ? 'bg-gradient-to-r from-[#6366F1]/20 to-[#3B82F6]/5 font-semibold text-white shadow-[inset_0_0_0_1px_rgba(99,102,241,0.20)]'
+                                    ? 'bg-gradient-to-r from-[#7A67C9]/20 to-[#8876D9]/5 font-semibold text-white shadow-[inset_0_0_0_1px_rgba(122,103,201,0.20)]'
                                     : 'text-slate-400 hover:bg-white/[0.04] hover:text-white'
                                 )}
                               >
@@ -756,7 +804,7 @@ export function AdminShell({
                                   className={cn(
                                     'size-[17px] shrink-0 transition-colors',
                                     active
-                                      ? 'text-[#A5B4FC]'
+                                      ? 'text-[#C5BDF2]'
                                       : 'text-slate-500 group-hover:text-slate-300'
                                   )}
                                   aria-hidden="true"
@@ -773,7 +821,7 @@ export function AdminShell({
                                 )}
                                 {active && !hasBadge && (
                                   <span
-                                    className="ml-auto size-1 shrink-0 rounded-full bg-[#6366F1]"
+                                    className="ml-auto size-1 shrink-0 rounded-full bg-[#7A67C9]"
                                     aria-hidden="true"
                                   />
                                 )}
@@ -821,7 +869,7 @@ export function AdminShell({
                     className={cn(
                       'group relative flex w-full max-w-[80px] flex-col items-center justify-center gap-1.5 rounded-2xl py-2.5 px-1 transition-all duration-200',
                       isActive || isFlyoutOpen
-                        ? 'bg-gradient-to-b from-[#6366F1]/20 to-[#4F46E5]/10 text-white shadow-xs ring-1 ring-[#6366F1]/40'
+                        ? 'bg-gradient-to-b from-[#7A67C9]/20 to-[#5946A6]/10 text-white shadow-xs ring-1 ring-[#7A67C9]/40'
                         : 'text-slate-400 hover:bg-white/[0.06] hover:text-white'
                     )}
                   >
@@ -829,13 +877,13 @@ export function AdminShell({
                       <SectionIcon
                         className={cn(
                           'size-5.5 shrink-0 transition-colors',
-                          isActive || isFlyoutOpen ? 'text-[#A5B4FC]' : 'text-slate-400 group-hover:text-white'
+                          isActive || isFlyoutOpen ? 'text-[#C5BDF2]' : 'text-slate-400 group-hover:text-white'
                         )}
                         aria-hidden="true"
                       />
                       {sectionPending > 0 && (
                         <span
-                          className="absolute -right-1 -top-1 grid size-5 place-items-center rounded-full bg-rose-500 text-[10px] font-extrabold leading-none text-white aspect-square shadow-sm ring-2 ring-[#090D16]"
+                          className="absolute -right-1 -top-1 grid size-5 place-items-center rounded-full bg-rose-500 text-[10px] font-extrabold leading-none text-white aspect-square shadow-sm ring-2 ring-[#0E0A1C]"
                           aria-hidden="true"
                         >
                           {sectionPending > 99 ? '99+' : sectionPending}
@@ -857,7 +905,7 @@ export function AdminShell({
             <button
               type="button"
               onClick={toggleCollapsed}
-              className="group mt-3 flex w-full max-w-[80px] items-center justify-center gap-1.5 rounded-2xl bg-gradient-to-b from-[#4F46E5]/30 to-[#4338CA]/20 py-2.5 text-[#A5B4FC] ring-1 ring-[#6366F1]/40 transition-all duration-200 hover:from-[#4F46E5]/50 hover:to-[#4338CA]/35 hover:text-white hover:ring-[#6366F1]/70 hover:shadow-lg hover:shadow-indigo-900/30"
+              className="group mt-3 flex w-full max-w-[80px] items-center justify-center gap-1.5 rounded-2xl bg-gradient-to-b from-[#5946A6]/30 to-[#4A3A8F]/20 py-2.5 text-[#C5BDF2] ring-1 ring-[#7A67C9]/40 transition-all duration-200 hover:from-[#5946A6]/50 hover:to-[#4A3A8F]/35 hover:text-white hover:ring-[#7A67C9]/70 hover:shadow-lg hover:shadow-indigo-900/30"
               aria-label="Expandir menú lateral"
               title="Expandir menú"
             >
@@ -877,10 +925,10 @@ export function AdminShell({
                 <div
                   ref={flyoutRef}
                   style={{ position: 'fixed', top: flyoutPos.top, left: flyoutPos.left, zIndex: 9999 }}
-                  className="w-56 rounded-2xl border border-slate-700/70 bg-[#0D1220] shadow-2xl shadow-black/70 ring-1 ring-white/[0.06] animate-in fade-in slide-in-from-left-2 duration-150"
+                  className="w-56 rounded-2xl border border-slate-700/70 bg-[#14102A] shadow-2xl shadow-black/70 ring-1 ring-white/[0.06] animate-in fade-in slide-in-from-left-2 duration-150"
                 >
                   <div className="flex items-center gap-2 border-b border-slate-800/80 px-3.5 py-3">
-                    <SectionIcon className="size-4 shrink-0 text-[#A5B4FC]" aria-hidden="true" />
+                    <SectionIcon className="size-4 shrink-0 text-[#C5BDF2]" aria-hidden="true" />
                     <span className="text-[13px] font-bold text-slate-100">{section.label}</span>
                   </div>
                   <ul className="p-2 space-y-0.5">
@@ -899,12 +947,12 @@ export function AdminShell({
                             className={cn(
                               'flex items-center gap-2.5 rounded-xl px-3 py-2 text-[13px] font-medium transition-colors duration-150',
                               active
-                                ? 'bg-gradient-to-r from-[#6366F1]/25 to-[#3B82F6]/10 font-semibold text-white shadow-[inset_0_0_0_1px_rgba(99,102,241,0.25)]'
+                                ? 'bg-gradient-to-r from-[#7A67C9]/25 to-[#8876D9]/10 font-semibold text-white shadow-[inset_0_0_0_1px_rgba(122,103,201,0.25)]'
                                 : 'text-slate-400 hover:bg-white/[0.06] hover:text-white'
                             )}
                           >
                             <Icon
-                              className={cn('size-4 shrink-0', active ? 'text-[#A5B4FC]' : 'text-slate-500')}
+                              className={cn('size-4 shrink-0', active ? 'text-[#C5BDF2]' : 'text-slate-500')}
                               aria-hidden="true"
                             />
                             <span className="flex-1 truncate">{item.label}</span>
@@ -925,10 +973,10 @@ export function AdminShell({
           )
         }
 
-        <div className="shrink-0 border-t border-slate-800/80 bg-[#070A0F] px-3 py-3">
+        <div className="shrink-0 border-t border-slate-800/80 bg-[#0B0817] px-3 py-3">
           {!collapsed && (
             <div className="flex items-center gap-3">
-              <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-[#6366F1]/15 text-[#A5B4FC] ring-1 ring-[#6366F1]/25">
+              <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-[#7A67C9]/15 text-[#C5BDF2] ring-1 ring-[#7A67C9]/25">
                 <Building2 className="size-4.5" />
               </span>
               <div className="min-w-0 flex-1">
@@ -976,7 +1024,7 @@ export function AdminShell({
             <button
               type="button"
               onClick={() => setCommandOpen(true)}
-              className="ml-auto hidden min-w-0 items-center justify-between gap-3 rounded-xl border border-border bg-muted/60 px-3 py-1.5 text-xs text-muted-foreground shadow-xs transition hover:border-[#2563EB]/40 hover:bg-card hover:text-foreground md:flex md:w-64 lg:w-80"
+              className="ml-auto hidden min-w-0 items-center justify-between gap-3 rounded-xl border border-border bg-muted/60 px-3 py-1.5 text-xs text-muted-foreground shadow-xs transition hover:border-[#5946A6]/40 hover:bg-card hover:text-foreground md:flex md:w-64 lg:w-80"
               aria-label="Abrir buscador y comandos (Ctrl + K)"
             >
               <div className="flex items-center gap-2 truncate">

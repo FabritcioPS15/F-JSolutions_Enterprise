@@ -255,7 +255,7 @@ html {
   left: 1.5rem;
   height: 2px;
   border-radius: 999px;
-  background: linear-gradient(90deg, #2563eb 0%, #2563EB 100%);
+  background: linear-gradient(90deg, #1769aa 0%, #1769AA 100%);
   transform: scaleX(0);
   transform-origin: left center;
   transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
@@ -266,7 +266,7 @@ html {
   position: absolute;
   inset: 0 auto 0 0;
   width: 3px;
-  background: linear-gradient(180deg, #2563eb 0%, #2563EB 100%);
+  background: linear-gradient(180deg, #1769aa 0%, #1769AA 100%);
   transform: scaleY(0);
   transform-origin: center top;
   transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
@@ -291,8 +291,8 @@ html {
 }
 
 .process-sequence[data-revealed='true'] .process-number {
-  color: #2563eb;
-  text-shadow: 0 0 18px rgba(37, 99, 235, 0.25);
+  color: #1769aa;
+  text-shadow: 0 0 18px rgba(23, 105, 170, 0.25);
 }
 
 .process-sequence .process-arrow {
@@ -488,30 +488,30 @@ html {
   --font-heading: var(--font-space-grotesk), ui-sans-serif, sans-serif;
   --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, 'Cascadia Code', 'Segoe UI Mono', 'Consolas', monospace;
-  /* F&J Systems Color Palette */
-  --midnight-navy: #0B1220;
-  --tech-blue: #2563EB;
-  --electric-cyan: #22D3EE;
+  /* SparkTree Systems Color Palette */
+  --midnight-navy: #102A43;
+  --tech-blue: #1769AA;
+  --electric-cyan: #00B8D9;
   --teal-green: #14B8A6;
-  --cloud-white: #F8FAFC;
+  --cloud-white: #F1F6FA;
   --pure-white: #FFFFFF;
   --slate-gray: #64748B;
   --border-gray: #E2E8F0;
   /* Matices con contraparte oscura */
-  --blue-ink: #2563eb;
-  --brand-ink: #1d4ed8;
+  --blue-ink: #1769aa;
+  --brand-ink: #12568c;
   --success: #15803d;
   --success-ink: #047857;
   --warning-ink: #b45309;
   --danger-ink: #b91c1c;
   --teal-ink: #0f766e;
   --sky-ink: #0369a1;
-  --tint-blue: #eff6ff;
-  --tint-brand: #eff6ff;
+  --tint-blue: #f1f6fa;
+  --tint-brand: #f1f6fa;
   --tint-green: #f0fdf4;
   --tint-red: #fef2f2;
   --tint-amber: #fffbeb;
-  --brand-soft: #dbeafe;
+  --brand-soft: #dceff6;
   /* Theme Variables */
   --background: var(--cloud-white);
   --foreground: var(--midnight-navy);
@@ -550,82 +550,82 @@ html {
 
 .dark {
   color-scheme: dark;
-  --background: #0b1220;
-  --foreground: #e6ebf5;
-  --card: #131d2f;
-  --card-foreground: #e6ebf5;
-  --popover: #131d2f;
-  --popover-foreground: #e6ebf5;
-  --primary: #60a5fa;
-  --primary-foreground: #0b1220;
-  --secondary: #1b2638;
-  --secondary-foreground: #e6ebf5;
-  --muted: #182335;
-  --muted-foreground: #94a3b8;
-  --accent: #22d3ee;
-  --accent-foreground: #0b1220;
+  --background: #102a43;
+  --foreground: #e8f1f7;
+  --card: #132a40;
+  --card-foreground: #e8f1f7;
+  --popover: #132a40;
+  --popover-foreground: #e8f1f7;
+  --primary: #75d7e8;
+  --primary-foreground: #102a43;
+  --secondary: #1b344c;
+  --secondary-foreground: #e8f1f7;
+  --muted: #16293d;
+  --muted-foreground: #9fb3c8;
+  --accent: #00b8d9;
+  --accent-foreground: #102a43;
   --destructive: #f87171;
-  --destructive-foreground: #0b1220;
-  --border: #26344a;
-  --input: #26344a;
-  --ring: #60a5fa;
-  --chart-1: #60a5fa;
+  --destructive-foreground: #102a43;
+  --border: #23415c;
+  --input: #23415c;
+  --ring: #75d7e8;
+  --chart-1: #75d7e8;
   --chart-2: #4ade80;
-  --chart-3: #22d3ee;
-  --chart-4: #94a3b8;
-  --chart-5: #e6ebf5;
-  --sidebar: #131d2f;
-  --sidebar-foreground: #e6ebf5;
-  --sidebar-primary: #60a5fa;
-  --sidebar-primary-foreground: #0b1220;
-  --sidebar-accent: #1b2638;
-  --sidebar-accent-foreground: #e6ebf5;
-  --sidebar-border: #26344a;
-  --sidebar-ring: #60a5fa;
-  --blue-ink: #60a5fa;
-  --brand-ink: #93c5fd;
+  --chart-3: #00b8d9;
+  --chart-4: #9fb3c8;
+  --chart-5: #e8f1f7;
+  --sidebar: #132a40;
+  --sidebar-foreground: #e8f1f7;
+  --sidebar-primary: #75d7e8;
+  --sidebar-primary-foreground: #102a43;
+  --sidebar-accent: #1b344c;
+  --sidebar-accent-foreground: #e8f1f7;
+  --sidebar-border: #23415c;
+  --sidebar-ring: #75d7e8;
+  --blue-ink: #75d7e8;
+  --brand-ink: #9fe2ef;
   --success: #4ade80;
   --success-ink: #6ee7b7;
   --warning-ink: #fcd34d;
   --danger-ink: #fca5a5;
   --teal-ink: #5eead4;
-  --sky-ink: #7dd3fc;
-  --tint-blue: #14243d;
-  --tint-brand: #172554;
+  --sky-ink: #75d7e8;
+  --tint-blue: #14304a;
+  --tint-brand: #0C2E4A;
   --tint-green: #10261d;
   --tint-red: #2a161b;
   --tint-amber: #2a2114;
-  --brand-soft: #1e3a8a;
+  --brand-soft: #14456e;
 }
 
 /* Superficies de marca que permanecen oscuras en ambos temas: fijan sus
    propios tokens para conservar el contraste cuando el sitio está en claro. */
 [data-surface='dark'] {
-  --background: #0b1220;
-  --foreground: #e6ebf5;
-  --card: #10203a;
-  --card-foreground: #e6ebf5;
-  --muted: #1b2638;
-  --muted-foreground: #94a3b8;
-  --border: #26344a;
-  --input: #26344a;
-  --primary: #60a5fa;
-  --blue-ink: #93c5fd;
-  --brand-ink: #93c5fd;
-  --tint-blue: #16283f;
-  --tint-brand: #172554;
+  --background: #102a43;
+  --foreground: #e8f1f7;
+  --card: #132a40;
+  --card-foreground: #e8f1f7;
+  --muted: #1b344c;
+  --muted-foreground: #9fb3c8;
+  --border: #23415c;
+  --input: #23415c;
+  --primary: #75d7e8;
+  --blue-ink: #9fe2ef;
+  --brand-ink: #9fe2ef;
+  --tint-blue: #14304a;
+  --tint-brand: #0C2E4A;
   --tint-green: #10261d;
   --tint-red: #2a161b;
   --tint-amber: #2a2114;
-  --brand-soft: #1e3a8a;
+  --brand-soft: #14456e;
 }
 
 .dark .auth-page {
-  background: #0b1220;
+  background: #102a43;
 }
 
 .dark .auth-title {
-  background-image: linear-gradient(100deg, #e6ebf5 0%, #93c5fd 52%, #93c5fd 100%);
+  background-image: linear-gradient(100deg, #e8f1f7 0%, #9fe2ef 52%, #9fe2ef 100%);
 }
 
 @layer base {
@@ -714,12 +714,12 @@ html {
 .auth-title {
   position: relative;
   width: fit-content;
-  background-image: linear-gradient(100deg, #0b1220 0%, #1d4ed8 52%, #2563EB 100%);
+  background-image: linear-gradient(100deg, #102a43 0%, #12568c 52%, #1769AA 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 8px 20px rgba(37, 99, 235, 0.16));
+  filter: drop-shadow(0 8px 20px rgba(23, 105, 170, 0.16));
 }
 
 .auth-title__rule {
@@ -728,8 +728,8 @@ html {
   height: 3px;
   width: 3rem;
   border-radius: 9999px;
-  background: linear-gradient(90deg, #2563eb 0%, #2563EB 55%, rgba(37, 99, 235, 0) 100%);
-  box-shadow: 0 0 10px rgba(37, 99, 235, 0.28);
+  background: linear-gradient(90deg, #1769aa 0%, #1769AA 55%, rgba(23, 105, 170, 0) 100%);
+  box-shadow: 0 0 10px rgba(23, 105, 170, 0.28);
 }
 
 /* Fondo animado compartido por login y registro: el degradado se desplaza,
@@ -762,7 +762,7 @@ html {
     transparent 32%,
     rgba(255, 255, 255, 0.06) 46%,
     rgba(125, 211, 252, 0.1) 52%,
-    rgba(147, 197, 253, 0.07) 58%,
+    rgba(159, 226, 239, 0.07) 58%,
     transparent 72%
   );
   animation: auth-sheen-sweep 18s ease-in-out infinite;

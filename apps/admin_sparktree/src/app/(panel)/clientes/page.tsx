@@ -35,7 +35,7 @@ export default function ClientesPage() {
               className={cn(
                 'inline-flex h-9 items-center gap-2 rounded-lg px-3.5 text-sm font-semibold transition',
                 active
-                  ? 'bg-[#2563EB] text-white shadow-sm shadow-[#2563EB]/20'
+                  ? 'bg-[#5946A6] text-white shadow-sm shadow-[#5946A6]/20'
                   : 'text-muted-foreground hover:bg-muted hover:text-foreground'
               )}
             >

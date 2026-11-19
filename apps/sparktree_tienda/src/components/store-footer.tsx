@@ -94,7 +94,7 @@ const SOCIAL_PATHS: Record<string, React.ReactNode> = {
 }
 
 const FOCUS_STYLE =
-  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0B132B]'
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:ring-offset-2 focus-visible:ring-offset-[#172554]'
 
 function isInternal(href: string) {
   return href.startsWith('/')
@@ -140,7 +140,7 @@ function FooterNavColumn({
         </span>
         <span className="flex items-center gap-2">
           {hasActiveLink && (
-            <span className="size-1.5 rounded-full bg-[#60A5FA]" aria-hidden="true" />
+            <span className="size-1.5 rounded-full bg-[#93C5FD]" aria-hidden="true" />
           )}
           <ChevronDown
             className={cn(
@@ -170,7 +170,7 @@ function FooterNavColumn({
                 <Link href={link.href} aria-current={active ? 'page' : undefined} className={className}>
                   {active && (
                     <span
-                      className="absolute -left-3 top-1/2 size-1.5 -translate-y-1/2 rounded-full bg-[#60A5FA]"
+                      className="absolute -left-3 top-1/2 size-1.5 -translate-y-1/2 rounded-full bg-[#93C5FD]"
                       aria-hidden="true"
                     />
                   )}
@@ -217,11 +217,11 @@ export function StoreFooter({ categories }: { categories: StoreCategory[] }) {
   return (
     <footer
       data-surface="dark"
-      className="border-t border-[#1E293B]/80 bg-gradient-to-b from-[#0B132B] via-[#0B1220] to-[#172554] text-muted-foreground selection:bg-[#2563EB]/30 selection:text-white"
+      className="border-t border-white/10 bg-gradient-to-b from-[#172554] via-[#14244c] to-[#0f1a33] text-muted-foreground selection:bg-[#2563EB]/30 selection:text-white"
       aria-label="Pie de página"
     >
       <div className="mx-auto max-w-[1280px] px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-16">
-        <div className="flex flex-col gap-5 border-b border-[#1E293B]/80 pb-8 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:pb-10">
+        <div className="flex flex-col gap-5 border-b border-white/10 pb-8 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:pb-10">
           <div className="flex flex-wrap items-center gap-x-6 gap-y-4">
             <Link
               href="/"
@@ -237,13 +237,13 @@ export function StoreFooter({ categories }: { categories: StoreCategory[] }) {
             </Link>
 
             <div
-              className="flex items-center gap-2.5 rounded-full border border-[#1E293B] bg-[#0F172A]/60 px-3 py-1.5 sm:rounded-none sm:border-0 sm:border-l sm:bg-transparent sm:px-0 sm:py-0 sm:pl-6"
+              className="flex items-center gap-2.5 rounded-full border border-white/15 bg-white/5 px-3 py-1.5 sm:rounded-none sm:border-0 sm:border-l sm:bg-transparent sm:px-0 sm:py-0 sm:pl-6"
               aria-label="RUC de la empresa"
             >
               <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
                 RUC
               </span>
-              <span className="text-sm font-semibold tracking-wide text-[#E2E8F0] tabular-nums">
+              <span className="text-sm font-semibold tracking-wide text-[#F8FAFC] tabular-nums">
                 {COMPANY.ruc}
               </span>
             </div>
@@ -257,7 +257,7 @@ export function StoreFooter({ categories }: { categories: StoreCategory[] }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={social.label}
-                className={`grid size-11 place-items-center rounded-full border border-[#1E293B] bg-[#0F172A]/70 text-muted-foreground transition duration-200 hover:border-[#2563EB]/60 hover:bg-[#1E1B4B] hover:text-white motion-reduce:transition-none ${FOCUS_STYLE}`}
+                className={`grid size-11 place-items-center rounded-full border border-white/15 bg-white/5 text-muted-foreground transition duration-200 hover:border-[#93C5FD]/60 hover:bg-[#2563EB]/25 hover:text-white motion-reduce:transition-none ${FOCUS_STYLE}`}
               >
                 <svg
                   viewBox="0 0 24 24"
@@ -278,7 +278,7 @@ export function StoreFooter({ categories }: { categories: StoreCategory[] }) {
 
         <nav
           aria-label="Navegación del pie de página"
-          className="divide-y divide-[#1E293B]/70 sm:grid sm:grid-cols-2 sm:gap-8 sm:divide-y-0 sm:py-10 lg:grid-cols-4 lg:gap-10"
+          className="divide-y divide-white/10 sm:grid sm:grid-cols-2 sm:gap-8 sm:divide-y-0 sm:py-10 lg:grid-cols-4 lg:gap-10"
         >
           {columns.map((column, index) => (
             <FooterNavColumn
@@ -290,7 +290,7 @@ export function StoreFooter({ categories }: { categories: StoreCategory[] }) {
           ))}
         </nav>
 
-        <div className="border-t border-[#1E293B]/80 pt-6 sm:pt-8">
+        <div className="border-t border-white/10 pt-6 sm:pt-8">
           <div className="flex flex-col gap-4 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
             <p>&copy; {currentYear} F&amp;J Store · F&amp;J Systems. Todos los derechos reservados.</p>
 

@@ -277,9 +277,9 @@ export function ServicesPage() {
             {serviceList.map((service) => (
               <article
                 key={service.title}
-                className="group flex flex-col rounded-2xl border border-border bg-card p-6 transition hover:border-[#2563EB]/30 hover:shadow-lg hover:shadow-black/5"
+                className="group flex flex-col rounded-2xl border border-border bg-card p-6 transition hover:border-[#1769AA]/30 hover:shadow-lg hover:shadow-black/5"
               >
-                <span className="grid size-12 place-items-center rounded-2xl bg-[#2563EB]/10 text-blue-ink transition group-hover:bg-[#2563EB] group-hover:text-white">
+                <span className="grid size-12 place-items-center rounded-2xl bg-[#1769AA]/10 text-blue-ink transition group-hover:bg-[#1769AA] group-hover:text-white">
                   <service.icon className="size-6" />
                 </span>
                 <h3 className="mt-4 text-base font-bold text-foreground">{service.title}</h3>
@@ -344,13 +344,13 @@ export function ServicesPage() {
               <div className="mt-7 flex flex-wrap gap-3">
                 <Link
                   href="/contacto"
-                  className="inline-flex h-11 items-center gap-2 rounded-xl bg-[#2563EB] px-5 text-sm font-bold text-white transition hover:bg-[#1D4ED8]"
+                  className="inline-flex h-11 items-center gap-2 rounded-xl bg-[#1769AA] px-5 text-sm font-bold text-white transition hover:bg-[#12568C]"
                 >
                   Me interesa alquilar <ArrowRight className="size-4" />
                 </Link>
                 <Link
                   href={storeUrl('/productos')}
-                  className="inline-flex h-11 items-center gap-2 rounded-xl border border-border bg-card px-5 text-sm font-bold text-foreground transition hover:border-[#2563EB] hover:text-blue-ink"
+                  className="inline-flex h-11 items-center gap-2 rounded-xl border border-border bg-card px-5 text-sm font-bold text-foreground transition hover:border-[#1769AA] hover:text-blue-ink"
                 >
                   Ver equipos en la tienda
                 </Link>
@@ -466,12 +466,12 @@ export function ServicesPage() {
                 key={plan.name}
                 className={`relative flex flex-col rounded-3xl border p-6 sm:p-7 ${
                   plan.highlighted
-                    ? 'border-[#2563EB] bg-card shadow-2xl shadow-[#2563EB]/20 lg:-mt-3 lg:pb-10'
+                    ? 'border-[#1769AA] bg-card shadow-2xl shadow-[#1769AA]/20 lg:-mt-3 lg:pb-10'
                     : 'border-border bg-card'
                 }`}
               >
                 {plan.highlighted && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[#2563EB] px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-white">
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[#1769AA] px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-white">
                     Recomendado
                   </span>
                 )}
@@ -507,7 +507,7 @@ export function ServicesPage() {
                       <span
                         className={`mt-0.5 grid size-4 shrink-0 place-items-center rounded-full ${
                           plan.highlighted
-                            ? 'bg-[#2563EB] text-white'
+                            ? 'bg-[#1769AA] text-white'
                             : 'bg-brand-soft text-brand-ink'
                         }`}
                       >
@@ -523,8 +523,8 @@ export function ServicesPage() {
                   href="/cotizador"
                   className={`mt-6 flex h-11 items-center justify-center gap-2 rounded-xl text-sm font-bold transition ${
                     plan.highlighted
-                      ? 'bg-[#2563EB] text-white hover:bg-[#1D4ED8]'
-                      : 'border border-border text-foreground hover:border-[#2563EB] hover:text-blue-ink'
+                      ? 'bg-[#1769AA] text-white hover:bg-[#12568C]'
+                      : 'border border-border text-foreground hover:border-[#1769AA] hover:text-blue-ink'
                   }`}
                 >
                   Solicitar propuesta <ArrowRight className="size-4" />
@@ -564,7 +564,7 @@ export function ServicesPage() {
               No aplicamos la misma receta a todos. Adaptamos equipos, redes y soporte a la
               realidad de cada sector.
             </p>
-            <div className="mt-6 flex items-center gap-3 rounded-2xl border border-[#2563EB]/30 bg-[#2563EB]/5 p-4">
+            <div className="mt-6 flex items-center gap-3 rounded-2xl border border-[#1769AA]/30 bg-[#1769AA]/5 p-4">
               <span className="grid size-10 place-items-center rounded-xl bg-card text-blue-ink shadow-sm">
                 <TrendingUp className="size-5" />
               </span>
@@ -619,9 +619,9 @@ export function ServicesPage() {
       </section>
 
       <section id="contacto" className="scroll-mt-20 sm:scroll-mt-24 lg:scroll-mt-28 px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
-        <div className="relative mx-auto max-w-[1280px] overflow-hidden rounded-3xl border border-[#2563EB]/25 bg-gradient-to-br from-tint-blue via-white to-brand-soft px-6 py-10 shadow-sm sm:px-10 lg:px-14 lg:py-14">
-          <div className="pointer-events-none absolute -right-24 -top-24 size-80 rounded-full bg-[#2563EB]/10 blur-2xl" />
-          <div className="pointer-events-none absolute -bottom-32 left-1/3 size-80 rounded-full bg-[#2563EB]/20 blur-3xl" />
+        <div className="relative mx-auto max-w-[1280px] overflow-hidden rounded-3xl border border-[#1769AA]/25 bg-gradient-to-br from-tint-blue via-white to-brand-soft px-6 py-10 shadow-sm sm:px-10 lg:px-14 lg:py-14">
+          <div className="pointer-events-none absolute -right-24 -top-24 size-80 rounded-full bg-[#1769AA]/10 blur-2xl" />
+          <div className="pointer-events-none absolute -bottom-32 left-1/3 size-80 rounded-full bg-[#1769AA]/20 blur-3xl" />
           <div className="relative grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
             <div>
               <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-foreground/85">
@@ -637,13 +637,13 @@ export function ServicesPage() {
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link
                   href="/cotizador"
-                  className="inline-flex h-11 items-center gap-2 rounded-xl bg-gradient-to-r from-[#1D4ED8] to-[#2563EB] px-5 text-sm font-bold text-white transition hover:from-[#2563EB] hover:to-[#1D4ED8]"
+                  className="inline-flex h-11 items-center gap-2 rounded-xl bg-gradient-to-r from-[#12568C] to-[#1769AA] px-5 text-sm font-bold text-white transition hover:from-[#1769AA] hover:to-[#12568C]"
                 >
                   Solicitar cotización <ArrowRight className="size-4" />
                 </Link>
                 <a
                   href="tel:+51999888777"
-                  className="inline-flex h-11 items-center gap-2 rounded-xl border border-input bg-card px-5 text-sm font-bold text-foreground transition hover:border-[#2563EB] hover:text-blue-ink"
+                  className="inline-flex h-11 items-center gap-2 rounded-xl border border-input bg-card px-5 text-sm font-bold text-foreground transition hover:border-[#1769AA] hover:text-blue-ink"
                 >
                   <Phone className="size-4" /> +51 999 888 777
                 </a>

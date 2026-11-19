@@ -34,7 +34,7 @@ const topics = [
 ]
 
 const fieldClass =
-  'mt-1.5 h-11 w-full rounded-xl border border-border bg-card px-3 text-sm font-normal text-foreground outline-none transition placeholder:text-muted-foreground focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15'
+  'mt-1.5 h-11 w-full rounded-xl border border-border bg-card px-3 text-sm font-normal text-foreground outline-none transition placeholder:text-muted-foreground focus:border-[#1769AA] focus:ring-2 focus:ring-[#1769AA]/15'
 
 export function ContactForm() {
   const [form, setForm] = useState<ContactFormData>(initialForm)
@@ -134,13 +134,13 @@ export function ContactForm() {
               setErrors({})
               setStatus('idle')
             }}
-            className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-border bg-card px-4 text-sm font-bold text-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink"
+            className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-border bg-card px-4 text-sm font-bold text-foreground transition hover:border-[#1769AA]/40 hover:text-blue-ink"
           >
             Enviar otro mensaje
           </button>
           <Link
             href="/"
-            className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-[#2563EB] px-4 text-sm font-bold text-white transition hover:bg-[#1D4ED8]"
+            className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-[#1769AA] px-4 text-sm font-bold text-white transition hover:bg-[#12568C]"
           >
             Volver al inicio
             <ArrowRight aria-hidden="true" className="size-4" />
@@ -251,7 +251,7 @@ export function ContactForm() {
               rows={5}
               aria-invalid={Boolean(errors.message)}
               aria-describedby={errors.message ? 'contact-message-error' : undefined}
-              className={`mt-1.5 w-full resize-none rounded-xl border border-border bg-card px-3 py-2.5 text-sm font-normal text-foreground outline-none transition placeholder:text-muted-foreground focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 ${
+              className={`mt-1.5 w-full resize-none rounded-xl border border-border bg-card px-3 py-2.5 text-sm font-normal text-foreground outline-none transition placeholder:text-muted-foreground focus:border-[#1769AA] focus:ring-2 focus:ring-[#1769AA]/15 ${
                 errors.message ? 'border-destructive focus:border-destructive focus:ring-[#EF4444]/10' : ''
               }`}
             />
@@ -282,7 +282,7 @@ export function ContactForm() {
         <button
           type="submit"
           disabled={status === 'sending'}
-          className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#2563EB] px-5 text-sm font-bold text-white shadow-[0_12px_28px_-16px_rgba(37,99,235,0.75)] transition hover:bg-[#1D4ED8] disabled:cursor-not-allowed disabled:opacity-70"
+          className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#1769AA] px-5 text-sm font-bold text-white shadow-[0_12px_28px_-16px_rgba(23,105,170,0.75)] transition hover:bg-[#12568C] disabled:cursor-not-allowed disabled:opacity-70"
         >
           {status === 'sending' ? (
             <>

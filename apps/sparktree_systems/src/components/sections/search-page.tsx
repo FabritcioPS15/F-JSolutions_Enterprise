@@ -43,7 +43,7 @@ function ResultRow({ item }: { item: SiteSearchResult }) {
   return (
     <Link
       href={item.href}
-      className="group flex min-w-0 items-center gap-3 rounded-xl border border-border bg-card p-3.5 transition hover:border-[#2563EB]/40 hover:shadow-sm sm:gap-4"
+      className="group flex min-w-0 items-center gap-3 rounded-xl border border-border bg-card p-3.5 transition hover:border-[#1769AA]/40 hover:shadow-sm sm:gap-4"
     >
       {item.type === 'product' && item.image ? (
         <span className="flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-card">
@@ -122,9 +122,9 @@ export function SearchPage() {
       </div>
 
       {/* Buscador */}
-      <section className="bg-gradient-to-br from-[#0B1220] via-[#0B1220] to-[#1D4ED8]">
+      <section className="bg-gradient-to-br from-[#102A43] via-[#102A43] to-[#12568C]">
         <div className="mx-auto max-w-[1100px] px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#7DD3FC]">
+          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#75D7E8]">
             Buscador
           </p>
           <h1 className="mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl">
@@ -144,12 +144,12 @@ export function SearchPage() {
                 placeholder="Ej. web, laptops, redes, soporte..."
                 aria-label="Buscar en todo el sitio"
                 autoComplete="off"
-                className="h-12 w-full rounded-xl border border-white/10 bg-card/95 pl-11 pr-4 text-sm text-foreground outline-none transition placeholder:text-muted-foreground focus:border-sky-300/50 focus:ring-2 focus:ring-[#7DD3FC]/30"
+                className="h-12 w-full rounded-xl border border-white/10 bg-card/95 pl-11 pr-4 text-sm text-foreground outline-none transition placeholder:text-muted-foreground focus:border-sky-300/50 focus:ring-2 focus:ring-[#75D7E8]/30"
               />
             </div>
             <button
               type="submit"
-              className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-[#2563EB] px-6 text-sm font-bold text-white transition hover:bg-[#1D4ED8]"
+              className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-[#1769AA] px-6 text-sm font-bold text-white transition hover:bg-[#12568C]"
             >
               <Search className="size-4" />
               Buscar
@@ -166,7 +166,7 @@ export function SearchPage() {
                   key={term}
                   type="button"
                   onClick={() => goToSearch(term)}
-                  className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold text-[#DBEAFE] transition hover:border-sky-300/50 hover:bg-white/10"
+                  className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs font-semibold text-[#DCEFF6] transition hover:border-sky-300/50 hover:bg-white/10"
                 >
                   {term}
                 </button>
@@ -193,7 +193,7 @@ export function SearchPage() {
               </div>
               <Link
                 href={storeUrl(`/productos?q=${encodeURIComponent(q)}`)}
-                className="inline-flex h-10 items-center gap-2 rounded-xl border border-border bg-card px-4 text-xs font-bold text-muted-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink"
+                className="inline-flex h-10 items-center gap-2 rounded-xl border border-border bg-card px-4 text-xs font-bold text-muted-foreground transition hover:border-[#1769AA]/40 hover:text-blue-ink"
               >
                 Buscar en la tienda <ArrowUpRight className="size-3.5" />
               </Link>
@@ -218,7 +218,7 @@ export function SearchPage() {
                       key={term}
                       type="button"
                       onClick={() => goToSearch(term)}
-                      className="rounded-full border border-border bg-muted px-3 py-1.5 text-xs font-semibold text-muted-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink"
+                      className="rounded-full border border-border bg-muted px-3 py-1.5 text-xs font-semibold text-muted-foreground transition hover:border-[#1769AA]/40 hover:text-blue-ink"
                     >
                       {term}
                     </button>
@@ -228,19 +228,19 @@ export function SearchPage() {
                 <div className="mt-6 flex flex-wrap justify-center gap-2">
                   <Link
                     href={storeUrl('/productos')}
-                    className="inline-flex h-10 items-center gap-2 rounded-xl bg-[#2563EB] px-4 text-xs font-bold text-white transition hover:bg-[#1D4ED8]"
+                    className="inline-flex h-10 items-center gap-2 rounded-xl bg-[#1769AA] px-4 text-xs font-bold text-white transition hover:bg-[#12568C]"
                   >
                     Ver tienda <ArrowRight className="size-3.5" />
                   </Link>
                   <Link
                     href="/servicios"
-                    className="inline-flex h-10 items-center gap-2 rounded-xl border border-border bg-card px-4 text-xs font-bold text-muted-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink"
+                    className="inline-flex h-10 items-center gap-2 rounded-xl border border-border bg-card px-4 text-xs font-bold text-muted-foreground transition hover:border-[#1769AA]/40 hover:text-blue-ink"
                   >
                     Ver servicios
                   </Link>
                   <Link
                     href="/contacto"
-                    className="inline-flex h-10 items-center gap-2 rounded-xl border border-border bg-card px-4 text-xs font-bold text-muted-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink"
+                    className="inline-flex h-10 items-center gap-2 rounded-xl border border-border bg-card px-4 text-xs font-bold text-muted-foreground transition hover:border-[#1769AA]/40 hover:text-blue-ink"
                   >
                     Contactar a ventas
                   </Link>
@@ -285,7 +285,7 @@ export function SearchPage() {
                     key={term}
                     type="button"
                     onClick={() => goToSearch(term)}
-                    className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-4 py-2.5 text-sm font-semibold text-muted-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink"
+                    className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-4 py-2.5 text-sm font-semibold text-muted-foreground transition hover:border-[#1769AA]/40 hover:text-blue-ink"
                   >
                     <Search className="size-3.5 text-muted-foreground" />
                     {term}
@@ -328,7 +328,7 @@ export function SearchPage() {
                     <Link
                       key={link.href}
                       href={link.href}
-                      className="group flex items-center justify-between gap-3 rounded-xl border border-border px-3 py-2.5 transition hover:border-[#2563EB]/40 hover:bg-muted"
+                      className="group flex items-center justify-between gap-3 rounded-xl border border-border px-3 py-2.5 transition hover:border-[#1769AA]/40 hover:bg-muted"
                     >
                       <span>
                         <span className="block text-xs font-bold text-foreground group-hover:text-blue-ink">

@@ -148,28 +148,28 @@ export function StoreHeader({ categories }: StoreHeaderProps) {
     <header className="sticky top-0 z-50">
       <div
         data-surface="dark"
-        className={`overflow-hidden bg-[#0B1B33] text-muted-foreground/60 transition-[max-height,opacity] duration-200 ease-out ${
+        className={`overflow-hidden bg-[#172554] text-muted-foreground/60 transition-[max-height,opacity] duration-200 ease-out ${
           topBarClosed ? 'max-h-0 opacity-0' : 'max-h-24 opacity-100'
         }`}
       >
         <div className="mx-auto flex max-w-[1280px] flex-wrap items-center justify-between gap-x-6 gap-y-1 px-4 py-2 text-[11.5px] font-medium sm:px-6 lg:px-8">
           <div className="flex flex-wrap items-center gap-x-5 gap-y-1">
             <a href={COMPANY.phoneHref} className="flex items-center gap-1.5 transition hover:text-white">
-              <Phone className="size-3.5 text-[#60A5FA]" /> {COMPANY.phone}
+              <Phone className="size-3.5 text-[#93C5FD]" /> {COMPANY.phone}
             </a>
             <a
               href={`mailto:${COMPANY.email}`}
               className="flex items-center gap-1.5 transition hover:text-white"
             >
-              <Mail className="size-3.5 text-[#60A5FA]" /> {COMPANY.email}
+              <Mail className="size-3.5 text-[#93C5FD]" /> {COMPANY.email}
             </a>
             <span className="hidden items-center gap-1.5 sm:flex">
-              <MapPin className="size-3.5 text-[#60A5FA]" /> {COMPANY.location}
+              <MapPin className="size-3.5 text-[#93C5FD]" /> {COMPANY.location}
             </span>
           </div>
           <div className="flex items-center gap-4">
             <span className="hidden items-center gap-1.5 md:flex">
-              <Clock className="size-3.5 text-[#60A5FA]" /> {COMPANY.hours}
+              <Clock className="size-3.5 text-[#93C5FD]" /> {COMPANY.hours}
             </span>
             <a href={corporateUrl('/')} className="transition hover:text-white">
               Web corporativa

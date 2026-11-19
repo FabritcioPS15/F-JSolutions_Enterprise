@@ -52,7 +52,7 @@ export function CartPanel({
 
         {lines.length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center px-8 text-center">
-            <span className="grid size-16 place-items-center rounded-2xl bg-[#2563EB]/10 text-blue-ink">
+            <span className="grid size-16 place-items-center rounded-2xl bg-[#1769AA]/10 text-blue-ink">
               <ShoppingCart className="size-7" />
             </span>
             <p className="mt-5 text-base font-bold text-foreground">Tu carrito está vacío</p>
@@ -62,7 +62,7 @@ export function CartPanel({
             <a
               href="/productos"
               onClick={onClose}
-              className="mt-6 inline-flex h-10 items-center gap-2 rounded-lg bg-[#2563EB] px-5 text-sm font-bold text-white transition hover:bg-[#1D4ED8]"
+              className="mt-6 inline-flex h-10 items-center gap-2 rounded-lg bg-[#1769AA] px-5 text-sm font-bold text-white transition hover:bg-[#12568C]"
             >
               Ver catálogo <ArrowRight className="size-4" />
             </a>
@@ -139,7 +139,7 @@ export function CartPanel({
               <a
                 href="/cotizador"
                 onClick={onClose}
-                className="mt-4 flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-[#2563EB] text-sm font-bold text-white transition hover:bg-[#1D4ED8]"
+                className="mt-4 flex h-11 w-full items-center justify-center gap-2 rounded-lg bg-[#1769AA] text-sm font-bold text-white transition hover:bg-[#12568C]"
               >
                 Solicitar cotización <ArrowRight className="size-4" />
               </a>

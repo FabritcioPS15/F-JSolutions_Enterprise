@@ -30,15 +30,15 @@ export function AuthShell({ children }: { children: ReactNode }) {
   return (
     <main className="auth-page text-foreground">
       <div className={`auth-stage${isRegister ? ' auth-stage--register' : ''}`}>
-        <aside data-surface="dark" className="auth-aside relative flex flex-col overflow-hidden bg-gradient-to-br from-[#0B1220] via-[#0F172A] to-[#1D4ED8] px-5 py-3 text-white sm:px-10 sm:py-7 lg:px-14 lg:py-9">
+        <aside data-surface="dark" className="auth-aside relative flex flex-col overflow-hidden bg-gradient-to-br from-[#102A43] via-[#0B2236] to-[#12568C] px-5 py-3 text-white sm:px-10 sm:py-7 lg:px-14 lg:py-9">
           <div aria-hidden="true" className="auth-sheen" />
           <div
             aria-hidden="true"
-            className="auth-orb auth-orb--a pointer-events-none absolute -right-20 -top-24 size-72 rounded-full bg-[#3B82F6]/20 blur-3xl"
+            className="auth-orb auth-orb--a pointer-events-none absolute -right-20 -top-24 size-72 rounded-full bg-[#2A82C4]/20 blur-3xl"
           />
           <div
             aria-hidden="true"
-            className="auth-orb auth-orb--b pointer-events-none absolute -bottom-28 left-1/4 size-72 rounded-full bg-[#2563EB]/20 blur-3xl"
+            className="auth-orb auth-orb--b pointer-events-none absolute -bottom-28 left-1/4 size-72 rounded-full bg-[#1769AA]/20 blur-3xl"
           />
 
           <div className="relative flex items-center justify-between gap-4">
@@ -62,7 +62,7 @@ export function AuthShell({ children }: { children: ReactNode }) {
 
           <div className="relative hidden flex-1 items-center lg:flex">
             <div className="max-w-md">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#7DD3FC]">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#75D7E8]">
                 Cuenta de cliente
               </p>
               <h2 className="mt-3 font-heading text-2xl font-bold tracking-tight sm:text-3xl">
@@ -75,7 +75,7 @@ export function AuthShell({ children }: { children: ReactNode }) {
               <ul className="mt-6 hidden space-y-2.5 text-sm text-[#E2E8F0] sm:block">
                 {benefits.map((item) => (
                   <li key={item} className="flex items-start gap-2">
-                    <CheckCircle2 aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-[#7DD3FC]" />
+                    <CheckCircle2 aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-[#75D7E8]" />
                     {item}
                   </li>
                 ))}

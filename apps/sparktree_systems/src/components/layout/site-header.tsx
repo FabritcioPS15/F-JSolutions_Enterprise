@@ -138,7 +138,7 @@ function CategoryPanel({ onClose }: { onClose: () => void }) {
             onClick={onClose}
             className="group flex items-start gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-muted"
           >
-            <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition-colors group-hover:border-[#2563EB]/20 group-hover:bg-tint-blue group-hover:text-blue-ink">
+            <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition-colors group-hover:border-[#1769AA]/20 group-hover:bg-tint-blue group-hover:text-blue-ink">
               <Icon className="size-4" />
             </span>
             <span className="min-w-0">
@@ -189,8 +189,8 @@ function NavDropdown({ items, onClose }: { items: MenuItem[]; onClose: () => voi
             <span
               className={`mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg border transition-colors ${
                 highlight
-                  ? 'border-[#2563EB]/20 bg-card text-blue-ink'
-                  : 'border-border bg-card text-muted-foreground group-hover:border-[#2563EB]/20 group-hover:bg-tint-blue group-hover:text-blue-ink'
+                  ? 'border-[#1769AA]/20 bg-card text-blue-ink'
+                  : 'border-border bg-card text-muted-foreground group-hover:border-[#1769AA]/20 group-hover:bg-tint-blue group-hover:text-blue-ink'
               }`}
             >
               <Icon className="size-4" />
@@ -317,18 +317,18 @@ export function SiteHeader({ quoteCount = 0, onQuoteClick }: SiteHeaderProps) {
         <div className="mx-auto flex max-w-[1280px] flex-wrap items-center justify-between gap-x-6 gap-y-1 px-4 py-2 text-[11.5px] font-medium sm:px-6 lg:px-8">
           <div className="flex flex-wrap items-center gap-x-5 gap-y-1">
             <a href="tel:+51999888777" className="flex items-center gap-1.5 transition hover:text-white">
-              <Phone className="size-3.5 text-[#60A5FA]" /> +51 999 888 777
+              <Phone className="size-3.5 text-[#75D7E8]" /> +51 999 888 777
             </a>
             <a href="mailto:ventas@fjsolutions.pe" className="flex items-center gap-1.5 transition hover:text-white">
-              <Mail className="size-3.5 text-[#60A5FA]" /> ventas@fjsolutions.pe
+              <Mail className="size-3.5 text-[#75D7E8]" /> ventas@fjsolutions.pe
             </a>
             <span className="hidden items-center gap-1.5 sm:flex">
-              <MapPin className="size-3.5 text-[#60A5FA]" /> Lima, Perú
+              <MapPin className="size-3.5 text-[#75D7E8]" /> Lima, Perú
             </span>
           </div>
           <div className="flex items-center gap-4">
             <span className="hidden items-center gap-1.5 md:flex">
-              <Clock className="size-3.5 text-[#60A5FA]" /> Lun–Sáb · 9:00 a 18:00
+              <Clock className="size-3.5 text-[#75D7E8]" /> Lun–Sáb · 9:00 a 18:00
             </span>
             <Link href="/cotizacion" className="transition hover:text-white">Ventas corporativas</Link>
             <Link href="/soporte-ti" className="transition hover:text-white">Mesa de ayuda</Link>
@@ -380,8 +380,8 @@ export function SiteHeader({ quoteCount = 0, onQuoteClick }: SiteHeaderProps) {
               aria-haspopup="dialog"
               className={`flex h-10 shrink-0 items-center gap-2 rounded-xl border px-4 text-[14px] font-semibold transition-all ${
                 openDropdown === 'categories'
-                  ? 'border-[#2563EB]/30 bg-tint-blue text-blue-ink'
-                  : 'border-border bg-card text-foreground hover:border-[#2563EB]/30 hover:bg-muted hover:text-blue-ink'
+                  ? 'border-[#1769AA]/30 bg-tint-blue text-blue-ink'
+                  : 'border-border bg-card text-foreground hover:border-[#1769AA]/30 hover:bg-muted hover:text-blue-ink'
               }`}
             >
               <LayoutGrid className="size-4" />
@@ -401,11 +401,11 @@ export function SiteHeader({ quoteCount = 0, onQuoteClick }: SiteHeaderProps) {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Busca laptops, monitores, componentes..."
-              className="h-10 w-full rounded-xl border border-border bg-muted pl-10 pr-24 text-[14px] text-foreground outline-none transition placeholder:text-muted-foreground focus:border-[#2563EB] focus:bg-card focus:ring-2 focus:ring-[#2563EB]/15"
+              className="h-10 w-full rounded-xl border border-border bg-muted pl-10 pr-24 text-[14px] text-foreground outline-none transition placeholder:text-muted-foreground focus:border-[#1769AA] focus:bg-card focus:ring-2 focus:ring-[#1769AA]/15"
             />
             <button
               type="submit"
-              className="absolute right-1.5 top-1.5 hidden h-7 items-center rounded-lg bg-[#2563EB] px-3.5 text-xs font-bold text-white transition hover:bg-[#1D4ED8] sm:flex"
+              className="absolute right-1.5 top-1.5 hidden h-7 items-center rounded-lg bg-[#1769AA] px-3.5 text-xs font-bold text-white transition hover:bg-[#12568C] sm:flex"
             >
               Buscar
             </button>
@@ -442,7 +442,7 @@ export function SiteHeader({ quoteCount = 0, onQuoteClick }: SiteHeaderProps) {
               <ShoppingCart className="size-5" />
               <span className="hidden md:inline">Cotización</span>
               {quoteCount > 0 && (
-                <span className="absolute -right-1 -top-1 grid size-5 place-items-center rounded-full bg-[#2563EB] text-[10px] font-bold text-white">
+                <span className="absolute -right-1 -top-1 grid size-5 place-items-center rounded-full bg-[#1769AA] text-[10px] font-bold text-white">
                   {quoteCount}
                 </span>
               )}
@@ -452,7 +452,7 @@ export function SiteHeader({ quoteCount = 0, onQuoteClick }: SiteHeaderProps) {
               onClick={() => setMenuOpen((v) => !v)}
               aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
               aria-expanded={menuOpen}
-              className="grid size-10 place-items-center rounded-xl border border-border text-muted-foreground transition hover:border-[#2563EB]/30 hover:bg-muted hover:text-blue-ink lg:hidden"
+              className="grid size-10 place-items-center rounded-xl border border-border text-muted-foreground transition hover:border-[#1769AA]/30 hover:bg-muted hover:text-blue-ink lg:hidden"
             >
               {menuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
             </button>
@@ -475,7 +475,7 @@ export function SiteHeader({ quoteCount = 0, onQuoteClick }: SiteHeaderProps) {
                     href={link.href}
                     className={`border-b-2 px-3 py-4 text-[14px] font-semibold transition-colors ${
                       active
-                        ? 'border-[#2563EB] text-blue-ink'
+                        ? 'border-[#1769AA] text-blue-ink'
                         : 'border-transparent text-muted-foreground hover:text-blue-ink'
                     }`}
                   >
@@ -497,7 +497,7 @@ export function SiteHeader({ quoteCount = 0, onQuoteClick }: SiteHeaderProps) {
                     aria-haspopup="dialog"
                     className={`flex items-center gap-1 border-b-2 px-3 py-4 text-[14px] font-semibold transition-colors ${
                       active || isOpen
-                        ? 'border-[#2563EB] text-blue-ink'
+                        ? 'border-[#1769AA] text-blue-ink'
                         : 'border-transparent text-muted-foreground hover:text-blue-ink'
                     }`}
                   >
@@ -538,7 +538,7 @@ export function SiteHeader({ quoteCount = 0, onQuoteClick }: SiteHeaderProps) {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Buscar productos..."
-              className="h-11 w-full rounded-xl border border-border bg-muted pl-9 pr-4 text-sm outline-none focus:border-[#2563EB]"
+              className="h-11 w-full rounded-xl border border-border bg-muted pl-9 pr-4 text-sm outline-none focus:border-[#1769AA]"
             />
           </form>
 

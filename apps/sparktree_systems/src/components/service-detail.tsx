@@ -151,7 +151,7 @@ export function ServiceDetail({
 
       {/* ─── Hero del servicio ─── */}
       {service.heroImage ? (
-        <section className="relative overflow-hidden bg-[#050B1F]">
+        <section className="relative overflow-hidden bg-[#08192A]">
           <Image
             src={service.heroImage.src}
             alt={service.heroImage.alt}
@@ -160,14 +160,14 @@ export function ServiceDetail({
             sizes="100vw"
             className="object-cover object-center lg:object-right"
           />
-          <div aria-hidden="true" className="absolute inset-0 bg-[#050B1F]/70" />
+          <div aria-hidden="true" className="absolute inset-0 bg-[#08192A]/70" />
           <div
             aria-hidden="true"
-            className="absolute inset-0 bg-gradient-to-r from-[#050B1F] via-[#050B1F]/85 to-transparent"
+            className="absolute inset-0 bg-gradient-to-r from-[#08192A] via-[#08192A]/85 to-transparent"
           />
           <div
             aria-hidden="true"
-            className="absolute inset-0 bg-gradient-to-t from-[#050B1F] via-transparent to-transparent"
+            className="absolute inset-0 bg-gradient-to-t from-[#08192A] via-transparent to-transparent"
           />
 
           <div className="relative mx-auto max-w-[1280px] px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
@@ -179,7 +179,7 @@ export function ServiceDetail({
               <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <Link
                   href="/cotizacion"
-                  className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#2563EB] px-5 text-sm font-bold text-white transition hover:bg-[#1D4ED8] sm:w-auto"
+                  className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#1769AA] px-5 text-sm font-bold text-white transition hover:bg-[#12568C] sm:w-auto"
                 >
                   Solicitar cotización <ArrowRight className="size-4" />
                 </Link>
@@ -200,20 +200,20 @@ export function ServiceDetail({
                 href={phoneHref}
                 className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.06] px-3 py-2 text-xs font-semibold text-muted-foreground/60 backdrop-blur transition hover:bg-white/10 hover:text-white"
               >
-                <Phone className="size-4 text-[#60A5FA]" /> {EMPRESA.telefono}
+                <Phone className="size-4 text-[#75D7E8]" /> {EMPRESA.telefono}
               </a>
               <a
                 href={`mailto:${EMPRESA.email}`}
                 className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.06] px-3 py-2 text-xs font-semibold text-muted-foreground/60 backdrop-blur transition hover:bg-white/10 hover:text-white"
               >
-                <Mail className="size-4 text-[#60A5FA]" /> {EMPRESA.email}
+                <Mail className="size-4 text-[#75D7E8]" /> {EMPRESA.email}
               </a>
             </div>
           </div>
         </section>
       ) : (
         <section className="relative overflow-hidden border-b border-border bg-gradient-to-br from-muted via-white to-brand-soft">
-          <div className="pointer-events-none absolute -right-32 -top-24 size-96 rounded-full bg-[#2563EB]/10 blur-3xl" />
+          <div className="pointer-events-none absolute -right-32 -top-24 size-96 rounded-full bg-[#1769AA]/10 blur-3xl" />
           <div className="relative mx-auto grid max-w-[1280px] grid-cols-1 gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:px-8 lg:py-16">
             <div className="min-w-0">
               <h1 className="max-w-2xl text-4xl font-bold tracking-[-0.045em] text-foreground sm:text-5xl">
@@ -223,13 +223,13 @@ export function ServiceDetail({
               <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <Link
                   href="/cotizacion"
-                  className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#2563EB] px-5 text-sm font-bold text-white transition hover:bg-[#1D4ED8] sm:w-auto"
+                  className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#1769AA] px-5 text-sm font-bold text-white transition hover:bg-[#12568C] sm:w-auto"
                 >
                   Solicitar cotización <ArrowRight className="size-4" />
                 </Link>
                 <Link
                   href="/contacto"
-                  className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-border bg-card px-5 text-sm font-bold text-foreground transition hover:border-[#2563EB] hover:text-blue-ink sm:w-auto"
+                  className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-border bg-card px-5 text-sm font-bold text-foreground transition hover:border-[#1769AA] hover:text-blue-ink sm:w-auto"
                 >
                   Hablar con un especialista
                 </Link>
@@ -239,7 +239,7 @@ export function ServiceDetail({
               </p>
             </div>
 
-            <aside className="min-w-0 rounded-3xl border border-border bg-card/90 p-6 shadow-xl shadow-[#0F172A]/5 backdrop-blur">
+            <aside className="min-w-0 rounded-3xl border border-border bg-card/90 p-6 shadow-xl shadow-[#0B2236]/5 backdrop-blur">
               <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
                 Datos del servicio
               </p>
@@ -282,7 +282,7 @@ export function ServiceDetail({
             {service.includes.map((item) => (
               <div
                 key={item.title}
-                className="rounded-2xl border border-border bg-muted p-5 transition hover:border-[#2563EB]/30 hover:bg-card hover:shadow-lg hover:shadow-black/5"
+                className="rounded-2xl border border-border bg-muted p-5 transition hover:border-[#1769AA]/30 hover:bg-card hover:shadow-lg hover:shadow-black/5"
               >
                 <span className="grid size-9 place-items-center rounded-xl bg-card text-blue-ink shadow-sm">
                   <Check className="size-4" />
@@ -391,9 +391,9 @@ export function ServiceDetail({
                   <Link
                     key={item.slug}
                     href={getServicePathFor(item)}
-                    className="group flex flex-col rounded-2xl border border-border bg-card p-6 transition hover:border-[#2563EB]/30 hover:shadow-lg hover:shadow-black/5"
+                    className="group flex flex-col rounded-2xl border border-border bg-card p-6 transition hover:border-[#1769AA]/30 hover:shadow-lg hover:shadow-black/5"
                   >
-                    <span className="grid size-10 place-items-center rounded-xl bg-tint-blue text-blue-ink transition group-hover:bg-[#2563EB] group-hover:text-white">
+                    <span className="grid size-10 place-items-center rounded-xl bg-tint-blue text-blue-ink transition group-hover:bg-[#1769AA] group-hover:text-white">
                       <Icon className="size-5" />
                     </span>
                     <h3 className="mt-4 text-base font-bold text-foreground">{item.title}</h3>
@@ -411,9 +411,9 @@ export function ServiceDetail({
 
       {/* ─── CTA final ─── */}
       <section className="px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
-        <div className="relative mx-auto max-w-[1280px] overflow-hidden rounded-3xl border border-[#2563EB]/25 bg-gradient-to-br from-tint-blue via-white to-brand-soft px-6 py-10 shadow-sm sm:px-10 lg:px-14 lg:py-14">
-          <div className="pointer-events-none absolute -right-24 -top-24 size-80 rounded-full bg-[#2563EB]/10 blur-2xl" />
-          <div className="pointer-events-none absolute -bottom-32 left-1/3 size-80 rounded-full bg-[#2563EB]/20 blur-3xl" />
+        <div className="relative mx-auto max-w-[1280px] overflow-hidden rounded-3xl border border-[#1769AA]/25 bg-gradient-to-br from-tint-blue via-white to-brand-soft px-6 py-10 shadow-sm sm:px-10 lg:px-14 lg:py-14">
+          <div className="pointer-events-none absolute -right-24 -top-24 size-80 rounded-full bg-[#1769AA]/10 blur-2xl" />
+          <div className="pointer-events-none absolute -bottom-32 left-1/3 size-80 rounded-full bg-[#1769AA]/20 blur-3xl" />
           <div className="relative grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
             <div>
               <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-foreground/85">
@@ -429,13 +429,13 @@ export function ServiceDetail({
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link
                   href="/cotizacion"
-                  className="inline-flex h-11 items-center gap-2 rounded-xl bg-[#2563EB] px-5 text-sm font-bold text-white transition hover:bg-[#1D4ED8]"
+                  className="inline-flex h-11 items-center gap-2 rounded-xl bg-[#1769AA] px-5 text-sm font-bold text-white transition hover:bg-[#12568C]"
                 >
                   Solicitar cotización <ArrowRight className="size-4" />
                 </Link>
                 <a
                   href={phoneHref}
-                  className="inline-flex h-11 items-center gap-2 rounded-xl border border-input bg-card px-5 text-sm font-bold text-foreground transition hover:border-[#2563EB] hover:text-blue-ink"
+                  className="inline-flex h-11 items-center gap-2 rounded-xl border border-input bg-card px-5 text-sm font-bold text-foreground transition hover:border-[#1769AA] hover:text-blue-ink"
                 >
                   <Phone className="size-4" /> {EMPRESA.telefono}
                 </a>

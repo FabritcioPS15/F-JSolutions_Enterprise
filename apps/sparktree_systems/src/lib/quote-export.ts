@@ -48,7 +48,7 @@ const PAGE = {
   contentBottom: 261,
   colors: {
     dark: [15, 23, 42] as PdfColor,
-    blue: [37, 99, 235] as PdfColor,
+    blue: [23, 105, 170] as PdfColor,
     gray: [100, 116, 139] as PdfColor,
     border: [226, 232, 240] as PdfColor,
     light: [248, 250, 252] as PdfColor,

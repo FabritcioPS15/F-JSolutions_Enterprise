@@ -1,0 +1,41 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-merriweather), Georgia, 'Times New Roman', serif;
+
+  --color-navy-950: #0c121a;
+  --color-navy-900: #111821;
+  --color-navy-800: #202c39;
+  --color-navy-700: #2c3540;
+  --color-ink-600: #52677d;
+  --color-ink-500: #6f7e8e;
+  --color-ink-400: #96a4b4;
+  --color-bone-50: #f8f7f3;
+  --color-bone-100: #f1efea;
+  --color-bone-200: #dedacf;
+  --color-gold-500: #c6a56b;
+  --color-gold-300: #d9c8a5;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 2rem;
+  }
+
+  body {
+    background-color: var(--color-bone-50);
+    color: var(--color-navy-800);
+  }
+
+  ::selection {
+    background-color: var(--color-gold-500);
+    color: var(--color-navy-900);
+  }
+}
+
+.hero-lines {
+  background-image: linear-gradient(115deg, transparent 0 62%, rgb(198 165 107 / 0.16) 62% 62.2%, transparent 62.2%),
+    linear-gradient(115deg, transparent 0 70%, rgb(198 165 107 / 0.1) 70% 70.18%, transparent 70.18%);
+}

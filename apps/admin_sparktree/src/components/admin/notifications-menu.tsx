@@ -36,7 +36,7 @@ type NotificationItem = {
 }
 
 const toneStyles = {
-  brand: 'bg-tint-brand text-brand-ink ring-[#2563EB]/20',
+  brand: 'bg-tint-brand text-brand-ink ring-[#5946A6]/20',
   amber: 'bg-amber-500/10 text-warning-ink ring-amber-500/25',
 } as const
 
@@ -216,7 +216,7 @@ export function NotificationsMenu({
               href="/notificaciones"
               role="menuitem"
               onClick={() => setOpen(false)}
-              className="flex items-center justify-center rounded-xl px-3 py-2 text-[11px] font-semibold text-[#2563EB] transition hover:bg-muted"
+              className="flex items-center justify-center rounded-xl px-3 py-2 text-[11px] font-semibold text-[#5946A6] transition hover:bg-muted"
             >
               Ver todas las notificaciones
             </Link>

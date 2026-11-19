@@ -303,11 +303,11 @@ export function OrganizationAreasView() {
           {filtered.map((dept) => (
             <div
               key={dept.id}
-              className="flex flex-col justify-between rounded-2xl border border-border/80 bg-card p-5 shadow-xs transition hover:border-[#2563EB]/40 hover:shadow-sm"
+              className="flex flex-col justify-between rounded-2xl border border-border/80 bg-card p-5 shadow-xs transition hover:border-[#5946A6]/40 hover:shadow-sm"
             >
               <div>
                 <div className="flex items-start justify-between gap-3">
-                  <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-tint-brand text-brand-ink ring-1 ring-[#2563EB]/20">
+                  <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-tint-brand text-brand-ink ring-1 ring-[#5946A6]/20">
                     <Building2 className="size-5" aria-hidden="true" />
                   </span>
                   <div className="flex items-center gap-1.5">

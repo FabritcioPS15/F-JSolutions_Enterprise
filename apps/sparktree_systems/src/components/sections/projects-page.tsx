@@ -247,7 +247,7 @@ export function ProjectsPage() {
   }, [selectedSector, searchFilter])
 
   return (
-    <div className="min-h-screen bg-card text-foreground selection:bg-[#2563EB]/15 selection:text-blue-ink">
+    <div className="min-h-screen bg-card text-foreground selection:bg-[#1769AA]/15 selection:text-blue-ink">
       <EnhancedHeader />
 
       <main>
@@ -284,19 +284,19 @@ export function ProjectsPage() {
         <section className="border-y border-border bg-muted py-10" aria-label="Cifras clave">
           <div className={CONTAINER}>
             <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
-              <div className="border-l-2 border-[#2563EB] pl-4">
+              <div className="border-l-2 border-[#1769AA] pl-4">
                 <p className="font-heading text-3xl font-bold tracking-tight text-foreground sm:text-4xl">850+</p>
                 <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Empresas atendidas</p>
               </div>
-              <div className="border-l-2 border-[#2563EB] pl-4">
+              <div className="border-l-2 border-[#1769AA] pl-4">
                 <p className="font-heading text-3xl font-bold tracking-tight text-foreground sm:text-4xl">2,400+</p>
                 <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Equipos gestionados</p>
               </div>
-              <div className="border-l-2 border-[#2563EB] pl-4">
+              <div className="border-l-2 border-[#1769AA] pl-4">
                 <p className="font-heading text-3xl font-bold tracking-tight text-foreground sm:text-4xl">&lt;35 min</p>
                 <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Tiempo promedio respuesta</p>
               </div>
-              <div className="border-l-2 border-[#2563EB] pl-4">
+              <div className="border-l-2 border-[#1769AA] pl-4">
                 <p className="font-heading text-3xl font-bold tracking-tight text-foreground sm:text-4xl">99.8%</p>
                 <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Uptime promedio en redes</p>
               </div>
@@ -323,7 +323,7 @@ export function ProjectsPage() {
                   value={searchFilter}
                   onChange={(e) => setSearchFilter(e.target.value)}
                   placeholder="Buscar por tecnología, reto..."
-                  className="h-10 w-full rounded-xl border border-input bg-card pl-10 pr-4 text-sm text-foreground outline-none transition placeholder:text-muted-foreground focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15"
+                  className="h-10 w-full rounded-xl border border-input bg-card pl-10 pr-4 text-sm text-foreground outline-none transition placeholder:text-muted-foreground focus:border-[#1769AA] focus:ring-2 focus:ring-[#1769AA]/15"
                 />
               </div>
             </div>
@@ -340,7 +340,7 @@ export function ProjectsPage() {
                     aria-pressed={active}
                     className={`rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-all ${
                       active
-                        ? 'bg-[#2563EB] text-white shadow-sm'
+                        ? 'bg-[#1769AA] text-white shadow-sm'
                         : 'border border-border bg-card text-muted-foreground hover:border-input hover:bg-muted'
                     }`}
                   >
@@ -366,7 +366,7 @@ export function ProjectsPage() {
                     setSelectedSector('todos')
                     setSearchFilter('')
                   }}
-                  className="mt-4 rounded-lg bg-[#2563EB] px-4 py-2 text-xs font-semibold text-white transition hover:bg-[#1D4ED8]"
+                  className="mt-4 rounded-lg bg-[#1769AA] px-4 py-2 text-xs font-semibold text-white transition hover:bg-[#12568C]"
                 >
                   Restablecer filtros
                 </button>
@@ -379,7 +379,7 @@ export function ProjectsPage() {
                   return (
                     <article
                       key={study.id}
-                      className="group flex flex-col justify-between rounded-2xl border border-border bg-card p-6 shadow-sm transition duration-200 hover:border-[#2563EB]/40 hover:shadow-md sm:p-8"
+                      className="group flex flex-col justify-between rounded-2xl border border-border bg-card p-6 shadow-sm transition duration-200 hover:border-[#1769AA]/40 hover:shadow-md sm:p-8"
                     >
                       <div>
                         {/* Top header */}
@@ -393,7 +393,7 @@ export function ProjectsPage() {
                                 type="button"
                                 onClick={() => setSelectedSector(study.sectorId)}
                                 aria-label={`Ver proyectos del sector ${sectorLabel}`}
-                                className="rounded-sm text-left text-[11px] font-bold uppercase tracking-wider text-blue-ink underline-offset-2 transition hover:text-blue-ink hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/40"
+                                className="rounded-sm text-left text-[11px] font-bold uppercase tracking-wider text-blue-ink underline-offset-2 transition hover:text-blue-ink hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1769AA]/40"
                               >
                                 {sectorLabel}
                               </button>
@@ -443,7 +443,7 @@ export function ProjectsPage() {
 
                         {/* Client quote if available */}
                         {study.quote && (
-                          <div className="mt-4 border-l-2 border-[#2563EB] pl-3 py-1 text-xs italic text-muted-foreground">
+                          <div className="mt-4 border-l-2 border-[#1769AA] pl-3 py-1 text-xs italic text-muted-foreground">
                             &ldquo;{study.quote.text}&rdquo;
                             <span className="block mt-1 font-semibold not-italic text-foreground">
                               — {study.quote.author}, <span className="font-normal text-muted-foreground">{study.quote.role}</span>
@@ -483,11 +483,11 @@ export function ProjectsPage() {
         </section>
 
         {/* Banner de llamada a la acción */}
-        <section className="border-t border-border bg-[#0F172A] py-16 text-white" aria-label="Contacto de proyectos">
+        <section className="border-t border-border bg-[#0B2236] py-16 text-white" aria-label="Contacto de proyectos">
           <div className={CONTAINER}>
             <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#38BDF8]">
+                <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#00B8D9]">
                   ¿Tienes un proyecto en mente?
                 </p>
                 <h2 className="mt-2 font-heading text-2xl font-bold tracking-tight text-white sm:text-3xl">
@@ -502,7 +502,7 @@ export function ProjectsPage() {
               <div className="flex flex-wrap items-center gap-3">
                 <Link
                   href="/contacto"
-                  className="inline-flex h-11 items-center gap-2 rounded-xl bg-[#2563EB] px-6 text-sm font-bold text-white transition hover:bg-[#1D4ED8]"
+                  className="inline-flex h-11 items-center gap-2 rounded-xl bg-[#1769AA] px-6 text-sm font-bold text-white transition hover:bg-[#12568C]"
                 >
                   Solicitar diagnóstico
                   <ArrowRight className="size-4" />

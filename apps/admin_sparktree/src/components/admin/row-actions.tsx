@@ -33,7 +33,7 @@ const EDGE = 8
 
 function itemClass(tone: RowAction['tone'], disabled?: boolean) {
   return cn(
-    'flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-[12.5px] font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/25',
+    'flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-[12.5px] font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5946A6]/25',
     tone === 'danger'
       ? 'text-danger-ink hover:bg-rose-50 focus-visible:bg-rose-50'
       : 'text-foreground/80 hover:bg-muted focus-visible:bg-muted',

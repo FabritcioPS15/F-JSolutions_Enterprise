@@ -190,7 +190,7 @@ export function LandingPage() {
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <div ref={categoryRef} className="relative">
-              <button type="button" onClick={() => setCategoryOpen((value) => !value)} aria-expanded={categoryOpen} aria-haspopup="listbox" className={`flex h-10 items-center gap-2 rounded-lg border px-3.5 text-sm font-semibold transition ${category !== 'Todas' ? 'border-[#155eef]/30 bg-tint-blue text-blue-ink' : 'border-border bg-card text-foreground hover:border-[#155eef]/40 hover:text-blue-ink'}`}>
+              <button type="button" onClick={() => setCategoryOpen((value) => !value)} aria-expanded={categoryOpen} aria-haspopup="listbox" className={`flex h-10 items-center gap-2 rounded-lg border px-3.5 text-sm font-semibold transition ${category !== 'Todas' ? 'border-[#1465a6]/30 bg-tint-blue text-blue-ink' : 'border-border bg-card text-foreground hover:border-[#1465a6]/40 hover:text-blue-ink'}`}>
                 <SlidersHorizontal className="size-4" />
                 {category === 'Todas' ? 'Categorías' : category}
                 <ChevronDown className={`size-4 transition-transform duration-200 ${categoryOpen ? 'rotate-180' : ''}`} />
@@ -213,7 +213,7 @@ export function LandingPage() {
                 </div>
               )}
             </div>
-            <a href={storeUrl('/productos')} className="group inline-flex h-10 items-center gap-2 rounded-lg border border-border bg-card px-4 text-sm font-semibold text-foreground transition hover:border-[#155eef]/40 hover:text-blue-ink">
+            <a href={storeUrl('/productos')} className="group inline-flex h-10 items-center gap-2 rounded-lg border border-border bg-card px-4 text-sm font-semibold text-foreground transition hover:border-[#1465a6]/40 hover:text-blue-ink">
               Ver toda la tienda <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-0.5" />
             </a>
             <div className="flex items-center gap-1.5">
@@ -225,7 +225,7 @@ export function LandingPage() {
                 onClick={() => scrollCarousel(-1)}
                 disabled={!canScrollLeft}
                 aria-label="Ver productos anteriores"
-                className="grid size-10 place-items-center rounded-lg border border-border bg-card text-foreground transition hover:border-[#155eef]/40 hover:text-blue-ink disabled:cursor-not-allowed disabled:opacity-40"
+                className="grid size-10 place-items-center rounded-lg border border-border bg-card text-foreground transition hover:border-[#1465a6]/40 hover:text-blue-ink disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <ChevronLeft className="size-4" />
               </button>
@@ -234,7 +234,7 @@ export function LandingPage() {
                 onClick={() => scrollCarousel(1)}
                 disabled={!canScrollRight}
                 aria-label="Ver más productos"
-                className="grid size-10 place-items-center rounded-lg border border-border bg-card text-foreground transition hover:border-[#155eef]/40 hover:text-blue-ink disabled:cursor-not-allowed disabled:opacity-40"
+                className="grid size-10 place-items-center rounded-lg border border-border bg-card text-foreground transition hover:border-[#1465a6]/40 hover:text-blue-ink disabled:cursor-not-allowed disabled:opacity-40"
               >
                 <ChevronRight className="size-4" />
               </button>
@@ -248,7 +248,7 @@ export function LandingPage() {
             <button
               type="button"
               onClick={() => setCategory('Todas')}
-              className="mt-4 inline-flex h-10 items-center gap-2 rounded-lg bg-[#155eef] px-4 text-sm font-semibold text-white transition hover:bg-[#0f4fd1]"
+              className="mt-4 inline-flex h-10 items-center gap-2 rounded-lg bg-[#1465a6] px-4 text-sm font-semibold text-white transition hover:bg-[#0f4fd1]"
             >
               Ver todos los productos
             </button>
@@ -295,7 +295,7 @@ export function LandingPage() {
           <div className="mt-8 flex flex-wrap gap-2 rounded-xl border border-blue-ink/25 bg-muted p-4">
             {businessLinks.map((link, index) => (
               <Reveal key={link} delay={index * 50}>
-                <a href={link.includes('Soporte') ? '/soporte-ti' : '/cotizacion'} className="inline-flex rounded-full border border-blue-ink/30 bg-card px-3 py-2 text-xs font-bold text-blue-ink transition duration-300 hover:-translate-y-0.5 hover:border-[#155eef]/40 hover:bg-tint-blue hover:shadow-sm">{link}</a>
+                <a href={link.includes('Soporte') ? '/soporte-ti' : '/cotizacion'} className="inline-flex rounded-full border border-blue-ink/30 bg-card px-3 py-2 text-xs font-bold text-blue-ink transition duration-300 hover:-translate-y-0.5 hover:border-[#1465a6]/40 hover:bg-tint-blue hover:shadow-sm">{link}</a>
               </Reveal>
             ))}
           </div>
@@ -346,7 +346,7 @@ function Feature({ icon, title, copy, onClick }: { icon: React.ReactNode; title:
   return (
     <button
       onClick={onClick}
-      className="group relative flex h-full w-full items-center gap-3 overflow-hidden rounded-2xl border border-border bg-card p-4 text-left transition-[transform,box-shadow,border-color] duration-300 ease-out hover:-translate-y-1 hover:border-[#3B82F6]/60 hover:shadow-[0_22px_45px_-24px_rgba(59,130,246,0.6)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3B82F6]/45 focus-visible:ring-offset-2 active:translate-y-0 active:shadow-sm sm:gap-4 sm:p-5"
+      className="group relative flex h-full w-full items-center gap-3 overflow-hidden rounded-2xl border border-border bg-card p-4 text-left transition-[transform,box-shadow,border-color] duration-300 ease-out hover:-translate-y-1 hover:border-[#2A82C4]/60 hover:shadow-[0_22px_45px_-24px_rgba(42,130,196,0.6)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2A82C4]/45 focus-visible:ring-offset-2 active:translate-y-0 active:shadow-sm sm:gap-4 sm:p-5"
     >
       <span
         aria-hidden="true"
@@ -354,16 +354,16 @@ function Feature({ icon, title, copy, onClick }: { icon: React.ReactNode; title:
       />
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute -right-8 -top-10 size-28 rounded-full bg-[#2563EB]/10 opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100"
+        className="pointer-events-none absolute -right-8 -top-10 size-28 rounded-full bg-[#1769AA]/10 opacity-0 blur-2xl transition-opacity duration-500 group-hover:opacity-100"
       />
-      <span className="relative flex size-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-tint-blue to-blue-ink/15 text-blue-ink shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] transition-all duration-300 group-hover:scale-110 group-hover:from-[#3B82F6] group-hover:to-[#2563EB] group-hover:text-white group-hover:shadow-[0_12px_24px_-10px_rgba(59,130,246,0.85)] sm:size-11">
+      <span className="relative flex size-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-tint-blue to-blue-ink/15 text-blue-ink shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] transition-all duration-300 group-hover:scale-110 group-hover:from-[#2A82C4] group-hover:to-[#1769AA] group-hover:text-white group-hover:shadow-[0_12px_24px_-10px_rgba(42,130,196,0.85)] sm:size-11">
         {icon}
       </span>
       <span className="relative flex-1">
         <span className="block font-heading text-xs font-bold text-foreground transition-colors duration-300 group-hover:text-blue-ink sm:text-sm">{title}</span>
         <span className="mt-1 block text-[10px] text-muted-foreground transition-colors duration-300 group-hover:text-muted-foreground sm:text-xs">{copy}</span>
       </span>
-      <span className="relative grid size-7 shrink-0 translate-x-1 place-items-center rounded-full border border-border bg-card text-muted-foreground opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:border-[#3B82F6]/30 group-hover:text-blue-ink group-hover:opacity-100">
+      <span className="relative grid size-7 shrink-0 translate-x-1 place-items-center rounded-full border border-border bg-card text-muted-foreground opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:border-[#2A82C4]/30 group-hover:text-blue-ink group-hover:opacity-100">
         <ArrowRight className="size-3.5" />
       </span>
     </button>
@@ -384,13 +384,13 @@ function Info({
   return (
     <a
       href={href}
-      className="group flex h-full w-full items-center gap-3.5 rounded-2xl border border-border bg-muted p-4 transition-all duration-300 hover:border-[#3B82F6]/40 hover:bg-gradient-to-br hover:from-tint-blue hover:to-blue-ink/15 hover:shadow-md hover:shadow-[#3B82F6]/10 hover:-translate-y-0.5"
+      className="group flex h-full w-full items-center gap-3.5 rounded-2xl border border-border bg-muted p-4 transition-all duration-300 hover:border-[#2A82C4]/40 hover:bg-gradient-to-br hover:from-tint-blue hover:to-blue-ink/15 hover:shadow-md hover:shadow-[#2A82C4]/10 hover:-translate-y-0.5"
     >
-      <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-ink/15 to-[#bfdbfe] text-blue-ink transition-all duration-300 group-hover:scale-110 group-hover:from-[#3B82F6] group-hover:to-[#1D4ED8] group-hover:text-white shadow-xs">
+      <span className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-blue-ink/15 to-[#bfe4f0] text-blue-ink transition-all duration-300 group-hover:scale-110 group-hover:from-[#2A82C4] group-hover:to-[#12568C] group-hover:text-white shadow-xs">
         <Icon className="size-5" />
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block font-heading text-xs sm:text-sm font-bold text-foreground transition-colors duration-300 group-hover:text-[#3B82F6]">
+        <span className="block font-heading text-xs sm:text-sm font-bold text-foreground transition-colors duration-300 group-hover:text-[#2A82C4]">
           {title}
         </span>
         <span className="mt-1 block text-[10px] sm:text-xs leading-relaxed text-muted-foreground">

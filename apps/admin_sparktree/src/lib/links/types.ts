@@ -73,14 +73,14 @@ export type LinkProfile = {
 export type LinkProfileInput = Omit<LinkProfile, 'id' | 'updatedAt'>
 
 export const ACCENT_PRESETS = [
-  { value: '#7C3AED', label: 'Violeta' },
-  { value: '#2563EB', label: 'Azul' },
+  { value: '#6A54B8', label: 'Violeta' },
+  { value: '#5946A6', label: 'Azul' },
   { value: '#0891B2', label: 'Cian' },
   { value: '#059669', label: 'Esmeralda' },
   { value: '#D97706', label: 'Ámbar' },
   { value: '#DB2777', label: 'Rosa' },
   { value: '#DC2626', label: 'Rojo' },
-  { value: '#475569', label: 'Pizarra' },
+  { value: '#4F4670', label: 'Pizarra' },
 ] as const
 
 export const LINK_ICON_OPTIONS: { value: LinkIconKey; label: string }[] = [
@@ -114,7 +114,7 @@ export const BACKGROUND_PRESETS: {
 }[] = [
   {
     label: 'Noche',
-    background: { kind: 'gradient', from: '#0B1220', to: '#16213A', angle: 160 },
+    background: { kind: 'gradient', from: '#16112E', to: '#1D1740', angle: 160 },
   },
   {
     label: 'Océano',
@@ -134,14 +134,14 @@ export const BACKGROUND_PRESETS: {
   },
   {
     label: 'Nieve',
-    background: { kind: 'solid', color: '#F8FAFC' },
+    background: { kind: 'solid', color: '#FAF9FE' },
   },
 ]
 
 export const DEFAULT_BACKGROUND: ProfileBackground = {
   kind: 'gradient',
-  from: '#0B1220',
-  to: '#16213A',
+  from: '#16112E',
+  to: '#1D1740',
   angle: 160,
 }
 

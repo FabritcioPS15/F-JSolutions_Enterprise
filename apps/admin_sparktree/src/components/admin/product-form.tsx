@@ -841,7 +841,7 @@ export function ProductForm({
                     className={cn(
                       'inline-flex h-9 items-center gap-2 rounded-lg px-2.5 text-[11px] font-semibold transition',
                       active
-                        ? 'bg-tint-brand text-brand-ink ring-1 ring-inset ring-[#2563EB]/15'
+                        ? 'bg-tint-brand text-brand-ink ring-1 ring-inset ring-[#5946A6]/15'
                         : done
                           ? 'text-muted-foreground hover:bg-muted'
                           : 'text-muted-foreground'
@@ -851,7 +851,7 @@ export function ProductForm({
                       className={cn(
                         'grid size-5 shrink-0 place-items-center rounded-full text-[10px] font-bold ring-1',
                         active
-                          ? 'bg-[#2563EB] text-white ring-[#2563EB]'
+                          ? 'bg-[#5946A6] text-white ring-[#5946A6]'
                           : done
                             ? 'bg-slate-900 text-white ring-slate-900'
                             : 'bg-muted text-muted-foreground ring-border'
@@ -1254,7 +1254,7 @@ export function ProductForm({
                   type="checkbox"
                   checked={draft.showPrice}
                   onChange={(event) => setField('showPrice', event.target.checked)}
-                  className="mt-0.5 size-4 rounded border-input accent-[#2563EB]"
+                  className="mt-0.5 size-4 rounded border-input accent-[#5946A6]"
                 />
                 <span>
                   <span className="block text-xs font-bold text-foreground">
@@ -1521,7 +1521,7 @@ export function ProductForm({
                   )}
 
                   {draggingImage && (
-                    <div className="pointer-events-none absolute inset-0 grid place-items-center bg-[#2563EB]/10 ring-2 ring-inset ring-[#2563EB]">
+                    <div className="pointer-events-none absolute inset-0 grid place-items-center bg-[#5946A6]/10 ring-2 ring-inset ring-[#5946A6]">
                       <span className="rounded-xl bg-card px-3 py-2 text-xs font-semibold text-brand-ink shadow-lg">
                         Suelta para {draft.image ? 'reemplazar la portada' : 'subir la imagen'}
                       </span>
@@ -1872,7 +1872,7 @@ export function ProductForm({
                       selected
                         ? archived
                           ? 'border-amber-500 bg-amber-500/10 ring-2 ring-amber-500/15'
-                          : 'border-[#2563EB] bg-tint-brand/60 ring-2 ring-[#2563EB]/15'
+                          : 'border-[#5946A6] bg-tint-brand/60 ring-2 ring-[#5946A6]/15'
                         : 'border-border bg-card hover:border-input'
                     )}
                   >
@@ -1882,7 +1882,7 @@ export function ProductForm({
                         selected
                           ? archived
                             ? 'bg-amber-500 text-white ring-amber-500'
-                            : 'bg-[#2563EB] text-white ring-[#2563EB]'
+                            : 'bg-[#5946A6] text-white ring-[#5946A6]'
                           : 'bg-muted text-muted-foreground ring-border'
                       )}
                     >
@@ -1915,7 +1915,7 @@ export function ProductForm({
                 type="checkbox"
                 checked={draft.featured}
                 onChange={(event) => setField('featured', event.target.checked)}
-                className="mt-0.5 size-4 rounded border-input accent-[#2563EB]"
+                className="mt-0.5 size-4 rounded border-input accent-[#5946A6]"
               />
               <span>
                 <span className="flex items-center gap-1.5 text-xs font-bold text-foreground">

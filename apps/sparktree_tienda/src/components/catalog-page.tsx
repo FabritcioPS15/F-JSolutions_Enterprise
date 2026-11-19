@@ -288,7 +288,7 @@ function CategoryCard({
           </span>
         </div>
 
-        <h3 className="mt-3 text-lg font-bold text-white transition group-hover:text-[#60A5FA]">
+        <h3 className="mt-3 text-lg font-bold text-white transition group-hover:text-[#93C5FD]">
           {category.label}
         </h3>
 
@@ -976,7 +976,7 @@ export function CatalogPage() {
                 <Headset className="size-6" />
               </span>
               <div>
-                <span className="inline-flex items-center gap-1 rounded-md bg-[#2563EB]/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-blue-ink">
+                <span className="inline-flex items-center gap-1 rounded-md bg-[#F59E0B]/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-warning-ink">
                   Atención B2B
                 </span>
                 <h2 className="mt-1 font-heading text-base font-bold text-foreground sm:text-lg">

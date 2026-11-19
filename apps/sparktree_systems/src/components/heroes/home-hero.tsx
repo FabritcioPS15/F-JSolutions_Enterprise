@@ -78,7 +78,7 @@ function EquipmentVisual() {
         {/* Cabecera del panel */}
         <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-3.5 sm:px-5">
           <div className="flex min-w-0 items-center gap-2.5">
-            <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-[#0F172A] text-white">
+            <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-[#0B2236] text-white">
               <Boxes aria-hidden="true" className="size-4" />
             </span>
             <div className="min-w-0">
@@ -101,7 +101,7 @@ function EquipmentVisual() {
             {hardwareItems.map((item) => (
               <div
                 key={item.category}
-                className="flex items-center gap-3 rounded-xl border border-border bg-card p-2.5 transition-colors hover:border-[#2563EB]/30 hover:bg-muted"
+                className="flex items-center gap-3 rounded-xl border border-border bg-card p-2.5 transition-colors hover:border-[#1769AA]/30 hover:bg-muted"
               >
                 <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-tint-blue text-blue-ink">
                   <item.icon aria-hidden="true" className="size-4.5" />
@@ -466,15 +466,15 @@ export function HomeHeroCarousel() {
                         onClick={() => goToSlide(index)}
                         aria-label={`Ir a diapositiva ${index + 1}: ${slide.tabLabel}`}
                         className={cn(
-                          'group relative h-2.5 rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/40',
+                          'group relative h-2.5 rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1769AA]/40',
                           isActive
-                            ? 'w-10 sm:w-16 overflow-hidden bg-blue-ink/15 ring-1 ring-[#2563EB]/30'
+                            ? 'w-10 sm:w-16 overflow-hidden bg-blue-ink/15 ring-1 ring-[#1769AA]/30'
                             : 'w-2.5 bg-[#CBD5E1] hover:bg-[#94A3B8]',
                         )}
                       >
                         {isActive && (
                           <span
-                            className="block h-full bg-gradient-to-r from-[#3B82F6] to-[#1D4ED8] transition-all duration-75"
+                            className="block h-full bg-gradient-to-r from-[#2A82C4] to-[#12568C] transition-all duration-75"
                             style={{ width: isCompact ? '100%' : `${progress}%` }}
                           />
                         )}

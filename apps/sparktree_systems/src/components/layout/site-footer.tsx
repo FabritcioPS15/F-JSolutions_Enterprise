@@ -116,7 +116,7 @@ const SOCIAL_NETWORKS = [
 ].filter((item) => Boolean(item.href))
 
 const FOCUS_STYLE =
-  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0B132B]'
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1769AA] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A1C2E]'
 
 function isActiveLink(href: string, pathname: string | null): boolean {
   if (!pathname || href.includes('?')) return false
@@ -142,7 +142,7 @@ function FooterNavColumn({
 
   return (
     <div className="flex flex-col">
-      <h2 className="hidden font-heading text-[13px] font-bold uppercase tracking-[0.12em] text-[#F8FAFC] sm:block">
+      <h2 className="hidden font-heading text-[13px] font-bold uppercase tracking-[0.12em] text-[#F1F6FA] sm:block">
         {column.title}
       </h2>
 
@@ -154,12 +154,12 @@ function FooterNavColumn({
         aria-controls={panelId}
         className={`flex min-h-12 w-full items-center justify-between gap-3 rounded-sm py-4 text-left sm:hidden ${FOCUS_STYLE}`}
       >
-        <span className="font-heading text-[13px] font-bold uppercase tracking-[0.12em] text-[#F8FAFC]">
+        <span className="font-heading text-[13px] font-bold uppercase tracking-[0.12em] text-[#F1F6FA]">
           {column.title}
         </span>
         <span className="flex items-center gap-2">
           {hasActiveLink && (
-            <span className="size-1.5 rounded-full bg-[#60A5FA]" aria-hidden="true" />
+            <span className="size-1.5 rounded-full bg-[#75D7E8]" aria-hidden="true" />
           )}
           <ChevronDown
             className={cn(
@@ -190,12 +190,12 @@ function FooterNavColumn({
                   FOCUS_STYLE,
                   active
                     ? 'font-semibold text-white'
-                    : 'text-muted-foreground hover:text-[#93C5FD]'
+                    : 'text-muted-foreground hover:text-[#9FE2EF]'
                 )}
               >
                 {active && (
                   <span
-                    className="absolute -left-3 top-1/2 size-1.5 -translate-y-1/2 rounded-full bg-[#60A5FA]"
+                    className="absolute -left-3 top-1/2 size-1.5 -translate-y-1/2 rounded-full bg-[#75D7E8]"
                     aria-hidden="true"
                   />
                 )}
@@ -218,12 +218,12 @@ export function SiteFooter() {
   return (
     <footer
       data-surface="dark"
-      className="border-t border-[#1E293B]/80 bg-gradient-to-b from-[#0B132B] via-[#0B1220] to-[#172554] text-muted-foreground selection:bg-[#2563EB]/30 selection:text-white"
+      className="border-t border-[#17324A]/80 bg-gradient-to-b from-[#0A1C2E] via-[#102A43] to-[#0C2E4A] text-muted-foreground selection:bg-[#1769AA]/30 selection:text-white"
       aria-label="Pie de página"
     >
       <div className="mx-auto max-w-[1280px] px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-16">
         {/* ─── A. Cabecera del Footer: Logotipo oficial & Redes Sociales ─── */}
-        <div className="flex flex-col gap-5 pb-8 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:pb-10 border-b border-[#1E293B]/80">
+        <div className="flex flex-col gap-5 pb-8 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:pb-10 border-b border-[#17324A]/80">
           <div className="flex flex-wrap items-center gap-x-6 gap-y-4">
             {/* Logotipo F&J Systems */}
             <Link
@@ -241,7 +241,7 @@ export function SiteFooter() {
 
             {/* RUC de la empresa, junto al logotipo */}
             <div
-              className="flex items-center gap-2.5 rounded-full border border-[#1E293B] bg-[#0F172A]/60 px-3 py-1.5 sm:rounded-none sm:border-0 sm:border-l sm:bg-transparent sm:px-0 sm:py-0 sm:pl-6"
+              className="flex items-center gap-2.5 rounded-full border border-[#17324A] bg-[#0B2236]/60 px-3 py-1.5 sm:rounded-none sm:border-0 sm:border-l sm:bg-transparent sm:px-0 sm:py-0 sm:pl-6"
               aria-label="RUC de la empresa"
             >
               <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
@@ -263,7 +263,7 @@ export function SiteFooter() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={social.label}
-                  className={`grid size-11 place-items-center rounded-full border border-[#1E293B] bg-[#0F172A]/70 text-muted-foreground transition duration-200 hover:border-[#2563EB]/60 hover:bg-[#1E1B4B] hover:text-white motion-reduce:transition-none ${FOCUS_STYLE}`}
+                  className={`grid size-11 place-items-center rounded-full border border-[#17324A] bg-[#0B2236]/70 text-muted-foreground transition duration-200 hover:border-[#1769AA]/60 hover:bg-[#1E1B4B] hover:text-white motion-reduce:transition-none ${FOCUS_STYLE}`}
                 >
                   <svg
                     viewBox="0 0 24 24"
@@ -286,7 +286,7 @@ export function SiteFooter() {
         {/* ─── B. Navegación Principal: desplegable en móvil, columnas en escritorio ─── */}
         <nav
           aria-label="Navegación del pie de página"
-          className="divide-y divide-[#1E293B]/70 sm:grid sm:grid-cols-2 sm:gap-8 sm:divide-y-0 sm:py-10 lg:grid-cols-4 lg:gap-10"
+          className="divide-y divide-[#17324A]/70 sm:grid sm:grid-cols-2 sm:gap-8 sm:divide-y-0 sm:py-10 lg:grid-cols-4 lg:gap-10"
         >
           {FOOTER_COLUMNS.map((column, index) => (
             <FooterNavColumn
@@ -299,7 +299,7 @@ export function SiteFooter() {
         </nav>
 
         {/* ─── C & D. Separador y Franja Legal Inferior ─── */}
-        <div className="border-t border-[#1E293B]/80 pt-6 sm:pt-8">
+        <div className="border-t border-[#17324A]/80 pt-6 sm:pt-8">
           <div className="flex flex-col gap-4 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
             <p className="text-muted-foreground">
               &copy; {currentYear} F&J Systems. Todos los derechos reservados.
@@ -322,7 +322,7 @@ export function SiteFooter() {
                         'inline-flex min-h-9 items-center rounded-sm py-1 transition-colors duration-200 motion-reduce:transition-none sm:min-h-0 sm:py-0',
                         FOCUS_STYLE,
                         active
-                          ? 'font-semibold text-white underline decoration-[#38BDF8] decoration-2 underline-offset-4'
+                          ? 'font-semibold text-white underline decoration-[#00B8D9] decoration-2 underline-offset-4'
                           : 'hover:text-muted-foreground/60'
                       )}
                     >

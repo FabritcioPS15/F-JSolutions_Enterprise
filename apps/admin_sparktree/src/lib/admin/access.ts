@@ -42,6 +42,8 @@ export function createCan(access: Access): CanFunction {
 export const moduleByHref: Record<string, string> = {
   '/': 'dashboard',
   '/notificaciones': 'dashboard',
+  '/unidades': 'units',
+  '/legal': 'legal',
   '/links': 'links',
   '/reportes': 'reports',
   '/actividad': 'audit',

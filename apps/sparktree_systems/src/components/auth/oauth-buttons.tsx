@@ -10,7 +10,7 @@ const providers = [
     label: 'Continuar con Google',
     short: 'Google',
     Icon: FaGoogle,
-    className: 'border-border text-foreground hover:border-[#2563EB]/40 hover:bg-muted',
+    className: 'border-border text-foreground hover:border-[#1769AA]/40 hover:bg-muted',
   },
   {
     id: 'facebook' as const,

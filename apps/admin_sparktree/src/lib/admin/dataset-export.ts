@@ -123,11 +123,11 @@ async function downloadPdf(dataset: DatasetExport) {
     function drawHeading() {
       doc.setFont('helvetica', 'bold')
       doc.setFontSize(14)
-      doc.setTextColor('#0F172A')
+      doc.setTextColor('#1C1638')
       doc.text(dataset.title, marginX, y)
       doc.setFont('helvetica', 'normal')
       doc.setFontSize(8)
-      doc.setTextColor('#64748B')
+      doc.setTextColor('#6D6590')
       const count = sheet.rows.length
       const subtitle = `${sheet.name} · ${count} ${count === 1 ? 'registro' : 'registros'} · Generado el ${formatDate(new Date())}`
       doc.text(subtitle, marginX, y + 5)
@@ -142,7 +142,7 @@ async function downloadPdf(dataset: DatasetExport) {
       )
       const headerHeight = Math.max(...lines.map((entry) => entry.length)) * lineHeight + 3.4
 
-      doc.setFillColor('#0F172A')
+      doc.setFillColor('#1C1638')
       doc.rect(marginX, y, usableWidth, headerHeight, 'F')
       doc.setTextColor('#FFFFFF')
 
@@ -191,11 +191,11 @@ async function downloadPdf(dataset: DatasetExport) {
       breakPageIfNeeded(rowHeight)
 
       if (rowIndex % 2 === 1) {
-        doc.setFillColor('#F8FAFC')
+        doc.setFillColor('#FAF9FE')
         doc.rect(marginX, y, usableWidth, rowHeight, 'F')
       }
 
-      doc.setTextColor('#334155')
+      doc.setTextColor('#3D3560')
       cells.forEach((cell, index) => {
         const x =
           cell.align === 'center'
@@ -206,7 +206,7 @@ async function downloadPdf(dataset: DatasetExport) {
         doc.text(cell.lines, x, y + paddingY, { align: cell.align, baseline: 'top' })
       })
 
-      doc.setDrawColor('#E2E8F0')
+      doc.setDrawColor('#E8E3F2')
       doc.setLineWidth(0.15)
       doc.line(marginX, y + rowHeight, marginX + usableWidth, y + rowHeight)
       y += rowHeight
@@ -218,7 +218,7 @@ async function downloadPdf(dataset: DatasetExport) {
     doc.setPage(page)
     doc.setFont('helvetica', 'normal')
     doc.setFontSize(7)
-    doc.setTextColor('#94A3B8')
+    doc.setTextColor('#A9A2C0')
     doc.text('FJ Systems · Panel de administración', marginX, pageHeight - 7)
     doc.text(`${page} / ${totalPages}`, pageWidth - marginX, pageHeight - 7, {
       align: 'right',

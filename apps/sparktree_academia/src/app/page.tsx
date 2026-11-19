@@ -25,7 +25,7 @@ export default function AcademyPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-white text-slate-900">
+    <div className="flex min-h-screen flex-col bg-surface text-ink-900">
       <AcademyHeader onOpenEnroll={handleOpenGeneral} />
 
       <main className="flex-1">

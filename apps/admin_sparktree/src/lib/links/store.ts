@@ -185,7 +185,7 @@ function seedProfile(): LinkProfile {
     phone: '+51 923 055 963',
     email: 'ventas@fjsolutions.com.pe',
     website: 'https://fjsolutions.com.pe',
-    accent: '#7C3AED',
+    accent: '#6A54B8',
     background: DEFAULT_BACKGROUND,
     tone: 'auto',
     footerNote: 'Lima, Perú · RUC & Marca Registrada',
@@ -354,14 +354,14 @@ function normalizeBackground(value: unknown, fallback: ProfileBackground): Profi
   const raw = (value ?? {}) as Record<string, unknown>
   const kind = text(raw.kind)
   if (kind === 'solid') {
-    return { kind: 'solid', color: normalizeHex(raw.color, '#0B1220') }
+    return { kind: 'solid', color: normalizeHex(raw.color, '#16112E') }
   }
   if (kind === 'gradient') {
     const angle = Number(raw.angle)
     return {
       kind: 'gradient',
-      from: normalizeHex(raw.from, '#0B1220'),
-      to: normalizeHex(raw.to, '#16213A'),
+      from: normalizeHex(raw.from, '#16112E'),
+      to: normalizeHex(raw.to, '#1D1740'),
       angle: Number.isFinite(angle) ? Math.min(360, Math.max(0, Math.round(angle))) : 160,
     }
   }
@@ -419,9 +419,9 @@ function validateProfile(
   const website = (websiteRaw ? normalizeUrl(websiteRaw, false) : '') ?? ''
   if (websiteRaw && !website) throw new LinkProfileError('La página web no es una URL válida.')
 
-  const accentRaw = text(input.accent, existing?.accent ?? '#7C3AED')
+  const accentRaw = text(input.accent, existing?.accent ?? '#6A54B8')
   if (!/^#[0-9a-fA-F]{6}$/.test(accentRaw)) {
-    throw new LinkProfileError('El color de acento debe ser un hex de 6 dígitos (ej. #7C3AED).')
+    throw new LinkProfileError('El color de acento debe ser un hex de 6 dígitos (ej. #6A54B8).')
   }
 
   const initialsRaw = text(input.initials, existing?.initials ?? '')

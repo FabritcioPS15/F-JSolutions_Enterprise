@@ -175,7 +175,7 @@ function UnitsBar({ order }: { order: Order }) {
         <div
           className={cn(
             'h-full rounded-full transition-all',
-            percent === 100 ? 'bg-emerald-500' : percent > 0 ? 'bg-[#2563EB]' : 'bg-border'
+            percent === 100 ? 'bg-emerald-500' : percent > 0 ? 'bg-[#5946A6]' : 'bg-border'
           )}
           style={{ width: `${percent}%` }}
         />

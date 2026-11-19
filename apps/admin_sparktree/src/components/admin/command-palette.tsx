@@ -14,9 +14,11 @@ import {
   Inbox,
   LayoutDashboard,
   Link2,
+  Network,
   Package,
   PackageCheck,
   PackagePlus,
+  Scale,
   Search,
   Settings,
   ShieldCheck,
@@ -71,6 +73,8 @@ export function CommandPalette({
       { title: 'Resumen general (Dashboard)', href: '/', icon: LayoutDashboard, group: 'Navegación' },
       { title: 'Reportes y analítica', href: '/reportes', icon: BarChart3, group: 'Navegación' },
       { title: 'Actividad reciente', href: '/actividad', icon: History, group: 'Navegación' },
+      { title: 'Unidades de negocio del grupo', href: '/unidades', icon: Network, group: 'Navegación' },
+      { title: 'Casos legales', href: '/legal', icon: Scale, group: 'Navegación' },
       { title: 'Linkeador: páginas de enlaces', href: '/links', icon: Link2, group: 'Navegación' },
       { title: 'Catálogo de productos', href: '/productos', icon: Package, group: 'Navegación' },
       { title: 'Inventario y control de stock', href: '/inventario', icon: Boxes, group: 'Navegación' },
@@ -268,9 +272,9 @@ export function CommandPalette({
       />
 
       {/* Contenedor del Command Dialog */}
-      <div className="relative flex max-h-[82vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-slate-700/60 bg-[#0F172A] text-slate-100 shadow-2xl shadow-black/60 ring-1 ring-white/10 animate-in fade-in-0 zoom-in-95 duration-150">
+      <div className="relative flex max-h-[82vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-slate-700/60 bg-[#1C1638] text-slate-100 shadow-2xl shadow-black/60 ring-1 ring-white/10 animate-in fade-in-0 zoom-in-95 duration-150">
         {/* Cabecera del buscador */}
-        <div className="flex items-center gap-3 border-b border-slate-800 bg-[#0B0F19] px-4 py-3 sm:px-5">
+        <div className="flex items-center gap-3 border-b border-slate-800 bg-[#0F0B1E] px-4 py-3 sm:px-5">
           <Search className="size-5 shrink-0 text-slate-400" aria-hidden="true" />
           <input
             ref={inputRef}
@@ -329,7 +333,7 @@ export function CommandPalette({
                       aria-selected={isSelected}
                       className={`flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-xs transition-all ${
                         isSelected
-                          ? 'bg-[#2563EB] text-white shadow-md shadow-[#2563EB]/30'
+                          ? 'bg-[#5946A6] text-white shadow-md shadow-[#5946A6]/30'
                           : 'text-slate-300 hover:bg-slate-800/80 hover:text-white'
                       }`}
                     >
@@ -376,7 +380,7 @@ export function CommandPalette({
         </div>
 
         {/* Barra inferior con atajos */}
-        <div className="flex items-center justify-between border-t border-slate-800/80 bg-[#0B0F19] px-4 py-2.5 text-[11px] text-slate-400">
+        <div className="flex items-center justify-between border-t border-slate-800/80 bg-[#0F0B1E] px-4 py-2.5 text-[11px] text-slate-400">
           <div className="flex items-center gap-3">
             <span className="inline-flex items-center gap-1">
               <kbd className="rounded bg-slate-800 px-1.5 py-0.5 text-[10px] font-mono">↑</kbd>

@@ -153,9 +153,9 @@ function MobileAccordion({
     <div
       className={`relative overflow-hidden rounded-2xl border transition-all duration-300 ${
         isOpen
-          ? 'border-[#2563EB]/45 bg-card shadow-[0_18px_40px_-32px_rgba(37,99,235,0.65)]'
+          ? 'border-[#1769AA]/45 bg-card shadow-[0_18px_40px_-32px_rgba(23,105,170,0.65)]'
           : active
-          ? 'border-[#2563EB]/30 bg-tint-blue/25'
+          ? 'border-[#1769AA]/30 bg-tint-blue/25'
           : 'border-border bg-card'
       }`}
     >
@@ -169,9 +169,9 @@ function MobileAccordion({
           <span
             className={`grid size-9 shrink-0 place-items-center rounded-xl border transition-colors duration-300 ${
               isOpen
-                ? 'border-[#2563EB] bg-[#2563EB] text-white'
+                ? 'border-[#1769AA] bg-[#1769AA] text-white'
                 : active
-                ? 'border-[#2563EB]/25 bg-tint-blue text-blue-ink'
+                ? 'border-[#1769AA]/25 bg-tint-blue text-blue-ink'
                 : 'border-border bg-muted text-muted-foreground'
             }`}
           >
@@ -188,7 +188,7 @@ function MobileAccordion({
             >
               {label}
             </span>
-            {active && !isOpen && <span className="size-1.5 shrink-0 rounded-full bg-[#2563EB]" />}
+            {active && !isOpen && <span className="size-1.5 shrink-0 rounded-full bg-[#1769AA]" />}
             {badge && (
               <span className="shrink-0 rounded-full bg-tint-blue px-2 py-0.5 text-[10px] font-bold text-blue-ink">
                 {badge}
@@ -203,7 +203,7 @@ function MobileAccordion({
         <span
           className={`grid size-7 shrink-0 place-items-center rounded-full border transition-all duration-300 ${
             isOpen
-              ? 'rotate-180 border-[#2563EB] bg-[#2563EB] text-white'
+              ? 'rotate-180 border-[#1769AA] bg-[#1769AA] text-white'
               : 'border-border bg-card text-muted-foreground'
           }`}
         >
@@ -256,7 +256,7 @@ function MobileStoreMenu({ onClose }: { onClose: () => void }) {
               <span
                 className={`flex size-8 shrink-0 items-center justify-center rounded-lg border transition-colors ${
                   isOpen
-                    ? 'border-[#2563EB]/25 bg-tint-blue text-blue-ink'
+                    ? 'border-[#1769AA]/25 bg-tint-blue text-blue-ink'
                     : 'border-border bg-card text-muted-foreground'
                 }`}
               >
@@ -268,7 +268,7 @@ function MobileStoreMenu({ onClose }: { onClose: () => void }) {
               <span
                 className={`grid size-6 shrink-0 place-items-center rounded-full border transition-all duration-300 ${
                   isOpen
-                    ? 'rotate-180 border-[#2563EB] bg-[#2563EB] text-white'
+                    ? 'rotate-180 border-[#1769AA] bg-[#1769AA] text-white'
                     : 'border-border bg-card text-muted-foreground'
                 }`}
               >
@@ -311,7 +311,7 @@ function MobileStoreMenu({ onClose }: { onClose: () => void }) {
                                 key={subItem.label}
                                 href={subItem.href}
                                 onClick={onClose}
-                                className="rounded-full border border-border bg-card px-2 py-0.5 text-[10px] font-medium text-muted-foreground transition-colors hover:border-[#2563EB]/40 hover:text-blue-ink"
+                                className="rounded-full border border-border bg-card px-2 py-0.5 text-[10px] font-medium text-muted-foreground transition-colors hover:border-[#1769AA]/40 hover:text-blue-ink"
                               >
                                 {subItem.label}
                               </Link>
@@ -340,7 +340,7 @@ function MobileStoreMenu({ onClose }: { onClose: () => void }) {
                 key={brand.name}
                 href={brand.href}
                 onClick={onClose}
-                className="rounded-md border border-border bg-muted px-2 py-1 text-[11px] font-semibold text-foreground/85 transition-colors hover:border-[#2563EB]/40 hover:bg-tint-blue hover:text-blue-ink"
+                className="rounded-md border border-border bg-muted px-2 py-1 text-[11px] font-semibold text-foreground/85 transition-colors hover:border-[#1769AA]/40 hover:bg-tint-blue hover:text-blue-ink"
               >
                 {brand.name}
               </Link>
@@ -352,7 +352,7 @@ function MobileStoreMenu({ onClose }: { onClose: () => void }) {
       <Link
         href={storeUrl('/productos')}
         onClick={onClose}
-        className="mt-2 flex items-center justify-center gap-2 rounded-lg bg-[#2563EB] px-3 py-2 text-xs font-bold text-white shadow-xs transition hover:bg-[#1D4ED8]"
+        className="mt-2 flex items-center justify-center gap-2 rounded-lg bg-[#1769AA] px-3 py-2 text-xs font-bold text-white shadow-xs transition hover:bg-[#12568C]"
       >
         <span>Ir a la tienda</span>
         <ArrowRight className="size-3.5" />
@@ -403,8 +403,8 @@ function StoreMegaMenu({ onClose }: { onClose: () => void }) {
                   <span
                     className={`flex size-7 shrink-0 items-center justify-center rounded-md border transition-colors ${
                       isActive
-                        ? 'border-[#2563EB]/20 bg-card text-blue-ink'
-                        : 'border-border bg-card text-muted-foreground group-hover:border-[#2563EB]/20 group-hover:text-blue-ink'
+                        ? 'border-[#1769AA]/20 bg-card text-blue-ink'
+                        : 'border-border bg-card text-muted-foreground group-hover:border-[#1769AA]/20 group-hover:text-blue-ink'
                     }`}
                   >
                     <Icon className="size-3.5" />
@@ -538,8 +538,8 @@ function CompactDropdown({ items, onClose }: { items: Array<{ label: string; hre
                 className={`flex items-center gap-3 rounded-lg px-4 py-3 text-sm transition-colors ${
                   isGeneral
                     ? active
-                      ? 'bg-[#1D4ED8] text-white ring-2 ring-[#2563EB]/25'
-                      : 'bg-[#2563EB] text-white shadow-[0_8px_20px_-12px_rgba(37,99,235,0.8)] hover:bg-[#1D4ED8]'
+                      ? 'bg-[#12568C] text-white ring-2 ring-[#1769AA]/25'
+                      : 'bg-[#1769AA] text-white shadow-[0_8px_20px_-12px_rgba(23,105,170,0.8)] hover:bg-[#12568C]'
                     : active
                       ? 'bg-tint-blue text-blue-ink'
                       : 'text-foreground hover:bg-muted hover:text-blue-ink'
@@ -561,7 +561,7 @@ function CompactDropdown({ items, onClose }: { items: Array<{ label: string; hre
                   <ArrowRight aria-hidden="true" className="size-4 shrink-0" />
                 ) : (
                   active && (
-                    <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-[#2563EB]" />
+                    <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-[#1769AA]" />
                   )
                 )}
               </Link>
@@ -577,7 +577,7 @@ function ActiveIndicator() {
   return (
     <span
       aria-hidden="true"
-      className="pointer-events-none absolute inset-x-3 bottom-0.5 h-[2px] rounded-full bg-gradient-to-r from-[#2563EB] via-[#4F46E5] to-[#2563EB]"
+      className="pointer-events-none absolute inset-x-3 bottom-0.5 h-[2px] rounded-full bg-gradient-to-r from-[#1769AA] via-[#1769AA] to-[#1769AA]"
     />
   )
 }
@@ -829,7 +829,7 @@ function SearchAutocomplete({
           aria-autocomplete="list"
           aria-controls={listboxId}
           aria-activedescendant={activeIndex >= 0 ? optionId(activeIndex) : undefined}
-          className={`w-full rounded-lg border bg-muted text-sm text-foreground outline-none transition placeholder:text-muted-foreground focus:border-[#2563EB] focus:bg-card focus:ring-2 focus:ring-[#2563EB]/15 ${
+          className={`w-full rounded-lg border bg-muted text-sm text-foreground outline-none transition placeholder:text-muted-foreground focus:border-[#1769AA] focus:bg-card focus:ring-2 focus:ring-[#1769AA]/15 ${
             isDesktop
               ? 'h-11 border-border pl-10 pr-28'
               : 'h-11 rounded-xl border-border pl-9 pr-[5.75rem] shadow-xs'
@@ -852,10 +852,10 @@ function SearchAutocomplete({
         )}
         <button
           type="submit"
-          className={`absolute font-bold text-white transition hover:bg-[#1D4ED8] ${
+          className={`absolute font-bold text-white transition hover:bg-[#12568C] ${
             isDesktop
-              ? 'right-1.5 top-1.5 h-8 rounded-lg bg-[#2563EB] px-4 text-xs'
-              : 'right-1.5 top-1 h-9 rounded-lg bg-[#2563EB] px-3 text-xs'
+              ? 'right-1.5 top-1.5 h-8 rounded-lg bg-[#1769AA] px-4 text-xs'
+              : 'right-1.5 top-1 h-9 rounded-lg bg-[#1769AA] px-3 text-xs'
           }`}
         >
           Buscar
@@ -897,7 +897,7 @@ function SearchAutocomplete({
                     key={term}
                     type="button"
                     onClick={() => setQuery(term)}
-                    className="rounded-full border border-border bg-muted px-2.5 py-1 text-[11px] font-semibold text-muted-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink"
+                    className="rounded-full border border-border bg-muted px-2.5 py-1 text-[11px] font-semibold text-muted-foreground transition hover:border-[#1769AA]/40 hover:text-blue-ink"
                   >
                     {term}
                   </button>
@@ -1254,7 +1254,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                 <FileText className="size-4 sm:size-5" />
                 <span className="hidden sm:inline md:inline">Mi cotización</span>
                 {quoteCount > 0 && (
-                  <span className="absolute -right-1 -top-1 grid size-5 place-items-center rounded-full bg-[#2563EB] text-[10px] font-bold text-white">
+                  <span className="absolute -right-1 -top-1 grid size-5 place-items-center rounded-full bg-[#1769AA] text-[10px] font-bold text-white">
                     {quoteCount}
                   </span>
                 )}
@@ -1265,7 +1265,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                 onClick={() => (menuOpen ? closeMobileMenu() : setMenuOpen(true))}
                 aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
                 aria-expanded={menuOpen}
-                className="grid size-9 sm:size-10 place-items-center rounded-lg border border-border text-muted-foreground transition hover:border-[#2563EB]/30 hover:bg-muted hover:text-blue-ink lg:hidden"
+                className="grid size-9 sm:size-10 place-items-center rounded-lg border border-border text-muted-foreground transition hover:border-[#1769AA]/30 hover:bg-muted hover:text-blue-ink lg:hidden"
               >
                 {menuOpen ? <X className="size-4 sm:size-5" /> : <Menu className="size-4 sm:size-5" />}
               </button>
@@ -1363,7 +1363,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
             <div className="ml-auto">
               <Link
                 href="/contacto"
-                className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#2563EB] to-[#1D4ED8] px-4 py-2 text-sm font-semibold text-white transition hover:from-[#1D4ED8] hover:to-[#2563EB]"
+                className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#1769AA] to-[#12568C] px-4 py-2 text-sm font-semibold text-white transition hover:from-[#12568C] hover:to-[#1769AA]"
               >
                 <FaTeamspeak aria-hidden="true" className="size-4" />
                 <span className="hidden sm:inline">Solicitar asesoría</span>
@@ -1494,9 +1494,9 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                                   aria-current={isItemActive ? 'page' : undefined}
                                   className={`group flex items-center gap-2.5 rounded-xl px-2.5 py-2.5 transition-colors ${
                                     isGeneral
-                                      ? 'bg-[#2563EB] text-white shadow-[0_8px_20px_-14px_rgba(37,99,235,0.9)] hover:bg-[#1D4ED8]'
+                                      ? 'bg-[#1769AA] text-white shadow-[0_8px_20px_-14px_rgba(23,105,170,0.9)] hover:bg-[#12568C]'
                                       : isItemActive
-                                        ? 'bg-card text-blue-ink shadow-xs ring-1 ring-[#2563EB]/15'
+                                        ? 'bg-card text-blue-ink shadow-xs ring-1 ring-[#1769AA]/15'
                                         : 'text-foreground/85 hover:bg-card hover:text-blue-ink'
                                   }`}
                                 >
@@ -1508,8 +1508,8 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                                     <span
                                       className={`grid size-8 shrink-0 place-items-center rounded-lg border transition-colors ${
                                         isItemActive
-                                          ? 'border-[#2563EB]/25 bg-tint-blue text-blue-ink'
-                                          : 'border-border bg-card text-muted-foreground group-hover:border-[#2563EB]/25 group-hover:text-blue-ink'
+                                          ? 'border-[#1769AA]/25 bg-tint-blue text-blue-ink'
+                                          : 'border-border bg-card text-muted-foreground group-hover:border-[#1769AA]/25 group-hover:text-blue-ink'
                                       }`}
                                     >
                                       <ItemIcon className="size-3.5" />
@@ -1536,7 +1536,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                                   {isGeneral ? (
                                     <ArrowRight className="size-3.5 shrink-0" />
                                   ) : isItemActive ? (
-                                    <span className="size-1.5 shrink-0 rounded-full bg-[#2563EB]" />
+                                    <span className="size-1.5 shrink-0 rounded-full bg-[#1769AA]" />
                                   ) : (
                                     <ChevronRight className="size-3.5 shrink-0 text-muted-foreground group-hover:text-blue-ink" />
                                   )}
@@ -1552,7 +1552,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                         onClick={markMobileNavigation}
                         className={`flex items-center justify-between rounded-xl border px-3.5 py-3 text-sm font-semibold transition-colors ${
                           active
-                            ? 'border-[#2563EB]/40 bg-tint-blue text-blue-ink'
+                            ? 'border-[#1769AA]/40 bg-tint-blue text-blue-ink'
                             : 'border-border bg-card text-foreground hover:bg-muted hover:text-blue-ink'
                         }`}
                       >
@@ -1573,7 +1573,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                 aria-current={isAccountActive ? 'page' : undefined}
                 className={`flex items-center gap-3 rounded-xl border px-3.5 py-2.5 text-sm font-semibold transition-colors ${
                   isAccountActive
-                    ? 'border-[#2563EB]/40 bg-tint-blue text-blue-ink'
+                    ? 'border-[#1769AA]/40 bg-tint-blue text-blue-ink'
                     : 'border-border text-foreground/85 hover:bg-muted hover:text-blue-ink'
                 }`}
               >
@@ -1592,7 +1592,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                 aria-current={isQuotePageActive ? 'page' : undefined}
                 className={`flex w-full items-center justify-between rounded-xl border px-3.5 py-2.5 text-sm font-semibold transition-colors ${
                   isQuotePageActive
-                    ? 'border-[#2563EB]/40 bg-tint-blue text-blue-ink'
+                    ? 'border-[#1769AA]/40 bg-tint-blue text-blue-ink'
                     : 'border-border text-foreground/85 hover:bg-muted hover:text-blue-ink'
                 }`}
               >
@@ -1603,7 +1603,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
                   <span>Mi cotización</span>
                 </div>
                 {quoteCount > 0 ? (
-                  <span className="grid size-6 place-items-center rounded-full bg-[#2563EB] text-xs font-bold text-white">
+                  <span className="grid size-6 place-items-center rounded-full bg-[#1769AA] text-xs font-bold text-white">
                     {quoteCount}
                   </span>
                 ) : (
@@ -1614,7 +1614,7 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
               <Link
                 href="/contacto"
                 onClick={markMobileNavigation}
-                className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#2563EB] to-[#1D4ED8] px-4 py-2.5 text-sm font-semibold text-white shadow-xs transition hover:from-[#1D4ED8] hover:to-[#2563EB]"
+                className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#1769AA] to-[#12568C] px-4 py-2.5 text-sm font-semibold text-white shadow-xs transition hover:from-[#12568C] hover:to-[#1769AA]"
               >
                 <FaTeamspeak aria-hidden="true" className="size-4" />
                 <span>Solicitar asesoría</span>

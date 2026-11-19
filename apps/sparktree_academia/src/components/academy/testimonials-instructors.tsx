@@ -17,17 +17,17 @@ export function TestimonialsAndInstructors() {
   }
 
   return (
-    <section id="testimonios" className="bg-slate-50 py-16 sm:py-20">
+    <section id="testimonios" className="bg-surface-muted py-16 sm:py-20">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div id="docentes">
           <div className="max-w-2xl">
-            <p className="text-xs font-semibold uppercase tracking-wider text-blue-600">
+            <p className="text-xs font-semibold uppercase tracking-wider text-brand-600">
               Cuerpo docente
             </p>
-            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-ink-900 sm:text-3xl">
               Ingenieros en activo
             </h2>
-            <p className="mt-2 text-sm leading-relaxed text-slate-600">
+            <p className="mt-2 text-sm leading-relaxed text-ink-600">
               Mentores que resuelven desafíos de arquitectura, seguridad e infraestructura todos
               los días.
             </p>
@@ -35,14 +35,14 @@ export function TestimonialsAndInstructors() {
 
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {instructors.map((instructor) => (
-              <div key={instructor.name} className="rounded-xl border border-slate-200 bg-white p-4">
-                <div className="grid size-10 place-items-center rounded-lg bg-blue-50 text-sm font-semibold text-blue-700">
+              <div key={instructor.name} className="rounded-xl border border-line bg-white p-4">
+                <div className="grid size-10 place-items-center rounded-lg bg-brand-50 text-sm font-semibold text-brand-700">
                   {initials(instructor.name)}
                 </div>
-                <p className="mt-3 text-sm font-semibold text-slate-900">{instructor.name}</p>
-                <p className="text-xs text-slate-600">{instructor.role}</p>
-                <p className="mt-1.5 flex items-center gap-1.5 text-[11px] text-slate-500">
-                  <Building2 className="size-3 text-slate-400" />
+                <p className="mt-3 text-sm font-semibold text-ink-900">{instructor.name}</p>
+                <p className="text-xs text-ink-600">{instructor.role}</p>
+                <p className="mt-1.5 flex items-center gap-1.5 text-[11px] text-ink-500">
+                  <Building2 className="size-3 text-ink-400" />
                   {instructor.company}
                 </p>
               </div>
@@ -52,10 +52,10 @@ export function TestimonialsAndInstructors() {
 
         <div className="mt-16">
           <div className="max-w-2xl">
-            <p className="text-xs font-semibold uppercase tracking-wider text-blue-600">
+            <p className="text-xs font-semibold uppercase tracking-wider text-brand-600">
               Casos de éxito
             </p>
-            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-slate-900 sm:text-3xl">
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-ink-900 sm:text-3xl">
               Lo que dicen nuestros egresados
             </h2>
           </div>
@@ -64,22 +64,22 @@ export function TestimonialsAndInstructors() {
             {TESTIMONIALS.map((test) => (
               <figure
                 key={test.name}
-                className="flex flex-col justify-between rounded-xl border border-slate-200 bg-white p-5"
+                className="flex flex-col justify-between rounded-xl border border-line bg-white p-5"
               >
                 <div>
-                  <div className="mb-3 flex gap-0.5 text-amber-500">
+                  <div className="mb-3 flex gap-0.5 text-accent-500">
                     {[...Array(test.rating)].map((_, i) => (
-                      <Star key={i} className="size-3.5 fill-amber-500" />
+                      <Star key={i} className="size-3.5 fill-accent-500" />
                     ))}
                   </div>
-                  <blockquote className="text-xs leading-relaxed text-slate-600">
+                  <blockquote className="text-xs leading-relaxed text-ink-600">
                     “{test.comment}”
                   </blockquote>
                 </div>
 
-                <figcaption className="mt-5 border-t border-slate-200 pt-3">
-                  <p className="text-sm font-semibold text-slate-900">{test.name}</p>
-                  <p className="text-[11px] text-slate-600">
+                <figcaption className="mt-5 border-t border-line pt-3">
+                  <p className="text-sm font-semibold text-ink-900">{test.name}</p>
+                  <p className="text-[11px] text-ink-600">
                     {test.role} · {test.company}
                   </p>
                 </figcaption>

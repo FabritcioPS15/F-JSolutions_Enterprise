@@ -160,7 +160,7 @@ export function DatePicker({
         className={cn(
           inputClass,
           'relative flex cursor-pointer items-center justify-between gap-2 pl-9 pr-9 text-left',
-          open && 'border-[#2563EB] ring-4 ring-[#2563EB]/10',
+          open && 'border-[#5946A6] ring-4 ring-[#5946A6]/10',
           className
         )}
       >

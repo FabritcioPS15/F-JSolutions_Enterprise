@@ -31,13 +31,13 @@ import { getStockState, statusLabels, stockLabels } from '@/lib/admin/format'
 import type { ProductStatus, StockState } from '@/lib/admin/types'
 
 export const inputClass =
-  'h-10 w-full rounded-xl border border-border bg-card px-3 text-sm text-foreground shadow-xs outline-none transition placeholder:text-muted-foreground focus:border-[#2563EB] focus:ring-4 focus:ring-[#2563EB]/10 disabled:cursor-not-allowed disabled:bg-muted disabled:text-muted-foreground'
+  'h-10 w-full rounded-xl border border-border bg-card px-3 text-sm text-foreground shadow-xs outline-none transition placeholder:text-muted-foreground focus:border-[#5946A6] focus:ring-4 focus:ring-[#5946A6]/10 disabled:cursor-not-allowed disabled:bg-muted disabled:text-muted-foreground'
 
 export const textareaClass =
-  'min-h-28 w-full resize-y rounded-xl border border-border bg-card px-3 py-2.5 text-sm leading-relaxed text-foreground shadow-xs outline-none transition placeholder:text-muted-foreground focus:border-[#2563EB] focus:ring-4 focus:ring-[#2563EB]/10'
+  'min-h-28 w-full resize-y rounded-xl border border-border bg-card px-3 py-2.5 text-sm leading-relaxed text-foreground shadow-xs outline-none transition placeholder:text-muted-foreground focus:border-[#5946A6] focus:ring-4 focus:ring-[#5946A6]/10'
 
 export const btnPrimary =
-  'inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-[#2563EB] px-4 text-sm font-semibold text-white shadow-sm shadow-[#2563EB]/20 transition hover:bg-[#1D4ED8] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#2563EB]/25 disabled:pointer-events-none disabled:opacity-50'
+  'inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-[#5946A6] px-4 text-sm font-semibold text-white shadow-sm shadow-[#5946A6]/20 transition hover:bg-[#4A3A8F] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#5946A6]/25 disabled:pointer-events-none disabled:opacity-50'
 
 export const btnSecondary =
   'inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-border bg-card px-4 text-sm font-semibold text-foreground/80 shadow-xs transition hover:border-input hover:bg-muted focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-slate-300/30 disabled:pointer-events-none disabled:opacity-50'
@@ -49,7 +49,7 @@ export const btnDanger =
   'inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-red-600 px-4 text-sm font-semibold text-white shadow-sm shadow-red-600/20 transition hover:bg-red-700 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-red-500/25 disabled:pointer-events-none disabled:opacity-50'
 
 export const iconButton =
-  'inline-flex size-8 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-muted hover:text-foreground/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/30'
+  'inline-flex size-8 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-muted hover:text-foreground/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#5946A6]/30'
 
 // Medida común de los listados: todas las tablas del panel comparten ancho,
 // tipografía base y encabezado para que se vean del mismo tamaño.
@@ -472,7 +472,7 @@ export function Select({
           inputClass,
           'relative flex cursor-pointer items-center justify-between gap-2 pr-9 text-left',
           Icon && 'pl-9',
-          open && 'border-[#2563EB] ring-4 ring-[#2563EB]/10',
+          open && 'border-[#5946A6] ring-4 ring-[#5946A6]/10',
           className
         )}
       >
@@ -713,11 +713,11 @@ export function FilterSelect({
         aria-expanded={open}
         aria-label={ariaLabel ?? label}
         className={cn(
-          'flex h-10 w-full items-center justify-between gap-2 rounded-xl border px-3 text-left text-sm shadow-xs transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#2563EB]/15',
+          'flex h-10 w-full items-center justify-between gap-2 rounded-xl border px-3 text-left text-sm shadow-xs transition focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#5946A6]/15',
           isActive
             ? 'border-brand-ink/40 bg-tint-brand/70 text-brand-ink'
             : 'border-border bg-card text-foreground hover:border-input hover:bg-muted',
-          open && 'border-[#2563EB] ring-4 ring-[#2563EB]/10'
+          open && 'border-[#5946A6] ring-4 ring-[#5946A6]/10'
         )}
       >
         <span className="flex min-w-0 items-center gap-1.5">
@@ -787,7 +787,7 @@ export function FilterSelect({
                         setHighlight(0)
                       }}
                       placeholder={searchPlaceholder}
-                      className="h-9 w-full rounded-lg border border-border bg-muted pl-8 pr-2.5 text-sm text-foreground outline-none transition placeholder:text-muted-foreground focus:border-[#2563EB] focus:bg-card focus:ring-2 focus:ring-[#2563EB]/10"
+                      className="h-9 w-full rounded-lg border border-border bg-muted pl-8 pr-2.5 text-sm text-foreground outline-none transition placeholder:text-muted-foreground focus:border-[#5946A6] focus:bg-card focus:ring-2 focus:ring-[#5946A6]/10"
                     />
                   </div>
                 </div>
@@ -945,7 +945,7 @@ export function StatusToggle({
       aria-label={label}
       onClick={onToggle}
       className={cn(
-        'relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#2563EB]/20',
+        'relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#5946A6]/20',
         active ? 'bg-emerald-500' : 'bg-border'
       )}
     >

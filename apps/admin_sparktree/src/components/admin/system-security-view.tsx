@@ -167,7 +167,7 @@ export function SystemSecurityView() {
           {sessions.map((sess) => (
             <div key={sess.id} className="flex flex-col gap-3 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-start gap-3">
-                <span className="mt-0.5 grid size-9 shrink-0 place-items-center rounded-xl bg-tint-brand text-brand-ink ring-1 ring-[#2563EB]/20">
+                <span className="mt-0.5 grid size-9 shrink-0 place-items-center rounded-xl bg-tint-brand text-brand-ink ring-1 ring-[#5946A6]/20">
                   {sess.type === 'mobile' ? (
                     <Smartphone className="size-4" />
                   ) : (

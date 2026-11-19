@@ -15,17 +15,17 @@ export function AcademyHeader({ onOpenEnroll }: { onOpenEnroll: () => void }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200 bg-white/95 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-line bg-white/95 backdrop-blur">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-2.5">
-          <div className="grid size-9 place-items-center rounded-lg bg-blue-600 text-white">
+          <div className="grid size-9 place-items-center rounded-lg bg-brand-600 text-white">
             <GraduationCap className="size-5" />
           </div>
           <div className="leading-tight">
-            <p className="text-[15px] font-semibold tracking-tight text-slate-900">
+            <p className="text-[15px] font-semibold tracking-tight text-ink-900">
               F&amp;J Academy
             </p>
-            <p className="text-[11px] text-slate-500">Instituto de tecnología</p>
+            <p className="text-[11px] text-ink-500">Instituto de tecnología</p>
           </div>
         </Link>
 
@@ -34,7 +34,7 @@ export function AcademyHeader({ onOpenEnroll }: { onOpenEnroll: () => void }) {
             <a
               key={link.href}
               href={link.href}
-              className="text-[13px] font-medium text-slate-600 transition hover:text-slate-900"
+              className="text-[13px] font-medium text-ink-600 transition hover:text-ink-900"
             >
               {link.label}
             </a>
@@ -46,7 +46,7 @@ export function AcademyHeader({ onOpenEnroll }: { onOpenEnroll: () => void }) {
             href="https://fjsolutions.com.pe"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-[13px] font-medium text-slate-500 transition hover:text-slate-900"
+            className="inline-flex items-center gap-1 text-[13px] font-medium text-ink-500 transition hover:text-ink-900"
           >
             F&amp;J Empresa
             <ArrowUpRight className="size-3.5" />
@@ -54,7 +54,7 @@ export function AcademyHeader({ onOpenEnroll }: { onOpenEnroll: () => void }) {
           <button
             type="button"
             onClick={onOpenEnroll}
-            className="inline-flex h-9 items-center rounded-lg bg-blue-600 px-4 text-[13px] font-semibold text-white transition hover:bg-blue-700"
+            className="inline-flex h-9 items-center rounded-lg bg-brand-600 px-4 text-[13px] font-semibold text-white transition hover:bg-brand-700"
           >
             Inscribirme
           </button>
@@ -63,7 +63,7 @@ export function AcademyHeader({ onOpenEnroll }: { onOpenEnroll: () => void }) {
         <button
           type="button"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="grid size-9 place-items-center rounded-lg border border-slate-200 text-slate-600 md:hidden"
+          className="grid size-9 place-items-center rounded-lg border border-line text-ink-600 md:hidden"
           aria-label="Abrir menú"
         >
           {mobileMenuOpen ? <X className="size-4" /> : <Menu className="size-4" />}
@@ -71,14 +71,14 @@ export function AcademyHeader({ onOpenEnroll }: { onOpenEnroll: () => void }) {
       </div>
 
       {mobileMenuOpen && (
-        <div className="border-t border-slate-200 bg-white px-4 py-4 md:hidden">
+        <div className="border-t border-line bg-white px-4 py-4 md:hidden">
           <div className="flex flex-col gap-1">
             {NAV_LINKS.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className="rounded-lg px-2 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                className="rounded-lg px-2 py-2 text-sm font-medium text-ink-700 hover:bg-surface-muted"
               >
                 {link.label}
               </a>
@@ -90,7 +90,7 @@ export function AcademyHeader({ onOpenEnroll }: { onOpenEnroll: () => void }) {
               setMobileMenuOpen(false)
               onOpenEnroll()
             }}
-            className="mt-2 w-full rounded-lg bg-blue-600 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700"
+            className="mt-2 w-full rounded-lg bg-brand-600 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-700"
           >
             Inscribirme
           </button>

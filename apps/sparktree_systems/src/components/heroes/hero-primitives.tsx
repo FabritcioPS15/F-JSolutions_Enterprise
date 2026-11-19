@@ -42,10 +42,10 @@ export function HeroSection({ id, children, className, overlay = true, fill = fa
     >
       {overlay && (
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-          <div className="absolute inset-0 bg-[linear-gradient(180deg,#FFFFFF_0%,#FCFDFE_52%,#F8FAFC_100%)] dark:bg-[linear-gradient(180deg,#0B1220_0%,#0E1626_52%,#0B1220_100%)]" />
+          <div className="absolute inset-0 bg-[linear-gradient(180deg,#FFFFFF_0%,#FCFDFE_52%,#F1F6FA_100%)] dark:bg-[linear-gradient(180deg,#102A43_0%,#0E1626_52%,#102A43_100%)]" />
           <div className="hero-grid absolute inset-x-0 top-0 h-[420px] opacity-60" />
-          <div className="absolute -right-44 -top-52 size-[560px] rounded-full bg-[#2563EB]/[0.07] blur-[110px]" />
-          <div className="absolute -left-36 top-24 size-[380px] rounded-full bg-[#2563EB]/[0.13] blur-[100px]" />
+          <div className="absolute -right-44 -top-52 size-[560px] rounded-full bg-[#1769AA]/[0.07] blur-[110px]" />
+          <div className="absolute -left-36 top-24 size-[380px] rounded-full bg-[#1769AA]/[0.13] blur-[100px]" />
         </div>
       )}
       {children}
@@ -70,7 +70,7 @@ export function HeroEyebrow({ children, icon, className }: HeroEyebrowProps) {
       {icon ?? (
         <span
           aria-hidden="true"
-          className="size-1.5 rounded-full bg-[#2563EB] shadow-[0_0_0_3px_rgba(37,99,235,0.18)]"
+          className="size-1.5 rounded-full bg-[#1769AA] shadow-[0_0_0_3px_rgba(23,105,170,0.18)]"
         />
       )}
       {children}
@@ -145,9 +145,9 @@ type HeroActionProps = {
 
 const actionVariants = {
   primary:
-    'bg-[#2563EB] text-white shadow-[0_12px_28px_-14px_rgba(37,99,235,0.75)] hover:-translate-y-0.5 hover:bg-[#1D4ED8] hover:shadow-[0_18px_34px_-16px_rgba(37,99,235,0.65)]',
+    'bg-[#1769AA] text-white shadow-[0_12px_28px_-14px_rgba(23,105,170,0.75)] hover:-translate-y-0.5 hover:bg-[#12568C] hover:shadow-[0_18px_34px_-16px_rgba(23,105,170,0.65)]',
   secondary:
-    'border border-border bg-card text-foreground shadow-[0_1px_2px_rgba(15,23,42,0.04)] hover:-translate-y-0.5 hover:border-[#2563EB]/45 hover:text-blue-ink hover:shadow-[0_10px_24px_-16px_rgba(15,23,42,0.35)]',
+    'border border-border bg-card text-foreground shadow-[0_1px_2px_rgba(15,23,42,0.04)] hover:-translate-y-0.5 hover:border-[#1769AA]/45 hover:text-blue-ink hover:shadow-[0_10px_24px_-16px_rgba(15,23,42,0.35)]',
   quiet:
     'border border-transparent bg-transparent text-blue-ink hover:bg-tint-blue hover:text-blue-ink',
 } as const
@@ -165,7 +165,7 @@ export function HeroAction({
       href={href}
       onClick={onClick}
       className={cn(
-        'group inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl px-5 text-sm font-bold transition duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/40 focus-visible:ring-offset-2 sm:w-auto',
+        'group inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl px-5 text-sm font-bold transition duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1769AA]/40 focus-visible:ring-offset-2 sm:w-auto',
         actionVariants[variant],
         className,
       )}
@@ -217,7 +217,7 @@ export function HeroVisual({ children, className }: { children: ReactNode; class
     >
       <div
         aria-hidden="true"
-        className="absolute inset-x-8 inset-y-10 -z-10 rounded-[40px] bg-gradient-to-br from-[#2563EB]/10 to-[#2563EB]/10 blur-3xl"
+        className="absolute inset-x-8 inset-y-10 -z-10 rounded-[40px] bg-gradient-to-br from-[#1769AA]/10 to-[#1769AA]/10 blur-3xl"
       />
       {children}
     </div>
@@ -263,9 +263,9 @@ export function HeroRelatedLinks({
           <Link
             key={item.label}
             href={item.href}
-            className="group flex items-center gap-3 rounded-xl border border-border bg-card/75 px-3 py-2.5 text-left transition hover:border-[#2563EB]/35 hover:bg-card hover:shadow-[0_10px_24px_-20px_rgba(15,23,42,0.4)]"
+            className="group flex items-center gap-3 rounded-xl border border-border bg-card/75 px-3 py-2.5 text-left transition hover:border-[#1769AA]/35 hover:bg-card hover:shadow-[0_10px_24px_-20px_rgba(15,23,42,0.4)]"
           >
-            <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-tint-blue text-blue-ink transition group-hover:bg-[#2563EB] group-hover:text-white">
+            <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-tint-blue text-blue-ink transition group-hover:bg-[#1769AA] group-hover:text-white">
               {item.icon ?? <ArrowUpRight aria-hidden="true" className="size-3.5" />}
             </span>
             <span className="min-w-0 flex-1">

@@ -178,7 +178,7 @@ const engagementModels = [
 
 export function HowWeWorkPage() {
   return (
-    <div className="min-h-screen bg-card text-foreground selection:bg-[#2563EB]/15 selection:text-blue-ink">
+    <div className="min-h-screen bg-card text-foreground selection:bg-[#1769AA]/15 selection:text-blue-ink">
       <EnhancedHeader />
 
       <main>
@@ -229,7 +229,7 @@ export function HowWeWorkPage() {
                 return (
                   <div
                     key={idx}
-                    className="rounded-2xl border border-border bg-card p-6 shadow-xs transition duration-200 hover:border-[#2563EB]/30 hover:shadow-sm"
+                    className="rounded-2xl border border-border bg-card p-6 shadow-xs transition duration-200 hover:border-[#1769AA]/30 hover:shadow-sm"
                   >
                     <span className="flex size-10 items-center justify-center rounded-xl bg-tint-blue text-blue-ink">
                       <Icon className="size-5" />
@@ -262,7 +262,7 @@ export function HowWeWorkPage() {
                 return (
                   <div
                     key={idx}
-                    className="relative overflow-hidden rounded-2xl border border-border bg-card p-6 shadow-xs transition duration-200 hover:border-[#2563EB]/40 hover:shadow-md sm:p-8"
+                    className="relative overflow-hidden rounded-2xl border border-border bg-card p-6 shadow-xs transition duration-200 hover:border-[#1769AA]/40 hover:shadow-md sm:p-8"
                   >
                     <div className="grid gap-6 lg:grid-cols-[100px_1fr_320px] lg:items-center">
                       {/* Step number and badge */}
@@ -327,7 +327,7 @@ export function HowWeWorkPage() {
               {engagementModels.map((model, idx) => (
                 <div
                   key={idx}
-                  className="flex flex-col justify-between rounded-2xl border border-border bg-card p-6 shadow-xs transition duration-200 hover:border-[#2563EB]/40 sm:p-8"
+                  className="flex flex-col justify-between rounded-2xl border border-border bg-card p-6 shadow-xs transition duration-200 hover:border-[#1769AA]/40 sm:p-8"
                 >
                   <div>
                     <div className="flex items-center justify-between">
@@ -353,7 +353,7 @@ export function HowWeWorkPage() {
 
                   <Link
                     href={model.ctaHref}
-                    className="mt-8 flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-[#0F172A] text-xs font-bold text-white transition hover:bg-[#2563EB]"
+                    className="mt-8 flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-[#0B2236] text-xs font-bold text-white transition hover:bg-[#1769AA]"
                   >
                     {model.ctaText}
                     <ArrowRight className="size-3.5" />
@@ -365,11 +365,11 @@ export function HowWeWorkPage() {
         </section>
 
         {/* Banner CTA */}
-        <section className="bg-[#0F172A] py-16 text-white" aria-label="Comenzar proyecto">
+        <section className="bg-[#0B2236] py-16 text-white" aria-label="Comenzar proyecto">
           <div className={CONTAINER}>
             <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#38BDF8]">
+                <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#00B8D9]">
                   Empieza con total claridad
                 </p>
                 <h2 className="mt-2 font-heading text-2xl font-bold tracking-tight text-white sm:text-3xl">
@@ -384,7 +384,7 @@ export function HowWeWorkPage() {
               <div className="flex flex-wrap items-center gap-3">
                 <Link
                   href="/contacto"
-                  className="inline-flex h-11 items-center gap-2 rounded-xl bg-[#2563EB] px-6 text-sm font-bold text-white transition hover:bg-[#1D4ED8]"
+                  className="inline-flex h-11 items-center gap-2 rounded-xl bg-[#1769AA] px-6 text-sm font-bold text-white transition hover:bg-[#12568C]"
                 >
                   Solicitar reunión
                   <ArrowRight className="size-4" />

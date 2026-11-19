@@ -70,11 +70,11 @@ const PAGE = {
 
 const COLORS = {
   navy: [11, 18, 32] as Rgb,
-  blue: [37, 99, 235] as Rgb,
+  blue: [89, 70, 166] as Rgb,
   blueDark: [29, 78, 216] as Rgb,
   blueSoft: [239, 246, 255] as Rgb,
   blueMuted: [219, 234, 254] as Rgb,
-  cyan: [34, 211, 238] as Rgb,
+  cyan: [136, 118, 217] as Rgb,
   slate: [71, 85, 105] as Rgb,
   slateLight: [100, 116, 139] as Rgb,
   muted: [148, 163, 184] as Rgb,
@@ -83,7 +83,7 @@ const COLORS = {
   surface: [248, 250, 252] as Rgb,
   white: [255, 255, 255] as Rgb,
   footerText: [226, 232, 240] as Rgb,
-  footerMuted: [147, 197, 253] as Rgb,
+  footerMuted: [197, 189, 242] as Rgb,
   footerShape: [17, 28, 51] as Rgb,
 }
 

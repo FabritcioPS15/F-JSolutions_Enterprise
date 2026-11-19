@@ -251,7 +251,7 @@ export function SystemIntegrationsView() {
                 className={cn(
                   'rounded-lg px-2.5 py-1.5 text-[11px] font-semibold transition',
                   filterCategory === tab.key
-                    ? 'bg-[#2563EB]/10 text-brand-ink ring-1 ring-[#2563EB]/20'
+                    ? 'bg-[#5946A6]/10 text-brand-ink ring-1 ring-[#5946A6]/20'
                     : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                 )}
               >
@@ -268,12 +268,12 @@ export function SystemIntegrationsView() {
           return (
             <div
               key={item.id}
-              className="flex flex-col justify-between rounded-2xl border border-border/80 bg-card p-5 shadow-xs transition hover:border-[#2563EB]/40 hover:shadow-sm"
+              className="flex flex-col justify-between rounded-2xl border border-border/80 bg-card p-5 shadow-xs transition hover:border-[#5946A6]/40 hover:shadow-sm"
             >
               <div>
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex items-center gap-2">
-                    <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-tint-brand text-brand-ink ring-1 ring-[#2563EB]/20">
+                    <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-tint-brand text-brand-ink ring-1 ring-[#5946A6]/20">
                       {item.category === 'pagos' ? (
                         <CreditCard className="size-5" />
                       ) : item.category === 'mensajeria' ? (
@@ -342,7 +342,7 @@ export function SystemIntegrationsView() {
                     <button
                       type="button"
                       onClick={() => handleOpenConfig(item)}
-                      className="rounded-lg bg-tint-brand px-2.5 py-1 text-[10.5px] font-bold text-brand-ink transition hover:bg-[#2563EB]/20"
+                      className="rounded-lg bg-tint-brand px-2.5 py-1 text-[10.5px] font-bold text-brand-ink transition hover:bg-[#5946A6]/20"
                     >
                       Ajustes
                     </button>

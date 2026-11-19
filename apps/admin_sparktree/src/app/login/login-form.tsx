@@ -291,14 +291,14 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
               autoFocus
               maxLength={useRecoveryCode ? 20 : 6}
               placeholder={useRecoveryCode ? 'XXXX-XXXX' : '000000'}
-              className="h-12 w-full rounded-xl border border-border bg-card px-3.5 text-center font-mono text-lg tracking-[0.4em] text-foreground outline-none transition placeholder:text-muted-foreground/60 focus:border-[#2563EB] focus:ring-4 focus:ring-[#2563EB]/10"
+              className="h-12 w-full rounded-xl border border-border bg-card px-3.5 text-center font-mono text-lg tracking-[0.4em] text-foreground outline-none transition placeholder:text-muted-foreground/60 focus:border-[#5946A6] focus:ring-4 focus:ring-[#5946A6]/10"
             />
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#172554] text-[13px] font-semibold text-white transition hover:bg-[#172554] focus:outline-none focus:ring-4 focus:ring-[#2563EB]/25 disabled:cursor-not-allowed disabled:opacity-60 sm:h-10"
+            className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#30265C] text-[13px] font-semibold text-white transition hover:bg-[#30265C] focus:outline-none focus:ring-4 focus:ring-[#5946A6]/25 disabled:cursor-not-allowed disabled:opacity-60 sm:h-10"
           >
             {loading ? (
               <>
@@ -380,7 +380,7 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           placeholder="nombre@fjsolutions.pe"
-          className="h-11 w-full rounded-xl border border-border bg-card px-3.5 text-[16px] text-foreground outline-none transition placeholder:text-muted-foreground focus:border-[#2563EB] focus:ring-4 focus:ring-[#2563EB]/10 sm:h-10 sm:text-[13px]"
+          className="h-11 w-full rounded-xl border border-border bg-card px-3.5 text-[16px] text-foreground outline-none transition placeholder:text-muted-foreground focus:border-[#5946A6] focus:ring-4 focus:ring-[#5946A6]/10 sm:h-10 sm:text-[13px]"
         />
       </div>
 
@@ -398,7 +398,7 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
             value={password}
             onChange={(event) => setPassword(event.target.value)}
             placeholder="Tu contraseña"
-            className="h-11 w-full rounded-xl border border-border bg-card pl-3.5 pr-10 text-[16px] text-foreground outline-none transition placeholder:text-muted-foreground focus:border-[#2563EB] focus:ring-4 focus:ring-[#2563EB]/10 sm:h-10 sm:text-[13px]"
+            className="h-11 w-full rounded-xl border border-border bg-card pl-3.5 pr-10 text-[16px] text-foreground outline-none transition placeholder:text-muted-foreground focus:border-[#5946A6] focus:ring-4 focus:ring-[#5946A6]/10 sm:h-10 sm:text-[13px]"
           />
           <button
             type="button"
@@ -414,7 +414,7 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
       <button
         type="submit"
         disabled={loading}
-        className="mt-2 inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#172554] text-[13px] font-semibold text-white transition hover:bg-[#172554] focus:outline-none focus:ring-4 focus:ring-[#2563EB]/25 disabled:cursor-not-allowed disabled:opacity-60 sm:h-10"
+        className="mt-2 inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#30265C] text-[13px] font-semibold text-white transition hover:bg-[#30265C] focus:outline-none focus:ring-4 focus:ring-[#5946A6]/25 disabled:cursor-not-allowed disabled:opacity-60 sm:h-10"
       >
         {loading ? (
           <>
@@ -436,7 +436,7 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
             onClick={() => setDemoOpen((value) => !value)}
             aria-expanded={demoOpen}
             aria-controls="login-dev-panel"
-            className="flex w-full items-center justify-between gap-2 rounded-xl border border-dashed border-input bg-muted/70 px-3 py-2 text-left transition hover:border-slate-400 hover:bg-muted focus:outline-none focus-visible:ring-4 focus-visible:ring-[#2563EB]/15"
+            className="flex w-full items-center justify-between gap-2 rounded-xl border border-dashed border-input bg-muted/70 px-3 py-2 text-left transition hover:border-slate-400 hover:bg-muted focus:outline-none focus-visible:ring-4 focus-visible:ring-[#5946A6]/15"
           >
             <span className="inline-flex items-center gap-1.5 whitespace-nowrap text-[9px] font-bold uppercase tracking-[0.12em] text-muted-foreground min-[380px]:text-[10px] min-[380px]:tracking-[0.16em]">
               <KeyRound className="size-3.5 shrink-0" aria-hidden="true" />
@@ -486,7 +486,7 @@ export function LoginForm({ demo }: { demo?: DemoCredentials | null }) {
               </dl>
               <a
                 href="/api/auth/dev-login"
-                className="mt-2.5 inline-flex h-8 w-full items-center justify-center gap-1.5 rounded-lg bg-[#172554] px-3 text-[11.5px] font-semibold text-white transition hover:bg-[#172554]"
+                className="mt-2.5 inline-flex h-8 w-full items-center justify-center gap-1.5 rounded-lg bg-[#30265C] px-3 text-[11.5px] font-semibold text-white transition hover:bg-[#30265C]"
               >
                 <LogIn className="size-3.5" aria-hidden="true" />
                 Entrar directamente

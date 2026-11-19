@@ -245,7 +245,7 @@ export function RolesView() {
                   className={cn(
                     'flex flex-col items-start gap-1 rounded-xl border p-3 text-left transition',
                     active
-                      ? 'border-[#2563EB]/40 bg-tint-brand shadow-xs ring-1 ring-[#2563EB]/30'
+                      ? 'border-[#5946A6]/40 bg-tint-brand shadow-xs ring-1 ring-[#5946A6]/30'
                       : 'border-border bg-card hover:bg-muted/60'
                   )}
                 >
@@ -256,7 +256,7 @@ export function RolesView() {
                     <span
                       className={cn(
                         'grid size-4 shrink-0 place-items-center rounded-full text-[9px] font-bold',
-                        active ? 'bg-[#2563EB] text-white' : 'bg-muted text-muted-foreground'
+                        active ? 'bg-[#5946A6] text-white' : 'bg-muted text-muted-foreground'
                       )}
                     >
                       {active ? '✓' : ''}
@@ -334,7 +334,7 @@ export function RolesView() {
                     className={cn(
                       'rounded-lg px-2.5 py-1.5 text-[11px] font-semibold transition',
                       active
-                        ? 'bg-[#2563EB]/10 text-brand-ink ring-1 ring-[#2563EB]/20'
+                        ? 'bg-[#5946A6]/10 text-brand-ink ring-1 ring-[#5946A6]/20'
                         : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                     )}
                   >

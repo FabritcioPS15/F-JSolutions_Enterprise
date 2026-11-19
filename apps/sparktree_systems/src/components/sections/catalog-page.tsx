@@ -140,9 +140,9 @@ function CustomFilterDropdown({
         aria-expanded={isOpen}
         className={`inline-flex h-10 items-center justify-between gap-2 rounded-xl border px-3 text-xs font-semibold transition-all ${
           isCustomSelected
-            ? 'border-[#2563EB] bg-tint-blue text-blue-ink shadow-xs ring-2 ring-[#2563EB]/15'
+            ? 'border-[#1769AA] bg-tint-blue text-blue-ink shadow-xs ring-2 ring-[#1769AA]/15'
             : isOpen
-            ? 'border-[#2563EB] bg-card text-foreground shadow-xs ring-2 ring-[#2563EB]/10'
+            ? 'border-[#1769AA] bg-card text-foreground shadow-xs ring-2 ring-[#1769AA]/10'
             : 'border-input bg-card text-foreground hover:border-[#94A3B8] hover:bg-muted'
         }`}
       >
@@ -176,7 +176,7 @@ function CustomFilterDropdown({
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder={searchPlaceholder}
-                  className="h-8 w-full rounded-lg border border-border bg-muted pl-8 pr-2 text-xs text-foreground outline-none transition focus:border-[#2563EB] focus:bg-card"
+                  className="h-8 w-full rounded-lg border border-border bg-muted pl-8 pr-2 text-xs text-foreground outline-none transition focus:border-[#1769AA] focus:bg-card"
                   autoFocus
                 />
               </div>
@@ -288,7 +288,7 @@ function CategoryCard({
     <button
       type="button"
       onClick={() => onSelect(category.label)}
-      className="group relative aspect-[4/3] overflow-hidden rounded-2xl transition duration-300 hover:-translate-y-1 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/30"
+      className="group relative aspect-[4/3] overflow-hidden rounded-2xl transition duration-300 hover:-translate-y-1 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1769AA]/30"
     >
       {/* Imagen de fondo */}
       <img
@@ -303,12 +303,12 @@ function CategoryCard({
       {/* Contenido */}
       <div className="absolute inset-0 flex flex-col justify-end p-5 text-left">
         <div className="flex items-center gap-2">
-          <span className="rounded-full bg-[#2563EB]/90 px-2 py-0.5 text-[10px] font-bold text-white backdrop-blur-sm">
+          <span className="rounded-full bg-[#1769AA]/90 px-2 py-0.5 text-[10px] font-bold text-white backdrop-blur-sm">
             {category.count} {category.count === 1 ? 'producto' : 'productos'}
           </span>
         </div>
 
-        <h3 className="mt-3 text-lg font-bold text-white transition group-hover:text-[#60A5FA]">
+        <h3 className="mt-3 text-lg font-bold text-white transition group-hover:text-[#75D7E8]">
           {category.label}
         </h3>
 
@@ -757,7 +757,7 @@ export function CatalogPage({
   }, [availableBrands, brandCounts, filtered.length])
 
   return (
-    <main className="min-h-screen bg-card text-foreground selection:bg-[#2563EB]/15 selection:text-blue-ink">
+    <main className="min-h-screen bg-card text-foreground selection:bg-[#1769AA]/15 selection:text-blue-ink">
       <EnhancedHeader quoteCount={quote.count} onQuoteClick={() => setShowQuote(true)} />
 
       {/* ── Breadcrumb Multinivel ────────────────────────────────────────────────── */}
@@ -832,7 +832,7 @@ export function CatalogPage({
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Buscar producto..."
-                  className="h-10 w-full rounded-xl border border-input bg-card pl-9 pr-8 text-xs text-foreground outline-none transition placeholder:text-muted-foreground focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15"
+                  className="h-10 w-full rounded-xl border border-input bg-card pl-9 pr-8 text-xs text-foreground outline-none transition placeholder:text-muted-foreground focus:border-[#1769AA] focus:ring-2 focus:ring-[#1769AA]/15"
                 />
                 {query && (
                   <button
@@ -1027,7 +1027,7 @@ export function CatalogPage({
             </div>
           ) : (
             <div className="rounded-3xl border border-dashed border-input bg-muted p-12 text-center sm:p-16">
-              <span className="mx-auto grid size-16 place-items-center rounded-2xl bg-[#2563EB]/10 text-blue-ink">
+              <span className="mx-auto grid size-16 place-items-center rounded-2xl bg-[#1769AA]/10 text-blue-ink">
                 <Search className="size-8" />
               </span>
               <h3 className="mt-4 font-heading text-lg font-bold text-foreground sm:text-xl">
@@ -1047,7 +1047,7 @@ export function CatalogPage({
                 </button>
                 <Link
                   href="/cotizacion"
-                  className="inline-flex h-11 items-center gap-2 rounded-xl bg-[#2563EB] px-5 text-xs font-bold text-white shadow-xs transition hover:bg-[#1D4ED8]"
+                  className="inline-flex h-11 items-center gap-2 rounded-xl bg-[#1769AA] px-5 text-xs font-bold text-white shadow-xs transition hover:bg-[#12568C]"
                 >
                   Solicitar cotización a medida
                   <ArrowRight className="size-3.5" />
@@ -1061,11 +1061,11 @@ export function CatalogPage({
         <div className="mt-14 rounded-3xl border border-brand-ink/30 bg-gradient-to-r from-tint-blue via-white to-brand-soft p-6 shadow-xs sm:p-8">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-start gap-4">
-              <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-[#2563EB] text-white shadow-sm">
+              <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-[#1769AA] text-white shadow-sm">
                 <Headset className="size-6" />
               </span>
               <div>
-                <span className="inline-flex items-center gap-1 rounded-md bg-[#2563EB]/10 px-2 py-0.5 text-[10px] font-bold text-blue-ink uppercase tracking-wider">
+                <span className="inline-flex items-center gap-1 rounded-md bg-[#1769AA]/10 px-2 py-0.5 text-[10px] font-bold text-blue-ink uppercase tracking-wider">
                   Atención B2B
                 </span>
                 <h4 className="mt-1 font-heading text-base font-bold text-foreground sm:text-lg">
@@ -1080,7 +1080,7 @@ export function CatalogPage({
             <div className="flex shrink-0 flex-wrap items-center gap-3">
               <Link
                 href="/cotizacion"
-                className="inline-flex h-11 items-center gap-2 rounded-xl bg-[#2563EB] px-5 text-xs font-bold text-white transition hover:bg-[#1D4ED8]"
+                className="inline-flex h-11 items-center gap-2 rounded-xl bg-[#1769AA] px-5 text-xs font-bold text-white transition hover:bg-[#12568C]"
               >
                 Solicitar cotización
                 <ArrowRight className="size-3.5" />

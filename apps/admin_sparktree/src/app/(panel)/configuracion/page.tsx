@@ -416,7 +416,7 @@ export default function ConfiguracionPage() {
                 </div>
                 <div className="mt-2.5 h-1.5 overflow-hidden rounded-full bg-muted">
                   <div
-                    className="h-full rounded-full bg-[#2563EB]"
+                    className="h-full rounded-full bg-[#5946A6]"
                     style={{ width: `${usagePercent}%` }}
                   />
                 </div>

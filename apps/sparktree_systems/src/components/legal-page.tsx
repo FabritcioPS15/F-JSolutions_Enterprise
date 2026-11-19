@@ -81,9 +81,9 @@ export function LegalPage({
       />
 
       <section className="relative overflow-hidden border-b border-border bg-gradient-to-br from-muted via-white to-brand-soft">
-        <div className="pointer-events-none absolute -right-32 -top-24 size-96 rounded-full bg-[#2563EB]/10 blur-3xl" />
+        <div className="pointer-events-none absolute -right-32 -top-24 size-96 rounded-full bg-[#1769AA]/10 blur-3xl" />
         <div className="relative mx-auto max-w-[1280px] px-4 py-12 sm:px-6 lg:px-8 lg:py-14">
-          <span className="inline-flex items-center gap-2 rounded-full border border-[#2563EB]/25 bg-card px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-blue-ink">
+          <span className="inline-flex items-center gap-2 rounded-full border border-[#1769AA]/25 bg-card px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-blue-ink">
             <Icon className="size-3.5" /> Documento legal
           </span>
           <h1 className="mt-4 max-w-3xl text-4xl font-bold tracking-[-0.045em] text-foreground sm:text-5xl">
@@ -122,7 +122,7 @@ export function LegalPage({
                       <li key={item} className="flex items-start gap-2.5 text-sm leading-6 text-muted-foreground">
                         <span
                           aria-hidden="true"
-                          className="mt-2 size-1.5 shrink-0 rounded-full bg-[#2563EB]"
+                          className="mt-2 size-1.5 shrink-0 rounded-full bg-[#1769AA]"
                         />
                         {item}
                       </li>

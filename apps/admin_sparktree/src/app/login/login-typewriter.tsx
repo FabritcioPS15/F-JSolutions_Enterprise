@@ -59,7 +59,7 @@ export function LoginTypewriter() {
     <div className="mt-5 flex items-center gap-3">
       <span
         key={phrase.text}
-        className="grid size-9 shrink-0 place-items-center rounded-xl border border-[#22D3EE]/20 bg-[#22D3EE]/10 text-[#A5F3FC] animate-in fade-in zoom-in-75 duration-300"
+        className="grid size-9 shrink-0 place-items-center rounded-xl border border-[#8876D9]/20 bg-[#8876D9]/10 text-[#CFC5F1] animate-in fade-in zoom-in-75 duration-300"
       >
         <Icon className="size-4" aria-hidden="true" />
       </span>
@@ -67,7 +67,7 @@ export function LoginTypewriter() {
         <span className="text-white/45">Tu panel para </span>
         {typed}
         {!reduced && (
-          <span className="ml-0.5 inline-block h-[1.05em] w-[2px] translate-y-[0.15em] bg-[#22D3EE] animate-pulse" />
+          <span className="ml-0.5 inline-block h-[1.05em] w-[2px] translate-y-[0.15em] bg-[#8876D9] animate-pulse" />
         )}
       </p>
       <span className="sr-only">

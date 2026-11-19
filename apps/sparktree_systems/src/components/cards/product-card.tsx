@@ -88,7 +88,7 @@ export function ProductCard({ product, onAddToQuote }: ProductCardProps) {
   return (
     <Link
       href={storeUrl(`/productos/${product.slug}`)}
-      className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-[#2563EB]/40 hover:shadow-lg"
+      className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-[#1769AA]/40 hover:shadow-lg"
     >
       {/* Contenedor de Imagen ampliado */}
       <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted p-4 sm:p-5">
@@ -122,7 +122,7 @@ export function ProductCard({ product, onAddToQuote }: ProductCardProps) {
           onClick={handleToggleFavorite}
           aria-label={`${isFavorite(product.id) ? 'Quitar de' : 'Agregar a'} favoritos: ${product.name}`}
           aria-pressed={isFavorite(product.id)}
-          className={`absolute right-3 top-3 grid size-9 place-items-center rounded-xl border border-border bg-card/95 shadow-xs backdrop-blur transition hover:scale-105 hover:border-[#2563EB]/40 ${
+          className={`absolute right-3 top-3 grid size-9 place-items-center rounded-xl border border-border bg-card/95 shadow-xs backdrop-blur transition hover:scale-105 hover:border-[#1769AA]/40 ${
             isFavorite(product.id) ? 'text-destructive' : 'text-muted-foreground hover:text-foreground'
           }`}
         >
@@ -184,7 +184,7 @@ export function ProductCard({ product, onAddToQuote }: ProductCardProps) {
         <ul className="mt-3 space-y-1.5 text-xs text-muted-foreground">
           {product.specs.slice(0, 3).map((spec) => (
             <li key={spec} className="flex items-start gap-2">
-              <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-[#2563EB]" />
+              <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-[#1769AA]" />
               <span className="line-clamp-1">{spec}</span>
             </li>
           ))}
@@ -195,10 +195,10 @@ export function ProductCard({ product, onAddToQuote }: ProductCardProps) {
           <button
             type="button"
             onClick={handleAddToQuote}
-            className={`flex h-11 w-full items-center justify-center gap-2 rounded-xl text-xs font-bold transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB] focus-visible:ring-offset-2 ${
+            className={`flex h-11 w-full items-center justify-center gap-2 rounded-xl text-xs font-bold transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1769AA] focus-visible:ring-offset-2 ${
               added
                 ? 'bg-[#10B981] text-white shadow-sm'
-                : 'bg-[#2563EB] text-white shadow-xs hover:bg-[#1D4ED8] hover:shadow-md active:scale-[0.98]'
+                : 'bg-[#1769AA] text-white shadow-xs hover:bg-[#12568C] hover:shadow-md active:scale-[0.98]'
             }`}
           >
             {added ? (

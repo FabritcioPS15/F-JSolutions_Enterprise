@@ -105,7 +105,7 @@ function SelectionCheckbox({
       checked={checked}
       onChange={onChange}
       aria-label={label}
-      className="size-4 shrink-0 cursor-pointer rounded border-input accent-[#2563EB]"
+      className="size-4 shrink-0 cursor-pointer rounded border-input accent-[#5946A6]"
     />
   )
 }
@@ -478,7 +478,7 @@ export function ProductsView({
 
       {selected.length > 0 && (
         <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-brand-ink/30 bg-tint-brand/70 px-4 py-3">
-          <p className="text-xs font-semibold text-[#172554]">
+          <p className="text-xs font-semibold text-[#30265C]">
             {selected.length} {selected.length === 1 ? 'producto seleccionado' : 'productos seleccionados'}
             {selectedVisibleCount !== selected.length && (
               <span className="ml-1 font-medium text-brand-ink/70">
@@ -740,7 +740,7 @@ export function ProductsView({
                   key={product.id}
                   className={cn(
                     'group flex flex-col overflow-hidden rounded-2xl border bg-card shadow-xs transition hover:-translate-y-0.5 hover:border-brand-ink/30 hover:shadow-md',
-                    isSelected ? 'border-brand-ink/40 ring-2 ring-[#2563EB]/10' : 'border-border/80'
+                    isSelected ? 'border-brand-ink/40 ring-2 ring-[#5946A6]/10' : 'border-border/80'
                   )}
                 >
                   <div className="relative">

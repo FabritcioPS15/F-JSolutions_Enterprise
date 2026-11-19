@@ -48,17 +48,17 @@ export const CATEGORIES = [
 
 // ─── Colores ───────────────────────────────────────────────────────────────────
 export const COLORS = {
-  primary: '#2563EB',
-  primaryDark: '#1D4ED8',
-  primaryLight: '#EFF6FF',
-  accent: '#0891B2',
+  primary: '#1769AA',
+  primaryDark: '#12568C',
+  primaryLight: '#F1F6FA',
+  accent: '#00B8D9',
   accentDark: '#0E7490',
-  text: '#0F172A',
+  text: '#0B2236',
   textSecondary: '#475569',
   textMuted: '#64748B',
   border: '#E2E8F0',
   borderLight: '#F1F5F9',
-  surface: '#F8FAFC',
+  surface: '#F1F6FA',
 } as const
 
 // ─── Paginacion ────────────────────────────────────────────────────────────────

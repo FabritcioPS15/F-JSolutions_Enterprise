@@ -639,7 +639,7 @@ export function ServiceOfferingEditor({ serviceId }: { serviceId?: string }) {
                         type="checkbox"
                         checked={checked}
                         onChange={() => toggleRelated(service.slug)}
-                        className="mt-0.5 size-4 accent-[#2563EB]"
+                        className="mt-0.5 size-4 accent-[#5946A6]"
                       />
                       <span>
                         <span className="block font-semibold text-foreground">

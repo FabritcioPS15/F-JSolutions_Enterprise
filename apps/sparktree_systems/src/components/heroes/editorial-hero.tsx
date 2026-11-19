@@ -60,7 +60,7 @@ export function EditorialHero({
                     key={item}
                     className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card/80 px-2.5 py-1 text-[10.5px] font-semibold text-muted-foreground backdrop-blur"
                   >
-                    <span aria-hidden="true" className="size-1 rounded-full bg-[#2563EB]" />
+                    <span aria-hidden="true" className="size-1 rounded-full bg-[#1769AA]" />
                     {item}
                   </li>
                 ))}

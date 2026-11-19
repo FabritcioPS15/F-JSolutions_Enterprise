@@ -202,7 +202,7 @@ export function WebAccountsView() {
               <Inbox className="size-4" aria-hidden="true" />
               Bandeja de correos
               {outbox.length > 0 && (
-                <span className="rounded-full bg-[#2563EB]/10 px-1.5 text-[11px] font-bold text-brand-ink">
+                <span className="rounded-full bg-[#5946A6]/10 px-1.5 text-[11px] font-bold text-brand-ink">
                   {outbox.length}
                 </span>
               )}

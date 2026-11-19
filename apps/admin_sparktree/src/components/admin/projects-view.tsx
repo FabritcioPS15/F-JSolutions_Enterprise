@@ -152,7 +152,7 @@ function RenewalCell({ value, today }: { value?: string; today: string | null })
               ? 'bg-red-500/10 text-danger-ink ring-red-600/15'
               : days <= 30
                 ? 'bg-amber-500/10 text-warning-ink ring-amber-600/15'
-                : 'bg-tint-brand text-brand-ink ring-[#60A5FA]/40'
+                : 'bg-tint-brand text-brand-ink ring-[#A99AF0]/40'
           )}
         >
           {days < 0

@@ -26,7 +26,7 @@ import type { ComplaintStatusView } from '@fj-solutions/contracts/complaints-boo
 const CONTAINER = 'mx-auto w-full max-w-[1180px] px-4 sm:px-6 lg:px-8'
 
 const fieldClass =
-  'mt-1.5 h-11 w-full rounded-xl border border-border bg-card px-3 text-sm font-normal text-foreground outline-none transition placeholder:text-muted-foreground focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 aria-[invalid=true]:border-destructive'
+  'mt-1.5 h-11 w-full rounded-xl border border-border bg-card px-3 text-sm font-normal text-foreground outline-none transition placeholder:text-muted-foreground focus:border-[#1769AA] focus:ring-2 focus:ring-[#1769AA]/15 aria-[invalid=true]:border-destructive'
 
 const labelClass = 'block text-[12px] font-semibold text-foreground'
 
@@ -357,7 +357,7 @@ export function ComplaintsBookPage() {
       <section className="relative overflow-hidden border-b border-border bg-gradient-to-b from-muted via-card to-card">
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute -right-24 -top-32 size-80 rounded-full bg-[#2563EB]/10 blur-3xl"
+          className="pointer-events-none absolute -right-24 -top-32 size-80 rounded-full bg-[#1769AA]/10 blur-3xl"
         />
         <div className={`${CONTAINER} relative py-10 sm:py-14`}>
           <span className="inline-flex items-center gap-2 rounded-full border border-brand-ink/20 bg-tint-brand px-3 py-1 text-[10.5px] font-bold uppercase tracking-[0.14em] text-brand-ink">
@@ -521,7 +521,7 @@ export function ComplaintsBookPage() {
                         type="checkbox"
                         checked={form.isMinor}
                         onChange={(event) => update('isMinor', event.target.checked)}
-                        className="mt-0.5 size-4 shrink-0 rounded border-input accent-[#2563EB]"
+                        className="mt-0.5 size-4 shrink-0 rounded border-input accent-[#1769AA]"
                       />
                       El consumidor es menor de edad
                     </label>
@@ -641,7 +641,7 @@ export function ComplaintsBookPage() {
                           value={option.value}
                           checked={form.kind === option.value}
                           onChange={() => update('kind', option.value)}
-                          className="mt-0.5 size-4 shrink-0 accent-[#2563EB]"
+                          className="mt-0.5 size-4 shrink-0 accent-[#1769AA]"
                         />
                         <span>
                           <span className="block text-xs font-bold text-foreground">{option.title}</span>
@@ -698,7 +698,7 @@ export function ComplaintsBookPage() {
                       type="checkbox"
                       checked={form.accepted}
                       onChange={(event) => update('accepted', event.target.checked)}
-                      className="mt-0.5 size-4 shrink-0 rounded border-input accent-[#2563EB]"
+                      className="mt-0.5 size-4 shrink-0 rounded border-input accent-[#1769AA]"
                       aria-invalid={Boolean(errors.accepted)}
                     />
                     <span>
@@ -724,7 +724,7 @@ export function ComplaintsBookPage() {
                   <button
                     type="submit"
                     disabled={sending}
-                    className="mt-5 inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#2563EB] px-6 text-sm font-bold text-white shadow-sm transition hover:bg-[#1D4ED8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
+                    className="mt-5 inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#1769AA] px-6 text-sm font-bold text-white shadow-sm transition hover:bg-[#12568C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1769AA]/40 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto"
                   >
                     {sending ? (
                       <>
@@ -790,7 +790,7 @@ export function ComplaintsBookPage() {
                   <button
                     type="submit"
                     disabled={lookupLoading}
-                    className="mt-4 inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-[#2563EB] px-5 text-xs font-bold text-white transition hover:bg-[#1D4ED8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/40 disabled:cursor-not-allowed disabled:opacity-70"
+                    className="mt-4 inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-[#1769AA] px-5 text-xs font-bold text-white transition hover:bg-[#12568C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1769AA]/40 disabled:cursor-not-allowed disabled:opacity-70"
                   >
                     {lookupLoading ? (
                       <>
@@ -933,7 +933,7 @@ function ReceiptCard({
         id="constancia"
         className="complaint-print overflow-hidden rounded-2xl border border-border bg-card shadow-sm"
       >
-        <header className="bg-gradient-to-r from-[#172554] via-[#1D4ED8] to-[#1D4ED8] px-5 py-5 text-white sm:px-7">
+        <header className="bg-gradient-to-r from-[#0C2E4A] via-[#12568C] to-[#12568C] px-5 py-5 text-white sm:px-7">
           <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/70">
             {EMPRESA.nombre} · Libro de Reclamaciones Virtual
           </p>
@@ -987,7 +987,7 @@ function ReceiptCard({
         <button
           type="button"
           onClick={() => window.print()}
-          className="inline-flex h-10 items-center gap-2 rounded-xl bg-[#2563EB] px-5 text-xs font-bold text-white transition hover:bg-[#1D4ED8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/40"
+          className="inline-flex h-10 items-center gap-2 rounded-xl bg-[#1769AA] px-5 text-xs font-bold text-white transition hover:bg-[#12568C] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1769AA]/40"
         >
           <Printer className="size-4" aria-hidden="true" />
           Imprimir o guardar PDF
@@ -995,7 +995,7 @@ function ReceiptCard({
         <button
           type="button"
           onClick={onCopy}
-          className="inline-flex h-10 items-center gap-2 rounded-xl border border-border bg-card px-5 text-xs font-bold text-foreground transition hover:border-brand-ink/40 hover:text-brand-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/25"
+          className="inline-flex h-10 items-center gap-2 rounded-xl border border-border bg-card px-5 text-xs font-bold text-foreground transition hover:border-brand-ink/40 hover:text-brand-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1769AA]/25"
         >
           {copied ? (
             <>
@@ -1012,7 +1012,7 @@ function ReceiptCard({
         <button
           type="button"
           onClick={onNew}
-          className="inline-flex h-10 items-center gap-2 rounded-xl border border-border bg-card px-5 text-xs font-bold text-muted-foreground transition hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/25"
+          className="inline-flex h-10 items-center gap-2 rounded-xl border border-border bg-card px-5 text-xs font-bold text-muted-foreground transition hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1769AA]/25"
         >
           Registrar otro caso
         </button>

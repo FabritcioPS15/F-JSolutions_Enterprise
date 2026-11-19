@@ -209,9 +209,9 @@ export function ContactPage() {
               <Link
                 key={channel.title}
                 href={channel.href}
-                className="group flex flex-col rounded-2xl border border-border bg-card p-5 transition duration-300 hover:-translate-y-0.5 hover:border-[#2563EB]/30 hover:shadow-[0_22px_46px_-36px_rgba(15,23,42,0.45)]"
+                className="group flex flex-col rounded-2xl border border-border bg-card p-5 transition duration-300 hover:-translate-y-0.5 hover:border-[#1769AA]/30 hover:shadow-[0_22px_46px_-36px_rgba(15,23,42,0.45)]"
               >
-                <span className="grid size-10 place-items-center rounded-xl bg-tint-blue text-blue-ink transition group-hover:bg-[#2563EB] group-hover:text-white">
+                <span className="grid size-10 place-items-center rounded-xl bg-tint-blue text-blue-ink transition group-hover:bg-[#1769AA] group-hover:text-white">
                   <channel.icon aria-hidden="true" className="size-4.5" />
                 </span>
                 <h3 className="mt-3.5 font-heading text-sm font-bold text-foreground">
@@ -251,7 +251,7 @@ export function ContactPage() {
             </div>
             <a
               href={`tel:${EMPRESA.telefono.replace(/\s/g, '')}`}
-              className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-[#2563EB] px-4 text-sm font-bold text-white transition hover:bg-[#1D4ED8]"
+              className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-[#1769AA] px-4 text-sm font-bold text-white transition hover:bg-[#12568C]"
             >
               <Phone aria-hidden="true" className="size-4" />
               Llamar ahora
@@ -272,7 +272,7 @@ function ContactCard() {
       />
       <div className="relative">
         <div className="flex items-center gap-3">
-          <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-[#3B82F6] to-[#2563EB] text-white shadow-[0_12px_24px_-12px_rgba(37,99,235,0.6)]">
+          <span className="grid size-11 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-[#2A82C4] to-[#1769AA] text-white shadow-[0_12px_24px_-12px_rgba(23,105,170,0.6)]">
             <MessageCircle aria-hidden="true" className="size-5" />
           </span>
           <div>
@@ -286,7 +286,7 @@ function ContactCard() {
         <div className="mt-4 space-y-2">
           <a
             href={`tel:${EMPRESA.telefono.replace(/\s/g, '')}`}
-            className="group flex items-center gap-3 rounded-xl border border-border bg-card px-3 py-2.5 transition hover:border-[#2563EB]/30 hover:bg-muted"
+            className="group flex items-center gap-3 rounded-xl border border-border bg-card px-3 py-2.5 transition hover:border-[#1769AA]/30 hover:bg-muted"
           >
             <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-tint-blue text-blue-ink">
               <Phone aria-hidden="true" className="size-3.5" />
@@ -305,7 +305,7 @@ function ContactCard() {
 
           <a
             href={`mailto:${EMPRESA.email}`}
-            className="group flex items-center gap-3 rounded-xl border border-border bg-card px-3 py-2.5 transition hover:border-[#2563EB]/30 hover:bg-muted"
+            className="group flex items-center gap-3 rounded-xl border border-border bg-card px-3 py-2.5 transition hover:border-[#1769AA]/30 hover:bg-muted"
           >
             <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-tint-blue text-blue-ink">
               <Mail aria-hidden="true" className="size-3.5" />

@@ -292,8 +292,8 @@ export function ProductDetail({ slug }: ProductDetailProps) {
                     onClick={() => setCurrentImageIndex(index)}
                     className={`relative aspect-square w-20 shrink-0 overflow-hidden rounded-lg border-2 transition ${
                       currentImageIndex === index
-                        ? 'border-[#2563EB] ring-2 ring-[#2563EB]/20'
-                        : 'border-border hover:border-[#2563EB]/50'
+                        ? 'border-[#1769AA] ring-2 ring-[#1769AA]/20'
+                        : 'border-border hover:border-[#1769AA]/50'
                     }`}
                     aria-label={`Ver imagen ${index + 1}`}
                   >
@@ -368,10 +368,10 @@ export function ProductDetail({ slug }: ProductDetailProps) {
               <button
                 onClick={handleAddToQuote}
                 disabled={product.availability === 'consult'}
-                className={`flex h-12 w-full items-center justify-center gap-2 rounded-xl text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#22D3EE] focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
+                className={`flex h-12 w-full items-center justify-center gap-2 rounded-xl text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#00B8D9] focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                   added
-                    ? 'bg-[#22D3EE] text-[#0B1220]'
-                    : 'bg-[#2563EB] text-white hover:bg-[#1D4ED8] disabled:bg-[#64748B] disabled:cursor-not-allowed'
+                    ? 'bg-[#00B8D9] text-[#102A43]'
+                    : 'bg-[#1769AA] text-white hover:bg-[#12568C] disabled:bg-[#64748B] disabled:cursor-not-allowed'
                 }`}
               >
                 {added ? (
@@ -388,7 +388,7 @@ export function ProductDetail({ slug }: ProductDetailProps) {
               <div className="flex gap-2">
                 <button
                   onClick={() => toggleFavorite(product.id)}
-                  className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-border px-4 py-2.5 text-sm font-semibold text-muted-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink"
+                  className="flex flex-1 items-center justify-center gap-2 rounded-lg border border-border px-4 py-2.5 text-sm font-semibold text-muted-foreground transition hover:border-[#1769AA]/40 hover:text-blue-ink"
                 >
                   <Heart className={`size-4 ${isFavorite(product.id) ? 'fill-current text-brand-ink' : ''}`} />
                   {isFavorite(product.id) ? 'Guardado' : 'Guardar'}
@@ -399,7 +399,7 @@ export function ProductDetail({ slug }: ProductDetailProps) {
                     onClick={toggleShare}
                     aria-expanded={shareOpen}
                     aria-haspopup="menu"
-                    className="flex w-full items-center justify-center gap-2 rounded-lg border border-border px-4 py-2.5 text-sm font-semibold text-muted-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/40"
+                    className="flex w-full items-center justify-center gap-2 rounded-lg border border-border px-4 py-2.5 text-sm font-semibold text-muted-foreground transition hover:border-[#1769AA]/40 hover:text-blue-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1769AA]/40"
                   >
                     <Share2 className="size-4" />
                     Compartir

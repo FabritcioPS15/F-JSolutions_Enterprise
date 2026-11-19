@@ -35,7 +35,7 @@ export function OpsConsoleVisual() {
       <HeroPanel className="hero-float-soft">
         <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-3.5 sm:px-5">
           <div className="flex min-w-0 items-center gap-2.5">
-            <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-[#0F172A] text-white">
+            <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-[#0B2236] text-white">
               <Activity aria-hidden="true" className="size-4" />
             </span>
             <div className="min-w-0">
@@ -73,8 +73,8 @@ export function OpsConsoleVisual() {
               <svg viewBox="0 0 320 88" className="h-[72px] w-full" aria-hidden="true">
                 <defs>
                   <linearGradient id="fj-hero-area" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#2563EB" stopOpacity="0.22" />
-                    <stop offset="100%" stopColor="#2563EB" stopOpacity="0" />
+                    <stop offset="0%" stopColor="#1769AA" stopOpacity="0.22" />
+                    <stop offset="100%" stopColor="#1769AA" stopOpacity="0" />
                   </linearGradient>
                 </defs>
                 {[18, 42, 66].map((y) => (
@@ -96,14 +96,14 @@ export function OpsConsoleVisual() {
                 <path
                   d="M0 66 C 18 64, 28 58, 42 60 S 66 48, 82 50 S 108 40, 126 44 S 152 32, 170 36 S 196 42, 214 34 S 242 20, 260 26 S 290 18, 320 22"
                   fill="none"
-                  stroke="#2563EB"
+                  stroke="#1769AA"
                   strokeWidth="2.4"
                   strokeLinecap="round"
                   className="hero-draw"
                 />
-                <circle cx="320" cy="22" r="4.5" fill="#2563EB" className="hero-pulse" />
+                <circle cx="320" cy="22" r="4.5" fill="#1769AA" className="hero-pulse" />
               </svg>
-              <div className="pointer-events-none absolute inset-x-0 top-1 h-10 rounded-full bg-[linear-gradient(180deg,rgba(34,211,238,0.18),transparent)] hero-scan" />
+              <div className="pointer-events-none absolute inset-x-0 top-1 h-10 rounded-full bg-[linear-gradient(180deg,rgba(0,184,217,0.18),transparent)] hero-scan" />
             </div>
           </div>
 
@@ -242,7 +242,7 @@ export function QuoteSummaryVisual() {
               <div key={step} className="flex min-w-0 flex-1 items-center gap-1.5">
                 <span
                   className={`grid size-4 shrink-0 place-items-center rounded-full text-[7px] font-bold ${
-                    index < 2 ? 'bg-[#2563EB] text-white' : 'bg-border text-muted-foreground'
+                    index < 2 ? 'bg-[#1769AA] text-white' : 'bg-border text-muted-foreground'
                   }`}
                 >
                   {index < 2 ? <Check aria-hidden="true" className="size-2.5" strokeWidth={3} /> : index + 1}
@@ -311,7 +311,7 @@ export function InfrastructureVisual() {
       <HeroPanel className="hero-float-soft">
         <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-3.5 sm:px-5">
           <div className="flex min-w-0 items-center gap-2.5">
-            <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-[#0F172A] text-white">
+            <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-[#0B2236] text-white">
               <Network aria-hidden="true" className="size-4" />
             </span>
             <div className="min-w-0">
@@ -322,7 +322,7 @@ export function InfrastructureVisual() {
         </div>
 
         <div className="p-3.5 sm:p-4">
-          <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-border bg-[radial-gradient(circle_at_50%_45%,#EFF6FF_0%,#FFFFFF_58%,#F8FAFC_100%)] dark:bg-[radial-gradient(circle_at_50%_45%,#14243D_0%,#0E1626_58%,#0B1220_100%)]">
+          <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-border bg-[radial-gradient(circle_at_50%_45%,#F1F6FA_0%,#FFFFFF_58%,#F1F6FA_100%)] dark:bg-[radial-gradient(circle_at_50%_45%,#14243D_0%,#0E1626_58%,#102A43_100%)]">
             <div aria-hidden="true" className="hero-grid absolute inset-0 opacity-50" />
             <svg
               viewBox="0 0 400 300"
@@ -330,16 +330,16 @@ export function InfrastructureVisual() {
               className="pointer-events-none absolute inset-0 size-full"
               aria-hidden="true"
             >
-              <path d="M200 150 L80 58" stroke="#93C5FD" strokeWidth="1.4" className="hero-dash" />
-              <path d="M200 150 L320 58" stroke="#93C5FD" strokeWidth="1.4" className="hero-dash" />
-              <path d="M200 150 L80 242" stroke="#93C5FD" strokeWidth="1.4" className="hero-dash" />
-              <path d="M200 150 L320 242" stroke="#93C5FD" strokeWidth="1.4" className="hero-dash" />
-              <circle cx="200" cy="150" r="52" fill="#2563EB" fillOpacity="0.06" />
-              <circle cx="200" cy="150" r="70" fill="#2563EB" fillOpacity="0.035" />
+              <path d="M200 150 L80 58" stroke="#9FE2EF" strokeWidth="1.4" className="hero-dash" />
+              <path d="M200 150 L320 58" stroke="#9FE2EF" strokeWidth="1.4" className="hero-dash" />
+              <path d="M200 150 L80 242" stroke="#9FE2EF" strokeWidth="1.4" className="hero-dash" />
+              <path d="M200 150 L320 242" stroke="#9FE2EF" strokeWidth="1.4" className="hero-dash" />
+              <circle cx="200" cy="150" r="52" fill="#1769AA" fillOpacity="0.06" />
+              <circle cx="200" cy="150" r="70" fill="#1769AA" fillOpacity="0.035" />
             </svg>
 
-            <div className="absolute left-1/2 top-1/2 w-[46%] max-w-[190px] -translate-x-1/2 -translate-y-1/2 rounded-xl border border-[#2563EB]/25 bg-card px-3 py-2.5 text-center shadow-[0_16px_40px_-20px_rgba(37,99,235,0.55)] sm:px-4 sm:py-3">
-              <span className="mx-auto grid size-8 place-items-center rounded-lg bg-gradient-to-br from-[#3B82F6] to-[#2563EB] text-white shadow-sm sm:size-9">
+            <div className="absolute left-1/2 top-1/2 w-[46%] max-w-[190px] -translate-x-1/2 -translate-y-1/2 rounded-xl border border-[#1769AA]/25 bg-card px-3 py-2.5 text-center shadow-[0_16px_40px_-20px_rgba(23,105,170,0.55)] sm:px-4 sm:py-3">
+              <span className="mx-auto grid size-8 place-items-center rounded-lg bg-gradient-to-br from-[#2A82C4] to-[#1769AA] text-white shadow-sm sm:size-9">
                 <Server aria-hidden="true" className="size-4" />
               </span>
               <p className="mt-1.5 text-[10px] font-bold leading-3 text-foreground sm:text-[11px]">Núcleo TI</p>
@@ -409,7 +409,7 @@ export function SupportVisual() {
       <HeroPanel className="hero-float-soft">
         <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-3.5 sm:px-5">
           <div className="flex min-w-0 items-center gap-2.5">
-            <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-[#0F172A] text-white">
+            <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-[#0B2236] text-white">
               <Headset aria-hidden="true" className="size-4" />
             </span>
             <div className="min-w-0">
@@ -453,7 +453,7 @@ export function SupportVisual() {
 
           <div className="mt-3 rounded-xl border border-brand-ink/30 bg-tint-brand p-3">
             <div className="flex items-center gap-2.5">
-              <span className="grid size-9 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[#3B82F6] to-[#2563EB] font-heading text-[9px] font-bold text-white">
+              <span className="grid size-9 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[#2A82C4] to-[#1769AA] font-heading text-[9px] font-bold text-white">
                 FJ
               </span>
               <div className="min-w-0 flex-1">
@@ -505,7 +505,7 @@ export function SoftwareVisual() {
 
         <div className="flex">
           <aside className="flex w-10 shrink-0 flex-col items-center gap-2 border-r border-border bg-muted py-3 sm:w-11">
-            <span className="grid size-6 place-items-center rounded-lg bg-[#2563EB] text-white">
+            <span className="grid size-6 place-items-center rounded-lg bg-[#1769AA] text-white">
               <Layers aria-hidden="true" className="size-3" />
             </span>
             <span className="grid size-6 place-items-center rounded-lg text-muted-foreground">
@@ -557,7 +557,7 @@ export function SoftwareVisual() {
                       width="18"
                       height={barHeight}
                       rx="4"
-                      fill={index === softwareBars.length - 1 ? '#2563EB' : '#BFDBFE'}
+                      fill={index === softwareBars.length - 1 ? '#1769AA' : '#BFE4F0'}
                       className="hero-grow"
                       style={{ animationDelay: `${index * 80}ms` }}
                     />
@@ -584,7 +584,7 @@ export function SoftwareVisual() {
                     >
                       <span
                         className={`grid size-3 shrink-0 place-items-center rounded-full ${
-                          step.done ? 'bg-[#2563EB] text-white' : 'bg-border text-muted-foreground'
+                          step.done ? 'bg-[#1769AA] text-white' : 'bg-border text-muted-foreground'
                         }`}
                       >
                         {step.done ? (
@@ -597,7 +597,7 @@ export function SoftwareVisual() {
                     </div>
                     {index < 2 && (
                       <svg width="14" height="8" viewBox="0 0 14 8" className="shrink-0" aria-hidden="true">
-                        <path d="M0 4 H14" stroke="#93C5FD" strokeWidth="1.2" strokeDasharray="2 3" className="hero-dash" />
+                        <path d="M0 4 H14" stroke="#9FE2EF" strokeWidth="1.2" strokeDasharray="2 3" className="hero-dash" />
                       </svg>
                     )}
                   </div>
@@ -640,7 +640,7 @@ export function DetailVisual({ icon, title, items, note }: DetailVisualProps) {
     <div className="relative pt-4">
       <HeroPanel className="hero-float-soft p-5 sm:p-6">
         <div className="flex items-center gap-3">
-          <span className="grid size-11 place-items-center rounded-2xl bg-gradient-to-br from-[#3B82F6] to-[#2563EB] text-white shadow-[0_12px_24px_-12px_rgba(37,99,235,0.7)]">
+          <span className="grid size-11 place-items-center rounded-2xl bg-gradient-to-br from-[#2A82C4] to-[#1769AA] text-white shadow-[0_12px_24px_-12px_rgba(23,105,170,0.7)]">
             {icon}
           </span>
           <div>
@@ -654,7 +654,7 @@ export function DetailVisual({ icon, title, items, note }: DetailVisualProps) {
         <ul className="mt-5 space-y-2.5">
           {items.map((item) => (
             <li key={item} className="flex items-start gap-2.5 rounded-xl border border-border bg-muted px-3 py-2.5">
-              <span className="mt-0.5 grid size-4 shrink-0 place-items-center rounded-full bg-[#2563EB] text-white">
+              <span className="mt-0.5 grid size-4 shrink-0 place-items-center rounded-full bg-[#1769AA] text-white">
                 <Check aria-hidden="true" className="size-2.5" strokeWidth={3} />
               </span>
               <span className="text-[11px] font-medium leading-4 text-foreground/85">{item}</span>

@@ -86,7 +86,7 @@ function KindBadge({ kind }: { kind: ComplaintKind }) {
       className={cn(
         'inline-flex items-center rounded-full px-2 py-0.5 text-[10.5px] font-semibold ring-1 ring-inset',
         kind === 'reclamo'
-          ? 'bg-tint-brand text-brand-ink ring-[#2563EB]/20'
+          ? 'bg-tint-brand text-brand-ink ring-[#5946A6]/20'
           : 'bg-muted text-muted-foreground ring-border/70'
       )}
     >
@@ -426,7 +426,7 @@ export function ComplaintsView() {
                     className={cn(
                       'grid size-10 shrink-0 place-items-center rounded-xl ring-1 ring-inset',
                       item.kind === 'reclamo'
-                        ? 'bg-tint-brand text-brand-ink ring-[#2563EB]/20'
+                        ? 'bg-tint-brand text-brand-ink ring-[#5946A6]/20'
                         : 'bg-muted text-muted-foreground ring-border/70'
                     )}
                   >

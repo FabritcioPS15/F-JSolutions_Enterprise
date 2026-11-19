@@ -40,25 +40,25 @@ export function SpotlightHero() {
   return (
     <HeroSection id="inicio" fill overlay={false} className="bg-[#070B18]">
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(37,99,235,0.3),transparent_62%)]" />
-        <div className="absolute -left-40 top-1/4 size-[420px] rounded-full bg-[#2563EB]/20 blur-[120px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(23,105,170,0.3),transparent_62%)]" />
+        <div className="absolute -left-40 top-1/4 size-[420px] rounded-full bg-[#1769AA]/20 blur-[120px]" />
         <div className="absolute -right-28 -top-24 size-[360px] rounded-full bg-[#06B6D4]/10 blur-[110px]" />
         <div className="hero-grid absolute inset-0 opacity-[0.14]" />
       </div>
 
       <div className={`${HERO_CONTAINER} flex flex-1 items-center py-[clamp(1.75rem,4vh,3.5rem)]`}>
         <div className="mx-auto w-full max-w-[920px] text-center">
-          <span className="hero-reveal inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-3 py-1.5 text-[10.5px] font-semibold uppercase tracking-[0.16em] text-[#93C5FD] backdrop-blur">
+          <span className="hero-reveal inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-3 py-1.5 text-[10.5px] font-semibold uppercase tracking-[0.16em] text-[#9FE2EF] backdrop-blur">
             <span
               aria-hidden="true"
-              className="size-1.5 rounded-full bg-[#60A5FA] shadow-[0_0_0_3px_rgba(96,165,250,0.25)]"
+              className="size-1.5 rounded-full bg-[#75D7E8] shadow-[0_0_0_3px_rgba(96,165,250,0.25)]"
             />
             Socio tecnológico para empresas
           </span>
 
           <HeroTitle size="xl" className="mx-auto max-w-[24ch] text-white">
             Infraestructura, software y soporte que{' '}
-            <span className="bg-gradient-to-r from-[#60A5FA] via-[#60A5FA] to-[#C084FC] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#75D7E8] via-[#75D7E8] to-[#C084FC] bg-clip-text text-transparent">
               trabajan juntos
             </span>
             .
@@ -86,7 +86,7 @@ export function SpotlightHero() {
                   href={capability.href}
                   className="group flex flex-col items-start gap-2 p-3 transition hover:bg-white/[0.06] sm:flex-row sm:items-center sm:gap-3 sm:p-4"
                 >
-                  <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-white/10 text-[#93C5FD] transition group-hover:bg-[#2563EB] group-hover:text-white">
+                  <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-white/10 text-[#9FE2EF] transition group-hover:bg-[#1769AA] group-hover:text-white">
                     <Icon className="size-4" aria-hidden="true" />
                   </span>
                   <span className="min-w-0">

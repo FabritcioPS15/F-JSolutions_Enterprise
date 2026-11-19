@@ -175,7 +175,7 @@ export function FaqPage() {
   }, [selectedCategory, searchQuery])
 
   return (
-    <div className="min-h-screen bg-card text-foreground selection:bg-[#2563EB]/15 selection:text-blue-ink">
+    <div className="min-h-screen bg-card text-foreground selection:bg-[#1769AA]/15 selection:text-blue-ink">
       <EnhancedHeader />
 
       <main>
@@ -218,7 +218,7 @@ export function FaqPage() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Escribe lo que necesitas saber (ej. SLA, SUNAT, garantía, visitas)..."
-                  className="h-12 w-full rounded-2xl border border-input bg-card pl-12 pr-10 text-sm text-foreground shadow-xs outline-none transition placeholder:text-muted-foreground focus:border-[#2563EB] focus:ring-4 focus:ring-[#2563EB]/10"
+                  className="h-12 w-full rounded-2xl border border-input bg-card pl-12 pr-10 text-sm text-foreground shadow-xs outline-none transition placeholder:text-muted-foreground focus:border-[#1769AA] focus:ring-4 focus:ring-[#1769AA]/10"
                 />
                 {searchQuery && (
                   <button
@@ -250,7 +250,7 @@ export function FaqPage() {
                     onClick={() => setSelectedCategory(cat.id as FAQCategory)}
                     className={`rounded-xl px-4 py-2 text-xs font-semibold transition-all ${
                       active
-                        ? 'bg-[#2563EB] text-white shadow-sm'
+                        ? 'bg-[#1769AA] text-white shadow-sm'
                         : 'border border-border bg-card text-muted-foreground hover:border-input hover:bg-card'
                     }`}
                   >
@@ -285,7 +285,7 @@ export function FaqPage() {
                     setSelectedCategory('todas')
                     setSearchQuery('')
                   }}
-                  className="mt-4 rounded-lg bg-[#2563EB] px-4 py-2 text-xs font-semibold text-white transition hover:bg-[#1D4ED8]"
+                  className="mt-4 rounded-lg bg-[#1769AA] px-4 py-2 text-xs font-semibold text-white transition hover:bg-[#12568C]"
                 >
                   Ver todas las preguntas
                 </button>
@@ -310,7 +310,7 @@ export function FaqPage() {
             <div className="rounded-3xl border border-brand-ink/30 bg-gradient-to-br from-white to-brand-soft p-8 shadow-sm sm:p-10">
               <div className="grid gap-6 md:grid-cols-[1fr_auto] md:items-center">
                 <div>
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-[#2563EB]/10 px-3 py-1 text-xs font-bold text-blue-ink">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-[#1769AA]/10 px-3 py-1 text-xs font-bold text-blue-ink">
                     <Sparkles className="size-3.5" />
                     ¿Tu duda no está en la lista?
                   </span>
@@ -327,7 +327,7 @@ export function FaqPage() {
                     href={`https://wa.me/${EMPRESA.telefono.replace(/[^0-9]/g, '')}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex h-11 items-center gap-2 rounded-xl bg-[#2563EB] px-5 text-sm font-bold text-white transition hover:bg-[#1D4ED8]"
+                    className="inline-flex h-11 items-center gap-2 rounded-xl bg-[#1769AA] px-5 text-sm font-bold text-white transition hover:bg-[#12568C]"
                   >
                     <MessageSquare className="size-4" />
                     WhatsApp directo

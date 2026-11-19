@@ -24,6 +24,7 @@ export type PermissionModule = {
 export const permissionCatalog: PermissionModule[] = [
   { key: 'dashboard', actions: ['view'] },
   { key: 'reports', actions: ['view'] },
+  { key: 'units', actions: ['view'] },
   { key: 'products', actions: ['view', 'create', 'update', 'delete', 'publish'] },
   { key: 'attributes', actions: ['view', 'create', 'update', 'delete'] },
   { key: 'categories', actions: ['view', 'create', 'update', 'delete'] },
@@ -35,6 +36,7 @@ export const permissionCatalog: PermissionModule[] = [
   { key: 'orders', actions: ['view', 'create', 'update', 'delete', 'manage-delivery'] },
   { key: 'requests', actions: ['view', 'create', 'update', 'delete', 'reply', 'assign'] },
   { key: 'complaints', actions: ['view', 'update', 'reply'] },
+  { key: 'legal', actions: ['view', 'create', 'update', 'delete'] },
   { key: 'services', actions: ['view', 'create', 'update', 'delete', 'publish'] },
   { key: 'projects', actions: ['view', 'create', 'update', 'delete', 'manage-deployments'] },
   { key: 'links', actions: ['view', 'create', 'update', 'delete', 'publish'] },

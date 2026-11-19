@@ -38,7 +38,7 @@ const variantStyles: Record<
     question: 'text-sm leading-6',
     panel: 'px-5 pb-4',
     answer: 'mt-3 text-sm leading-6 text-muted-foreground',
-    openCard: 'border-[#2563EB]/35 shadow-sm',
+    openCard: 'border-[#1769AA]/35 shadow-sm',
   },
   numbered: {
     list: 'space-y-2',
@@ -47,7 +47,7 @@ const variantStyles: Record<
     question: 'text-sm leading-6',
     panel: 'px-5 pb-4',
     answer: 'mt-3 pl-8 text-sm leading-6 text-muted-foreground',
-    openCard: 'border-[#2563EB]/35 shadow-sm',
+    openCard: 'border-[#1769AA]/35 shadow-sm',
   },
   search: {
     list: 'space-y-3',
@@ -56,7 +56,7 @@ const variantStyles: Record<
     question: 'mt-2 font-heading text-sm font-bold sm:text-base',
     panel: 'border-t border-border bg-muted/50 px-5 pb-5 pt-3',
     answer: 'text-xs leading-relaxed text-muted-foreground sm:text-sm',
-    openCard: 'border-[#2563EB]/45 shadow-sm',
+    openCard: 'border-[#1769AA]/45 shadow-sm',
     openQuestion: 'text-brand-ink',
   },
 }
@@ -93,7 +93,7 @@ export function FaqAccordion({ items, variant = 'default', className }: FaqAccor
                 setOpenQuestion((current) => (current === item.question ? null : item.question))
               }
               className={cn(
-                'flex w-full items-start justify-between gap-4 text-left transition-colors focus-visible:ring-2 focus-visible:ring-[#2563EB]/40 focus-visible:ring-inset focus-visible:outline-none',
+                'flex w-full items-start justify-between gap-4 text-left transition-colors focus-visible:ring-2 focus-visible:ring-[#1769AA]/40 focus-visible:ring-inset focus-visible:outline-none',
                 styles.trigger,
               )}
             >
@@ -126,7 +126,7 @@ export function FaqAccordion({ items, variant = 'default', className }: FaqAccor
                   className={cn(
                     'flex size-7 shrink-0 items-center justify-center rounded-lg border transition-[rotate,background-color,border-color,color] duration-300 motion-reduce:transition-none',
                     isOpen
-                      ? 'rotate-180 border-[#2563EB]/25 bg-brand-soft text-brand-ink'
+                      ? 'rotate-180 border-[#1769AA]/25 bg-brand-soft text-brand-ink'
                       : 'border-border bg-muted text-muted-foreground',
                   )}
                 >

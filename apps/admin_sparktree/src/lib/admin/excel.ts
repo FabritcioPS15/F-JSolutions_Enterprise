@@ -52,7 +52,7 @@ function headerCell(column: ExcelSheetColumn): Cell {
     value: column.header,
     type: String,
     fontWeight: 'bold',
-    backgroundColor: '#0F172A',
+    backgroundColor: '#1C1638',
     textColor: '#FFFFFF',
     align: column.align ?? 'left',
     wrap: true,

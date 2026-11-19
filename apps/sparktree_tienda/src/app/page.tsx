@@ -10,7 +10,7 @@ export default function StoreHomePage() {
     <main className="mx-auto w-full max-w-[1280px] px-4 pb-16 sm:px-6 lg:px-8">
       <section className="py-14 text-center sm:py-20">
         <div className="inline-flex items-center gap-2 rounded-full border border-[#2563EB]/20 bg-tint-blue px-4 py-1.5 text-xs font-semibold text-blue-ink">
-          <Sparkles className="size-3.5" aria-hidden="true" />
+          <Sparkles className="size-3.5 text-[#F59E0B]" aria-hidden="true" />
           <span>F&amp;J Store · Tienda especializada en hardware</span>
         </div>
 

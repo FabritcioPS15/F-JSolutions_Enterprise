@@ -109,7 +109,7 @@ const levelBadgeLabels: Record<NodeKind, string> = {
 
 const levelStyles: Record<NodeKind, string> = {
   category: 'bg-muted text-muted-foreground ring-slate-500/15',
-  subcategory: 'bg-tint-brand text-brand-ink ring-[#2563EB]/15',
+  subcategory: 'bg-tint-brand text-brand-ink ring-[#5946A6]/15',
   type: 'bg-teal-500/10 text-teal-ink ring-teal-600/15',
 }
 
@@ -705,7 +705,7 @@ export default function CategoriasPage() {
                   <div className="border-t border-border bg-muted/60 p-3 sm:p-4">
                     <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
                       <div className="flex items-center gap-2">
-                        <span className="inline-flex items-center gap-1 rounded-md bg-tint-brand px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-brand-ink ring-1 ring-inset ring-[#2563EB]/15">
+                        <span className="inline-flex items-center gap-1 rounded-md bg-tint-brand px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-brand-ink ring-1 ring-inset ring-[#5946A6]/15">
                           <Layers className="size-2.5" aria-hidden="true" />
                           Subcategorías
                         </span>
@@ -785,13 +785,13 @@ export default function CategoriasPage() {
                                 className="relative overflow-hidden rounded-xl border border-brand-ink/30 bg-card p-3 pl-4 shadow-xs"
                               >
                                 <span
-                                  className="absolute inset-y-3 left-0 w-[3px] rounded-full bg-[#1D4ED8]"
+                                  className="absolute inset-y-3 left-0 w-[3px] rounded-full bg-[#4A3A8F]"
                                   aria-hidden="true"
                                 />
                                 <div className="flex flex-wrap items-start gap-2">
                                   <div className="min-w-0 flex-1">
                                     <div className="flex flex-wrap items-center gap-2">
-                                      <span className="inline-flex items-center gap-1 rounded-md bg-tint-brand px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-brand-ink ring-1 ring-inset ring-[#2563EB]/15">
+                                      <span className="inline-flex items-center gap-1 rounded-md bg-tint-brand px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-brand-ink ring-1 ring-inset ring-[#5946A6]/15">
                                         <Layers className="size-2.5" aria-hidden="true" />
                                         Subcategoría
                                       </span>

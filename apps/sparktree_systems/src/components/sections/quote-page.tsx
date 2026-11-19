@@ -344,7 +344,7 @@ export function QuotePage() {
                 type="button"
                 onClick={() => handleDownloadPdf(successQuote)}
                 disabled={isDownloading}
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-border bg-card px-5 text-sm font-bold text-muted-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-border bg-card px-5 text-sm font-bold text-muted-foreground transition hover:border-[#1769AA]/40 hover:text-blue-ink disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {isDownloading ? (
                   <Loader2 className="size-4 animate-spin" />
@@ -355,7 +355,7 @@ export function QuotePage() {
               </button>
               <Link
                 href="/mi-cuenta#cotizaciones"
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-[#2563EB] px-5 text-sm font-bold text-white transition hover:bg-[#1D4ED8]"
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-[#1769AA] px-5 text-sm font-bold text-white transition hover:bg-[#12568C]"
               >
                 Ver mis cotizaciones <ArrowRight className="size-4" />
               </Link>
@@ -403,14 +403,14 @@ export function QuotePage() {
                 key={step.id}
                 className={`flex items-center gap-3 rounded-2xl border px-4 py-3 ${
                   active
-                    ? 'border-[#2563EB] bg-card shadow-sm shadow-[#2563EB]/10'
+                    ? 'border-[#1769AA] bg-card shadow-sm shadow-[#1769AA]/10'
                     : 'border-border bg-card/60'
                 }`}
               >
                 <span
                   className={`grid size-8 shrink-0 place-items-center rounded-full text-xs font-bold ${
                     completed
-                      ? 'bg-[#2563EB] text-white'
+                      ? 'bg-[#1769AA] text-white'
                       : active
                         ? 'bg-tint-blue text-blue-ink'
                         : 'bg-muted text-muted-foreground'
@@ -468,7 +468,7 @@ export function QuotePage() {
                       className={`mt-1.5 h-11 w-full rounded-xl border px-3 text-sm font-normal outline-none transition ${
                         errors.contactName
                           ? 'border-destructive focus:border-destructive'
-                          : 'border-border focus:border-[#2563EB]'
+                          : 'border-border focus:border-[#1769AA]'
                       }`}
                     />
                     {errors.contactName && (
@@ -490,7 +490,7 @@ export function QuotePage() {
                       className={`mt-1.5 h-11 w-full rounded-xl border px-3 text-sm font-normal outline-none transition ${
                         errors.contactPhone
                           ? 'border-destructive focus:border-destructive'
-                          : 'border-border focus:border-[#2563EB]'
+                          : 'border-border focus:border-[#1769AA]'
                       }`}
                     />
                     {errors.contactPhone && (
@@ -512,7 +512,7 @@ export function QuotePage() {
                       className={`mt-1.5 h-11 w-full rounded-xl border px-3 text-sm font-normal outline-none transition ${
                         errors.contactEmail
                           ? 'border-destructive focus:border-destructive'
-                          : 'border-border focus:border-[#2563EB]'
+                          : 'border-border focus:border-[#1769AA]'
                       }`}
                     />
                     {errors.contactEmail && (
@@ -529,7 +529,7 @@ export function QuotePage() {
                       onChange={(event) =>
                         updateField('contactPreference', event.target.value as ContactPreference)
                       }
-                      className="mt-1.5 h-11 w-full rounded-xl border border-border bg-card px-3 text-sm font-normal outline-none transition focus:border-[#2563EB]"
+                      className="mt-1.5 h-11 w-full rounded-xl border border-border bg-card px-3 text-sm font-normal outline-none transition focus:border-[#1769AA]"
                     >
                       <option value="email">Email</option>
                       <option value="phone">Llamada telefónica</option>
@@ -562,7 +562,7 @@ export function QuotePage() {
                       onChange={(event) => updateField('companyName', event.target.value)}
                       placeholder="Nombre de tu empresa"
                       autoComplete="organization"
-                      className="mt-1.5 h-11 w-full rounded-xl border border-border px-3 text-sm font-normal outline-none transition focus:border-[#2563EB]"
+                      className="mt-1.5 h-11 w-full rounded-xl border border-border px-3 text-sm font-normal outline-none transition focus:border-[#1769AA]"
                     />
                   </label>
 
@@ -571,7 +571,7 @@ export function QuotePage() {
                     <select
                       value={formData.documentType}
                       onChange={(event) => updateField('documentType', event.target.value as DocumentType)}
-                      className="mt-1.5 h-11 w-full rounded-xl border border-border bg-card px-3 text-sm font-normal outline-none transition focus:border-[#2563EB]"
+                      className="mt-1.5 h-11 w-full rounded-xl border border-border bg-card px-3 text-sm font-normal outline-none transition focus:border-[#1769AA]"
                     >
                       <option value="ruc">RUC (empresa)</option>
                       <option value="dni">DNI (persona natural)</option>
@@ -590,7 +590,7 @@ export function QuotePage() {
                       className={`mt-1.5 h-11 w-full rounded-xl border px-3 text-sm font-normal outline-none transition ${
                         errors.documentNumber
                           ? 'border-destructive focus:border-destructive'
-                          : 'border-border focus:border-[#2563EB]'
+                          : 'border-border focus:border-[#1769AA]'
                       }`}
                     />
                     {errors.documentNumber && (
@@ -620,7 +620,7 @@ export function QuotePage() {
                     onChange={(event) => updateField('generalNotes', event.target.value.slice(0, 500))}
                     rows={4}
                     placeholder="Presupuesto estimado, fecha requerida, uso de los equipos, etc."
-                    className="mt-1.5 w-full resize-none rounded-xl border border-border px-3 py-2.5 text-sm font-normal outline-none transition focus:border-[#2563EB]"
+                    className="mt-1.5 w-full resize-none rounded-xl border border-border px-3 py-2.5 text-sm font-normal outline-none transition focus:border-[#1769AA]"
                   />
                 </label>
                 <p className="mt-1 text-right text-[10px] text-muted-foreground">{totalNotesLength}/500</p>
@@ -658,7 +658,7 @@ export function QuotePage() {
                   </p>
                   <Link
                     href={storeUrl('/productos')}
-                    className="mt-4 inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-[#2563EB] text-xs font-bold text-white transition hover:bg-[#1D4ED8]"
+                    className="mt-4 inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-[#1769AA] text-xs font-bold text-white transition hover:bg-[#12568C]"
                   >
                     Ir a la tienda <ArrowRight className="size-3.5" />
                   </Link>
@@ -736,7 +736,7 @@ export function QuotePage() {
                           onChange={(event) => quote.updateItemNotes(item.productId, event.target.value)}
                           disabled={isSubmitting}
                           placeholder="Nota para este producto (opcional)"
-                          className="mt-2.5 h-8 w-full rounded-lg border border-border bg-muted px-2.5 text-[11px] outline-none transition placeholder:text-muted-foreground focus:border-[#2563EB] focus:bg-card disabled:cursor-not-allowed disabled:opacity-60"
+                          className="mt-2.5 h-8 w-full rounded-lg border border-border bg-muted px-2.5 text-[11px] outline-none transition placeholder:text-muted-foreground focus:border-[#1769AA] focus:bg-card disabled:cursor-not-allowed disabled:opacity-60"
                         />
                       </li>
                     ))}
@@ -765,7 +765,7 @@ export function QuotePage() {
                     type="submit"
                     form="quote-form"
                     disabled={isSubmitting}
-                    className="mt-4 inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#2563EB] text-sm font-bold text-white transition hover:bg-[#1D4ED8] disabled:cursor-not-allowed disabled:bg-[#94A3B8]"
+                    className="mt-4 inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#1769AA] text-sm font-bold text-white transition hover:bg-[#12568C] disabled:cursor-not-allowed disabled:bg-[#94A3B8]"
                   >
                     {isSubmitting ? <Loader2 className="size-4 animate-spin" /> : <Send className="size-4" />}
                     {isSubmitting ? 'Enviando solicitud...' : 'Enviar solicitud de cotización'}

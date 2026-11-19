@@ -362,7 +362,7 @@ export function ImageCropDialog({
               value={zoom}
               onChange={(event) => updateZoom(Number(event.target.value))}
               disabled={status !== 'ready' || locked}
-              className="h-1.5 flex-1 cursor-pointer accent-[#2563EB] disabled:opacity-40"
+              className="h-1.5 flex-1 cursor-pointer accent-[#5946A6] disabled:opacity-40"
               aria-label="Zoom de la imagen"
             />
             <button

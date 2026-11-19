@@ -144,7 +144,7 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       {/* ── Banner Principal de Operaciones (Enterprise Slate) ── */}
-      <section className="relative overflow-hidden rounded-3xl border border-slate-800/80 bg-[#0A0E17] px-6 py-7 text-white shadow-xl shadow-black/25 sm:px-8 sm:py-8">
+      <section className="relative overflow-hidden rounded-3xl border border-[#2E2750]/80 bg-[#16112E] px-6 py-7 text-white shadow-xl shadow-black/25 sm:px-8 sm:py-8">
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.08]"
           style={{
@@ -155,19 +155,19 @@ export default function DashboardPage() {
           aria-hidden="true"
         />
         <div
-          className="pointer-events-none absolute -right-20 -top-20 size-72 rounded-full bg-[#2563EB]/15 blur-3xl"
+          className="pointer-events-none absolute -right-20 -top-20 size-72 rounded-full bg-[#5946A6]/15 blur-3xl"
           aria-hidden="true"
         />
         <div
-          className="pointer-events-none absolute -bottom-24 left-1/4 size-72 rounded-full bg-cyan-500/10 blur-3xl"
+          className="pointer-events-none absolute -bottom-24 left-1/4 size-72 rounded-full bg-[#8876D9]/10 blur-3xl"
           aria-hidden="true"
         />
 
         <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div className="max-w-2xl">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-blue-500/30 bg-blue-500/10 px-3 py-1 text-[10.5px] font-bold uppercase tracking-[0.16em] text-blue-400">
-                <span className="size-1.5 rounded-full bg-blue-400 shadow-[0_0_8px_rgba(96,165,250,0.8)]" />
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-[#8876D9]/30 bg-[#8876D9]/10 px-3 py-1 text-[10.5px] font-bold uppercase tracking-[0.16em] text-[#C5BDF2]">
+                <span className="size-1.5 rounded-full bg-[#8876D9] shadow-[0_0_8px_rgba(169,154,240,0.8)]" />
                 {settings.storeName} Enterprise
               </span>
               <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[10.5px] font-medium text-slate-400">
@@ -185,15 +185,15 @@ export default function DashboardPage() {
 
             <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-[11px] font-medium text-slate-400">
               <span className="inline-flex items-center gap-1.5">
-                <Package className="size-3.5 text-blue-400" aria-hidden="true" />
+                <Package className="size-3.5 text-[#A99AF0]" aria-hidden="true" />
                 <strong className="text-white">{products.length}</strong> productos
               </span>
               <span className="inline-flex items-center gap-1.5">
-                <FileText className="size-3.5 text-blue-400" aria-hidden="true" />
+                <FileText className="size-3.5 text-[#A99AF0]" aria-hidden="true" />
                 <strong className="text-white">{openQuotes}</strong> cotizaciones abiertas
               </span>
               <span className="inline-flex items-center gap-1.5">
-                <Users className="size-3.5 text-blue-400" aria-hidden="true" />
+                <Users className="size-3.5 text-[#A99AF0]" aria-hidden="true" />
                 <strong className="text-white">{activeClients}</strong> clientes activos
               </span>
             </div>
@@ -202,7 +202,7 @@ export default function DashboardPage() {
           <div className="flex flex-wrap items-center gap-2.5">
             <Link
               href="/cotizaciones"
-              className="inline-flex h-10 items-center gap-2 rounded-xl bg-[#2563EB] px-4 text-xs font-bold text-white shadow-md shadow-[#2563EB]/25 transition hover:bg-[#1D4ED8]"
+              className="inline-flex h-10 items-center gap-2 rounded-xl bg-[#5946A6] px-4 text-xs font-bold text-white shadow-md shadow-[#5946A6]/25 transition hover:bg-[#4A3A8F]"
             >
               <FileText className="size-3.5" aria-hidden="true" />
               Ver cotizaciones
@@ -231,7 +231,7 @@ export default function DashboardPage() {
       <div className="space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="grid size-6 place-items-center rounded-lg bg-[#2563EB]/15 text-[#2563EB]">
+            <span className="grid size-6 place-items-center rounded-lg bg-[#5946A6]/15 text-[#5946A6]">
               <Sparkles className="size-3.5" />
             </span>
             <h2 className="text-xs font-bold uppercase tracking-[0.16em] text-muted-foreground">
@@ -270,7 +270,7 @@ export default function DashboardPage() {
                   : `${openQuotes} cotizaciones pendientes de emitir`}
               </p>
             </div>
-            <span className="mt-3 inline-flex items-center gap-1 text-[11px] font-semibold text-[#2563EB] group-hover:underline">
+            <span className="mt-3 inline-flex items-center gap-1 text-[11px] font-semibold text-[#5946A6] group-hover:underline">
               Revisar cotizaciones
               <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
             </span>
@@ -549,7 +549,7 @@ export default function DashboardPage() {
                   </div>
                   <div className="h-1.5 overflow-hidden rounded-full bg-muted">
                     <div
-                      className="h-full rounded-full bg-[#2563EB] transition-all duration-500"
+                      className="h-full rounded-full bg-[#5946A6] transition-all duration-500"
                       style={{ width: `${Math.max(4, (category.count / maxCategoryCount) * 100)}%` }}
                     />
                   </div>
@@ -568,7 +568,7 @@ export default function DashboardPage() {
             <div
               className="relative size-36 shrink-0 rounded-full"
               style={{
-                background: `conic-gradient(#059669 0% ${publishedPct}%, #94A3B8 ${publishedPct}% ${draftPct}%, #F59E0B ${draftPct}% 100%)`,
+                background: `conic-gradient(#059669 0% ${publishedPct}%, #A9A2C0 ${publishedPct}% ${draftPct}%, #F59E0B ${draftPct}% 100%)`,
               }}
               role="img"
               aria-label={`${published.length} publicados, ${drafts.length} en borrador, ${archived.length} archivados`}

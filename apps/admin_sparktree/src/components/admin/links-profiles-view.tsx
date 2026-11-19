@@ -110,7 +110,7 @@ function backgroundPreview(background: ProfileBackground): string {
 }
 
 function previewLuminance(hex: string) {
-  const safe = /^#[0-9a-fA-F]{6}$/.test(hex) ? hex : '#0B1220'
+  const safe = /^#[0-9a-fA-F]{6}$/.test(hex) ? hex : '#16112E'
   const channel = (value: number) => {
     const ratio = parseInt(safe.slice(value, value + 2), 16) / 255
     return ratio <= 0.03928 ? ratio / 12.92 : ((ratio + 0.055) / 1.055) ** 2.4
@@ -279,7 +279,7 @@ function emptyDraft(): LinkProfile {
     phone: '',
     email: '',
     website: '',
-    accent: '#7C3AED',
+    accent: '#6A54B8',
     background: DEFAULT_BACKGROUND,
     tone: 'auto',
     footerNote: 'Lima, Perú',
@@ -327,7 +327,7 @@ function Toggle({
         checked={checked}
         disabled={disabled}
         onChange={(event) => onChange(event.target.checked)}
-        className="mt-0.5 size-4 shrink-0 accent-[#2563EB]"
+        className="mt-0.5 size-4 shrink-0 accent-[#5946A6]"
       />
     </label>
   )
@@ -734,7 +734,7 @@ export function LinksProfilesView() {
                       onClick={() => selectProfile(profile)}
                       className={cn(
                         'flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition',
-                        active ? 'bg-tint-brand ring-1 ring-[#2563EB]/25' : 'hover:bg-muted'
+                        active ? 'bg-tint-brand ring-1 ring-[#5946A6]/25' : 'hover:bg-muted'
                       )}
                     >
                       <span
@@ -749,7 +749,7 @@ export function LinksProfilesView() {
                             {profile.name}
                           </span>
                           {profile.verified && (
-                            <CheckCircle2 className="size-3.5 shrink-0 text-[#2563EB]" aria-hidden="true" />
+                            <CheckCircle2 className="size-3.5 shrink-0 text-[#5946A6]" aria-hidden="true" />
                           )}
                         </span>
                         <span className="mt-0.5 block truncate text-[10.5px] text-muted-foreground">
@@ -1023,11 +1023,11 @@ export function LinksProfilesView() {
                             const color =
                               draft.background.kind === 'gradient'
                                 ? draft.background.from
-                                : '#0B1220'
+                                : '#16112E'
                             update({ background: { kind: 'solid', color } })
                           } else if (option.kind === 'gradient') {
                             update({
-                              background: { kind: 'gradient', from: '#0B1220', to: '#16213A', angle: 160 },
+                              background: { kind: 'gradient', from: '#16112E', to: '#1D1740', angle: 160 },
                             })
                           } else {
                             update({
@@ -1042,7 +1042,7 @@ export function LinksProfilesView() {
                         className={cn(
                           'rounded-md px-2.5 py-1 text-[11px] font-semibold transition',
                           draft.background.kind === option.kind
-                            ? 'bg-tint-brand text-[#1D4ED8]'
+                            ? 'bg-tint-brand text-[#4A3A8F]'
                             : 'text-muted-foreground hover:text-foreground'
                         )}
                       >
@@ -1064,7 +1064,7 @@ export function LinksProfilesView() {
                       className={cn(
                         'size-10 rounded-lg border-2 transition hover:scale-105',
                         JSON.stringify(draft.background) === JSON.stringify(preset.background)
-                          ? 'border-[#2563EB]'
+                          ? 'border-[#5946A6]'
                           : 'border-border'
                       )}
                       style={{ background: backgroundPreview(preset.background) }}
@@ -1192,7 +1192,7 @@ export function LinksProfilesView() {
                         value={draft.background.dim}
                         onChange={(event) => patchBackground({ dim: Number(event.target.value) })}
                         disabled={!canEdit}
-                        className="w-full accent-[#2563EB]"
+                        className="w-full accent-[#5946A6]"
                       />
                     </Field>
                   </div>
@@ -1250,7 +1250,7 @@ export function LinksProfilesView() {
                     ))}
                     <input
                       type="color"
-                      value={/^#[0-9a-fA-F]{6}$/.test(draft.accent) ? draft.accent : '#7C3AED'}
+                      value={/^#[0-9a-fA-F]{6}$/.test(draft.accent) ? draft.accent : '#6A54B8'}
                       onChange={(event) => update({ accent: event.target.value.toUpperCase() })}
                       disabled={!canEdit}
                       aria-label="Color personalizado"
@@ -1424,7 +1424,7 @@ export function LinksProfilesView() {
                       key={link.id}
                       className={cn(
                         'rounded-xl border bg-card transition',
-                        expanded ? 'border-[#2563EB]/30' : 'border-border'
+                        expanded ? 'border-[#5946A6]/30' : 'border-border'
                       )}
                     >
                       <div className="flex items-center gap-2 p-2.5">
