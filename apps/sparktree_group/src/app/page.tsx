@@ -15,6 +15,20 @@ import {
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { ECOSYSTEM_STEPS, GROUP_CONTACT, UNITS, whatsappUrl } from '@/lib/site'
+import { HeroTypewriter } from '@/components/hero-typewriter'
+
+const UNIT_WORDS = {
+  studio: 'Marca',
+  systems: 'Tecnología',
+  academia: 'Formación',
+  store: 'Equipamiento',
+  legal: 'Respaldo legal',
+} as const
+
+const HERO_HIGHLIGHTS = UNITS.map((unit) => ({
+  word: UNIT_WORDS[unit.slug],
+  accent: unit.accent,
+}))
 
 const UNIT_ICONS: Record<string, LucideIcon> = {
   studio: Megaphone,
@@ -70,7 +84,7 @@ export default function GroupPage() {
       <section className="relative overflow-hidden bg-forest-900 text-white">
         <div className="hero-grid absolute inset-0" aria-hidden="true" />
         <div
-          className="pointer-events-none absolute -right-24 top-10 h-[26rem] w-[26rem] rounded-full blur-3xl"
+          className="hero-float pointer-events-none absolute -right-24 top-10 h-[26rem] w-[26rem] rounded-full blur-3xl"
           style={{
             background:
               'radial-gradient(circle at center, rgba(60,128,96,0.45), transparent 68%)',
@@ -78,7 +92,7 @@ export default function GroupPage() {
           aria-hidden="true"
         />
         <div
-          className="pointer-events-none absolute -left-32 bottom-0 h-80 w-80 rounded-full blur-3xl"
+          className="hero-float-slow pointer-events-none absolute -left-32 bottom-0 h-80 w-80 rounded-full blur-3xl"
           style={{
             background:
               'radial-gradient(circle at center, rgba(165,201,174,0.18), transparent 70%)',
@@ -87,20 +101,37 @@ export default function GroupPage() {
         />
 
         <div className="relative mx-auto max-w-6xl px-5 pb-20 pt-32 sm:px-8 sm:pb-24 sm:pt-40">
-          <p className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-forest-200">
+          <p
+            className="hero-rise flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-forest-200"
+            style={{ animationDelay: '80ms' }}
+          >
             <span className="size-1.5 rounded-full bg-forest-200" />
             SparkTree Group · Lima, Perú
           </p>
-          <h1 className="mt-5 max-w-3xl font-display text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl">
+          <h1
+            className="hero-rise mt-5 max-w-3xl font-display text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl"
+            style={{ animationDelay: '180ms' }}
+          >
             Un ecosistema de empresas para crecer con orden.
           </h1>
-          <p className="mt-6 max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg">
+
+          <div className="hero-rise" style={{ animationDelay: '300ms' }}>
+            <HeroTypewriter items={HERO_HIGHLIGHTS} />
+          </div>
+
+          <p
+            className="hero-rise mt-5 max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg"
+            style={{ animationDelay: '420ms' }}
+          >
             Marca, tecnología, formación, equipamiento y respaldo legal. Cada unidad mantiene su
             especialidad y trabaja con las demás para que tu empresa no tenga que coordinar cinco
             proveedores distintos.
           </p>
 
-          <div className="mt-9 flex flex-wrap items-center gap-3">
+          <div
+            className="hero-rise mt-9 flex flex-wrap items-center gap-3"
+            style={{ animationDelay: '520ms' }}
+          >
             <a
               href="#unidades"
               className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-forest-800 transition hover:bg-forest-200"
@@ -119,7 +150,10 @@ export default function GroupPage() {
             </a>
           </div>
 
-          <dl className="mt-14 grid max-w-2xl grid-cols-1 gap-6 border-t border-white/10 pt-8 sm:grid-cols-3">
+          <dl
+            className="hero-rise mt-14 grid max-w-2xl grid-cols-1 gap-6 border-t border-white/10 pt-8 sm:grid-cols-3"
+            style={{ animationDelay: '640ms' }}
+          >
             {[
               { value: '5', label: 'unidades especializadas' },
               { value: '1', label: 'punto de contacto' },

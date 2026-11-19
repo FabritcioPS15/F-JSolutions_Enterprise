@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { AlertCircle, ArrowRight, CheckCircle2, Eye, EyeOff, Loader2, MailCheck, Plus } from 'lucide-react'
 import { PASSWORD_HINT, isEmail, onlyDigits, passwordProblem } from '@fj-solutions/contracts/domain'
 import { AuthDivider, OAuthButtons } from './oauth-buttons'
+import { corporateUrl } from '@/lib/store-nav'
 
 type Availability = { google: boolean; facebook: boolean }
 type DocumentType = 'dni' | 'ruc'
@@ -13,7 +14,7 @@ type FieldErrors = Partial<
 >
 
 const fieldClass =
-  'mt-1 h-10 w-full rounded-xl border border-border bg-card px-3 text-sm font-normal text-foreground outline-none transition placeholder:text-muted-foreground focus:border-[#1769AA] focus:ring-2 focus:ring-[#1769AA]/15 aria-[invalid=true]:border-destructive'
+  'mt-1 h-10 w-full rounded-xl border border-border bg-card px-3 text-sm font-normal text-foreground outline-none transition placeholder:text-muted-foreground focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 aria-[invalid=true]:border-destructive'
 
 const initialDraft = {
   name: '',
@@ -209,14 +210,14 @@ export function RegisterForm({ availability }: { availability: Availability }) {
             type="button"
             onClick={handleResend}
             disabled={status === 'resending'}
-            className="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-xl border border-border bg-card px-4 text-sm font-bold text-foreground transition hover:border-[#1769AA]/40 hover:text-blue-ink disabled:opacity-60"
+            className="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-xl border border-border bg-card px-4 text-sm font-bold text-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink disabled:opacity-60"
           >
             {status === 'resending' && <Loader2 aria-hidden="true" className="size-4 animate-spin" />}
             Reenviar enlace
           </button>
           <Link
             href={`/login?correo=${encodeURIComponent(created.email)}`}
-            className="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-[#1769AA] px-4 text-sm font-bold text-white transition hover:bg-[#12568C]"
+            className="inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-[#2563EB] px-4 text-sm font-bold text-white transition hover:bg-[#1D4ED8]"
           >
             Ir a iniciar sesión
             <ArrowRight aria-hidden="true" className="size-4" />
@@ -402,17 +403,27 @@ export function RegisterForm({ availability }: { availability: Availability }) {
                 checked={draft.acceptTerms}
                 onChange={(event) => update('acceptTerms', event.target.checked)}
                 aria-invalid={Boolean(errors.terms)}
-                className="mt-0.5 size-3.5 shrink-0 rounded border-input text-blue-ink focus:ring-[#1769AA]/30"
+                className="mt-0.5 size-3.5 shrink-0 rounded border-input text-blue-ink focus:ring-[#2563EB]/30"
               />
               <span>
                 Acepto los{' '}
-                <Link href="/terminos-y-condiciones" className="font-semibold text-blue-ink hover:underline">
+                <a
+                  href={corporateUrl('/terminos-y-condiciones')}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-semibold text-blue-ink hover:underline"
+                >
                   términos y condiciones
-                </Link>{' '}
+                </a>{' '}
                 y la{' '}
-                <Link href="/politica-de-privacidad" className="font-semibold text-blue-ink hover:underline">
+                <a
+                  href={corporateUrl('/politica-de-privacidad')}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-semibold text-blue-ink hover:underline"
+                >
                   política de privacidad
-                </Link>
+                </a>
                 . *
               </span>
             </label>
@@ -422,9 +433,9 @@ export function RegisterForm({ availability }: { availability: Availability }) {
                 type="checkbox"
                 checked={draft.marketingConsent}
                 onChange={(event) => update('marketingConsent', event.target.checked)}
-                className="mt-0.5 size-3.5 shrink-0 rounded border-input text-blue-ink focus:ring-[#1769AA]/30"
+                className="mt-0.5 size-3.5 shrink-0 rounded border-input text-blue-ink focus:ring-[#2563EB]/30"
               />
-              <span>Quiero recibir novedades y promociones de SparkTree Systems (opcional).</span>
+              <span>Quiero recibir novedades y promociones de SparkTree Store (opcional).</span>
             </label>
           </div>
           {errors.terms && <p className="mt-1 text-[10px] font-semibold text-destructive">{errors.terms}</p>}
@@ -433,7 +444,7 @@ export function RegisterForm({ availability }: { availability: Availability }) {
         <button
           type="submit"
           disabled={status === 'sending'}
-          className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-[#1769AA] text-sm font-bold text-white transition hover:bg-[#12568C] disabled:opacity-60"
+          className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-[#2563EB] text-sm font-bold text-white transition hover:bg-[#1D4ED8] disabled:opacity-60"
         >
           {status === 'sending' ? (
             <Loader2 aria-hidden="true" className="size-4 animate-spin" />

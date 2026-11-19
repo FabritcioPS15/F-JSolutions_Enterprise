@@ -218,18 +218,6 @@ const staticPages: StaticPage[] = [
     ],
   },
   {
-    title: 'Solicitar cotización',
-    href: '/cotizacion',
-    description: 'Arma tu cotización y recíbela con asesoría personalizada.',
-    keywords: ['cotizacion', 'cotizar', 'presupuesto', 'precio', 'cotizador', 'comprar'],
-  },
-  {
-    title: 'Mi cuenta',
-    href: '/mi-cuenta',
-    description: 'Perfil, favoritos y cotizaciones guardadas.',
-    keywords: ['cuenta', 'perfil', 'favoritos', 'cotizaciones', 'mi cuenta'],
-  },
-  {
     title: 'Blog',
     href: '/blog',
     description: 'Artículos y novedades de tecnología para empresas.',

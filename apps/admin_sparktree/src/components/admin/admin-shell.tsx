@@ -654,8 +654,18 @@ export function AdminShell({
               src="/brand/sparktree-horizontal.png"
               alt="SparkTree Admin"
               className={cn(
-                'h-16 w-auto shrink-0 object-contain transition duration-200 group-hover:scale-105',
-                collapsed && 'lg:h-12'
+                'h-10 w-auto shrink-0 object-contain transition duration-200 group-hover:scale-105 sm:h-11',
+                collapsed && 'lg:hidden'
+              )}
+            />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/brand/sparktree-symbol.png"
+              alt=""
+              aria-hidden="true"
+              className={cn(
+                'hidden h-10 w-auto shrink-0 object-contain transition duration-200 group-hover:scale-105 sm:h-11',
+                collapsed && 'lg:block'
               )}
             />
           </Link>

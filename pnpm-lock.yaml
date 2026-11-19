@@ -492,6 +492,9 @@ importers:
       '@fj-solutions/contracts':
         specifier: workspace:*
         version: link:../../packages/contracts
+      '@types/nodemailer':
+        specifier: ^8.0.2
+        version: 8.0.2
       '@vercel/analytics':
         specifier: 1.6.1
         version: 1.6.1(next@16.4.3(@babel/core@7.29.7(supports-color@8.1.1))(@types/node@24.10.4)(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
@@ -510,6 +513,9 @@ importers:
       next:
         specifier: 16.4.3
         version: 16.4.3(@babel/core@7.29.7(supports-color@8.1.1))(@types/node@24.10.4)(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+      nodemailer:
+        specifier: ^10.3.1
+        version: 10.3.1
       react:
         specifier: ^19
         version: 19.2.4

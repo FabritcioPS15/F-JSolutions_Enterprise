@@ -43,3 +43,48 @@
   background-size: 56px 56px;
   mask-image: radial-gradient(ellipse at 65% 15%, black, transparent 70%);
 }
+
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hero-float {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(0, -18px, 0) scale(1.06);
+  }
+}
+
+.hero-rise {
+  opacity: 0;
+  animation: hero-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero-float {
+  animation: hero-float 12s ease-in-out infinite alternate;
+}
+
+.hero-float-slow {
+  animation: hero-float 16s ease-in-out infinite alternate-reverse;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-rise {
+    opacity: 1;
+    animation: none;
+  }
+
+  .hero-float,
+  .hero-float-slow {
+    animation: none;
+  }
+}

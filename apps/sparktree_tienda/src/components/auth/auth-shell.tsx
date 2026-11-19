@@ -30,23 +30,23 @@ export function AuthShell({ children }: { children: ReactNode }) {
   return (
     <main className="auth-page text-foreground">
       <div className={`auth-stage${isRegister ? ' auth-stage--register' : ''}`}>
-        <aside data-surface="dark" className="auth-aside relative flex flex-col overflow-hidden bg-gradient-to-br from-[#102A43] via-[#0B2236] to-[#12568C] px-5 py-3 text-white sm:px-10 sm:py-7 lg:px-14 lg:py-9">
+        <aside data-surface="dark" className="auth-aside relative flex flex-col overflow-hidden bg-gradient-to-br from-[#172554] via-[#1E3A8A] to-[#1D4ED8] px-5 py-3 text-white sm:px-10 sm:py-7 lg:px-14 lg:py-9">
           <div aria-hidden="true" className="auth-sheen" />
           <div
             aria-hidden="true"
-            className="auth-orb auth-orb--a pointer-events-none absolute -right-20 -top-24 size-72 rounded-full bg-[#2A82C4]/20 blur-3xl"
+            className="auth-orb auth-orb--a pointer-events-none absolute -right-20 -top-24 size-72 rounded-full bg-[#3B82F6]/20 blur-3xl"
           />
           <div
             aria-hidden="true"
-            className="auth-orb auth-orb--b pointer-events-none absolute -bottom-28 left-1/4 size-72 rounded-full bg-[#1769AA]/20 blur-3xl"
+            className="auth-orb auth-orb--b pointer-events-none absolute -bottom-28 left-1/4 size-72 rounded-full bg-[#2563EB]/20 blur-3xl"
           />
 
           <div className="relative flex items-center justify-between gap-4">
-            <Link href="/" className="inline-flex w-fit items-center" aria-label="SparkTree Systems · Inicio">
+            <Link href="/" className="inline-flex w-fit items-center" aria-label="SparkTree Store · Inicio">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/brand/sparktree-horizontal.png"
-                alt="SparkTree Systems"
+                alt="SparkTree Store"
                 className="h-10 w-auto object-contain sm:h-16 lg:h-20"
               />
             </Link>
@@ -62,11 +62,11 @@ export function AuthShell({ children }: { children: ReactNode }) {
 
           <div className="relative hidden flex-1 items-center lg:flex">
             <div className="max-w-md">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#75D7E8]">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[#93C5FD]">
                 Cuenta de cliente
               </p>
               <h2 className="mt-3 font-heading text-2xl font-bold tracking-tight sm:text-3xl">
-                Tu operación con SparkTree Systems en un solo lugar
+                Tu operación con SparkTree Store en un solo lugar
               </h2>
               <p className="mt-3 text-sm leading-6 text-muted-foreground/60">
                 Crea tu cuenta para guardar tus cotizaciones, tus equipos favoritos y el historial de
@@ -75,7 +75,7 @@ export function AuthShell({ children }: { children: ReactNode }) {
               <ul className="mt-6 hidden space-y-2.5 text-sm text-[#E2E8F0] sm:block">
                 {benefits.map((item) => (
                   <li key={item} className="flex items-start gap-2">
-                    <CheckCircle2 aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-[#75D7E8]" />
+                    <CheckCircle2 aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-[#93C5FD]" />
                     {item}
                   </li>
                 ))}
@@ -84,7 +84,7 @@ export function AuthShell({ children }: { children: ReactNode }) {
           </div>
 
           <p className="relative mt-8 hidden text-[11px] text-muted-foreground sm:block">
-            © {new Date().getFullYear()} SparkTree Systems. Todos los derechos reservados.
+            © {new Date().getFullYear()} SparkTree Store. Todos los derechos reservados.
           </p>
         </aside>
 

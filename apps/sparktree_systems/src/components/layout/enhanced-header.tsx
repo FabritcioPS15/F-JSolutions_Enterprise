@@ -42,7 +42,6 @@ import {
   Sparkles,
   Store,
   Tag,
-  UserRound,
   Workflow,
   Wrench,
   X,
@@ -59,13 +58,6 @@ import {
 import { mainNav, itServicesMenu, infrastructureMenu, softwareDevMenu, companyMenu } from '@/lib/navigation'
 import { ThemeToggle } from '@/components/theme/theme-toggle'
 import { storeUrl } from '@/lib/store-url'
-
-// ─── Types ───────────────────────────────────────────────────────────────────────────────
-
-type EnhancedHeaderProps = {
-  quoteCount?: number
-  onQuoteClick?: () => void
-}
 
 // ─── Hook: click outside ─────────────────────────────────────────────────────────────────
 
@@ -830,7 +822,7 @@ function StoreRedirectDialog({ onClose }: { onClose: () => void }) {
 
 // ─── Componente: Enhanced Header ─────────────────────────────────────────────────────────
 
-export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderProps) {
+export function EnhancedHeader() {
   const pathname = usePathname()
   const router = useRouter()
   const [menuOpen, setMenuOpen] = useState(false)
@@ -930,11 +922,6 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
     }
   }, [menuOpen])
 
-  const goToQuote = () => {
-    if (onQuoteClick) { onQuoteClick(); return }
-    router.push('/cotizacion')
-  }
-
   const closeMobileMenu = () => {
     setMenuOpen(false)
     setOpenMobileSection(null)
@@ -981,9 +968,6 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
     setRedirectOpen(true)
   }
 
-  const isAccountActive = isPathActive('/mi-cuenta')
-  const isQuotePageActive = isPathActive('/cotizacion')
-
   const toggle = (key: string) => setOpenDropdown((prev) => (prev === key ? null : key))
   const toggleMobile = (key: string) => setOpenMobileSection((prev) => (prev === key ? null : key))
 
@@ -1029,38 +1013,6 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
             {/* Acciones del usuario */}
             <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
               <ThemeToggle />
-              <Link
-                href="/mi-cuenta"
-                aria-current={isAccountActive ? 'page' : undefined}
-                className={`hidden items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold transition lg:flex ${
-                  isAccountActive
-                    ? 'bg-tint-blue text-blue-ink'
-                    : 'text-muted-foreground hover:bg-muted hover:text-blue-ink'
-                }`}
-              >
-                <UserRound className="size-4" />
-                Mi cuenta
-              </Link>
-
-              <button
-                type="button"
-                onClick={goToQuote}
-                aria-current={isQuotePageActive ? 'page' : undefined}
-                className={`relative flex items-center gap-1.5 sm:gap-2 rounded-lg px-2 sm:px-3 py-2 text-sm font-semibold transition ${
-                  isQuotePageActive
-                    ? 'bg-tint-blue text-blue-ink'
-                    : 'text-muted-foreground hover:bg-muted hover:text-blue-ink'
-                }`}
-                aria-label={`Abrir cotización, ${quoteCount} productos`}
-              >
-                <FileText className="size-4 sm:size-5" />
-                <span className="hidden sm:inline md:inline">Mi cotización</span>
-                {quoteCount > 0 && (
-                  <span className="absolute -right-1 -top-1 grid size-5 place-items-center rounded-full bg-[#1769AA] text-[10px] font-bold text-white">
-                    {quoteCount}
-                  </span>
-                )}
-              </button>
 
               <button
                 type="button"
@@ -1347,50 +1299,6 @@ export function EnhancedHeader({ quoteCount = 0, onQuoteClick }: EnhancedHeaderP
 
             {/* Acciones rápidas móvil */}
             <div className="mt-5 space-y-2 border-t border-border pt-4">
-              <Link
-                href="/mi-cuenta"
-                onClick={markMobileNavigation}
-                aria-current={isAccountActive ? 'page' : undefined}
-                className={`flex items-center gap-3 rounded-xl border px-3.5 py-2.5 text-sm font-semibold transition-colors ${
-                  isAccountActive
-                    ? 'border-[#1769AA]/40 bg-tint-blue text-blue-ink'
-                    : 'border-border text-foreground/85 hover:bg-muted hover:text-blue-ink'
-                }`}
-              >
-                <div className="grid size-8 place-items-center rounded-lg bg-muted text-muted-foreground">
-                  <UserRound className="size-4" />
-                </div>
-                <span>Mi cuenta</span>
-              </Link>
-
-              <button
-                type="button"
-                onClick={() => {
-                  markMobileNavigation()
-                  goToQuote()
-                }}
-                aria-current={isQuotePageActive ? 'page' : undefined}
-                className={`flex w-full items-center justify-between rounded-xl border px-3.5 py-2.5 text-sm font-semibold transition-colors ${
-                  isQuotePageActive
-                    ? 'border-[#1769AA]/40 bg-tint-blue text-blue-ink'
-                    : 'border-border text-foreground/85 hover:bg-muted hover:text-blue-ink'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <div className="grid size-8 place-items-center rounded-lg bg-tint-blue text-blue-ink">
-                    <FileText className="size-4" />
-                  </div>
-                  <span>Mi cotización</span>
-                </div>
-                {quoteCount > 0 ? (
-                  <span className="grid size-6 place-items-center rounded-full bg-[#1769AA] text-xs font-bold text-white">
-                    {quoteCount}
-                  </span>
-                ) : (
-                  <span className="text-xs font-normal text-muted-foreground">0 items</span>
-                )}
-              </button>
-
               <Link
                 href="/contacto"
                 onClick={markMobileNavigation}

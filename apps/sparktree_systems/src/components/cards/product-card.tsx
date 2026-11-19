@@ -1,213 +1,60 @@
-'use client'
-
-import { useState } from 'react'
 import Link from 'next/link'
-import {
-  AppWindow,
-  ArrowRight,
-  BatteryCharging,
-  Cable,
-  Check,
-  ClipboardList,
-  Cpu,
-  Gamepad2,
-  HardDrive,
-  Headphones,
-  Heart,
-  House,
-  Keyboard,
-  Laptop,
-  Monitor,
-  Package,
-  Printer,
-  Router,
-  Server,
-  Smartphone,
-  type LucideIcon,
-} from 'lucide-react'
-import { useFavorites } from '@/lib/use-favorites'
+import { ArrowRight, Package } from 'lucide-react'
 import { storeUrl } from '@/lib/store-url'
 import type { Product } from '@/lib/catalog'
 
-type ProductCardProps = {
-  product: Product
-  onAddToQuote: (id: string) => void
-}
-
-const categoryIcons: Record<string, LucideIcon> = {
-  'PC y Servidores': Server,
-  Laptops: Laptop,
-  Componentes: Cpu,
-  Monitores: Monitor,
-  'Periféricos': Keyboard,
-  Almacenamiento: HardDrive,
-  Redes: Router,
-  'Impresoras y Escáneres': Printer,
-  Impresoras: Printer,
-  'Audio y Video': Headphones,
-  Gaming: Gamepad2,
-  Accesorios: Cable,
-  'Telefonía': Smartphone,
-  Software: AppWindow,
-  'Cables y Energía': BatteryCharging,
-  'Hogar inteligente': House,
-}
-
-const availabilityLabels = {
-  available: 'En stock para entrega inmediata',
+const availabilityLabels: Record<NonNullable<Product['availability']>, string> = {
+  available: 'Disponible en tienda',
   limited: 'Stock limitado',
-  consult: 'A pedido corporativo',
+  consult: 'A consultar',
 }
 
-const availabilityColors = {
-  available: 'bg-[#10B981]',
-  limited: 'bg-[#F59E0B]',
-  consult: 'bg-[#64748B]',
+const availabilityStyles: Record<NonNullable<Product['availability']>, string> = {
+  available: 'bg-tint-green text-success-ink ring-emerald-500/25',
+  limited: 'bg-tint-amber text-warning-ink ring-amber-500/25',
+  consult: 'bg-muted text-muted-foreground ring-border',
 }
 
-export function ProductCard({ product, onAddToQuote }: ProductCardProps) {
-  const { isFavorite, toggleFavorite } = useFavorites()
-  const [added, setAdded] = useState(false)
-  const [imageFailed, setImageFailed] = useState(false)
-  const CategoryIcon = categoryIcons[product.category] ?? Package
-
-  const handleAddToQuote = (event: React.MouseEvent) => {
-    event.stopPropagation()
-    event.preventDefault()
-    onAddToQuote(product.id)
-    setAdded(true)
-    window.setTimeout(() => setAdded(false), 1600)
-  }
-
-  const handleToggleFavorite = (event: React.MouseEvent) => {
-    event.stopPropagation()
-    event.preventDefault()
-    toggleFavorite(product.id)
-  }
+export function ProductCard({ product }: { product: Product }) {
+  const availability = product.availability ?? 'consult'
 
   return (
     <Link
       href={storeUrl(`/productos/${product.slug}`)}
-      className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-[#1769AA]/40 hover:shadow-lg"
+      className="group flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card transition hover:border-[#1769AA]/40 hover:shadow-[0_12px_28px_-18px_rgba(15,23,42,0.35)]"
     >
-      {/* Contenedor de Imagen ampliado */}
-      <div className="relative aspect-[4/3] w-full overflow-hidden bg-muted p-4 sm:p-5">
-        {imageFailed ? (
-          <div
-            role="img"
-            aria-label={product.name}
-            className="flex size-full flex-col items-center justify-center gap-3 px-5 text-center"
-          >
-            <span className="grid size-16 place-items-center rounded-2xl border border-border bg-card text-blue-ink">
-              <CategoryIcon className="size-7" strokeWidth={1.5} aria-hidden="true" />
-            </span>
-            <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
-              {product.category}
-            </span>
-          </div>
-        ) : (
-          <img
-            src={product.image}
-            alt={product.name}
-            loading="lazy"
-            decoding="async"
-            onError={() => setImageFailed(true)}
-            className="size-full object-contain transition-transform duration-500 group-hover:scale-105"
-          />
-        )}
-
-        {/* Botón de Favoritos */}
-        <button
-          type="button"
-          onClick={handleToggleFavorite}
-          aria-label={`${isFavorite(product.id) ? 'Quitar de' : 'Agregar a'} favoritos: ${product.name}`}
-          aria-pressed={isFavorite(product.id)}
-          className={`absolute right-3 top-3 grid size-9 place-items-center rounded-xl border border-border bg-card/95 shadow-xs backdrop-blur transition hover:scale-105 hover:border-[#1769AA]/40 ${
-            isFavorite(product.id) ? 'text-destructive' : 'text-muted-foreground hover:text-foreground'
-          }`}
+      <div className="relative aspect-[4/3] overflow-hidden bg-muted p-4">
+        <img
+          src={product.image}
+          alt={product.name}
+          loading="lazy"
+          className="size-full object-contain transition duration-300 group-hover:scale-105"
+        />
+        <span
+          className={`absolute left-3 top-3 rounded-full px-2 py-0.5 text-[10px] font-bold ring-1 ring-inset ${availabilityStyles[availability]}`}
         >
-          <Heart className={`size-4 ${isFavorite(product.id) ? 'fill-current' : ''}`} aria-hidden="true" />
-        </button>
-
-        {/* Badge de Disponibilidad */}
-        {product.availability && (
-          <span className="absolute bottom-3 left-3 inline-flex items-center gap-1.5 rounded-lg border border-border bg-card/95 px-2.5 py-1 text-[10px] font-semibold text-foreground shadow-xs backdrop-blur">
-            <span className={`size-1.5 rounded-full ${availabilityColors[product.availability]}`} />
-            {availabilityLabels[product.availability]}
-          </span>
-        )}
+          {availabilityLabels[availability]}
+        </span>
       </div>
 
-      {/* Contenido de la Card */}
-      <div className="flex flex-1 flex-col p-5">
-        {/* Jerarquía: Marca + Subcategoría + Sub-subcategoría */}
-        <div className="flex items-center gap-1.5 flex-wrap">
-          <span className="rounded-md bg-brand-soft px-2 py-0.5 text-[10px] font-bold text-brand-ink uppercase tracking-wider">
+      <div className="flex flex-1 flex-col gap-1.5 p-4">
+        <p className="flex items-center gap-1.5 text-[10.5px] font-bold uppercase tracking-[0.14em] text-blue-ink">
+          <Package className="size-3.5" aria-hidden="true" />
+          {product.category}
+        </p>
+        <h2 className="line-clamp-2 text-sm font-bold text-foreground">{product.name}</h2>
+        <p className="line-clamp-2 text-[11.5px] text-muted-foreground">
+          {product.specs.slice(0, 2).join(' · ') || product.description}
+        </p>
+
+        <div className="mt-auto flex items-center justify-between gap-2 pt-3">
+          <span className="text-[10.5px] font-semibold text-muted-foreground">
             {product.brand}
           </span>
-          <span className="text-xs text-muted-foreground font-medium">
-            {product.subcategory || product.category}
+          <span className="flex items-center gap-1 text-[11px] font-semibold text-blue-ink transition group-hover:gap-2">
+            Ver en la tienda
+            <ArrowRight className="size-3.5" aria-hidden="true" />
           </span>
-          {product.subSubcategory && (
-            <>
-              <span className="text-muted-foreground/60">·</span>
-              <span className="text-xs text-muted-foreground font-normal truncate max-w-[140px]">
-                {product.subSubcategory}
-              </span>
-            </>
-          )}
-        </div>
-
-        {/* Título del producto con tamaño mejorado */}
-        <h3 className="mt-2.5 font-heading text-base font-bold leading-snug text-foreground transition-colors group-hover:text-brand-ink line-clamp-2 min-h-[46px]">
-          {product.name}
-        </h3>
-
-        {/* SKU y Modelo */}
-        {(product.model || product.sku) && (
-          <div className="mt-1 flex items-center gap-2 text-[11px] text-muted-foreground">
-            {product.sku && (
-              <span>
-                SKU: <span className="font-mono font-medium text-foreground">{product.sku}</span>
-              </span>
-            )}
-            {product.model && product.sku && <span className="text-[#E2E8F0]">|</span>}
-            {product.model && (
-              <span>
-                Mod: <span className="font-mono font-medium text-foreground">{product.model}</span>
-              </span>
-            )}
-          </div>
-        )}
-
-        {/* Especificaciones clave */}
-        <ul className="mt-3 space-y-1.5 text-xs text-muted-foreground">
-          {product.specs.slice(0, 3).map((spec) => (
-            <li key={spec} className="flex items-start gap-2">
-              <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-[#1769AA]" />
-              <span className="line-clamp-1">{spec}</span>
-            </li>
-          ))}
-        </ul>
-
-        {/* Botón de acción inferior */}
-        <div className="mt-auto pt-5">
-          <button
-            type="button"
-            onClick={handleAddToQuote}
-            className={`flex h-11 w-full items-center justify-center gap-2 rounded-xl text-xs font-bold transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1769AA] focus-visible:ring-offset-2 ${
-              added
-                ? 'bg-[#10B981] text-white shadow-sm'
-                : 'bg-[#1769AA] text-white shadow-xs hover:bg-[#12568C] hover:shadow-md active:scale-[0.98]'
-            }`}
-          >
-            {added ? (
-              <Check className="size-4" aria-hidden="true" />
-            ) : (
-              <ClipboardList className="size-4" aria-hidden="true" />
-            )}
-            {added ? 'Agregado a cotización' : 'Agregar a cotización'}
-          </button>
         </div>
       </div>
     </Link>

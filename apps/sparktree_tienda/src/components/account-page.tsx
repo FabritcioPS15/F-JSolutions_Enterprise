@@ -27,7 +27,6 @@ import {
   X,
   type LucideIcon,
 } from 'lucide-react'
-import { EnhancedHeader } from '@/components/layout/enhanced-header'
 import {
   EMPTY_PROFILE,
   documentLabel,
@@ -45,7 +44,6 @@ import { useAccount } from '@/lib/use-account'
 import { useFavorites } from '@/lib/use-favorites'
 import { useQuote } from '@/lib/use-quote'
 import { buildQuoteWhatsAppUrl, downloadQuotePdf } from '@/lib/quote-export'
-import { storeUrl } from '@/lib/store-url'
 
 type Tab = 'perfil' | 'favoritos' | 'cotizaciones'
 type FavoriteSort = 'name' | 'brand'
@@ -86,7 +84,7 @@ const statusClasses: Record<SavedQuote['status'], string> = {
 }
 
 const FOCUS_RING =
-  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1769AA]/35 focus-visible:ring-offset-1'
+  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#2563EB]/35 focus-visible:ring-offset-1'
 
 function getInitials(name: string): string {
   const parts = name.trim().split(/\s+/).filter(Boolean)
@@ -399,7 +397,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
     const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
-    link.download = `fj-systems-mis-datos-${new Date().toISOString().slice(0, 10)}.json`
+    link.download = `fj-store-mis-datos-${new Date().toISOString().slice(0, 10)}.json`
     document.body.appendChild(link)
     link.click()
     link.remove()
@@ -432,13 +430,12 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
     `mt-1.5 h-11 w-full rounded-xl border px-3 text-sm font-normal outline-none transition ${FOCUS_RING} ${
       hasError
         ? 'border-destructive focus-visible:border-destructive'
-        : 'border-border focus-visible:border-[#1769AA]'
+        : 'border-border focus-visible:border-[#2563EB]'
     }`
 
   if (!isReady) {
     return (
       <main className="min-h-screen bg-muted text-foreground">
-        <EnhancedHeader quoteCount={quote.count} />
         <div className="border-b border-border bg-card">
           <div className="mx-auto flex max-w-[1280px] items-center gap-2 px-4 py-3 text-xs text-muted-foreground sm:px-6 lg:px-8">
             <Link href="/" className="font-semibold hover:text-blue-ink">
@@ -461,7 +458,6 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
 
   return (
     <main className="min-h-screen bg-muted text-foreground">
-      <EnhancedHeader quoteCount={quote.count} />
 
       <div className="border-b border-border bg-card">
         <div className="mx-auto flex max-w-[1280px] items-center gap-2 px-4 py-3 text-xs text-muted-foreground sm:px-6 lg:px-8">
@@ -475,23 +471,23 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
 
       <div className="mx-auto max-w-[1280px] px-4 py-8 sm:px-6 lg:px-8 lg:py-12">
         {/* Cabecera de cuenta */}
-        <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#102A43] via-[#0B2236] to-[#12568C] p-6 text-white sm:p-8">
+        <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#172554] via-[#1E3A8A] to-[#1D4ED8] p-6 text-white sm:p-8">
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute -right-16 -top-24 size-64 rounded-full bg-[#2A82C4]/20 blur-3xl"
+            className="pointer-events-none absolute -right-16 -top-24 size-64 rounded-full bg-[#3B82F6]/20 blur-3xl"
           />
           <div
             aria-hidden="true"
-            className="pointer-events-none absolute -bottom-24 left-1/3 size-64 rounded-full bg-[#1769AA]/15 blur-3xl"
+            className="pointer-events-none absolute -bottom-24 left-1/3 size-64 rounded-full bg-[#2563EB]/15 blur-3xl"
           />
 
           <div className="relative flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
             <div className="flex items-center gap-4">
-              <span className="grid size-16 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-[#2A82C4] to-[#1769AA] font-heading text-xl font-bold ring-1 ring-white/20">
+              <span className="grid size-16 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-[#3B82F6] to-[#2563EB] font-heading text-xl font-bold ring-1 ring-white/20">
                 {getInitials(form.name || account.profile?.name || '')}
               </span>
               <div className="min-w-0">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#75D7E8]">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[#93C5FD]">
                   Mi cuenta
                 </p>
                 <h1 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">
@@ -548,7 +544,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                 const active = item.tab ? tab === item.tab : false
                 const className = `rounded-xl border px-3 py-3 text-left transition ${FOCUS_RING} ${
                   active
-                    ? 'border-[#2A82C4]/60 bg-[#1769AA]/20'
+                    ? 'border-[#3B82F6]/60 bg-[#2563EB]/20'
                     : 'border-white/10 bg-white/5 hover:border-white/25 hover:bg-white/10'
                 }`
                 const content = (
@@ -582,7 +578,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
           <div className="relative mt-6 rounded-2xl border border-white/10 bg-white/5 p-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <p className="inline-flex items-center gap-2 text-xs font-semibold text-[#DCEFF6]">
-                <ShieldCheck className="size-4 text-[#75D7E8]" />
+                <ShieldCheck className="size-4 text-[#93C5FD]" />
                 Perfil {completion.percent}% completo
               </p>
               <p className="text-[11px] text-muted-foreground">
@@ -598,7 +594,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
               aria-label="Perfil completo"
             >
               <div
-                className="h-full rounded-full bg-gradient-to-r from-[#1769AA] to-[#2A82C4] transition-[width] duration-500"
+                className="h-full rounded-full bg-gradient-to-r from-[#2563EB] to-[#3B82F6] transition-[width] duration-500"
                 style={{ width: `${completion.percent}%` }}
               />
             </div>
@@ -611,7 +607,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
         </section>
 
         {notice && (
-          <div className="fixed bottom-6 left-1/2 z-[80] flex -translate-x-1/2 items-center gap-2 rounded-full bg-[#0B2236] px-5 py-3 text-sm font-semibold text-white shadow-xl">
+          <div className="fixed bottom-6 left-1/2 z-[80] flex -translate-x-1/2 items-center gap-2 rounded-full bg-[#1E3A8A] px-5 py-3 text-sm font-semibold text-white shadow-xl">
             <Check className="size-4 text-[#00B8D9]" />
             {notice}
           </div>
@@ -640,7 +636,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                     <span
                       className={`grid size-8 place-items-center rounded-lg transition ${
                         active
-                          ? 'bg-[#1769AA] text-white'
+                          ? 'bg-[#2563EB] text-white'
                           : 'bg-muted text-muted-foreground group-hover:bg-card'
                       }`}
                     >
@@ -650,7 +646,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                     {counts[item.id] > 0 && (
                       <span
                         className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
-                          active ? 'bg-[#1769AA]/10 text-blue-ink' : 'bg-muted text-muted-foreground'
+                          active ? 'bg-[#2563EB]/10 text-blue-ink' : 'bg-muted text-muted-foreground'
                         }`}
                       >
                         {counts[item.id]}
@@ -662,7 +658,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
 
               <div className="mt-2 space-y-1 border-t border-border pt-2">
                 <Link
-                  href={storeUrl('/productos')}
+                  href={'/productos'}
                   className={`flex items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold text-muted-foreground transition hover:bg-muted hover:text-blue-ink ${FOCUS_RING}`}
                 >
                   <ShoppingCart className="size-3.5" /> Ir a la tienda
@@ -707,8 +703,8 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                     onClick={() => switchTab(item.id)}
                     className={`inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition ${FOCUS_RING} ${
                       active
-                        ? 'bg-[#1769AA] text-white shadow-sm shadow-[#1769AA]/30'
-                        : 'border border-border bg-card text-muted-foreground hover:border-[#1769AA]/40 hover:text-blue-ink'
+                        ? 'bg-[#2563EB] text-white shadow-sm shadow-[#2563EB]/30'
+                        : 'border border-border bg-card text-muted-foreground hover:border-[#2563EB]/40 hover:text-blue-ink'
                     }`}
                   >
                     <Icon className="size-4" />
@@ -883,7 +879,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                       disabled={!isDirty}
                       className={`inline-flex h-11 items-center gap-2 rounded-xl px-6 text-sm font-bold text-white transition ${FOCUS_RING} ${
                         isDirty
-                          ? 'bg-[#1769AA] hover:bg-[#12568C]'
+                          ? 'bg-[#2563EB] hover:bg-[#1D4ED8]'
                           : 'cursor-not-allowed bg-[#CBD5E1]'
                       }`}
                     >
@@ -941,7 +937,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                       <button
                         type="button"
                         onClick={exportData}
-                        className={`flex h-10 w-full items-center justify-center gap-2 rounded-xl border border-border text-xs font-bold text-muted-foreground transition hover:border-[#1769AA]/40 hover:text-blue-ink ${FOCUS_RING}`}
+                        className={`flex h-10 w-full items-center justify-center gap-2 rounded-xl border border-border text-xs font-bold text-muted-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink ${FOCUS_RING}`}
                       >
                         <Download className="size-3.5" /> Exportar mis datos
                       </button>
@@ -990,7 +986,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                     </p>
                     <Link
                       href="/contacto"
-                      className={`mt-4 inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl border border-border text-xs font-bold text-muted-foreground transition hover:border-[#1769AA]/40 hover:text-blue-ink ${FOCUS_RING}`}
+                      className={`mt-4 inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl border border-border text-xs font-bold text-muted-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink ${FOCUS_RING}`}
                     >
                       Contactar a ventas <ArrowRight className="size-3.5" />
                     </Link>
@@ -1010,8 +1006,8 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                     </p>
                   </div>
                   <Link
-                    href={storeUrl('/productos')}
-                    className={`inline-flex h-10 items-center gap-2 rounded-xl border border-border bg-card px-4 text-xs font-bold text-muted-foreground transition hover:border-[#1769AA]/40 hover:text-blue-ink ${FOCUS_RING}`}
+                    href={'/productos'}
+                    className={`inline-flex h-10 items-center gap-2 rounded-xl border border-border bg-card px-4 text-xs font-bold text-muted-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink ${FOCUS_RING}`}
                   >
                     Explorar tienda <ArrowRight className="size-3.5" />
                   </Link>
@@ -1033,7 +1029,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                           value={favoriteQuery}
                           onChange={(event) => setFavoriteQuery(event.target.value)}
                           placeholder="Buscar por nombre, marca o categoría"
-                          className={`h-10 w-full rounded-xl border border-border bg-card pl-9 pr-3 text-sm outline-none transition focus-visible:border-[#1769AA] ${FOCUS_RING}`}
+                          className={`h-10 w-full rounded-xl border border-border bg-card pl-9 pr-3 text-sm outline-none transition focus-visible:border-[#2563EB] ${FOCUS_RING}`}
                         />
                       </label>
 
@@ -1043,7 +1039,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                           <select
                             value={favoriteSort}
                             onChange={(event) => setFavoriteSort(event.target.value as FavoriteSort)}
-                            className={`h-10 rounded-xl border border-border bg-card px-3 text-xs font-semibold text-muted-foreground outline-none transition focus-visible:border-[#1769AA] ${FOCUS_RING}`}
+                            className={`h-10 rounded-xl border border-border bg-card px-3 text-xs font-semibold text-muted-foreground outline-none transition focus-visible:border-[#2563EB] ${FOCUS_RING}`}
                           >
                             <option value="name">Nombre (A-Z)</option>
                             <option value="brand">Marca</option>
@@ -1093,7 +1089,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                         <button
                           type="button"
                           onClick={() => setFavoriteQuery('')}
-                          className={`mt-4 inline-flex h-9 items-center gap-2 rounded-xl border border-border bg-card px-4 text-xs font-bold text-muted-foreground transition hover:border-[#1769AA]/40 hover:text-blue-ink ${FOCUS_RING}`}
+                          className={`mt-4 inline-flex h-9 items-center gap-2 rounded-xl border border-border bg-card px-4 text-xs font-bold text-muted-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink ${FOCUS_RING}`}
                         >
                           Limpiar búsqueda
                         </button>
@@ -1107,9 +1103,9 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                           {filteredFavorites.map((product) => (
                             <article
                               key={product.id}
-                              className="flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition hover:border-[#1769AA]/30 hover:shadow-lg hover:shadow-black/5"
+                              className="flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition hover:border-[#2563EB]/30 hover:shadow-lg hover:shadow-black/5"
                             >
-                              <Link href={storeUrl(`/productos/${product.slug}`)} className="block bg-muted p-4">
+                              <Link href={`/productos/${product.slug}`} className="block bg-muted p-4">
                                 <img
                                   src={product.image}
                                   alt={product.name}
@@ -1122,7 +1118,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                                   {product.brand} / {product.category}
                                 </p>
                                 <Link
-                                  href={storeUrl(`/productos/${product.slug}`)}
+                                  href={`/productos/${product.slug}`}
                                   className={`mt-1.5 line-clamp-2 text-sm font-bold leading-5 hover:text-blue-ink ${FOCUS_RING}`}
                                 >
                                   {product.name}
@@ -1137,7 +1133,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                                   <button
                                     type="button"
                                     onClick={() => addToQuote(product.id, product.name)}
-                                    className={`inline-flex h-9 flex-1 items-center justify-center gap-2 rounded-lg bg-[#1769AA] text-xs font-bold text-white transition hover:bg-[#12568C] ${FOCUS_RING}`}
+                                    className={`inline-flex h-9 flex-1 items-center justify-center gap-2 rounded-lg bg-[#2563EB] text-xs font-bold text-white transition hover:bg-[#1D4ED8] ${FOCUS_RING}`}
                                   >
                                     <ShoppingCart className="size-3.5" /> Cotizar
                                   </button>
@@ -1204,8 +1200,8 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                       </>
                     )}
                     <Link
-                      href={storeUrl('/productos')}
-                      className={`inline-flex h-10 items-center gap-2 rounded-xl bg-[#1769AA] px-4 text-xs font-bold text-white transition hover:bg-[#12568C] ${FOCUS_RING}`}
+                      href={'/productos'}
+                      className={`inline-flex h-10 items-center gap-2 rounded-xl bg-[#2563EB] px-4 text-xs font-bold text-white transition hover:bg-[#1D4ED8] ${FOCUS_RING}`}
                     >
                       Nueva cotización <ArrowRight className="size-3.5" />
                     </Link>
@@ -1246,8 +1242,8 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                               aria-pressed={active}
                               className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[11px] font-bold transition ${FOCUS_RING} ${
                                 active
-                                  ? 'border-[#1769AA] bg-[#1769AA] text-white'
-                                  : 'border-border bg-card text-muted-foreground hover:border-[#1769AA]/40 hover:text-blue-ink'
+                                  ? 'border-[#2563EB] bg-[#2563EB] text-white'
+                                  : 'border-border bg-card text-muted-foreground hover:border-[#2563EB]/40 hover:text-blue-ink'
                               }`}
                             >
                               {filter.label}
@@ -1274,7 +1270,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                               setShowAllQuotes(false)
                             }}
                             placeholder="Código o producto"
-                            className={`h-10 w-full rounded-xl border border-border bg-card pl-9 pr-3 text-sm outline-none transition focus-visible:border-[#1769AA] ${FOCUS_RING}`}
+                            className={`h-10 w-full rounded-xl border border-border bg-card pl-9 pr-3 text-sm outline-none transition focus-visible:border-[#2563EB] ${FOCUS_RING}`}
                           />
                         </label>
 
@@ -1283,7 +1279,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                           <select
                             value={quoteSort}
                             onChange={(event) => setQuoteSort(event.target.value as QuoteSort)}
-                            className={`h-10 rounded-xl border border-border bg-card px-3 text-xs font-semibold text-muted-foreground outline-none transition focus-visible:border-[#1769AA] ${FOCUS_RING}`}
+                            className={`h-10 rounded-xl border border-border bg-card px-3 text-xs font-semibold text-muted-foreground outline-none transition focus-visible:border-[#2563EB] ${FOCUS_RING}`}
                           >
                             <option value="recientes">Más recientes</option>
                             <option value="antiguas">Más antiguas</option>
@@ -1307,7 +1303,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                             setQuoteFilter('todas')
                             setQuoteQuery('')
                           }}
-                          className={`mt-4 inline-flex h-9 items-center gap-2 rounded-xl border border-border bg-card px-4 text-xs font-bold text-muted-foreground transition hover:border-[#1769AA]/40 hover:text-blue-ink ${FOCUS_RING}`}
+                          className={`mt-4 inline-flex h-9 items-center gap-2 rounded-xl border border-border bg-card px-4 text-xs font-bold text-muted-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink ${FOCUS_RING}`}
                         >
                           Limpiar filtros
                         </button>
@@ -1324,7 +1320,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                           return (
                             <article
                               key={savedQuote.id}
-                              className="overflow-hidden rounded-2xl border border-border bg-card transition hover:border-[#1769AA]/30"
+                              className="overflow-hidden rounded-2xl border border-border bg-card transition hover:border-[#2563EB]/30"
                             >
                               <div className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
                                 <div className="min-w-0">
@@ -1374,7 +1370,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                                     type="button"
                                     onClick={() => setExpandedQuote(isExpanded ? null : savedQuote.id)}
                                     aria-expanded={isExpanded}
-                                    className={`inline-flex h-9 items-center gap-1.5 rounded-lg border border-border px-3 text-xs font-bold text-muted-foreground transition hover:border-[#1769AA]/40 hover:text-blue-ink ${FOCUS_RING}`}
+                                    className={`inline-flex h-9 items-center gap-1.5 rounded-lg border border-border px-3 text-xs font-bold text-muted-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink ${FOCUS_RING}`}
                                   >
                                     {isExpanded ? 'Ocultar' : 'Ver detalle'}
                                     <ChevronDown
@@ -1393,7 +1389,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                                     type="button"
                                     onClick={() => handleDownloadPdf(savedQuote)}
                                     disabled={downloadingId === savedQuote.id}
-                                    className={`inline-flex h-9 items-center gap-1.5 rounded-lg border border-border px-3 text-xs font-bold text-muted-foreground transition hover:border-[#1769AA]/40 hover:text-blue-ink disabled:cursor-not-allowed disabled:opacity-60 ${FOCUS_RING}`}
+                                    className={`inline-flex h-9 items-center gap-1.5 rounded-lg border border-border px-3 text-xs font-bold text-muted-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink disabled:cursor-not-allowed disabled:opacity-60 ${FOCUS_RING}`}
                                   >
                                     {downloadingId === savedQuote.id ? (
                                       <Loader2 className="size-3.5 animate-spin" />
@@ -1405,7 +1401,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                                   <button
                                     type="button"
                                     onClick={() => repeatQuote(savedQuote)}
-                                    className={`inline-flex h-9 items-center gap-1.5 rounded-lg bg-[#1769AA] px-3 text-xs font-bold text-white transition hover:bg-[#12568C] ${FOCUS_RING}`}
+                                    className={`inline-flex h-9 items-center gap-1.5 rounded-lg bg-[#2563EB] px-3 text-xs font-bold text-white transition hover:bg-[#1D4ED8] ${FOCUS_RING}`}
                                   >
                                     <ShoppingCart className="size-3.5" /> Repetir
                                   </button>
@@ -1506,7 +1502,7 @@ export function AccountPage({ customer }: { customer: SessionCustomer }) {
                           <button
                             type="button"
                             onClick={() => setShowAllQuotes((value) => !value)}
-                            className={`mx-auto flex h-10 items-center gap-2 rounded-xl border border-border bg-card px-4 text-xs font-bold text-muted-foreground transition hover:border-[#1769AA]/40 hover:text-blue-ink ${FOCUS_RING}`}
+                            className={`mx-auto flex h-10 items-center gap-2 rounded-xl border border-border bg-card px-4 text-xs font-bold text-muted-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink ${FOCUS_RING}`}
                           >
                             {showAllQuotes
                               ? 'Ver menos'
@@ -1546,8 +1542,8 @@ function EmptyState({
       <p className="mt-5 text-base font-bold">{title}</p>
       <p className="mt-2 max-w-md text-sm leading-6 text-muted-foreground">{description}</p>
       <Link
-        href={storeUrl('/productos')}
-        className="mt-6 inline-flex h-10 items-center gap-2 rounded-xl bg-[#1769AA] px-5 text-xs font-bold text-white transition hover:bg-[#12568C]"
+        href={'/productos'}
+        className="mt-6 inline-flex h-10 items-center gap-2 rounded-xl bg-[#2563EB] px-5 text-xs font-bold text-white transition hover:bg-[#1D4ED8]"
       >
         Ir a la tienda <ArrowRight className="size-3.5" />
       </Link>

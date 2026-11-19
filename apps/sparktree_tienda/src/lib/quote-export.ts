@@ -1,5 +1,13 @@
-import { EMPRESA } from '@/lib/constants'
+import { COMPANY } from '@/lib/store-nav'
 import { documentLabel, formatQuoteDate, type SavedQuote } from '@/lib/account'
+
+const BRAND = {
+  name: 'SparkTree Store',
+  tagline: 'Equipos y tecnología empresarial',
+}
+
+const WHATSAPP_URL =
+  COMPANY.socials.find((social) => social.id === 'whatsapp')?.href ?? 'https://wa.me/51999888777'
 
 const CONTACT_PREFERENCES: Record<SavedQuote['contactPreference'], string> = {
   email: 'Email',
@@ -8,12 +16,12 @@ const CONTACT_PREFERENCES: Record<SavedQuote['contactPreference'], string> = {
 }
 
 function whatsappNumber(): string {
-  return EMPRESA.redesSociales.whatsapp.replace(/\D/g, '')
+  return WHATSAPP_URL.replace(/\D/g, '')
 }
 
 export function buildQuoteWhatsAppMessage(quote: SavedQuote): string {
   const lines = [
-    `Hola ${EMPRESA.nombre}, acabo de enviar la cotización *${quote.code}*.`,
+    `Hola ${BRAND.name}, acabo de enviar la cotización *${quote.code}*.`,
     '',
     'Productos solicitados:',
     ...quote.items.map(
@@ -48,7 +56,7 @@ const PAGE = {
   contentBottom: 261,
   colors: {
     dark: [15, 23, 42] as PdfColor,
-    blue: [23, 105, 170] as PdfColor,
+    blue: [37, 99, 235] as PdfColor,
     gray: [100, 116, 139] as PdfColor,
     border: [226, 232, 240] as PdfColor,
     light: [248, 250, 252] as PdfColor,
@@ -131,12 +139,12 @@ export async function downloadQuotePdf(quote: SavedQuote): Promise<boolean> {
         doc.text('SparkTree', margin, 25)
         const brandWidth = doc.getTextWidth('SparkTree ')
         setText(colors.blue)
-        doc.text('Systems', margin + brandWidth, 25)
+        doc.text('Store', margin + brandWidth, 25)
 
         doc.setFont('helvetica', 'normal')
         doc.setFontSize(7.5)
         setText(colors.gray)
-        doc.text(EMPRESA.tagline, margin, 30)
+        doc.text(BRAND.tagline, margin, 30)
 
         const metaWidth = 64
         const metaX = width - margin - metaWidth
@@ -172,7 +180,7 @@ export async function downloadQuotePdf(quote: SavedQuote): Promise<boolean> {
       doc.text('SparkTree', margin, 23)
       const brandWidth = doc.getTextWidth('SparkTree ')
       setText(colors.blue)
-      doc.text('Systems', margin + brandWidth, 23)
+      doc.text('Store', margin + brandWidth, 23)
 
       doc.setFont('helvetica', 'normal')
       doc.setFontSize(7.5)
@@ -402,8 +410,8 @@ export async function downloadQuotePdf(quote: SavedQuote): Promise<boolean> {
       doc.setFont('helvetica', 'normal')
       doc.setFontSize(6.5)
       setText(colors.gray)
-      doc.text(`${EMPRESA.nombre} · ${EMPRESA.telefono} · ${EMPRESA.email}`, margin, footerLine + 5)
-      doc.text(`${EMPRESA.direccion} · ${EMPRESA.horario}`, margin, footerLine + 9)
+      doc.text(`${BRAND.name} · ${COMPANY.phone} · ${COMPANY.email}`, margin, footerLine + 5)
+      doc.text(`${COMPANY.location} · ${COMPANY.hours}`, margin, footerLine + 9)
       doc.text(quote.code, width - margin, footerLine + 5, { align: 'right' })
       doc.text(`Página ${page} de ${totalPages}`, width - margin, footerLine + 9, { align: 'right' })
     }

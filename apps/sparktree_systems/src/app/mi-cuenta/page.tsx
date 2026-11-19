@@ -1,31 +1,17 @@
-import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
-import { AccountPage } from '@/components/sections/account-page'
-import { getCustomerSession } from '@/lib/customer/session'
 
-export const metadata: Metadata = {
-  title: 'Mi cuenta | SparkTree Systems',
-  description:
-    'Administra tu perfil, tus productos favoritos y el historial de cotizaciones de SparkTree Systems.',
-  robots: { index: false, follow: false },
-}
+const storeAppUrl = (process.env.NEXT_PUBLIC_STORE_APP_URL ?? 'http://localhost:3006').replace(/\/$/, '')
 
-export default async function MiCuentaPage() {
-  const customer = await getCustomerSession()
-  if (!customer) redirect('/login?next=%2Fmi-cuenta')
+type SearchParams = Promise<Record<string, string | string[] | undefined>>
 
-  return (
-    <AccountPage
-      customer={{
-        id: customer.id,
-        name: customer.name,
-        email: customer.email,
-        phone: customer.phone,
-        company: customer.company,
-        documentType: customer.documentType,
-        documentNumber: customer.documentNumber,
-        createdAt: customer.createdAt,
-      }}
-    />
-  )
+export default async function MiCuentaRedirect({ searchParams }: { searchParams: SearchParams }) {
+  const params = await searchParams
+  const query = new URLSearchParams()
+
+  for (const [key, value] of Object.entries(params)) {
+    if (typeof value === 'string' && value) query.set(key, value)
+  }
+
+  const qs = query.toString()
+  redirect(`${storeAppUrl}/mi-cuenta${qs ? `?${qs}` : ''}`)
 }

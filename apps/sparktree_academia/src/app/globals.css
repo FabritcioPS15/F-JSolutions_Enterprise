@@ -50,3 +50,77 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #4267c7;
 }
+
+.academy-grid {
+  background-image:
+    linear-gradient(to right, rgb(66 103 199 / 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(66 103 199 / 0.06) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse at 72% 18%, black, transparent 72%);
+}
+
+@keyframes academy-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes academy-float {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, -14px, 0);
+  }
+}
+
+@keyframes academy-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.academy-rise {
+  opacity: 0;
+  animation: academy-rise 0.75s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.academy-float {
+  animation: academy-float 9s ease-in-out infinite alternate;
+}
+
+.academy-float-slow {
+  animation: academy-float 13s ease-in-out infinite alternate-reverse;
+}
+
+.academy-underline {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  animation: academy-draw 0.9s 0.55s ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .academy-rise {
+    opacity: 1;
+    animation: none;
+  }
+
+  .academy-float,
+  .academy-float-slow {
+    animation: none;
+  }
+
+  .academy-underline {
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+    animation: none;
+  }
+}

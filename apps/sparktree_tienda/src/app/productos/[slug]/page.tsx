@@ -10,9 +10,9 @@ import {
   Truck,
 } from 'lucide-react'
 import { ProductCard } from '@/components/product-card'
+import { AddToQuoteButton } from '@/components/add-to-quote'
 import { findProductBySlug, products } from '@/lib/catalog'
 import { formatPrice } from '@/lib/catalog-query'
-import { corporateUrl } from '@/lib/store-nav'
 
 const availabilityLabels = {
   available: 'Disponible',
@@ -126,23 +126,16 @@ export default async function StoreProductPage({ params }: PageProps) {
               Precio referencial en soles, sujeto a stock y cotización formal.
             </p>
 
-            <div className="mt-4 flex flex-col gap-2 sm:flex-row">
+            <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-start">
+              <AddToQuoteButton productId={product.id} productName={product.name} />
               <a
                 href={`https://wa.me/51923055963?text=${quoteMessage}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-2.5 text-xs font-bold text-white transition hover:bg-emerald-500"
+                className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-border bg-card px-4 py-2.5 text-xs font-bold text-foreground transition hover:border-emerald-500/40 hover:text-emerald-600"
               >
                 <MessageCircle className="size-4" aria-hidden="true" />
                 Cotizar por WhatsApp
-              </a>
-              <a
-                href={corporateUrl('/cotizacion')}
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl border border-border bg-card px-4 py-2.5 text-xs font-bold text-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink"
-              >
-                Formulario de cotización
               </a>
             </div>
           </div>

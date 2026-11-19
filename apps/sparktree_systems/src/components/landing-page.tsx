@@ -30,7 +30,6 @@ import { categories } from '@/lib/catalog'
 import { getFeaturedProducts } from '@/lib/product-feed'
 import { storeUrl } from '@/lib/store-url'
 import { cn } from '@/lib/utils'
-import { useQuote } from '@/lib/use-quote'
 
 const businessLinks = [
   'Ventas corporativas',
@@ -94,7 +93,6 @@ const enterpriseServices = [
 
 
 export function LandingPage() {
-  const quote = useQuote()
   const [category, setCategory] = useState('Todas')
   const [categoryOpen, setCategoryOpen] = useState(false)
   const [visiblePages, setVisiblePages] = useState(1)
@@ -156,7 +154,7 @@ export function LandingPage() {
 
   return (
     <main className="min-h-screen overflow-x-clip bg-muted text-foreground">
-      <EnhancedHeader quoteCount={quote.count} />
+      <EnhancedHeader />
 
       <HomeHero />
 
@@ -265,7 +263,7 @@ export function LandingPage() {
                   key={product.id}
                   className="w-[86%] shrink-0 snap-start sm:w-[calc(50%-6px)] lg:w-[calc(33.333%-10.667px)] xl:w-[calc(25%-12px)]"
                 >
-                  <ProductCard product={product} onAddToQuote={quote.addItem} />
+                  <ProductCard product={product} />
                 </div>
               ))}
             </div>
@@ -295,7 +293,7 @@ export function LandingPage() {
           <div className="mt-8 flex flex-wrap gap-2 rounded-xl border border-blue-ink/25 bg-muted p-4">
             {businessLinks.map((link, index) => (
               <Reveal key={link} delay={index * 50}>
-                <a href={link.includes('Soporte') ? '/soporte-ti' : '/cotizacion'} className="inline-flex rounded-full border border-blue-ink/30 bg-card px-3 py-2 text-xs font-bold text-blue-ink transition duration-300 hover:-translate-y-0.5 hover:border-[#1465a6]/40 hover:bg-tint-blue hover:shadow-sm">{link}</a>
+                <a href={link.includes('Soporte') ? '/soporte-ti' : storeUrl('/cotizacion')} className="inline-flex rounded-full border border-blue-ink/30 bg-card px-3 py-2 text-xs font-bold text-blue-ink transition duration-300 hover:-translate-y-0.5 hover:border-[#1465a6]/40 hover:bg-tint-blue hover:shadow-sm">{link}</a>
               </Reveal>
             ))}
           </div>

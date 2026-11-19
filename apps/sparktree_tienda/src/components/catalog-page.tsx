@@ -958,7 +958,7 @@ export function CatalogPage() {
                   Limpiar filtros
                 </button>
                 <a
-                  href={corporateUrl('/cotizacion')}
+                  href="/cotizacion"
                   className="inline-flex h-11 items-center gap-2 rounded-xl bg-[#2563EB] px-5 text-xs font-bold text-white shadow-xs transition hover:bg-[#1D4ED8]"
                 >
                   Solicitar cotización a medida
@@ -991,7 +991,7 @@ export function CatalogPage() {
 
             <div className="flex shrink-0 flex-wrap items-center gap-3">
               <a
-                href={corporateUrl('/cotizacion')}
+                href="/cotizacion"
                 className="inline-flex h-11 items-center gap-2 rounded-xl bg-[#2563EB] px-5 text-xs font-bold text-white transition hover:bg-[#1D4ED8]"
               >
                 Solicitar cotización

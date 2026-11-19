@@ -20,6 +20,7 @@ import {
 } from 'lucide-react'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { COMPANY, ECOSYSTEM_NAV, GROUP_URL, STORE_NAV, corporateUrl } from '@/lib/store-nav'
+import { useQuote } from '@/lib/use-quote'
 
 type StoreCategory = { value: string; label: string }
 
@@ -97,6 +98,7 @@ function CategoryPanel({
 export function StoreHeader({ categories }: StoreHeaderProps) {
   const pathname = usePathname()
   const router = useRouter()
+  const quote = useQuote()
   const [menuOpen, setMenuOpen] = useState(false)
   const [categoriesOpen, setCategoriesOpen] = useState(false)
   const [ecosystemOpen, setEcosystemOpen] = useState(false)
@@ -148,6 +150,8 @@ export function StoreHeader({ categories }: StoreHeaderProps) {
     if (href === '/') return pathname === '/'
     return pathname === href || pathname.startsWith(`${href}/`)
   }
+
+  if (pathname === '/login' || pathname === '/registro') return null
 
   return (
     <header className="sticky top-0 z-50">
@@ -256,20 +260,28 @@ export function StoreHeader({ categories }: StoreHeaderProps) {
 
           <div className="flex items-center gap-1 sm:gap-1.5">
             <ThemeToggle />
-            <a
-              href={corporateUrl('/mi-cuenta')}
+            <Link
+              href="/mi-cuenta"
               className="hidden items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-muted-foreground transition hover:bg-muted hover:text-blue-ink xl:flex"
             >
               <UserRound className="size-4" />
               Mi cuenta
-            </a>
-            <a
-              href={corporateUrl('/cotizacion')}
-              className="hidden items-center gap-2 rounded-lg bg-[#2563EB] px-3.5 py-2 text-sm font-semibold text-white transition hover:bg-[#1D4ED8] sm:flex"
+            </Link>
+            <Link
+              href="/cotizacion"
+              aria-label={
+                quote.count > 0 ? `Mi cotización (${quote.count} productos)` : 'Mi cotización'
+              }
+              className="relative hidden items-center gap-2 rounded-lg bg-[#2563EB] px-3.5 py-2 text-sm font-semibold text-white transition hover:bg-[#1D4ED8] sm:flex"
             >
               <FileText className="size-4" />
               Cotizar
-            </a>
+              {quote.count > 0 && (
+                <span className="grid min-w-5 place-items-center rounded-full bg-white px-1.5 text-[11px] font-bold text-[#2563EB]">
+                  {quote.count}
+                </span>
+              )}
+            </Link>
             <button
               type="button"
               onClick={() => setMenuOpen((value) => !value)}
@@ -443,6 +455,30 @@ export function StoreHeader({ categories }: StoreHeaderProps) {
             )}
           </div>
 
+          <div className="mb-3 grid gap-1 border-t border-border pt-3 text-sm">
+            <Link
+              href="/mi-cuenta"
+              onClick={() => setMenuOpen(false)}
+              className="flex items-center gap-2.5 rounded-xl px-4 py-2.5 font-semibold text-foreground transition hover:bg-muted"
+            >
+              <UserRound className="size-4 text-blue-ink" /> Mi cuenta
+            </Link>
+            <Link
+              href="/cotizacion"
+              onClick={() => setMenuOpen(false)}
+              className="flex items-center justify-between gap-2.5 rounded-xl px-4 py-2.5 font-semibold text-foreground transition hover:bg-muted"
+            >
+              <span className="flex items-center gap-2.5">
+                <FileText className="size-4 text-blue-ink" /> Mi cotización
+              </span>
+              {quote.count > 0 && (
+                <span className="rounded-full bg-[#2563EB] px-2 py-0.5 text-[11px] font-bold text-white">
+                  {quote.count}
+                </span>
+              )}
+            </Link>
+          </div>
+
           <div className="mt-4 grid gap-2.5 border-t border-border pt-4 text-sm">
             <a href={COMPANY.phoneHref} className="flex items-center gap-2 text-muted-foreground">
               <Phone className="size-4 text-blue-ink" /> {COMPANY.phone}
@@ -450,9 +486,13 @@ export function StoreHeader({ categories }: StoreHeaderProps) {
             <a href={`mailto:${COMPANY.email}`} className="flex items-center gap-2 text-muted-foreground">
               <Mail className="size-4 text-blue-ink" /> {COMPANY.email}
             </a>
-            <a href={corporateUrl('/cotizacion')} className="mt-1 flex items-center justify-center gap-2 rounded-lg bg-[#2563EB] py-2.5 text-sm font-semibold text-white transition hover:bg-[#1D4ED8]">
+            <Link
+              href="/cotizacion"
+              onClick={() => setMenuOpen(false)}
+              className="mt-1 flex items-center justify-center gap-2 rounded-lg bg-[#2563EB] py-2.5 text-sm font-semibold text-white transition hover:bg-[#1D4ED8]"
+            >
               <FileText className="size-4" /> Solicitar cotización
-            </a>
+            </Link>
           </div>
         </div>
       )}

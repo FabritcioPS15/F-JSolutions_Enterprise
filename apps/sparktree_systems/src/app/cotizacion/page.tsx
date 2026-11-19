@@ -1,12 +1,17 @@
-import type { Metadata } from 'next'
-import { QuotePage } from '@/components/sections/quote-page'
+import { redirect } from 'next/navigation'
 
-export const metadata: Metadata = {
-  title: 'Solicitar cotización | SparkTree',
-  description:
-    'Completa tu solicitud de cotización de equipos, infraestructura TI o desarrollo de software. Un asesor te responde en menos de 24 horas hábiles.',
-}
+const storeAppUrl = (process.env.NEXT_PUBLIC_STORE_APP_URL ?? 'http://localhost:3006').replace(/\/$/, '')
 
-export default function CotizacionPage() {
-  return <QuotePage />
+type SearchParams = Promise<Record<string, string | string[] | undefined>>
+
+export default async function CotizacionRedirect({ searchParams }: { searchParams: SearchParams }) {
+  const params = await searchParams
+  const query = new URLSearchParams()
+
+  for (const [key, value] of Object.entries(params)) {
+    if (typeof value === 'string' && value) query.set(key, value)
+  }
+
+  const qs = query.toString()
+  redirect(`${storeAppUrl}/cotizacion${qs ? `?${qs}` : ''}`)
 }

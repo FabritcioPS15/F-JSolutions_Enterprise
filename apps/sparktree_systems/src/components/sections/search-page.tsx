@@ -17,7 +17,6 @@ import {
 } from 'lucide-react'
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
 import { storeUrl } from '@/lib/store-url'
-import { useQuote } from '@/lib/use-quote'
 import {
   popularSearches,
   quickSearchLinks,
@@ -73,7 +72,6 @@ function ResultRow({ item }: { item: SiteSearchResult }) {
 export function SearchPage() {
   const searchParams = useSearchParams()
   const router = useRouter()
-  const quote = useQuote()
 
   const q = (searchParams?.get('q') ?? '').trim()
   const [input, setInput] = useState(q)
@@ -109,7 +107,7 @@ export function SearchPage() {
 
   return (
     <main className="min-h-screen bg-muted text-foreground">
-      <EnhancedHeader quoteCount={quote.count} />
+      <EnhancedHeader />
 
       <div className="border-b border-border bg-card">
         <div className="mx-auto flex max-w-[1100px] items-center gap-2 px-4 py-3 text-xs text-muted-foreground sm:px-6 lg:px-8">

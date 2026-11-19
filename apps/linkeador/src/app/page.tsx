@@ -16,7 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const image = `/opengraph-image?v=${encodeURIComponent(profile.updatedAt)}`
   return {
     metadataBase: new URL(baseUrl),
-    title,
+    title: 'SparkTree Studio | Linkeador',
     description,
     openGraph: {
       title,

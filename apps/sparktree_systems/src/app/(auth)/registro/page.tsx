@@ -1,18 +1,17 @@
-import type { Metadata } from 'next'
 import { redirect } from 'next/navigation'
-import { RegisterForm } from '@/components/auth/register-form'
-import { oauthAvailability } from '@/lib/customer/oauth'
-import { getCustomerSession } from '@/lib/customer/session'
 
-export const metadata: Metadata = {
-  title: 'Crear cuenta | SparkTree Systems',
-  description: 'Regístrate para guardar tus cotizaciones, favoritos y solicitudes de soporte.',
-  robots: { index: false, follow: true },
-}
+const storeAppUrl = (process.env.NEXT_PUBLIC_STORE_APP_URL ?? 'http://localhost:3006').replace(/\/$/, '')
 
-export default async function RegistroPage() {
-  const session = await getCustomerSession()
-  if (session) redirect('/mi-cuenta')
+type SearchParams = Promise<Record<string, string | string[] | undefined>>
 
-  return <RegisterForm availability={oauthAvailability()} />
+export default async function RegistroRedirect({ searchParams }: { searchParams: SearchParams }) {
+  const params = await searchParams
+  const query = new URLSearchParams()
+
+  for (const [key, value] of Object.entries(params)) {
+    if (typeof value === 'string' && value) query.set(key, value)
+  }
+
+  const qs = query.toString()
+  redirect(`${storeAppUrl}/registro${qs ? `?${qs}` : ''}`)
 }

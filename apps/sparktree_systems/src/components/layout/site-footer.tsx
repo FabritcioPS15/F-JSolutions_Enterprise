@@ -22,7 +22,7 @@ interface FooterColumn {
 
 const FOOTER_COLUMNS: FooterColumn[] = [
   {
-    title: 'Tienda de equipos TI',
+    title: 'SparkTree Store | Tienda de equipos TI',
     links: [
       { label: 'Computadoras y laptops', href: storeUrl('/productos?categoria=PC y Servidores') },
       { label: 'Componentes y periféricos', href: storeUrl('/productos?categoria=Componentes') },
@@ -60,8 +60,8 @@ const FOOTER_COLUMNS: FooterColumn[] = [
   {
     title: 'Atención y cotizaciones',
     links: [
-      { label: 'Solicitar cotización', href: '/cotizacion' },
-      { label: 'Consultar productos', href: '/cotizador' },
+      { label: 'Solicitar cotización', href: storeUrl('/cotizacion') },
+      { label: 'Consultar productos', href: storeUrl('/productos') },
       { label: 'Atención empresarial', href: '/contacto' },
       { label: 'Preguntas frecuentes', href: '/preguntas-frecuentes' },
       { label: 'Libro de reclamaciones', href: '/libro-de-reclamaciones' },

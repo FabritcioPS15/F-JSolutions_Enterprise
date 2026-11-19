@@ -20,7 +20,7 @@ type Availability = { google: boolean; facebook: boolean }
 type Notice = { tone: 'success' | 'error'; title: string; message?: string }
 
 const fieldClass =
-  'mt-1 h-10 w-full rounded-xl border border-border bg-card px-3 text-sm font-normal text-foreground outline-none transition placeholder:text-muted-foreground focus:border-[#1769AA] focus:ring-2 focus:ring-[#1769AA]/15 aria-[invalid=true]:border-destructive'
+  'mt-1 h-10 w-full rounded-xl border border-border bg-card px-3 text-sm font-normal text-foreground outline-none transition placeholder:text-muted-foreground focus:border-[#2563EB] focus:ring-2 focus:ring-[#2563EB]/15 aria-[invalid=true]:border-destructive'
 
 const oauthErrorMessages: Record<string, string> = {
   cancelado: 'Cancelaste el acceso con el proveedor. Puedes intentarlo de nuevo.',
@@ -206,7 +206,7 @@ export function LoginForm({
         <button
           type="submit"
           disabled={status === 'sending'}
-          className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-[#1769AA] text-sm font-bold text-white transition hover:bg-[#12568C] disabled:opacity-60"
+          className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-xl bg-[#2563EB] text-sm font-bold text-white transition hover:bg-[#1D4ED8] disabled:opacity-60"
         >
           {status === 'sending' && <Loader2 aria-hidden="true" className="size-4 animate-spin" />}
           {status === 'sending' ? 'Ingresando…' : 'Iniciar sesión'}
@@ -232,13 +232,13 @@ export function LoginForm({
             <div className="mt-2.5 grid grid-cols-2 gap-2">
               <a
                 href={devHref('persona')}
-                className="inline-flex h-9 items-center justify-center rounded-lg border border-brand-ink/40 bg-card px-2 text-xs font-bold text-brand-ink transition hover:border-[#1769AA] hover:bg-brand-soft"
+                className="inline-flex h-9 items-center justify-center rounded-lg border border-brand-ink/40 bg-card px-2 text-xs font-bold text-brand-ink transition hover:border-[#2563EB] hover:bg-brand-soft"
               >
                 Persona natural
               </a>
               <a
                 href={devHref('empresa')}
-                className="inline-flex h-9 items-center justify-center rounded-lg border border-brand-ink/40 bg-card px-2 text-xs font-bold text-brand-ink transition hover:border-[#1769AA] hover:bg-brand-soft"
+                className="inline-flex h-9 items-center justify-center rounded-lg border border-brand-ink/40 bg-card px-2 text-xs font-bold text-brand-ink transition hover:border-[#2563EB] hover:bg-brand-soft"
               >
                 Empresa
               </a>
@@ -257,7 +257,7 @@ export function LoginForm({
             type="button"
             onClick={handleResend}
             disabled={status === 'resending'}
-            className="mt-2 inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-border bg-card px-3 text-xs font-bold text-foreground transition hover:border-[#1769AA]/40 hover:text-blue-ink disabled:opacity-60"
+            className="mt-2 inline-flex h-9 items-center justify-center gap-2 rounded-lg border border-border bg-card px-3 text-xs font-bold text-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink disabled:opacity-60"
           >
             {status === 'resending' && <Loader2 aria-hidden="true" className="size-3.5 animate-spin" />}
             Reenviar enlace de confirmación

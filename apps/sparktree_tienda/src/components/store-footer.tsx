@@ -52,8 +52,8 @@ const CORPORATE_COLUMNS: FooterColumn[] = [
   {
     title: 'Atención y cotizaciones',
     links: [
-      { label: 'Solicitar cotización', href: corporateUrl('/cotizacion') },
-      { label: 'Mi cuenta', href: corporateUrl('/mi-cuenta') },
+      { label: 'Solicitar cotización', href: '/cotizacion' },
+      { label: 'Mi cuenta', href: '/mi-cuenta' },
       { label: 'Contacto', href: corporateUrl('/contacto') },
       { label: 'Preguntas frecuentes', href: corporateUrl('/preguntas-frecuentes') },
       { label: 'Libro de reclamaciones', href: corporateUrl('/libro-de-reclamaciones') },
@@ -193,6 +193,8 @@ export function StoreFooter({ categories }: { categories: StoreCategory[] }) {
   const currentYear = new Date().getFullYear()
   const pathname = usePathname()
 
+  if (pathname === '/login' || pathname === '/registro') return null
+
   const featured = categories
     .filter((category) =>
       FEATURED_LABELS.some((label) => category.label.toLowerCase().startsWith(label.toLowerCase()))
@@ -201,7 +203,7 @@ export function StoreFooter({ categories }: { categories: StoreCategory[] }) {
 
   const columns: FooterColumn[] = [
     {
-      title: 'Tienda de equipos TI',
+      title: 'SparkTree Store | Tienda de equipos TI ',
       links: [
         ...featured.map((category) => ({
           label: category.label,

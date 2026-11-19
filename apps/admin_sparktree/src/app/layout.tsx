@@ -14,8 +14,8 @@ const themeScript = `(function(){try{var t=localStorage.getItem('fj-theme');var 
 
 export const metadata: Metadata = {
   title: {
-    default: 'SparkTree Systems · Administración',
-    template: '%s · SparkTree Systems',
+    default: 'SparkTree | Administración',
+    template: '%s | SparkTree',
   },
   description: 'Panel de administración del catálogo de SparkTree Systems.',
   icons: {
