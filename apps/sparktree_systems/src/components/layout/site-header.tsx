@@ -55,7 +55,7 @@ const navLinks = [
   { label: 'Servicios', href: '/servicios', hasMenu: true },
   { label: 'Soporte TI', href: '/soporte-ti' },
   { label: 'Sistemas', href: '/sistemas', hasMenu: true },
-  { label: 'Cotizador', href: '/cotizacion' },
+  { label: 'Cotizador', href: '/cotizador-servicios' },
   { label: 'Contacto', href: '/#contacto' },
 ]
 
@@ -286,7 +286,7 @@ export function SiteHeader({ quoteCount = 0, onQuoteClick }: SiteHeaderProps) {
 
   const goToCart = () => {
     if (onQuoteClick) { onQuoteClick(); return }
-    router.push('/cotizacion')
+    router.push('/cotizador-servicios')
   }
 
   const submitSearch = (e: React.FormEvent<HTMLFormElement>) => {
@@ -330,7 +330,7 @@ export function SiteHeader({ quoteCount = 0, onQuoteClick }: SiteHeaderProps) {
             <span className="hidden items-center gap-1.5 md:flex">
               <Clock className="size-3.5 text-[#75D7E8]" /> Lun–Sáb · 9:00 a 18:00
             </span>
-            <Link href="/cotizacion" className="transition hover:text-white">Ventas corporativas</Link>
+            <Link href="/cotizador-servicios" className="transition hover:text-white">Ventas corporativas</Link>
             <Link href="/soporte-ti" className="transition hover:text-white">Mesa de ayuda</Link>
             <button
               type="button"

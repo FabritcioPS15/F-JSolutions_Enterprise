@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react'
 import {
+  HERO_BODY,
   HERO_CONTAINER,
+  HERO_VIEWPORT_BODY,
   HeroActions,
   HeroEyebrow,
   HeroLead,
@@ -38,8 +40,8 @@ export function EditorialHero({
   size = 'lg',
 }: EditorialHeroProps) {
   return (
-    <HeroSection id={id}>
-      <div className={`${HERO_CONTAINER} pb-10 pt-10 sm:pb-12 sm:pt-12 lg:pb-14 lg:pt-14`}>
+    <HeroSection id={id} viewport>
+      <div className={`${HERO_CONTAINER} ${HERO_BODY} ${HERO_VIEWPORT_BODY}`}>
         <div
           className={cn(
             'grid grid-cols-1 gap-8',

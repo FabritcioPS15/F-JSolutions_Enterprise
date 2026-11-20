@@ -271,7 +271,6 @@ export function ProjectsPage() {
             <div className="flex flex-wrap items-center gap-3">
               <HeroAction href="/contacto" variant="primary">
                 Conversar sobre tu proyecto
-                <ArrowRight className="size-4" />
               </HeroAction>
               <HeroAction href="/como-trabajamos" variant="secondary">
                 Ver cómo trabajamos

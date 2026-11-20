@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import {
@@ -22,6 +22,7 @@ import {
   Globe,
   HardDrive,
   Headset,
+  Home,
   Laptop,
   LayoutTemplate,
   Lightbulb,
@@ -49,7 +50,6 @@ import {
   Zap,
 } from 'lucide-react'
 import { FaTeamspeak } from 'react-icons/fa6'
-import { SiReact } from 'react-icons/si'
 import { categories as catalogCategories } from '@/lib/catalog'
 import {
   popularSearches,
@@ -65,7 +65,6 @@ import {
   companyMenu,
   type NavMenuItem,
 } from '@/lib/navigation'
-import { ThemeToggle } from '@/components/theme/theme-toggle'
 import { storeUrl } from '@/lib/store-url'
 
 // ─── Hook: click outside ─────────────────────────────────────────────────────────────────
@@ -122,6 +121,8 @@ function getIcon(iconName: string) {
 }
 
 const sectionIcons: Record<string, React.ElementType> = {
+  inicio: Home,
+  tienda: Store,
   store: Store,
   'servicios-ti': Headset,
   'infraestructura-ti': Network,
@@ -129,8 +130,21 @@ const sectionIcons: Record<string, React.ElementType> = {
   empresa: Compass,
 }
 
-// Acceso directo destacado junto a "Desarrollo de software".
-const SOFTWARE_QUICK_LINK = '/sistemas/sistemas-web-a-medida'
+// Bloque de medios del menú móvil: reemplaza image/video/href por el contenido definitivo.
+const mobileMenuMedia: {
+  href: string
+  image: string
+  video?: string
+  eyebrow: string
+  title: string
+  description: string
+} = {
+  href: '/sistemas',
+  image: '/images/heroes/sistemas-web-a-medida.webp',
+  eyebrow: 'Recurso destacado',
+  title: 'Sistemas web a la medida',
+  description: 'Conoce cómo diseñamos software que se adapta a tu operación.',
+}
 
 // ─── Componente: Mobile Accordion ─────────────────────────────────────────────────────────────
 
@@ -155,28 +169,24 @@ function MobileAccordion({
 }) {
   return (
     <div
-      className={`relative overflow-hidden rounded-2xl border transition-all duration-300 ${
-        isOpen
-          ? 'border-[#1769AA]/45 bg-card shadow-[0_18px_40px_-32px_rgba(23,105,170,0.65)]'
-          : active
-          ? 'border-[#1769AA]/30 bg-tint-blue/25'
-          : 'border-border bg-card'
+      className={`relative overflow-hidden rounded-2xl transition-colors duration-300 ${
+        isOpen ? 'bg-[#F1F6FA]/70' : active ? 'bg-tint-blue/20' : ''
       }`}
     >
       <button
         type="button"
         onClick={onToggle}
         aria-expanded={isOpen}
-        className="flex w-full items-center gap-3 px-3.5 py-3 text-left"
+        className="flex w-full items-center gap-3 px-3.5 py-3 text-left transition-colors hover:bg-muted/50"
       >
         {Icon && (
           <span
-            className={`grid size-9 shrink-0 place-items-center rounded-xl border transition-colors duration-300 ${
+            className={`grid size-9 shrink-0 place-items-center rounded-xl transition-colors duration-300 ${
               isOpen
-                ? 'border-[#1769AA] bg-[#1769AA] text-white'
+                ? 'bg-[#1769AA] text-white'
                 : active
-                ? 'border-[#1769AA]/25 bg-tint-blue text-blue-ink'
-                : 'border-border bg-muted text-muted-foreground'
+                ? 'bg-tint-blue text-blue-ink'
+                : 'bg-muted text-muted-foreground'
             }`}
           >
             <Icon className="size-4" />
@@ -186,7 +196,7 @@ function MobileAccordion({
         <span className="min-w-0 flex-1">
           <span className="flex items-center gap-2">
             <span
-              className={`truncate text-sm font-semibold transition-colors duration-200 ${
+              className={`text-base font-bold leading-tight transition-colors duration-200 ${
                 isOpen || active ? 'text-blue-ink' : 'text-foreground'
               }`}
             >
@@ -199,16 +209,16 @@ function MobileAccordion({
               </span>
             )}
           </span>
-          <span className="mt-0.5 block truncate text-[11px] text-muted-foreground">
+          <span className="mt-0.5 block truncate text-[10.5px] font-medium text-muted-foreground">
             {isOpen ? 'Toca para cerrar' : `${count ?? 0} opciones`}
           </span>
         </span>
 
         <span
-          className={`grid size-7 shrink-0 place-items-center rounded-full border transition-all duration-300 ${
+          className={`grid size-7 shrink-0 place-items-center rounded-full transition-all duration-[250ms] ease-[cubic-bezier(0.32,0.72,0,1)] ${
             isOpen
-              ? 'rotate-180 border-[#1769AA] bg-[#1769AA] text-white'
-              : 'border-border bg-card text-muted-foreground'
+              ? 'rotate-180 bg-[#1769AA] text-white'
+              : 'bg-muted text-muted-foreground'
           }`}
         >
           <ChevronDown className="size-3.5" />
@@ -216,13 +226,19 @@ function MobileAccordion({
       </button>
 
       <div
-        className={`grid transition-all duration-300 ease-out ${
+        className={`grid transition-[grid-template-rows,opacity] duration-[280ms] ease-[cubic-bezier(0.32,0.72,0,1)] ${
           isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
         }`}
         inert={!isOpen}
       >
         <div className="overflow-hidden">
-          <div className="border-t border-border bg-muted/70 p-2.5">{children}</div>
+          <div
+            className={`bg-[#F1F6FA]/80 p-2 transition-[transform,opacity] duration-[220ms] ease-[cubic-bezier(0.32,0.72,0,1)] ${
+              isOpen ? 'translate-y-0 opacity-100' : '-translate-y-1 opacity-0'
+            }`}
+          >
+            {children}
+          </div>
         </div>
       </div>
     </div>
@@ -254,7 +270,7 @@ function CompactDropdown({
     <div
       ref={ref}
       role="dialog"
-      className={`absolute top-[calc(100%+4px)] z-[60] w-80 rounded-xl border border-border bg-card shadow-[0_12px_40px_rgba(15,23,42,0.12)] animate-in fade-in slide-in-from-top-2 duration-200 ${className}`}
+      className={`absolute top-[calc(100%+4px)] z-[60] w-80 rounded-xl border border-border bg-card shadow-[0_12px_40px_rgba(15,23,42,0.12)] animate-in fade-in duration-100 ${className}`}
     >
       <div className="p-2">
         {items.map((item, index) => {
@@ -319,12 +335,10 @@ function MegaDropdown({
   items,
   sectionLabel,
   onClose,
-  className = 'left-0',
 }: {
   items: NavMenuItem[]
   sectionLabel: string
   onClose: () => void
-  className?: string
 }) {
   const ref = useRef<HTMLDivElement>(null)
   const pathname = usePathname()
@@ -342,10 +356,37 @@ function MegaDropdown({
     const current = options.findIndex((item) => isItemActive(item.href))
     return current >= 0 ? current : 0
   })
+  const [placement, setPlacement] = useState<{ left: number; top: number; caret: number } | null>(
+    null,
+  )
+
+  // Ancla el panel al botón del menú y lo mantiene dentro de la pantalla.
+  useLayoutEffect(() => {
+    const update = () => {
+      const panel = ref.current
+      const anchor = panel?.parentElement?.getBoundingClientRect()
+      if (!panel || !anchor) return
+      const header = document.querySelector('header')?.getBoundingClientRect()
+      const width = panel.offsetWidth
+      const margin = 16
+      const triggerCenter = anchor.left + anchor.width / 2
+      const left = Math.min(Math.max(anchor.left, margin), window.innerWidth - width - margin)
+      setPlacement({
+        left,
+        top: (header?.bottom ?? anchor.bottom) + 8,
+        caret: Math.min(Math.max(triggerCenter - left, 22), width - 22),
+      })
+    }
+
+    update()
+    window.addEventListener('resize', update)
+    return () => window.removeEventListener('resize', update)
+  }, [])
 
   if (options.length === 0) return null
 
   const total = options.length
+  const gridColumns = total === 4 ? 'grid-cols-2' : 'grid-cols-3'
   const preview = options[Math.min(activeIndex, total - 1)]
   const PreviewIcon = preview.icon ? getIcon(preview.icon) : MousePointer2
   const palette = previewPalettes[activeIndex % previewPalettes.length]
@@ -359,11 +400,22 @@ function MegaDropdown({
       onKeyDown={(event) => {
         if (event.key === 'Escape') onClose()
       }}
-      className={`absolute top-[calc(100%+6px)] z-[60] w-[720px] max-w-[calc(100vw-2rem)] rounded-2xl border border-border bg-card p-3 shadow-[0_24px_60px_-24px_rgba(15,23,42,0.35)] animate-in fade-in slide-in-from-top-2 duration-200 xl:w-[880px] ${className}`}
+      style={{
+        left: placement?.left ?? 0,
+        top: placement?.top ?? 0,
+        visibility: placement ? 'visible' : 'hidden',
+      }}
+      className="fixed z-[60] w-[720px] max-w-[calc(100vw-2rem)] rounded-2xl border border-border/80 bg-card p-3.5 shadow-[0_30px_70px_-30px_rgba(15,23,42,0.45)] ring-1 ring-slate-900/5 animate-in fade-in duration-100 xl:w-[880px]"
     >
+      <span
+        aria-hidden="true"
+        className="absolute -top-2 size-4 rotate-45 rounded-[3px] border-l border-t border-border/80 bg-card shadow-[-3px_-3px_8px_-4px_rgba(15,23,42,0.18)]"
+        style={{ left: (placement?.caret ?? 22) - 8 }}
+      />
+
       <div className="flex items-stretch gap-3">
         {/* Opciones en dos filas de tres */}
-        <div className="grid flex-1 auto-rows-fr grid-cols-3 gap-1.5">
+        <div className={`grid flex-1 auto-rows-fr gap-2 ${gridColumns}`}>
           {options.map((item, index) => {
             const active = isItemActive(item.href)
             const selected = index === activeIndex
@@ -376,20 +428,20 @@ function MegaDropdown({
                 onMouseEnter={() => setActiveIndex(index)}
                 onFocus={() => setActiveIndex(index)}
                 aria-current={active ? 'page' : undefined}
-                className={`group relative flex h-full flex-col justify-center gap-2 rounded-xl border p-2.5 transition-colors duration-150 ${
+                className={`group relative flex h-full flex-col gap-1.5 rounded-xl border p-3 transition-all duration-150 ${
                   selected
-                    ? 'border-[#1769AA]/35 bg-tint-blue/50'
-                    : 'border-transparent hover:border-border hover:bg-muted/70'
+                    ? 'border-[#1769AA]/30 bg-tint-blue/45 shadow-[0_10px_24px_-20px_rgba(23,105,170,0.6)]'
+                    : 'border-transparent hover:border-border hover:bg-muted/60'
                 }`}
               >
                 <span
-                  className={`grid size-8 place-items-center rounded-lg border transition-colors duration-150 ${
+                  className={`grid size-9 place-items-center rounded-xl border transition-colors duration-150 ${
                     selected
                       ? 'border-[#1769AA]/25 bg-card text-[#1769AA]'
-                      : 'border-border bg-muted text-muted-foreground group-hover:text-blue-ink'
+                      : 'border-border bg-muted text-muted-foreground group-hover:border-[#1769AA]/20 group-hover:text-blue-ink'
                   }`}
                 >
-                  <Icon className="size-4" />
+                  <Icon aria-hidden="true" className="size-4" />
                 </span>
                 <span
                   className={`text-[12.5px] font-semibold leading-snug ${
@@ -398,10 +450,15 @@ function MegaDropdown({
                 >
                   {item.label}
                 </span>
+                {item.desc && (
+                  <span className="line-clamp-2 text-[11px] leading-snug text-muted-foreground">
+                    {item.desc}
+                  </span>
+                )}
                 {active && (
                   <span
                     aria-hidden="true"
-                    className="absolute right-2.5 top-2.5 size-1.5 rounded-full bg-[#1769AA]"
+                    className="absolute right-3 top-3 size-1.5 rounded-full bg-[#1769AA]"
                   />
                 )}
               </Link>
@@ -410,11 +467,15 @@ function MegaDropdown({
         </div>
 
         {/* Minicarrusel de vista previa + enlace general */}
-        <div className="flex w-[264px] shrink-0 flex-col gap-2 xl:w-[296px]">
-          <div className="relative flex min-h-[212px] flex-1 flex-col justify-between overflow-hidden rounded-xl p-3.5 text-white">
+        <div className="flex w-[272px] shrink-0 flex-col gap-2.5 xl:w-[304px]">
+          <div className="relative flex min-h-[224px] flex-1 flex-col justify-between overflow-hidden rounded-2xl p-4 text-white ring-1 ring-inset ring-white/10">
             <div
               aria-hidden="true"
               className={`absolute inset-0 bg-gradient-to-br ${palette}`}
+            />
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 opacity-[0.09] bg-[radial-gradient(circle_at_1px_1px,white_1px,transparent_0)] bg-[length:14px_14px]"
             />
             <div
               aria-hidden="true"
@@ -422,15 +483,12 @@ function MegaDropdown({
             />
             <div
               aria-hidden="true"
-              className="absolute -bottom-12 -left-6 size-32 rounded-full bg-black/20 blur-2xl"
+              className="absolute -bottom-12 -left-6 size-32 rounded-full bg-black/25 blur-2xl"
             />
 
-            <div
-              key={activeIndex}
-              className="relative flex flex-1 animate-in fade-in flex-col duration-200"
-            >
+            <div className="relative flex flex-1 flex-col">
               <div className="flex items-center justify-between gap-2">
-                <span className="truncate rounded-full bg-white/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.12em] text-white/80">
+                <span className="truncate rounded-full bg-white/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-white/85">
                   {sectionLabel}
                 </span>
                 <span className="text-[10px] font-semibold tabular-nums text-white/70">
@@ -438,13 +496,13 @@ function MegaDropdown({
                 </span>
               </div>
 
-              <span className="mt-3 grid size-11 place-items-center rounded-xl border border-white/20 bg-white/10 backdrop-blur-sm">
-                <PreviewIcon aria-hidden="true" className="size-5" />
+              <span className="mt-3.5 grid size-12 place-items-center rounded-2xl border border-white/25 bg-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.15)] backdrop-blur-sm">
+                <PreviewIcon aria-hidden="true" className="size-[22px]" />
               </span>
 
-              <p className="mt-2.5 text-sm font-bold leading-snug">{preview.label}</p>
+              <p className="mt-3 text-[15px] font-bold leading-snug">{preview.label}</p>
               {preview.desc && (
-                <p className="mt-1 text-[11px] leading-snug text-white/75">{preview.desc}</p>
+                <p className="mt-1 text-[11.5px] leading-relaxed text-white/80">{preview.desc}</p>
               )}
             </div>
 
@@ -458,27 +516,27 @@ function MegaDropdown({
                     aria-label={`Ver ${item.label}`}
                     aria-pressed={index === activeIndex}
                     className={`h-1.5 rounded-full transition-all duration-200 ${
-                      index === activeIndex ? 'w-5 bg-white' : 'w-1.5 bg-white/40 hover:bg-white/70'
+                      index === activeIndex ? 'w-6 bg-white' : 'w-1.5 bg-white/40 hover:bg-white/70'
                     }`}
                   />
                 ))}
               </div>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1.5">
                 <button
                   type="button"
                   onClick={() => goTo(activeIndex - 1)}
                   aria-label="Opción anterior"
-                  className="grid size-6 place-items-center rounded-full border border-white/25 bg-white/10 text-white/80 transition-colors hover:bg-white/20 hover:text-white"
+                  className="grid size-7 place-items-center rounded-full border border-white/25 bg-white/10 text-white/85 transition-colors hover:bg-white/20 hover:text-white"
                 >
-                  <ChevronLeft aria-hidden="true" className="size-3.5" />
+                  <ChevronLeft aria-hidden="true" className="size-4" />
                 </button>
                 <button
                   type="button"
                   onClick={() => goTo(activeIndex + 1)}
                   aria-label="Opción siguiente"
-                  className="grid size-6 place-items-center rounded-full border border-white/25 bg-white/10 text-white/80 transition-colors hover:bg-white/20 hover:text-white"
+                  className="grid size-7 place-items-center rounded-full border border-white/25 bg-white/10 text-white/85 transition-colors hover:bg-white/20 hover:text-white"
                 >
-                  <ChevronRight aria-hidden="true" className="size-3.5" />
+                  <ChevronRight aria-hidden="true" className="size-4" />
                 </button>
               </div>
             </div>
@@ -489,14 +547,14 @@ function MegaDropdown({
               href={general.href}
               onClick={onClose}
               aria-current={isItemActive(general.href) ? 'page' : undefined}
-              className={`flex h-10 items-center justify-center gap-2 rounded-xl px-3 text-xs font-bold text-white transition-colors ${
+              className={`flex h-11 items-center justify-center gap-2 rounded-xl px-3 text-xs font-bold text-white transition-all ${
                 isItemActive(general.href)
                   ? 'bg-[#12568C] ring-2 ring-[#1769AA]/30'
-                  : 'bg-[#1769AA] shadow-[0_8px_20px_-12px_rgba(23,105,170,0.8)] hover:bg-[#12568C]'
+                  : 'bg-gradient-to-r from-[#1769AA] to-[#12568C] shadow-[0_10px_22px_-14px_rgba(23,105,170,0.9)] hover:from-[#12568C] hover:to-[#1769AA]'
               }`}
             >
               {general.label}
-              <ArrowRight aria-hidden="true" className="size-3.5" />
+              <ArrowRight aria-hidden="true" className="size-4" />
             </Link>
           )}
         </div>
@@ -505,11 +563,14 @@ function MegaDropdown({
   )
 }
 
-function ActiveIndicator() {
+function ActiveIndicator({ onDark = false }: { onDark?: boolean }) {
   return (
     <span
       aria-hidden="true"
-      className="pointer-events-none absolute inset-x-3 bottom-0.5 h-[2px] rounded-full bg-gradient-to-r from-[#1769AA] via-[#1769AA] to-[#1769AA]"
+      className={`pointer-events-none absolute inset-x-3 bottom-0.5 h-[2px] rounded-full ${onDark
+        ? 'bg-gradient-to-r from-[#00B8D9] to-[#7FD8E8]'
+        : 'bg-gradient-to-r from-[#1769AA] via-[#1769AA] to-[#1769AA]'
+        }`}
     />
   )
 }
@@ -751,7 +812,7 @@ function SearchAutocomplete({
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setFocused(true)}
           onKeyDown={handleKeyDown}
-          placeholder="Buscar servicios, soluciones o secciones..."
+          placeholder={isDesktop ? 'Buscar servicios, soluciones o secciones...' : 'Buscar en SparkTree...'}
           autoComplete="off"
           enterKeyHint="search"
           role="combobox"
@@ -798,7 +859,7 @@ function SearchAutocomplete({
           id={listboxId}
           role="listbox"
           ref={listRef}
-          className={`overflow-y-auto overscroll-contain rounded-xl border border-border bg-card shadow-[0_12px_40px_rgba(15,23,42,0.12)] animate-in fade-in slide-in-from-top-2 duration-150 ${
+          className={`overflow-y-auto overscroll-contain rounded-xl border border-border bg-card shadow-[0_12px_40px_rgba(15,23,42,0.12)] animate-in fade-in slide-in-from-top-1 duration-200 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:animate-none ${
             isDesktop
               ? 'absolute left-0 right-0 top-full z-[80] mt-1.5 max-h-[420px]'
               : 'relative z-10 mt-2 max-h-[min(52vh,420px)] shadow-[0_18px_36px_-28px_rgba(15,23,42,0.35)]'
@@ -968,7 +1029,7 @@ function StoreRedirectDialog({ onClose }: { onClose: () => void }) {
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center p-4">
       <div
-        className="absolute inset-0 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-200"
+        className="absolute inset-0 bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-[220ms] ease-out motion-reduce:animate-none"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -977,7 +1038,7 @@ function StoreRedirectDialog({ onClose }: { onClose: () => void }) {
         role="dialog"
         aria-modal="true"
         aria-labelledby="store-redirect-title"
-        className="relative w-full max-w-md overflow-hidden rounded-2xl border border-border bg-card shadow-2xl animate-in fade-in zoom-in-95 duration-200"
+        className="relative w-full max-w-md overflow-hidden rounded-2xl border border-border bg-card shadow-2xl animate-in fade-in zoom-in-[97%] slide-in-from-bottom-1 duration-[240ms] ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:animate-none"
       >
         <button
           type="button"
@@ -1182,69 +1243,43 @@ export function EnhancedHeader() {
   return (
     <>
     <header
-      className={`sticky top-0 z-50 w-full bg-card transition-all duration-200 ${
+      className={`sticky top-0 z-50 w-full transition-colors duration-300 ${
         scrolled
-          ? 'border-b border-border/90 shadow-md shadow-slate-900/5'
-          : 'border-b border-border'
+          ? 'border-b border-white/10 bg-[#102A43] shadow-lg shadow-slate-950/20'
+          : 'border-b border-border bg-card'
       }`}
     >
-      {/* Primera franja: Logo, enlaces corporativos, buscador, acciones */}
-      <div>
-        <div className="mx-auto max-w-[1400px] px-3 py-2.5 sm:px-4 sm:py-3 lg:px-8 lg:py-3">
-          <div className="flex items-center gap-3 lg:gap-6">
-            {/* Logo */}
-            <Link
-              href="/"
-              className="flex shrink-0 items-center gap-2 sm:gap-3 group"
-              aria-label="SparkTree Systems · Inicio"
-              onClick={() => { setMenuOpen(false); closeAll() }}
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/brand/sparktree-horizontal.png"
-                alt="SparkTree Systems"
-                className="h-10 sm:h-11 w-auto object-contain transition-transform duration-200 group-hover:scale-105 brightness-0 dark:brightness-100"
-              />
-            </Link>
+      <div className="mx-auto flex h-[calc(var(--site-header-height)-1px)] max-w-[1400px] items-center gap-3 px-3 sm:px-4 lg:px-8 xl:gap-5">
+          {/* Logo */}
+          <Link
+            href="/"
+            className="flex shrink-0 items-center gap-2 sm:gap-3 group"
+            aria-label="SparkTree Systems · Inicio"
+            onClick={() => { setMenuOpen(false); closeAll() }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/brand/sparktree-horizontal.png"
+              alt="SparkTree Systems"
+              className={`h-12 w-auto object-contain transition-[transform,filter] duration-300 group-hover:scale-105 ${scrolled ? 'brightness-0 invert' : 'brightness-0 dark:brightness-100'
+                }`}
+            />
+          </Link>
 
-            {/* Buscador con autocompletado */}
-            <div className="hidden min-w-0 flex-1 justify-center md:flex">
-              <SearchAutocomplete
-                query={query}
-                setQuery={setQuery}
-                onSubmit={submitSearch}
-                onNavigate={closeAll}
-                variant="desktop"
-              />
-            </div>
-
-            {/* Acciones del usuario */}
-            <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
-              <ThemeToggle />
-
-              <button
-                type="button"
-                onClick={() => (menuOpen ? closeMobileMenu() : setMenuOpen(true))}
-                aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
-                aria-expanded={menuOpen}
-                className="grid size-9 sm:size-10 place-items-center rounded-lg border border-border text-muted-foreground transition hover:border-[#1769AA]/30 hover:bg-muted hover:text-blue-ink lg:hidden"
-              >
-                {menuOpen ? <X className="size-4 sm:size-5" /> : <Menu className="size-4 sm:size-5" />}
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Segunda franja: Navegación principal */}
-      <div>
-        <div className="mx-auto max-w-[1400px] px-4 sm:px-6 lg:px-8">
-          <div className="hidden lg:block">
-            <nav className="flex items-center gap-1 py-3" aria-label="Navegación principal">
+          {/* Navegación principal (escritorio) */}
+          <div className="hidden min-w-0 flex-1 lg:block">
+            <nav className="flex items-center" aria-label="Navegación principal">
+            <div className="flex flex-1 items-center justify-center gap-0.5 xl:gap-1">
             {mainNav.map((link, index) => {
               const active = isActive(link)
+              const itemTone = scrolled
+                ? active
+                  ? 'text-white'
+                  : 'text-white/70 hover:bg-white/[0.06] hover:text-white'
+                : active
+                  ? 'text-blue-ink'
+                  : 'text-muted-foreground hover:text-blue-ink'
               const dropdownKey = link.label.toLowerCase().replace(/ /g, '-')
-              const isSoftware = dropdownKey === 'desarrollo-de-software'
               const refMap: Record<string, React.RefObject<HTMLDivElement | null>> = {
                 'servicios-ti': servicesRef,
                 'infraestructura-ti': infrastructureRef,
@@ -1258,53 +1293,31 @@ export function EnhancedHeader() {
                 empresa: companyMenu,
               }
               const usesMegaMenu = dropdownKey !== 'empresa'
-              const megaAlign =
-                dropdownKey === 'desarrollo-de-software' ? 'left-1/2 -translate-x-1/2' : 'left-0'
 
               return (
                 <div key={index} className="relative" ref={refMap[dropdownKey]}>
                   {link.hasMenu ? (
                     <>
-                      <div className="flex items-center">
-                        {isSoftware && (
-                          <Link
-                            href={SOFTWARE_QUICK_LINK}
-                            aria-label="Sistemas web a medida"
-                            title="Sistemas web a medida"
-                            aria-current={isPathActive(SOFTWARE_QUICK_LINK) ? 'page' : undefined}
-                            className="group/react mr-0.5 grid size-7 place-items-center rounded-lg text-[#61DAFB] transition-colors hover:bg-muted"
-                          >
-                            <SiReact
-                              aria-hidden="true"
-                              className="size-[18px] transition-transform duration-500 group-hover/react:rotate-180"
-                            />
-                          </Link>
-                        )}
-                        <button
-                          type="button"
-                          onClick={() => toggle(dropdownKey)}
-                          aria-expanded={openDropdown === dropdownKey}
-                          aria-haspopup="dialog"
-                          aria-current={active ? 'page' : undefined}
-                          className={`relative flex h-10 items-center gap-1.5 rounded-lg text-sm font-semibold transition-colors ${isSoftware ? 'pl-1 pr-3' : 'px-3'} ${active
-                              ? 'text-blue-ink'
-                              : 'text-muted-foreground hover:text-blue-ink'
-                            }`}
-                        >
-                          {link.label}
-                          <ChevronDown
-                            className={`size-3.5 transition-transform duration-200 ${openDropdown === dropdownKey ? 'rotate-180' : ''}`}
-                          />
-                          {active && <ActiveIndicator />}
-                        </button>
-                      </div>
+                      <button
+                        type="button"
+                        onClick={() => toggle(dropdownKey)}
+                        aria-expanded={openDropdown === dropdownKey}
+                        aria-haspopup="dialog"
+                        aria-current={active ? 'page' : undefined}
+                        className={`relative flex h-11 items-center gap-1.5 whitespace-nowrap rounded-lg px-2 text-[13px] font-semibold transition-colors xl:px-3 xl:text-sm ${itemTone}`}
+                      >
+                        {link.label}
+                        <ChevronDown
+                          className={`size-3.5 transition-transform duration-200 ${openDropdown === dropdownKey ? 'rotate-180' : ''}`}
+                        />
+                        {active && <ActiveIndicator onDark={scrolled} />}
+                      </button>
                       {openDropdown === dropdownKey &&
                         (usesMegaMenu ? (
                           <MegaDropdown
                             items={itemsMap[dropdownKey] || []}
                             sectionLabel={link.label}
                             onClose={closeAll}
-                            className={megaAlign}
                           />
                         ) : (
                           <CompactDropdown items={itemsMap[dropdownKey] || []} onClose={closeAll} />
@@ -1319,34 +1332,50 @@ export function EnhancedHeader() {
                         openStoreRedirect()
                       }}
                       aria-current={active ? 'page' : undefined}
-                      className={`relative flex h-10 items-center rounded-lg px-3 text-sm font-semibold transition-colors ${active
-                          ? 'text-blue-ink'
-                          : 'text-muted-foreground hover:text-blue-ink'
-                        }`}
+                      className={`relative flex h-11 items-center gap-1 whitespace-nowrap rounded-lg px-2 text-[13px] font-semibold transition-colors xl:px-3 xl:text-sm ${itemTone}`}
                     >
                       {link.label}
-                      {active && <ActiveIndicator />}
+                      {isExternalHref(link.href) && (
+                        <ArrowUpRight aria-hidden="true" className="size-3.5" />
+                      )}
+                      {active && <ActiveIndicator onDark={scrolled} />}
                     </Link>
                   )}
                 </div>
               )
             })}
+            </div>
 
-            {/* CTA: Solicitar asesoría */}
-            <div className="ml-auto">
+            {/* CTA: Asesoría */}
+            <div className="shrink-0">
               <Link
                 href="/contacto"
-                className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#1769AA] to-[#12568C] px-4 py-2 text-sm font-semibold text-white transition hover:from-[#12568C] hover:to-[#1769AA]"
+                className={`flex items-center gap-2 whitespace-nowrap rounded-lg px-2.5 py-2.5 text-[13px] font-semibold transition-colors xl:px-4 xl:text-sm ${scrolled
+                  ? 'bg-white text-[#12568C] hover:bg-[#DCEEFB]'
+                  : 'bg-gradient-to-r from-[#1769AA] to-[#12568C] text-white hover:from-[#12568C] hover:to-[#1769AA]'
+                  }`}
               >
                 <FaTeamspeak aria-hidden="true" className="size-4" />
-                <span className="hidden sm:inline">Solicitar asesoría</span>
+                <span>Asesoría</span>
               </Link>
             </div>
-          </nav>
+            </nav>
           </div>
-        </div>
-      </div>
 
+          {/* Botón de menú móvil */}
+          <button
+            type="button"
+            onClick={() => (menuOpen ? closeMobileMenu() : setMenuOpen(true))}
+            aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
+            aria-expanded={menuOpen}
+            className={`ml-auto grid size-11 place-items-center rounded-xl border transition-colors lg:hidden ${scrolled
+              ? 'border-white/20 text-white hover:bg-white/10'
+              : 'border-border text-muted-foreground hover:border-[#1769AA]/30 hover:bg-muted hover:text-blue-ink'
+              }`}
+          >
+            {menuOpen ? <X className="size-5" /> : <Menu className="size-5" />}
+          </button>
+      </div>
     </header>
 
     {/* Menú móvil */}
@@ -1354,7 +1383,7 @@ export function EnhancedHeader() {
       <>
         {/* Backdrop oscuro con blur y fade suave */}
         <div
-          className="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-xs transition-opacity animate-in fade-in duration-200 lg:hidden"
+          className="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-xs animate-in fade-in duration-[240ms] ease-out motion-reduce:animate-none lg:hidden"
           onClick={closeMobileMenu}
           aria-hidden="true"
         />
@@ -1364,10 +1393,15 @@ export function EnhancedHeader() {
           role="dialog"
           aria-modal="true"
           aria-label="Menú de navegación"
-          className="fixed inset-y-0 right-0 z-[110] flex w-full max-w-[340px] sm:max-w-sm flex-col bg-card shadow-2xl transition-transform animate-in slide-in-from-right duration-250 lg:hidden"
+          className="fixed inset-0 z-[110] flex flex-col overflow-hidden bg-card animate-in slide-in-from-right duration-[320ms] ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:animate-none lg:hidden"
         >
+          <span
+            aria-hidden="true"
+            className="absolute inset-x-0 top-0 z-20 h-1 bg-gradient-to-r from-[#1769AA] via-[#00B8D9] to-[#1769AA]"
+          />
+
           {/* Cabecera fija */}
-          <div className="flex shrink-0 items-center justify-between gap-3 border-b border-border px-4 py-3">
+          <div className="flex shrink-0 items-center justify-between gap-3 border-b border-border/70 px-4 pb-3 pt-[calc(env(safe-area-inset-top,0px)+0.75rem)]">
             <Link
               href="/"
               className="inline-flex items-center gap-2.5 group"
@@ -1381,22 +1415,23 @@ export function EnhancedHeader() {
               <img
                 src="/brand/sparktree-horizontal.png"
                 alt="SparkTree Systems"
-                className="h-10 sm:h-11 w-auto object-contain transition-transform duration-200 group-hover:scale-105 brightness-0 dark:brightness-100"
+                className="h-12 w-auto object-contain transition-transform duration-200 group-hover:scale-105 brightness-0 dark:brightness-100"
               />
             </Link>
 
             <button
               type="button"
               onClick={closeMobileMenu}
-              className="grid size-9 shrink-0 place-items-center rounded-lg border border-border text-muted-foreground transition-colors hover:bg-muted hover:text-blue-ink"
+              className="grid size-10 shrink-0 place-items-center rounded-xl border border-border bg-muted/50 text-muted-foreground transition-colors hover:border-[#1769AA]/30 hover:bg-muted hover:text-blue-ink"
               aria-label="Cerrar menú"
             >
-              <X className="size-4 sm:size-5" />
+              <X className="size-5" />
             </button>
           </div>
 
           {/* Contenido desplazable */}
-          <div className="flex-1 overflow-y-auto overscroll-contain px-3.5 py-4">
+          <div className="flex-1 overflow-y-auto overscroll-contain px-3.5 py-4 sm:px-6">
+            <div className="mx-auto w-full max-w-lg">
             {/* Buscador móvil con autocompletado */}
             <SearchAutocomplete
               query={query}
@@ -1411,7 +1446,6 @@ export function EnhancedHeader() {
               {mainNav.map((link, index) => {
                 const active = isActive(link)
                 const dropdownKey = link.label.toLowerCase().replace(/ /g, '-')
-                const isSoftware = dropdownKey === 'desarrollo-de-software'
                 const isSectionOpen = openMobileSection === dropdownKey
 
                 const getSubmenu = () => {
@@ -1430,33 +1464,17 @@ export function EnhancedHeader() {
                 }
 
                 return (
-                  <div key={index} className={isSoftware ? 'flex items-start gap-2' : undefined}>
-                    {isSoftware && (
-                      <Link
-                        href={SOFTWARE_QUICK_LINK}
-                        onClick={markMobileNavigation}
-                        aria-label="Sistemas web a medida"
-                        title="Sistemas web a medida"
-                        aria-current={isPathActive(SOFTWARE_QUICK_LINK) ? 'page' : undefined}
-                        className="mt-1 flex size-12 shrink-0 flex-col items-center justify-center gap-0.5 rounded-2xl border border-border bg-card text-[#61DAFB] transition-colors hover:border-[#1769AA]/30 hover:bg-muted"
-                      >
-                        <SiReact aria-hidden="true" className="size-5" />
-                        <span className="text-[8px] font-bold uppercase tracking-[0.08em] text-muted-foreground">
-                          React
-                        </span>
-                      </Link>
-                    )}
-                    <div className="min-w-0 flex-1">
+                  <div key={index}>
                     {link.hasMenu ? (
                       <MobileAccordion
                         label={link.label}
                         isOpen={isSectionOpen}
                         onToggle={() => toggleMobile(dropdownKey)}
                         active={active}
-                        icon={isSoftware ? undefined : sectionIcons[dropdownKey]}
+                        icon={sectionIcons[dropdownKey]}
                         count={getSubmenu().filter((item) => item.variant !== 'general').length}
                       >
-                        <div className="space-y-0.5">
+                        <div className="space-y-1.5">
                           {getSubmenu().map((item, itemIdx) => {
                             const isItemActive = isPathActive(item.href)
                             const isGeneral = item.variant === 'general'
@@ -1464,7 +1482,12 @@ export function EnhancedHeader() {
                             return (
                               <div
                                 key={`${item.href}-${itemIdx}`}
-                                className={isGeneral ? 'mt-2 border-t border-border pt-2' : undefined}
+                                className={`${isGeneral ? 'mt-3' : ''} ${
+                                  isSectionOpen
+                                    ? 'animate-in fade-in slide-in-from-top-1 fill-mode-both duration-[220ms] ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:animate-none'
+                                    : ''
+                                }`}
+                                style={{ animationDelay: isSectionOpen ? `${Math.min(itemIdx, 7) * 22}ms` : undefined }}
                               >
                                 <Link
                                   href={item.href}
@@ -1474,7 +1497,7 @@ export function EnhancedHeader() {
                                     isGeneral
                                       ? 'bg-[#1769AA] text-white shadow-[0_8px_20px_-14px_rgba(23,105,170,0.9)] hover:bg-[#12568C]'
                                       : isItemActive
-                                        ? 'bg-card text-blue-ink shadow-xs ring-1 ring-[#1769AA]/15'
+                                        ? 'bg-tint-blue/70 text-blue-ink'
                                         : 'text-foreground/85 hover:bg-card hover:text-blue-ink'
                                   }`}
                                 >
@@ -1484,10 +1507,10 @@ export function EnhancedHeader() {
                                     </span>
                                   ) : ItemIcon ? (
                                     <span
-                                      className={`grid size-8 shrink-0 place-items-center rounded-lg border transition-colors ${
+                                      className={`grid size-8 shrink-0 place-items-center rounded-lg transition-colors ${
                                         isItemActive
-                                          ? 'border-[#1769AA]/25 bg-tint-blue text-blue-ink'
-                                          : 'border-border bg-card text-muted-foreground group-hover:border-[#1769AA]/25 group-hover:text-blue-ink'
+                                          ? 'bg-card text-blue-ink'
+                                          : 'bg-card text-muted-foreground group-hover:text-blue-ink'
                                       }`}
                                     >
                                       <ItemIcon className="size-3.5" />
@@ -1495,7 +1518,7 @@ export function EnhancedHeader() {
                                   ) : null}
                                   <div className="min-w-0 flex-1">
                                     <span
-                                      className={`block text-xs font-bold leading-snug tracking-tight ${
+                                      className={`block text-[13px] font-bold leading-snug tracking-tight ${
                                         isGeneral
                                           ? ''
                                           : isItemActive
@@ -1506,7 +1529,7 @@ export function EnhancedHeader() {
                                       {item.label}
                                     </span>
                                     {item.desc && !isGeneral && (
-                                      <span className="mt-0.5 block text-[11px] leading-snug text-muted-foreground group-hover:text-muted-foreground">
+                                      <span className="mt-0.5 block text-[10.5px] leading-snug text-muted-foreground group-hover:text-muted-foreground">
                                         {item.desc}
                                       </span>
                                     )}
@@ -1535,55 +1558,120 @@ export function EnhancedHeader() {
                           }
                           markMobileNavigation()
                         }}
-                        className={`flex items-center justify-between rounded-xl border px-3.5 py-3 text-sm font-semibold transition-colors ${
+                        aria-current={active ? 'page' : undefined}
+                        className={`group flex items-center gap-3 rounded-xl px-3.5 py-2.5 transition-colors ${
                           active
-                            ? 'border-[#1769AA]/40 bg-tint-blue text-blue-ink'
-                            : 'border-border bg-card text-foreground hover:bg-muted hover:text-blue-ink'
+                            ? 'bg-tint-blue/40 text-blue-ink'
+                            : 'text-foreground hover:bg-muted/60 hover:text-blue-ink'
                         }`}
                       >
-                        <span>{link.label}</span>
-                        <ChevronRight className="size-4 text-muted-foreground" />
+                        {(() => {
+                          const PlainIcon = sectionIcons[dropdownKey]
+                          return PlainIcon ? (
+                            <span
+                              className={`grid size-9 shrink-0 place-items-center rounded-xl transition-colors ${
+                                active
+                                  ? 'bg-tint-blue text-blue-ink'
+                                  : 'bg-muted text-muted-foreground group-hover:text-blue-ink'
+                              }`}
+                            >
+                              <PlainIcon className="size-4" />
+                            </span>
+                          ) : null
+                        })()}
+                        <span className="min-w-0 flex-1">
+                          <span className={`block text-base font-bold ${active ? 'text-blue-ink' : 'text-foreground'}`}>
+                            {link.label}
+                          </span>
+                          <span className="mt-0.5 block text-[10.5px] font-medium text-muted-foreground">
+                            {isExternalHref(link.href) ? 'Catálogo en línea' : 'Página principal'}
+                          </span>
+                        </span>
+                        {isExternalHref(link.href) ? (
+                          <ArrowUpRight className="size-4 shrink-0 text-muted-foreground group-hover:text-blue-ink" />
+                        ) : (
+                          <ChevronRight className="size-4 shrink-0 text-muted-foreground group-hover:text-blue-ink" />
+                        )}
                       </Link>
                     )}
-                    </div>
                   </div>
                 )
               })}
             </nav>
 
-            {/* Acciones rápidas móvil */}
-            <div className="mt-5 space-y-2 border-t border-border pt-4">
-              <Link
-                href="/contacto"
-                onClick={markMobileNavigation}
-                className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#1769AA] to-[#12568C] px-4 py-2.5 text-sm font-semibold text-white shadow-xs transition hover:from-[#12568C] hover:to-[#1769AA]"
-              >
-                <FaTeamspeak aria-hidden="true" className="size-4" />
-                <span>Solicitar asesoría</span>
-              </Link>
+            <Link
+              href={mobileMenuMedia.href}
+              onClick={markMobileNavigation}
+              className="group relative mt-5 block overflow-hidden rounded-2xl bg-slate-900 text-white shadow-[0_18px_40px_-28px_rgba(15,23,42,0.65)]"
+            >
+              <span className="block aspect-[16/9]">
+                {mobileMenuMedia.video ? (
+                  <video
+                    className="h-full w-full object-cover"
+                    src={mobileMenuMedia.video}
+                    poster={mobileMenuMedia.image}
+                    autoPlay
+                    muted
+                    loop
+                    playsInline
+                  />
+                ) : (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={mobileMenuMedia.image}
+                    alt=""
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                  />
+                )}
+              </span>
+              <span
+                aria-hidden="true"
+                className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/30 to-transparent"
+              />
+              <span className="absolute right-3 top-3 grid size-8 place-items-center rounded-full bg-white/15 text-white backdrop-blur-sm transition-colors group-hover:bg-white group-hover:text-blue-ink">
+                <ArrowUpRight className="size-4" />
+              </span>
+              <span className="absolute inset-x-0 bottom-0 block p-3.5">
+                <span className="inline-flex items-center gap-1 rounded-full bg-white/15 px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.16em] text-white backdrop-blur-sm">
+                  {mobileMenuMedia.eyebrow}
+                </span>
+                <span className="mt-1.5 block text-[15px] font-bold leading-snug">{mobileMenuMedia.title}</span>
+                <span className="mt-0.5 block line-clamp-2 text-[11px] leading-snug text-white/75">
+                  {mobileMenuMedia.description}
+                </span>
+              </span>
+            </Link>
             </div>
+          </div>
 
-            {/* Contacto móvil */}
-            <div className="mt-5 border-t border-border pt-4">
-              <p className="mb-2 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                Atención directa
-              </p>
-              <div className="space-y-1.5 text-xs text-muted-foreground">
-                <a
-                  href="tel:+51999888777"
-                  className="flex items-center gap-2 rounded-lg p-1.5 transition-colors hover:bg-muted hover:text-blue-ink"
-                >
-                  <Phone className="size-3.5 text-blue-ink" />
-                  <span>+51 999 888 777</span>
-                </a>
-                <a
-                  href="mailto:ventas@fjsolutions.pe"
-                  className="flex items-center gap-2 rounded-lg p-1.5 transition-colors hover:bg-muted hover:text-blue-ink"
-                >
-                  <Mail className="size-3.5 text-blue-ink" />
-                  <span>ventas@fjsolutions.pe</span>
-                </a>
-              </div>
+          {/* Acciones fijas al pie */}
+          <div className="shrink-0 border-t border-border/70 bg-card px-3.5 pb-[calc(env(safe-area-inset-bottom,0px)+0.75rem)] pt-3 sm:px-6">
+            <div className="mx-auto w-full max-w-lg">
+            <Link
+              href="/contacto"
+              onClick={markMobileNavigation}
+              className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#1769AA] to-[#12568C] px-4 py-3 text-[15px] font-bold text-white shadow-[0_10px_24px_-16px_rgba(23,105,170,0.9)] transition hover:from-[#12568C] hover:to-[#1769AA]"
+            >
+              <FaTeamspeak aria-hidden="true" className="size-4" />
+              <span>Asesoría</span>
+            </Link>
+            <div className="mt-2 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[11px] font-medium text-muted-foreground">
+              <a
+                href="tel:+51999888777"
+                className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2 py-1 transition-colors hover:bg-muted hover:text-blue-ink"
+              >
+                <Phone className="size-3.5 text-blue-ink" />
+                <span>+51 999 888 777</span>
+              </a>
+              <span aria-hidden="true" className="hidden size-1 rounded-full bg-border min-[360px]:block" />
+              <a
+                href="mailto:ventas@fjsolutions.pe"
+                className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2 py-1 transition-colors hover:bg-muted hover:text-blue-ink"
+              >
+                <Mail className="size-3.5 text-blue-ink" />
+                <span>ventas@fjsolutions.pe</span>
+              </a>
+            </div>
             </div>
           </div>
         </div>

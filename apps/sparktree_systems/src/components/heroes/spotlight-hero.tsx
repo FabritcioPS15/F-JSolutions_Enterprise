@@ -70,7 +70,7 @@ export function SpotlightHero() {
           </HeroLead>
 
           <HeroActions className="justify-center">
-            <HeroAction href="/cotizacion">Solicitar cotización</HeroAction>
+            <HeroAction href="/cotizador-servicios">Solicitar cotización</HeroAction>
             <HeroAction href="/servicios" variant="secondary">
               Explorar soluciones
             </HeroAction>

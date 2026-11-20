@@ -335,7 +335,7 @@ export function ServicePage({
 
             <div className="mt-4 flex flex-col gap-2 sm:flex-row">
               <Link
-                href="/cotizacion"
+                href="/cotizador-servicios"
                 className="group inline-flex h-11 flex-1 items-center justify-center gap-2 rounded-xl bg-[#1769AA] px-4 text-sm font-bold text-white transition hover:bg-[#12568C]"
               >
                 Continuar en el cotizador

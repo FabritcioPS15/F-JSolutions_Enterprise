@@ -8,12 +8,18 @@ import { cn } from '@/lib/utils'
  *
  * Reglas compartidas:
  * - Fondo claro, superficies blancas y bordes sutiles.
- * - Espaciado vertical automático: nunca alturas fijas ni 100vh.
+ * - Los heroes de página ocupan al menos el primer viewport debajo del header.
  * - Contenedor central de 1280 px, igual que el resto del sitio.
  * - Microanimaciones CSS con soporte para prefers-reduced-motion.
  */
 
 export const HERO_CONTAINER = 'mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8'
+
+/** Ritmo vertical único para el cuerpo de todos los heroes. */
+export const HERO_BODY = 'pb-10 pt-9 sm:pb-12 sm:pt-11 lg:pb-14 lg:pt-12'
+
+/** Centra el contenido del hero en el alto disponible del viewport. */
+export const HERO_VIEWPORT_BODY = 'flex flex-1 flex-col justify-center'
 
 export const HERO_TITLE_SIZE = {
   xl: 'text-[clamp(2.25rem,1.15rem+3.4vw,4.1rem)]',
@@ -28,15 +34,18 @@ type HeroSectionProps = {
   overlay?: boolean
   /** Ocupa el alto disponible del contenedor (hero de portada). */
   fill?: boolean
+  /** Ocupa al menos el primer viewport debajo del header sticky. */
+  viewport?: boolean
 }
 
-export function HeroSection({ id, children, className, overlay = true, fill = false }: HeroSectionProps) {
+export function HeroSection({ id, children, className, overlay = true, fill = false, viewport = false }: HeroSectionProps) {
   return (
     <section
       id={id}
       className={cn(
         'relative isolate overflow-hidden bg-card',
         fill && 'flex flex-1 flex-col',
+        viewport && 'hero-viewport',
         className,
       )}
     >
@@ -89,8 +98,9 @@ export function HeroTitle({ children, className, size = 'xl', as: Tag = 'h1' }: 
   return (
     <Tag
       className={cn(
-        'hero-reveal hero-delay-1 mt-4 sm:mt-5 max-w-[20ch] text-balance font-heading font-bold leading-[1.08] sm:leading-[1.04] tracking-[-0.04em] text-foreground',
+        'hero-reveal hero-delay-1 mt-4 sm:mt-5 max-w-[20ch] text-balance font-heading font-bold tracking-[-0.04em] text-foreground',
         HERO_TITLE_SIZE[size],
+        'leading-[1.08] sm:leading-[1.04]',
         className,
       )}
     >

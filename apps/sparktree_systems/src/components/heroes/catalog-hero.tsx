@@ -16,7 +16,9 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 import {
+  HERO_BODY,
   HERO_CONTAINER,
+  HERO_VIEWPORT_BODY,
   HeroAccent,
   HeroAction,
   HeroActions,
@@ -172,8 +174,8 @@ export function CatalogHero({
   }
 
   return (
-    <HeroSection>
-      <div className={`${HERO_CONTAINER} pb-8 pt-6 sm:pb-12 sm:pt-10 lg:pb-14 lg:pt-12`}>
+    <HeroSection viewport>
+      <div className={`${HERO_CONTAINER} ${HERO_BODY} ${HERO_VIEWPORT_BODY}`}>
         <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.96fr)] lg:gap-12 xl:gap-16">
           <div className="min-w-0 max-w-[620px]">
             <HeroTitle size="lg">
@@ -195,13 +197,13 @@ export function CatalogHero({
               >
                 Ver catálogo completo
               </HeroAction>
-              <HeroAction href="/cotizacion" variant="secondary">
+              <HeroAction href="/cotizador" variant="secondary">
                 Solicitar cotización
               </HeroAction>
             </HeroActions>
           </div>
 
-          <div className="hero-reveal hero-delay-2 relative mx-auto w-full min-w-0 max-w-[560px] lg:max-w-none">
+          <div className="hero-reveal hero-delay-2 relative mx-auto hidden w-full min-w-0 max-w-[560px] sm:block lg:max-w-none">
             <div
               aria-hidden="true"
               className="absolute inset-x-8 inset-y-10 -z-10 rounded-[40px] bg-gradient-to-br from-[#1769AA]/10 to-[#1769AA]/10 blur-3xl"

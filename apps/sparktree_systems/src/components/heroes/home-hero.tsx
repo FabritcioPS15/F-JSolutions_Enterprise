@@ -64,7 +64,7 @@ const HERO_SLIDES: HeroSlide[] = [
       'Diseñamos, implementamos y damos soporte a la infraestructura, servidores, redes y centros de datos que tu empresa necesita para operar con máxima seguridad, alta disponibilidad y sin interrupciones.',
     primaryAction: {
       label: 'Solicitar cotización',
-      href: '/cotizacion',
+      href: '/cotizador-servicios?servicio=implementacion-de-infraestructura',
     },
     secondaryAction: {
       label: 'Explorar soluciones',
@@ -289,7 +289,7 @@ export function HomeHeroCarousel() {
             </div>
 
             {/* Columna Derecha: Visual Interactiva */}
-            <div className="min-w-0">
+            <div className="hidden min-w-0 sm:block">
               {activeSlide.visual}
             </div>
           </div>

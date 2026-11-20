@@ -60,7 +60,7 @@ const FOOTER_COLUMNS: FooterColumn[] = [
   {
     title: 'Atención y cotizaciones',
     links: [
-      { label: 'Solicitar cotización', href: storeUrl('/cotizacion') },
+      { label: 'Solicitar cotización', href: '/cotizador-servicios' },
       { label: 'Consultar productos', href: storeUrl('/productos') },
       { label: 'Atención empresarial', href: '/contacto' },
       { label: 'Preguntas frecuentes', href: '/preguntas-frecuentes' },
@@ -152,7 +152,7 @@ function FooterNavColumn({
         onClick={() => setOpen((value) => !value)}
         aria-expanded={open}
         aria-controls={panelId}
-        className={`flex min-h-12 w-full items-center justify-between gap-3 rounded-sm py-4 text-left sm:hidden ${FOCUS_STYLE}`}
+        className={`flex min-h-11 w-full items-center justify-between gap-3 rounded-sm py-3 text-left sm:hidden ${FOCUS_STYLE}`}
       >
         <span className="font-heading text-[13px] font-bold uppercase tracking-[0.12em] text-[#F1F6FA]">
           {column.title}
@@ -174,8 +174,8 @@ function FooterNavColumn({
       <ul
         id={panelId}
         className={cn(
-          'text-sm sm:mt-4 sm:block sm:space-y-2.5',
-          open ? 'block pb-4' : 'hidden'
+          'text-sm sm:mt-3.5 sm:block sm:space-y-2',
+          open ? 'block pb-3' : 'hidden'
         )}
       >
         {column.links.map((link) => {
@@ -221,9 +221,9 @@ export function SiteFooter() {
       className="border-t border-[#17324A]/80 bg-gradient-to-b from-[#0A1C2E] via-[#102A43] to-[#0C2E4A] text-muted-foreground selection:bg-[#1769AA]/30 selection:text-white"
       aria-label="Pie de página"
     >
-      <div className="mx-auto max-w-[1280px] px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:py-16">
+      <div className="mx-auto max-w-[1280px] px-4 py-9 sm:px-6 sm:py-12 lg:px-8 lg:py-14">
         {/* ─── A. Cabecera del Footer: Logotipo oficial & Redes Sociales ─── */}
-        <div className="flex flex-col gap-5 pb-8 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:pb-10 border-b border-[#17324A]/80">
+        <div className="flex flex-col gap-4 pb-7 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:pb-8 border-b border-[#17324A]/80">
           <div className="flex flex-wrap items-center gap-x-6 gap-y-4">
             {/* Logotipo SparkTree Systems */}
             <Link
@@ -235,7 +235,7 @@ export function SiteFooter() {
               <img
                 src="/brand/sparktree-horizontal.png"
                 alt="SparkTree Systems"
-                className="h-16 w-auto object-contain transition-transform duration-200 group-hover:scale-105 motion-reduce:transition-none sm:h-20"
+                className="h-14 w-auto object-contain transition-transform duration-200 group-hover:scale-105 motion-reduce:transition-none sm:h-16"
               />
             </Link>
 
@@ -286,7 +286,7 @@ export function SiteFooter() {
         {/* ─── B. Navegación Principal: desplegable en móvil, columnas en escritorio ─── */}
         <nav
           aria-label="Navegación del pie de página"
-          className="divide-y divide-[#17324A]/70 sm:grid sm:grid-cols-2 sm:gap-8 sm:divide-y-0 sm:py-10 lg:grid-cols-4 lg:gap-10"
+          className="divide-y divide-[#17324A]/70 sm:grid sm:grid-cols-2 sm:gap-8 sm:divide-y-0 sm:py-8 lg:grid-cols-4 lg:gap-10"
         >
           {FOOTER_COLUMNS.map((column, index) => (
             <FooterNavColumn
@@ -299,7 +299,7 @@ export function SiteFooter() {
         </nav>
 
         {/* ─── C & D. Separador y Franja Legal Inferior ─── */}
-        <div className="border-t border-[#17324A]/80 pt-6 sm:pt-8">
+        <div className="border-t border-[#17324A]/80 pt-5 sm:pt-6">
           <div className="flex flex-col gap-4 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
             <p className="text-muted-foreground">
               &copy; {currentYear} SparkTree Systems. Todos los derechos reservados.

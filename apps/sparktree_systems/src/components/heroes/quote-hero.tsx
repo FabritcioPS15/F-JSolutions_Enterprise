@@ -1,7 +1,9 @@
 import type { ReactNode } from 'react'
 import { FileText } from 'lucide-react'
 import {
+  HERO_BODY,
   HERO_CONTAINER,
+  HERO_VIEWPORT_BODY,
   HeroAccent,
   HeroAction,
   HeroActions,
@@ -38,8 +40,8 @@ export function QuoteHero({
   secondaryHref = '/contacto',
 }: QuoteHeroProps) {
   return (
-    <HeroSection id={id}>
-      <div className={`${HERO_CONTAINER} pb-10 pt-9 sm:pb-12 sm:pt-11 lg:pb-14 lg:pt-12`}>
+    <HeroSection id={id} viewport>
+      <div className={`${HERO_CONTAINER} ${HERO_BODY} ${HERO_VIEWPORT_BODY}`}>
         <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[minmax(0,1.02fr)_minmax(0,0.98fr)] lg:gap-12 xl:gap-16">
           <div className="min-w-0 max-w-[620px]">
             <HeroTitle size="lg">
@@ -60,7 +62,7 @@ export function QuoteHero({
             </HeroActions>
           </div>
 
-          <div className="min-w-0">
+          <div className="hidden min-w-0 sm:block">
             <QuoteSummaryVisual />
           </div>
         </div>

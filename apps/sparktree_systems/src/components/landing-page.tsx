@@ -20,7 +20,6 @@ import {
 } from 'react-icons/hi2'
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
 import { HomeHero } from '@/components/heroes'
-import { storeUrl } from '@/lib/store-url'
 import { cn } from '@/lib/utils'
 
 const businessLinks = [
@@ -133,7 +132,7 @@ export function LandingPage() {
           <div className="mt-8 flex flex-wrap gap-2 rounded-xl border border-blue-ink/25 bg-muted p-4">
             {businessLinks.map((link, index) => (
               <Reveal key={link} delay={index * 50}>
-                <a href={link.includes('Soporte') ? '/soporte-ti' : storeUrl('/cotizacion')} className="inline-flex rounded-full border border-blue-ink/30 bg-card px-3 py-2 text-xs font-bold text-blue-ink transition duration-300 hover:-translate-y-0.5 hover:border-[#1465A6]/40 hover:bg-tint-blue hover:shadow-sm">{link}</a>
+                <a href={link.includes('Soporte') ? '/soporte-ti' : '/cotizador-servicios'} className="inline-flex rounded-full border border-blue-ink/30 bg-card px-3 py-2 text-xs font-bold text-blue-ink transition duration-300 hover:-translate-y-0.5 hover:border-[#1465A6]/40 hover:bg-tint-blue hover:shadow-sm">{link}</a>
               </Reveal>
             ))}
           </div>

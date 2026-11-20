@@ -17,6 +17,7 @@ import {
   Wrench,
 } from 'lucide-react'
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
+import { HERO_BODY, HERO_TITLE_SIZE } from '@/components/heroes/hero-primitives'
 import { storeUrl } from '@/lib/store-url'
 import {
   popularSearches,
@@ -113,20 +114,22 @@ export function SearchPage() {
       </div>
 
       {/* Buscador */}
-      <section className="bg-gradient-to-br from-[#102A43] via-[#102A43] to-[#12568C]">
-        <div className="mx-auto max-w-[1100px] px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#75D7E8]">
+      <section className="hero-viewport-detail flex items-center bg-gradient-to-br from-[#102A43] via-[#102A43] to-[#12568C]">
+        <div className={`mx-auto w-full max-w-[1100px] px-4 sm:px-6 lg:px-8 ${HERO_BODY}`}>
+          <p className="text-[10.5px] font-semibold uppercase tracking-[0.16em] text-[#75D7E8]">
             Buscador
           </p>
-          <h1 className="mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl">
+          <h1
+            className={`mt-4 max-w-[26ch] text-balance font-heading font-bold tracking-[-0.04em] text-white sm:mt-5 ${HERO_TITLE_SIZE.md} leading-[1.08] sm:leading-[1.04]`}
+          >
             Encuentra servicios, soluciones y páginas del sitio
           </h1>
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+          <p className="mt-4 max-w-2xl text-[0.95rem] leading-relaxed text-white/70 sm:mt-5 sm:text-base">
             Busca por palabra clave en soporte, infraestructura, desarrollo de software y páginas de la
             empresa. Los equipos y productos están disponibles en SparkTree Store.
           </p>
 
-          <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-2 sm:flex-row">
+          <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-2 sm:mt-7 sm:flex-row">
             <div className="relative flex-1">
               <Search className="pointer-events-none absolute left-4 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
               <input

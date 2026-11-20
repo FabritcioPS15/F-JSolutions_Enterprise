@@ -1,7 +1,5 @@
 import { redirect } from 'next/navigation'
 
-const storeAppUrl = (process.env.NEXT_PUBLIC_STORE_APP_URL ?? 'http://localhost:3006').replace(/\/$/, '')
-
 type SearchParams = Promise<Record<string, string | string[] | undefined>>
 
 export default async function CotizacionRedirect({ searchParams }: { searchParams: SearchParams }) {
@@ -13,5 +11,5 @@ export default async function CotizacionRedirect({ searchParams }: { searchParam
   }
 
   const qs = query.toString()
-  redirect(`${storeAppUrl}/cotizacion${qs ? `?${qs}` : ''}`)
+  redirect(`/cotizador-servicios${qs ? `?${qs}` : ''}`)
 }

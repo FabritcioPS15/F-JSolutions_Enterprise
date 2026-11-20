@@ -19,6 +19,13 @@ import {
 } from 'lucide-react'
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
 import { Breadcrumbs } from '@/components/layout/breadcrumbs'
+import {
+  HERO_BODY,
+  HeroEyebrow,
+  HeroLead,
+  HeroSection,
+  HeroTitle,
+} from '@/components/heroes/hero-primitives'
 import { EMPRESA } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 import type { ComplaintStatusView } from '@fj-solutions/contracts/complaints-book'
@@ -354,28 +361,23 @@ export function ComplaintsBookPage() {
         items={[{ label: 'Inicio', href: '/' }, { label: 'Libro de reclamaciones', current: true }]}
       />
 
-      <section className="relative overflow-hidden border-b border-border bg-gradient-to-b from-muted via-card to-card">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -right-24 -top-32 size-80 rounded-full bg-[#1769AA]/10 blur-3xl"
-        />
-        <div className={`${CONTAINER} relative py-10 sm:py-14`}>
-          <span className="inline-flex items-center gap-2 rounded-full border border-brand-ink/20 bg-tint-brand px-3 py-1 text-[10.5px] font-bold uppercase tracking-[0.14em] text-brand-ink">
-            <BookOpenCheck className="size-3.5" aria-hidden="true" />
+      <HeroSection className="border-b border-border">
+        <div className={`${CONTAINER} ${HERO_BODY}`}>
+          <HeroEyebrow icon={<BookOpenCheck className="size-3.5" aria-hidden="true" />}>
             Libro de Reclamaciones Virtual
-          </span>
+          </HeroEyebrow>
 
-          <h1 className="mt-4 max-w-[22ch] font-heading text-[clamp(2rem,1.2rem+3vw,3.4rem)] font-bold leading-[1.04] tracking-[-0.045em] text-foreground">
+          <HeroTitle size="lg" className="max-w-[24ch]">
             Registra tu <span className="text-brand-ink">reclamo</span> o{' '}
             <span className="text-blue-ink">queja</span>.
-          </h1>
-          <p className="mt-4 max-w-2xl text-sm leading-6 text-muted-foreground sm:text-[15px]">
+          </HeroTitle>
+          <HeroLead className="max-w-2xl">
             Este libro virtual está a tu disposición las 24 horas, conforme al Código de Protección
             y Defensa del Consumidor. Al registrar tu caso recibirás un código de constancia y
             responderemos en un plazo máximo de 30 días calendario.
-          </p>
+          </HeroLead>
 
-          <div className="mt-6 flex flex-wrap gap-2 text-[11px] font-semibold text-muted-foreground">
+          <div className="hero-reveal hero-delay-3 mt-6 flex flex-wrap gap-2 text-[11px] font-semibold text-muted-foreground">
             <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5">
               <ShieldCheck className="size-3.5 text-success" aria-hidden="true" />
               Datos tratados de forma confidencial
@@ -386,7 +388,7 @@ export function ComplaintsBookPage() {
             </span>
           </div>
         </div>
-      </section>
+      </HeroSection>
 
       <section className={`${CONTAINER} py-10 sm:py-14`}>
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start lg:gap-12">

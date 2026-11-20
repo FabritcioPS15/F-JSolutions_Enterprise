@@ -16,6 +16,7 @@ import {
 } from 'lucide-react'
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
 import { Breadcrumbs } from '@/components/layout/breadcrumbs'
+import { HERO_BODY, HERO_TITLE_SIZE } from '@/components/heroes/hero-primitives'
 import { FaqAccordion } from '@/components/ui/faq-accordion'
 import { ProcessSequence } from '@/components/ui/process-sequence'
 import { EMPRESA } from '@/lib/constants'
@@ -151,7 +152,7 @@ export function ServiceDetail({
 
       {/* ─── Hero del servicio ─── */}
       {service.heroImage ? (
-        <section className="relative overflow-hidden bg-[#08192A]">
+        <section className="hero-viewport-detail relative flex items-center overflow-hidden bg-[#08192A]">
           <Image
             src={service.heroImage.src}
             alt={service.heroImage.alt}
@@ -170,22 +171,26 @@ export function ServiceDetail({
             className="absolute inset-0 bg-gradient-to-t from-[#08192A] via-transparent to-transparent"
           />
 
-          <div className="relative mx-auto max-w-[1280px] px-4 py-14 sm:px-6 lg:px-8 lg:py-20">
+          <div className={`relative w-full mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8 ${HERO_BODY}`}>
             <div className="max-w-2xl">
-              <h1 className="text-4xl font-bold tracking-[-0.045em] text-white sm:text-5xl">
+              <h1
+                className={`font-heading font-bold tracking-[-0.04em] text-white ${HERO_TITLE_SIZE.lg} leading-[1.08] sm:leading-[1.04]`}
+              >
                 {service.title}
               </h1>
-              <p className="mt-4 text-base leading-7 text-muted-foreground/60">{service.intro}</p>
-              <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <p className="mt-4 max-w-[54ch] text-[0.95rem] leading-relaxed text-muted-foreground/60 sm:mt-5 sm:text-base">
+                {service.intro}
+              </p>
+              <div className="mt-6 flex flex-col gap-2.5 sm:mt-7 sm:flex-row sm:flex-wrap">
                 <Link
-                  href="/cotizacion"
-                  className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#1769AA] px-5 text-sm font-bold text-white transition hover:bg-[#12568C] sm:w-auto"
+                  href={`/cotizador-servicios?servicio=${service.slug}`}
+                  className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#1769AA] px-5 text-sm font-bold text-white transition hover:bg-[#12568C] sm:w-auto"
                 >
                   Solicitar cotización <ArrowRight className="size-4" />
                 </Link>
                 <Link
                   href="/contacto"
-                  className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-white/25 bg-white/5 px-5 text-sm font-bold text-white backdrop-blur transition hover:border-white/50 hover:bg-white/10 sm:w-auto"
+                  className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-white/25 bg-white/5 px-5 text-sm font-bold text-white backdrop-blur transition hover:border-white/50 hover:bg-white/10 sm:w-auto"
                 >
                   Hablar con un especialista
                 </Link>
@@ -212,24 +217,28 @@ export function ServiceDetail({
           </div>
         </section>
       ) : (
-        <section className="relative overflow-hidden border-b border-border bg-gradient-to-br from-muted via-white to-brand-soft">
+        <section className="hero-viewport-detail relative flex items-center overflow-hidden border-b border-border bg-gradient-to-br from-muted via-white to-brand-soft">
           <div className="pointer-events-none absolute -right-32 -top-24 size-96 rounded-full bg-[#1769AA]/10 blur-3xl" />
-          <div className="relative mx-auto grid max-w-[1280px] grid-cols-1 gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:px-8 lg:py-16">
+          <div className={`relative mx-auto grid w-full max-w-[1280px] grid-cols-1 gap-10 px-4 sm:px-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:px-8 ${HERO_BODY}`}>
             <div className="min-w-0">
-              <h1 className="max-w-2xl text-4xl font-bold tracking-[-0.045em] text-foreground sm:text-5xl">
+              <h1
+                className={`max-w-2xl font-heading font-bold tracking-[-0.04em] text-foreground ${HERO_TITLE_SIZE.lg} leading-[1.08] sm:leading-[1.04]`}
+              >
                 {service.title}
               </h1>
-              <p className="mt-4 max-w-2xl text-base leading-7 text-muted-foreground">{service.intro}</p>
-              <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <p className="mt-4 max-w-[54ch] text-[0.95rem] leading-relaxed text-muted-foreground sm:mt-5 sm:text-base">
+                {service.intro}
+              </p>
+              <div className="mt-6 flex flex-col gap-2.5 sm:mt-7 sm:flex-row sm:flex-wrap">
                 <Link
-                  href="/cotizacion"
-                  className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl bg-[#1769AA] px-5 text-sm font-bold text-white transition hover:bg-[#12568C] sm:w-auto"
+                  href={`/cotizador-servicios?servicio=${service.slug}`}
+                  className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#1769AA] px-5 text-sm font-bold text-white transition hover:bg-[#12568C] sm:w-auto"
                 >
                   Solicitar cotización <ArrowRight className="size-4" />
                 </Link>
                 <Link
                   href="/contacto"
-                  className="inline-flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-border bg-card px-5 text-sm font-bold text-foreground transition hover:border-[#1769AA] hover:text-blue-ink sm:w-auto"
+                  className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-border bg-card px-5 text-sm font-bold text-foreground transition hover:border-[#1769AA] hover:text-blue-ink sm:w-auto"
                 >
                   Hablar con un especialista
                 </Link>
@@ -428,7 +437,7 @@ export function ServiceDetail({
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link
-                  href="/cotizacion"
+                  href={`/cotizador-servicios?servicio=${service.slug}`}
                   className="inline-flex h-11 items-center gap-2 rounded-xl bg-[#1769AA] px-5 text-sm font-bold text-white transition hover:bg-[#12568C]"
                 >
                   Solicitar cotización <ArrowRight className="size-4" />

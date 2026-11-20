@@ -35,7 +35,7 @@ export function CorporateHero() {
             </HeroLead>
 
             <HeroActions>
-              <HeroAction href="/cotizacion">Solicitar cotización</HeroAction>
+              <HeroAction href="/cotizador-servicios">Solicitar cotización</HeroAction>
               <HeroAction href="/servicios" variant="secondary">
                 Explorar soluciones
               </HeroAction>

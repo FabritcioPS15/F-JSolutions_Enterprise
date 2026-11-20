@@ -9,6 +9,14 @@ import {
 } from 'lucide-react'
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
 import { Breadcrumbs } from '@/components/layout/breadcrumbs'
+import {
+  HERO_BODY,
+  HERO_CONTAINER,
+  HeroEyebrow,
+  HeroLead,
+  HeroSection,
+  HeroTitle,
+} from '@/components/heroes/hero-primitives'
 import { EMPRESA } from '@/lib/constants'
 import { SITE_NAME, SITE_URL } from '@/lib/site'
 
@@ -80,21 +88,21 @@ export function LegalPage({
         ]}
       />
 
-      <section className="relative overflow-hidden border-b border-border bg-gradient-to-br from-muted via-white to-brand-soft">
-        <div className="pointer-events-none absolute -right-32 -top-24 size-96 rounded-full bg-[#1769AA]/10 blur-3xl" />
-        <div className="relative mx-auto max-w-[1280px] px-4 py-12 sm:px-6 lg:px-8 lg:py-14">
-          <span className="inline-flex items-center gap-2 rounded-full border border-[#1769AA]/25 bg-card px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-blue-ink">
-            <Icon className="size-3.5" /> Documento legal
-          </span>
-          <h1 className="mt-4 max-w-3xl text-4xl font-bold tracking-[-0.045em] text-foreground sm:text-5xl">
+      <HeroSection className="border-b border-border">
+        <div className={`${HERO_CONTAINER} ${HERO_BODY}`}>
+          <HeroEyebrow icon={<Icon className="size-3.5" aria-hidden="true" />}>
+            Documento legal
+          </HeroEyebrow>
+          <HeroTitle size="lg" className="max-w-3xl">
             {title}
-          </h1>
-          <p className="mt-4 max-w-3xl text-base leading-7 text-muted-foreground">{intro}</p>
-          <p className="mt-5 inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1.5 text-[11px] font-semibold text-muted-foreground">
-            <Clock className="size-3.5 text-blue-ink" /> Última actualización: {updatedLabel}
+          </HeroTitle>
+          <HeroLead className="max-w-3xl">{intro}</HeroLead>
+          <p className="hero-reveal hero-delay-3 mt-5 inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1.5 text-[11px] font-semibold text-muted-foreground">
+            <Clock className="size-3.5 text-blue-ink" aria-hidden="true" /> Última actualización:{' '}
+            {updatedLabel}
           </p>
         </div>
-      </section>
+      </HeroSection>
 
       <div className="mx-auto max-w-[1280px] px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_280px] lg:gap-14">

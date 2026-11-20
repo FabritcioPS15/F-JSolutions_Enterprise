@@ -3,7 +3,6 @@
 import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import {
-  ArrowRight,
   FileQuestion,
   HelpCircle,
   Mail,
@@ -198,7 +197,6 @@ export function FaqPage() {
             <div className="flex flex-wrap items-center gap-3">
               <HeroAction href="/contacto" variant="primary">
                 Consultar otra duda
-                <ArrowRight className="size-4" />
               </HeroAction>
               <HeroAction href="/como-trabajamos" variant="secondary">
                 Conocer metodología

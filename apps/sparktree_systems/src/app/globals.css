@@ -5,7 +5,7 @@
 @custom-variant dark (&:is(.dark *));
 
 html {
-  scroll-padding-top: 5rem;
+  scroll-padding-top: calc(var(--site-header-height) + 0.75rem);
   overflow-x: clip;
 }
 
@@ -14,29 +14,40 @@ html {
    Se mantienen fuera de capas para que cualquier variante pueda reutilizarlas.
    ─────────────────────────────────────────────────────────────────────────── */
 
-/* Alto del header sticky (ver enhanced-header.tsx): el hero de portada ocupa
-   el resto del viewport para no dejar huecos ni exigir scroll en laptops. */
+/* Alto total del header sticky: logo + relleno + borde. Debe coincidir con
+   la altura fija de enhanced-header.tsx para que los heroes llenen el viewport. */
 :root {
-  --home-header-height: 69px;
+  --site-header-height: 73px;
+  --home-header-height: var(--site-header-height);
 }
 
 @media (min-width: 640px) {
   :root {
-    --home-header-height: 81px;
-  }
-}
-
-@media (min-width: 1024px) {
-  :root {
-    --home-header-height: 145px;
+    --site-header-height: 77px;
   }
 }
 
 .home-hero-shell {
   display: flex;
   flex-direction: column;
-  min-height: calc(100vh - var(--home-header-height));
-  min-height: calc(100svh - var(--home-header-height));
+  min-height: calc(100vh - var(--site-header-height));
+  min-height: calc(100svh - var(--site-header-height));
+}
+
+/* Hero de página: ocupa al menos el primer viewport debajo del header. */
+.hero-viewport {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - var(--site-header-height));
+  min-height: calc(100svh - var(--site-header-height));
+}
+
+/* Variante para heroes que van debajo de las migas de pan. */
+.hero-viewport-detail {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - var(--site-header-height) - 2.75rem);
+  min-height: calc(100svh - var(--site-header-height) - 2.75rem);
 }
 
 @keyframes hero-rise {
@@ -426,8 +437,8 @@ html {
 }
 
 @theme inline {
-  --font-sans: var(--font-inter);
-  --font-heading: var(--font-space-grotesk);
+  --font-sans: var(--font-fira-sans);
+  --font-heading: var(--font-fira-sans);
   --font-mono: ui-monospace, 'Cascadia Code', 'Segoe UI Mono', 'Consolas', monospace;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -485,8 +496,8 @@ html {
 
 :root {
   color-scheme: light;
-  --font-heading: var(--font-space-grotesk), ui-sans-serif, sans-serif;
-  --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-fira-sans), ui-sans-serif, sans-serif;
+  --font-body: var(--font-fira-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, 'Cascadia Code', 'Segoe UI Mono', 'Consolas', monospace;
   /* SparkTree Systems Color Palette */
   --midnight-navy: #102A43;

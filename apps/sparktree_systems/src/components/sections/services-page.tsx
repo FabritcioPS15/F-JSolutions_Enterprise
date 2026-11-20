@@ -520,7 +520,7 @@ export function ServicesPage() {
                   ))}
                 </ul>
                 <Link
-                  href="/cotizador"
+                  href="/cotizador-servicios"
                   className={`mt-6 flex h-11 items-center justify-center gap-2 rounded-xl text-sm font-bold transition ${
                     plan.highlighted
                       ? 'bg-[#1769AA] text-white hover:bg-[#12568C]'
@@ -636,7 +636,7 @@ export function ServicesPage() {
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
                 <Link
-                  href="/cotizador"
+                  href="/cotizador-servicios"
                   className="inline-flex h-11 items-center gap-2 rounded-xl bg-gradient-to-r from-[#12568C] to-[#1769AA] px-5 text-sm font-bold text-white transition hover:from-[#1769AA] hover:to-[#12568C]"
                 >
                   Solicitar cotización <ArrowRight className="size-4" />

@@ -2,7 +2,9 @@ import type { ReactNode } from 'react'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import {
+  HERO_BODY,
   HERO_CONTAINER,
+  HERO_VIEWPORT_BODY,
   HeroAction,
   HeroActions,
   HeroEyebrow,
@@ -37,8 +39,8 @@ export function DetailHero({
   backLabel = 'Volver a servicios',
 }: DetailHeroProps) {
   return (
-    <HeroSection>
-      <div className={`${HERO_CONTAINER} pb-10 pt-7 sm:pb-12 sm:pt-9 lg:pb-14 lg:pt-10`}>
+    <HeroSection viewport>
+      <div className={`${HERO_CONTAINER} ${HERO_BODY} ${HERO_VIEWPORT_BODY}`}>
         <Link
           href={backHref}
           className="hero-reveal inline-flex items-center gap-1.5 rounded-md text-[11px] font-semibold text-muted-foreground transition hover:text-blue-ink"
@@ -63,7 +65,7 @@ export function DetailHero({
             </HeroActions>
           </div>
 
-          <div className="min-w-0">{visual}</div>
+          <div className="hidden min-w-0 sm:block">{visual}</div>
         </div>
       </div>
     </HeroSection>

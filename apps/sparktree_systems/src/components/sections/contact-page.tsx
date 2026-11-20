@@ -42,7 +42,7 @@ const channels = [
     icon: MonitorCog,
     title: 'Necesito equipos',
     copy: 'Laptops, servidores, monitores o implementación de una oficina completa.',
-    href: '/cotizacion',
+    href: '/cotizador-servicios',
     cta: 'Ir al cotizador',
   },
   {
@@ -84,7 +84,7 @@ export function ContactPage() {
         actions={
           <>
             <HeroAction href="#formulario">Escribir un mensaje</HeroAction>
-            <HeroAction href="/cotizacion" variant="secondary">
+            <HeroAction href="/cotizador-servicios" variant="secondary">
               Solicitar cotización
             </HeroAction>
           </>
@@ -175,7 +175,7 @@ export function ContactPage() {
                 <Send aria-hidden="true" className="mt-0.5 size-3.5 shrink-0 text-blue-ink" />
                 <span>
                   ¿Ya sabes qué equipos necesitas? Usa el{' '}
-                  <Link href="/cotizacion" className="font-bold text-blue-ink hover:text-blue-ink">
+                  <Link href="/cotizador-servicios" className="font-bold text-blue-ink hover:text-blue-ink">
                     cotizador
                   </Link>{' '}
                   para enviar una lista detallada.

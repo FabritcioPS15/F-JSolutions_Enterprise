@@ -201,7 +201,6 @@ export function HowWeWorkPage() {
             <div className="flex flex-wrap items-center gap-3">
               <HeroAction href="/contacto" variant="primary">
                 Iniciar conversación
-                <ArrowRight className="size-4" />
               </HeroAction>
               <HeroAction href="/proyectos" variant="secondary">
                 Ver casos de éxito
