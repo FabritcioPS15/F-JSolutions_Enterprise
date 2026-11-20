@@ -11,7 +11,7 @@ packages:
   - 'packages/*'
 
 packageExtensions:
-  next@16.4.3:
+  next@16.4.5:
     peerDependencies:
       '@types/react': '*'
     peerDependenciesMeta:

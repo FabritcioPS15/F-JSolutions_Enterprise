@@ -1,8 +1,8 @@
-import { categories as catalogCategories, products as catalogProducts } from './catalog'
+import { categories as catalogCategories } from './catalog'
 import { getServicePathFor, serviceDefinitions, type ServiceCategory } from './services'
 import { storeUrl } from './store-url'
 
-export type SiteSearchType = 'product' | 'system' | 'service' | 'category' | 'page' | 'legal'
+export type SiteSearchType = 'system' | 'service' | 'category' | 'page' | 'legal'
 
 export type SiteSearchEntry = {
   id: string
@@ -25,7 +25,6 @@ export type SiteSearchGroup = {
 }
 
 export const searchTypeGroupLabels: Record<SiteSearchType, string> = {
-  product: 'Productos',
   system: 'Desarrollo de software',
   service: 'Servicios',
   category: 'Categorías',
@@ -34,7 +33,6 @@ export const searchTypeGroupLabels: Record<SiteSearchType, string> = {
 }
 
 export const searchTypeOrder: SiteSearchType[] = [
-  'product',
   'system',
   'service',
   'category',
@@ -43,7 +41,6 @@ export const searchTypeOrder: SiteSearchType[] = [
 ]
 
 const typeWeight: Record<SiteSearchType, number> = {
-  product: 8,
   system: 7,
   service: 6,
   category: 5,
@@ -107,7 +104,7 @@ const staticPages: StaticPage[] = [
   {
     title: 'Inicio',
     href: '/',
-    description: 'Soluciones tecnológicas para empresas: equipos, soporte y software.',
+    description: 'Soluciones tecnológicas para empresas: soporte, infraestructura y software.',
     keywords: ['inicio', 'home', 'portada', 'fj', 'f&j', 'sistemas', 'tecnologia'],
   },
   {
@@ -247,22 +244,6 @@ const legalPages: StaticPage[] = [
 ]
 
 function buildIndex(): SiteSearchEntry[] {
-  const productEntries: SiteSearchEntry[] = catalogProducts.map((product) => ({
-    id: `product-${product.id}`,
-    type: 'product',
-    title: product.name,
-    description: `${product.brand} · ${product.category}`,
-    href: storeUrl(`/productos/${product.slug}`),
-    image: product.image,
-    keywords: [
-      product.brand,
-      product.category,
-      product.model ?? '',
-      product.sku ?? '',
-      ...product.specs.slice(0, 6),
-    ].filter(Boolean),
-  }))
-
   const serviceEntries: SiteSearchEntry[] = serviceDefinitions.map((service) => {
     const isSoftware = service.category === 'Desarrollo de software'
     return {
@@ -308,7 +289,6 @@ function buildIndex(): SiteSearchEntry[] {
   }))
 
   return [
-    ...productEntries,
     ...serviceEntries,
     ...categoryEntries,
     ...pageEntries,

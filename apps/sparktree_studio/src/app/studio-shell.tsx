@@ -23,6 +23,15 @@ export function StudioShell({ children }: { children: React.ReactNode }) {
     return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      ['/', '/services', '/portfolio', '/blog', '/nosotros', '/contact'].forEach((route) =>
+        router.prefetch(route),
+      );
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, [router]);
+
   const currentPage = getCurrentPageId(pathname);
 
   const handleNavigate = (page: string) => {
@@ -34,7 +43,7 @@ export function StudioShell({ children }: { children: React.ReactNode }) {
       router.push(target);
       setIsExiting(false);
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, 350);
+    }, 180);
   };
 
   return (

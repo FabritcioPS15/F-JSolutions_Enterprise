@@ -1,17 +1,12 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import {
   ArrowRight,
-  BarChart3,
-  Check,
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  Globe,
-  Laptop,
-  Package,
-  SlidersHorizontal,
+  Code2,
+  FolderKanban,
+  Headset,
+  Network,
 } from 'lucide-react'
 import {
   HiOutlineAcademicCap,
@@ -25,9 +20,6 @@ import {
 } from 'react-icons/hi2'
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
 import { HomeHero } from '@/components/heroes'
-import { ProductCard } from '@/components/cards/product-card'
-import { categories } from '@/lib/catalog'
-import { getFeaturedProducts } from '@/lib/product-feed'
 import { storeUrl } from '@/lib/store-url'
 import { cn } from '@/lib/utils'
 
@@ -93,65 +85,6 @@ const enterpriseServices = [
 
 
 export function LandingPage() {
-  const [category, setCategory] = useState('Todas')
-  const [categoryOpen, setCategoryOpen] = useState(false)
-  const [visiblePages, setVisiblePages] = useState(1)
-  const [canScrollLeft, setCanScrollLeft] = useState(false)
-  const [canScrollRight, setCanScrollRight] = useState(false)
-  const categoryRef = useRef<HTMLDivElement>(null)
-  const trackRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const listener = (event: MouseEvent) => {
-      if (categoryRef.current && !categoryRef.current.contains(event.target as Node)) {
-        setCategoryOpen(false)
-      }
-    }
-    document.addEventListener('mousedown', listener)
-    return () => document.removeEventListener('mousedown', listener)
-  }, [])
-
-  useEffect(() => {
-    setVisiblePages(1)
-    trackRef.current?.scrollTo({ left: 0 })
-  }, [category])
-
-  const syncArrows = useCallback(() => {
-    const track = trackRef.current
-    if (!track) return
-    setCanScrollLeft(track.scrollLeft > 4)
-    setCanScrollRight(track.scrollLeft + track.clientWidth < track.scrollWidth - 4)
-  }, [])
-
-  const featured = useMemo(
-    () => getFeaturedProducts({ category, pages: visiblePages }),
-    [category, visiblePages],
-  )
-
-  useEffect(() => {
-    syncArrows()
-    window.addEventListener('resize', syncArrows)
-    return () => window.removeEventListener('resize', syncArrows)
-  }, [featured.items.length, syncArrows])
-
-  const handleTrackScroll = () => {
-    const track = trackRef.current
-    if (!track) return
-
-    syncArrows()
-
-    // Carga la siguiente tanda al acercarse al final del carrusel.
-    if (featured.hasMore && track.scrollLeft + track.clientWidth >= track.scrollWidth - 160) {
-      setVisiblePages((value) => value + 1)
-    }
-  }
-
-  const scrollCarousel = (direction: 1 | -1) => {
-    const track = trackRef.current
-    if (!track) return
-    track.scrollBy({ left: direction * track.clientWidth, behavior: 'smooth' })
-  }
-
   return (
     <main className="min-h-screen overflow-x-clip bg-muted text-foreground">
       <EnhancedHeader />
@@ -163,112 +96,19 @@ export function LandingPage() {
         <div className="mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8">
           <div className="grid gap-3.5 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
             <Reveal className="h-full">
-              <Feature icon={<Package />} title="Tienda de productos" copy="Explora equipos y componentes" onClick={() => { window.location.href = storeUrl('/productos') }} />
+              <Feature icon={<Headset />} title="Soporte TI" copy="Atención remota y en sitio" onClick={() => { window.location.href = '/soporte-ti' }} />
             </Reveal>
             <Reveal className="h-full" delay={70}>
-              <Feature icon={<BarChart3 />} title="Comparar productos" copy="Elige con confianza" />
+              <Feature icon={<Network />} title="Infraestructura TI" copy="Redes, servidores y cableado" onClick={() => { window.location.href = '/infraestructura-ti' }} />
             </Reveal>
             <Reveal className="h-full" delay={140}>
-              <Feature icon={<Laptop />} title="Asesoría especializada" copy="Te ayudamos a decidir" />
+              <Feature icon={<Code2 />} title="Desarrollo de sistemas" copy="Software a la medida" onClick={() => { window.location.href = '/sistemas' }} />
             </Reveal>
             <Reveal className="h-full" delay={210}>
-              <Feature icon={<Globe />} title="Servicios TI" copy="Soporte para empresas" onClick={() => { window.location.href = '/servicios' }} />
+              <Feature icon={<FolderKanban />} title="Proyectos y experiencia" copy="Casos de éxito y sectores" onClick={() => { window.location.href = '/proyectos' }} />
             </Reveal>
           </div>
         </div>
-      </section>
-
-
-
-      <section id="productos" className="mx-auto max-w-[1280px] scroll-mt-20 sm:scroll-mt-24 px-4 py-8 sm:py-10 sm:px-6 lg:px-8">
-        <Reveal className="relative z-20 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-ink sm:text-sm">Selección SparkTree</p>
-            <h2 className="mt-2 text-2xl font-bold tracking-[-0.05em] sm:text-3xl lg:text-4xl">Productos destacados</h2>
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
-            <div ref={categoryRef} className="relative">
-              <button type="button" onClick={() => setCategoryOpen((value) => !value)} aria-expanded={categoryOpen} aria-haspopup="listbox" className={`flex h-10 items-center gap-2 rounded-lg border px-3.5 text-sm font-semibold transition ${category !== 'Todas' ? 'border-[#1465a6]/30 bg-tint-blue text-blue-ink' : 'border-border bg-card text-foreground hover:border-[#1465a6]/40 hover:text-blue-ink'}`}>
-                <SlidersHorizontal className="size-4" />
-                {category === 'Todas' ? 'Categorías' : category}
-                <ChevronDown className={`size-4 transition-transform duration-200 ${categoryOpen ? 'rotate-180' : ''}`} />
-              </button>
-              {categoryOpen && (
-                <div className="absolute left-0 top-[calc(100%+8px)] z-30 w-64 rounded-xl border border-border bg-card p-1.5 shadow-[0_16px_40px_-12px_rgba(15,23,42,0.25)] sm:left-auto sm:right-0">
-                  <div className="max-h-72 overflow-y-auto">
-                    <button type="button" onClick={() => { setCategory('Todas'); setCategoryOpen(false) }} className={`flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-left text-sm font-semibold transition ${category === 'Todas' ? 'bg-tint-blue text-blue-ink' : 'text-foreground hover:bg-muted'}`}>
-                      Todas las categorías
-                      {category === 'Todas' && <Check className="size-4" />}
-                    </button>
-                    <div className="my-1 h-px bg-muted" />
-                    {categories.map((item) => (
-                      <button key={item} type="button" onClick={() => { setCategory(item); setCategoryOpen(false) }} className={`flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2.5 text-left text-sm transition ${category === item ? 'bg-tint-blue text-blue-ink' : 'text-foreground hover:bg-muted'}`}>
-                        {item}
-                        {category === item && <Check className="size-4" />}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-            <a href={storeUrl('/productos')} className="group inline-flex h-10 items-center gap-2 rounded-lg border border-border bg-card px-4 text-sm font-semibold text-foreground transition hover:border-[#1465a6]/40 hover:text-blue-ink">
-              Ver toda la tienda <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-0.5" />
-            </a>
-            <div className="flex items-center gap-1.5">
-              <span className="mr-1 hidden text-xs font-semibold text-muted-foreground sm:inline">
-                {featured.items.length} de {featured.total}
-              </span>
-              <button
-                type="button"
-                onClick={() => scrollCarousel(-1)}
-                disabled={!canScrollLeft}
-                aria-label="Ver productos anteriores"
-                className="grid size-10 place-items-center rounded-lg border border-border bg-card text-foreground transition hover:border-[#1465a6]/40 hover:text-blue-ink disabled:cursor-not-allowed disabled:opacity-40"
-              >
-                <ChevronLeft className="size-4" />
-              </button>
-              <button
-                type="button"
-                onClick={() => scrollCarousel(1)}
-                disabled={!canScrollRight}
-                aria-label="Ver más productos"
-                className="grid size-10 place-items-center rounded-lg border border-border bg-card text-foreground transition hover:border-[#1465a6]/40 hover:text-blue-ink disabled:cursor-not-allowed disabled:opacity-40"
-              >
-                <ChevronRight className="size-4" />
-              </button>
-            </div>
-          </div>
-        </Reveal>
-        {featured.total === 0 ? (
-          <div className="mt-5 rounded-2xl border border-dashed border-border bg-card px-4 py-10 text-center">
-            <p className="text-sm font-bold text-foreground">No hay productos en esta categoría</p>
-            <p className="mt-1 text-xs text-muted-foreground">Prueba con otra categoría o revisa el catálogo completo.</p>
-            <button
-              type="button"
-              onClick={() => setCategory('Todas')}
-              className="mt-4 inline-flex h-10 items-center gap-2 rounded-lg bg-[#1465a6] px-4 text-sm font-semibold text-white transition hover:bg-[#0f4fd1]"
-            >
-              Ver todos los productos
-            </button>
-          </div>
-        ) : (
-          <Reveal className="mt-5">
-            <div
-              ref={trackRef}
-              onScroll={handleTrackScroll}
-              className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-2 lg:gap-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-            >
-              {featured.items.map((product) => (
-                <div
-                  key={product.id}
-                  className="w-[86%] shrink-0 snap-start sm:w-[calc(50%-6px)] lg:w-[calc(33.333%-10.667px)] xl:w-[calc(25%-12px)]"
-                >
-                  <ProductCard product={product} />
-                </div>
-              ))}
-            </div>
-          </Reveal>
-        )}
       </section>
 
       <section id="servicios" className="border-y border-border bg-card scroll-mt-20 sm:scroll-mt-24 px-4 py-8 sm:py-10 sm:px-6 lg:px-8">
@@ -276,7 +116,7 @@ export function LandingPage() {
           <Reveal>
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-ink sm:text-sm">Servicios para empresas</p>
             <h2 className="mt-2 text-2xl font-bold tracking-[-0.05em] sm:text-3xl">Soporte TI en cada etapa</h2>
-            <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">Además de vender tecnología, ayudamos a implementar, mantener y proteger tu operación.</p>
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-muted-foreground">Implementamos, mantenemos y protegemos la operación tecnológica de tu empresa.</p>
           </Reveal>
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {enterpriseServices.map((service, index) => (
@@ -293,7 +133,7 @@ export function LandingPage() {
           <div className="mt-8 flex flex-wrap gap-2 rounded-xl border border-blue-ink/25 bg-muted p-4">
             {businessLinks.map((link, index) => (
               <Reveal key={link} delay={index * 50}>
-                <a href={link.includes('Soporte') ? '/soporte-ti' : storeUrl('/cotizacion')} className="inline-flex rounded-full border border-blue-ink/30 bg-card px-3 py-2 text-xs font-bold text-blue-ink transition duration-300 hover:-translate-y-0.5 hover:border-[#1465a6]/40 hover:bg-tint-blue hover:shadow-sm">{link}</a>
+                <a href={link.includes('Soporte') ? '/soporte-ti' : storeUrl('/cotizacion')} className="inline-flex rounded-full border border-blue-ink/30 bg-card px-3 py-2 text-xs font-bold text-blue-ink transition duration-300 hover:-translate-y-0.5 hover:border-[#1465A6]/40 hover:bg-tint-blue hover:shadow-sm">{link}</a>
               </Reveal>
             ))}
           </div>

@@ -9,6 +9,7 @@ import {
   Code2,
   Compass,
   FileText,
+  Network,
   Package,
   Scale,
   Search,
@@ -28,7 +29,6 @@ import {
 } from '@/lib/site-search'
 
 const typeIcons: Record<SiteSearchType, typeof Package> = {
-  product: Package,
   system: Code2,
   service: Wrench,
   category: Tag,
@@ -44,16 +44,9 @@ function ResultRow({ item }: { item: SiteSearchResult }) {
       href={item.href}
       className="group flex min-w-0 items-center gap-3 rounded-xl border border-border bg-card p-3.5 transition hover:border-[#1769AA]/40 hover:shadow-sm sm:gap-4"
     >
-      {item.type === 'product' && item.image ? (
-        <span className="flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-card">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={item.image} alt="" className="size-full object-cover" loading="lazy" />
-        </span>
-      ) : (
-        <span className="grid size-11 shrink-0 place-items-center rounded-lg bg-tint-blue text-blue-ink">
-          <Icon className="size-4" aria-hidden="true" />
-        </span>
-      )}
+      <span className="grid size-11 shrink-0 place-items-center rounded-lg bg-tint-blue text-blue-ink">
+        <Icon className="size-4" aria-hidden="true" />
+      </span>
 
       <span className="min-w-0 flex-1">
         <span className="block truncate text-sm font-semibold text-foreground transition group-hover:text-blue-ink">
@@ -126,11 +119,11 @@ export function SearchPage() {
             Buscador
           </p>
           <h1 className="mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            Encuentra productos, servicios y soluciones
+            Encuentra servicios, soluciones y páginas del sitio
           </h1>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
-            Busca por palabra clave en todo el sitio: equipos del catálogo, soporte, infraestructura,
-            desarrollo de software y páginas de la empresa.
+            Busca por palabra clave en soporte, infraestructura, desarrollo de software y páginas de la
+            empresa. Los equipos y productos están disponibles en SparkTree Store.
           </p>
 
           <form onSubmit={handleSubmit} className="mt-6 flex flex-col gap-2 sm:flex-row">
@@ -139,7 +132,7 @@ export function SearchPage() {
               <input
                 value={input}
                 onChange={(event) => setInput(event.target.value)}
-                placeholder="Ej. web, laptops, redes, soporte..."
+                placeholder="Ej. web, redes, soporte, sistemas..."
                 aria-label="Buscar en todo el sitio"
                 autoComplete="off"
                 className="h-12 w-full rounded-xl border border-white/10 bg-card/95 pl-11 pr-4 text-sm text-foreground outline-none transition placeholder:text-muted-foreground focus:border-sky-300/50 focus:ring-2 focus:ring-[#75D7E8]/30"
@@ -186,7 +179,7 @@ export function SearchPage() {
                   <span className="text-blue-ink">&quot;{q}&quot;</span>
                 </h2>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Coincidencias en productos, servicios, desarrollo de software y secciones.
+                  Coincidencias en servicios, desarrollo de software, categorías y secciones.
                 </p>
               </div>
               <Link
@@ -207,7 +200,7 @@ export function SearchPage() {
                 </h3>
                 <p className="mx-auto mt-1 max-w-md text-sm text-muted-foreground">
                   Revisa la ortografía o prueba con una palabra más general. También puedes explorar
-                  el catálogo o hablar con un asesor.
+                  los servicios o hablar con un asesor.
                 </p>
 
                 <div className="mt-4 flex flex-wrap justify-center gap-2">
@@ -294,7 +287,7 @@ export function SearchPage() {
               <h2 className="mt-10 text-xl font-bold">Qué puedes encontrar</h2>
               <div className="mt-4 grid gap-3 sm:grid-cols-2">
                 {[
-                  { icon: Package, title: 'Productos', copy: 'Laptops, PCs, monitores, redes, impresoras y accesorios.' },
+                  { icon: Network, title: 'Infraestructura TI', copy: 'Redes, servidores, cableado y conectividad.' },
                   { icon: Wrench, title: 'Servicios TI', copy: 'Soporte técnico, mantenimiento e infraestructura.' },
                   { icon: Code2, title: 'Desarrollo de software', copy: 'Sistemas web, ERP, automatización e integraciones.' },
                   { icon: FileText, title: 'Secciones y legales', copy: 'Empresa, proyectos, contacto, preguntas y políticas.' },

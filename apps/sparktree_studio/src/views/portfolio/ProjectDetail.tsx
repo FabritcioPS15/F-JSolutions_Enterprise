@@ -375,7 +375,7 @@ export default function ProjectDetail({ projectId, onNavigate, initialData, isPr
                   {((project as any).contentBlocks as ContentBlock[]).map((block, idx) => {
                     switch (block.type) {
                       case 'heading':
-                        const HeadingTag = `h${block.level || 2}` as keyof JSX.IntrinsicElements;
+                        const HeadingTag = `h${block.level || 2}` as 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
                         return (
                           <HeadingTag key={block.id || idx} className={`font-black text-gray-900 tracking-tight reveal ${
                             block.level === 2 ? 'text-3xl' : block.level === 3 ? 'text-2xl' : 'text-xl'

@@ -60,7 +60,7 @@ export function HeroTypewriter({ items }: { items: TypewriterItem[] }) {
         Unidades de negocio
       </span>
       <p
-        className="inline-flex min-h-7 items-baseline font-display text-lg font-semibold transition-colors duration-500 sm:min-h-8 sm:text-xl"
+        className="inline-flex min-h-7 items-baseline font-display text-lg font-semibold sm:min-h-8 sm:text-xl"
         style={{ color: accent, textShadow: `0 0 30px ${current.accent}59` }}
         aria-hidden="true"
       >

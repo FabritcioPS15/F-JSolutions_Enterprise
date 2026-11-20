@@ -9,25 +9,16 @@ import {
   type ReactNode,
 } from 'react'
 import {
-  Boxes,
-  CheckCircle2,
   ChevronLeft,
   ChevronRight,
-  Headset,
-  Laptop,
-  Layers,
   Pause,
   Play,
-  Router,
-  Server,
-  Truck,
 } from 'lucide-react'
 import {
   HERO_CONTAINER,
   HeroAccent,
   HeroAction,
   HeroActions,
-  HeroPanel,
   HeroProof,
   HeroSection,
   HeroTitle,
@@ -39,128 +30,7 @@ import {
 } from '@/components/heroes/hero-visuals'
 import { CorporateHero } from '@/components/heroes/corporate-hero'
 import { SpotlightHero } from '@/components/heroes/spotlight-hero'
-import { storeUrl } from '@/lib/store-url'
 import { cn } from '@/lib/utils'
-
-/* ─── Visual especializada para el slide de Equipamiento & Hardware ─────── */
-
-function EquipmentVisual() {
-  const hardwareItems = [
-    {
-      icon: Laptop,
-      category: 'Laptops Corporativas',
-      title: 'Equipos de alta productividad',
-      detail: 'Lenovo ThinkPad · Dell Latitude · HP ProBook',
-      badge: 'Garantía 3 años',
-      status: 'Disponible',
-    },
-    {
-      icon: Server,
-      category: 'Servidores & Nube',
-      title: 'Infraestructura de almacenamiento',
-      detail: 'Servidores en torre y rack · Xeon · Arreglos RAID',
-      badge: 'Configuración lista',
-      status: 'A medida',
-    },
-    {
-      icon: Router,
-      category: 'Redes & Conectividad',
-      title: 'Switches, APs y Routers Gigabit',
-      detail: 'Cisco · Ubiquiti UniFi · TP-Link Omada',
-      badge: 'Soporte PoE+',
-      status: 'En stock',
-    },
-  ]
-
-  return (
-    <div className="relative pt-4">
-      <HeroPanel className="hero-float-soft">
-        {/* Cabecera del panel */}
-        <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-3.5 sm:px-5">
-          <div className="flex min-w-0 items-center gap-2.5">
-            <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-[#0B2236] text-white">
-              <Boxes aria-hidden="true" className="size-4" />
-            </span>
-            <div className="min-w-0">
-              <p className="truncate text-[11px] font-bold text-foreground">
-                Suministro y Hardware
-              </p>
-              <p className="truncate text-[9.5px] text-muted-foreground">
-                Equipamiento corporativo con garantía oficial
-              </p>
-            </div>
-          </div>
-          <span className="shrink-0 rounded-full border border-success/35 bg-tint-green px-2 py-1 text-[8px] font-bold uppercase tracking-wider text-success">
-            Stock y despacho
-          </span>
-        </div>
-
-        {/* Contenido con items destacados */}
-        <div className="p-4 sm:p-5">
-          <div className="space-y-2.5">
-            {hardwareItems.map((item) => (
-              <div
-                key={item.category}
-                className="flex items-center gap-3 rounded-xl border border-border bg-card p-2.5 transition-colors hover:border-[#1769AA]/30 hover:bg-muted"
-              >
-                <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-tint-blue text-blue-ink">
-                  <item.icon aria-hidden="true" className="size-4.5" />
-                </span>
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <p className="truncate text-[10.5px] font-bold text-foreground">
-                      {item.category}
-                    </p>
-                    <span className="hidden rounded bg-muted px-1.5 py-0.5 text-[7.5px] font-semibold text-muted-foreground sm:inline">
-                      {item.badge}
-                    </span>
-                  </div>
-                  <p className="truncate text-[9px] text-muted-foreground">{item.detail}</p>
-                </div>
-                <span className="shrink-0 rounded-md bg-tint-blue px-2 py-0.5 text-[8px] font-bold text-blue-ink">
-                  {item.status}
-                </span>
-              </div>
-            ))}
-          </div>
-
-          {/* Bloque inferior de métricas de suministro */}
-          <div className="mt-3.5 grid grid-cols-3 gap-2">
-            {[
-              { value: '100%', label: 'Garantía de marca' },
-              { value: '24-48 h', label: 'Entrega en Lima' },
-              { value: 'RUC 20', label: 'Factura oficial' },
-            ].map((stat) => (
-              <div
-                key={stat.label}
-                className="rounded-xl border border-border bg-muted px-2.5 py-2 text-center"
-              >
-                <p className="font-heading text-xs font-bold text-foreground sm:text-sm">
-                  {stat.value}
-                </p>
-                <p className="mt-0.5 truncate text-[8px] font-medium text-muted-foreground">
-                  {stat.label}
-                </p>
-              </div>
-            ))}
-          </div>
-
-          {/* Aviso de asesoría */}
-          <div className="mt-3 flex items-center justify-between gap-2 rounded-xl border border-border bg-muted px-3 py-2 text-[8.5px]">
-            <span className="inline-flex items-center gap-1.5 font-semibold text-muted-foreground">
-              <Truck aria-hidden="true" className="size-3.5 text-blue-ink" />
-              Envíos y coordinación a provincias
-            </span>
-            <span className="inline-flex items-center gap-1 font-bold text-success">
-              <CheckCircle2 aria-hidden="true" className="size-3" />
-              Asesoría técnica
-            </span>
-          </div>
-        </div>
-      </HeroPanel>
-    </div>
-  )
-}
 
 /* ─── Configuración de los Heros del carrusel ────────────────────────────── */
 
@@ -206,31 +76,6 @@ const HERO_SLIDES: HeroSlide[] = [
       'SLA 99.8% garantizado',
     ],
     visual: <OpsConsoleVisual />,
-  },
-  {
-    id: 'equipos',
-    tabLabel: 'Equipos & Tienda',
-    title: (
-      <>
-        Equipos y tecnología para <HeroAccent>cada área</HeroAccent> de tu empresa.
-      </>
-    ),
-    description:
-      'Laptops corporativas, computadoras de alto rendimiento, servidores y periféricos de las marcas líderes mundiales. Compra inteligente con garantía directa, factura electrónica y asesoría especializada.',
-    primaryAction: {
-      label: 'Ver tienda de productos',
-      href: storeUrl('/productos'),
-    },
-    secondaryAction: {
-      label: 'Cotizar equipamiento',
-      href: '/cotizador',
-    },
-    proofItems: [
-      'Marcas autorizadas y originales',
-      'Garantía directa de fabricante',
-      'Despachos coordinados a nivel nacional',
-    ],
-    visual: <EquipmentVisual />,
   },
   {
     id: 'soporte',

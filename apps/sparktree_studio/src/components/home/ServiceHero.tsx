@@ -17,7 +17,7 @@ const services: Service[] = [
     title: 'Tu Equipo de Marketing Externo',
     subtitle: 'Outsourcing',
     description: 'No necesitas contratar un equipo interno. Nosotros somos tu departamento de marketing dedicado a resultados.',
-    image: '/assets/heroimages/Marketing_externo.png',
+    image: '/assets/heroimages/marketing-externo.webp',
     cta: 'Empezar ahora',
     path: 'contact'
   },
@@ -25,7 +25,7 @@ const services: Service[] = [
     title: 'Automatización con IA (SaaS)',
     subtitle: 'SparkBots',
     description: 'Alquila nuestros bots inteligentes para atención al cliente y ventas. Automatiza tu área de respuestas 24/7.',
-    image: '/assets/heroimages/Automatización_IA_Imagen.png',
+    image: '/assets/heroimages/automatizacion-ia.webp',
     cta: 'Ver SparkBots',
     path: 'service-ti'
   },
@@ -33,7 +33,7 @@ const services: Service[] = [
     title: 'Diseño Web de Alto Impacto',
     subtitle: 'Presencia',
     description: 'Convertimos tu marca en una experiencia digital única que atrae y fideliza clientes.',
-    image: '/assets/heroimages/Diseñoweb.png',
+    image: '/assets/heroimages/diseno-web.webp',
     cta: 'Crear mi Web',
     path: 'service-web'
   },
@@ -41,7 +41,7 @@ const services: Service[] = [
     title: 'Hub de Soluciones Tecnológicas',
     subtitle: 'Ingeniería',
     description: 'Desarrollamos software a medida y soluciones de IT que escalan con tu negocio. El motor técnico que tu empresa necesita.',
-    image: '/assets/heroimages/Soluciones_tecnologicas.png',
+    image: '/assets/heroimages/soluciones-tecnologicas.webp',
     cta: 'Ver Soluciones',
     path: 'service-ti'
   }
@@ -49,12 +49,8 @@ const services: Service[] = [
 
 
 const logos = [
-  { name: 'Empresa 1', src: '/assets/EmpresasSparktreekeadas/logo1.png' },
-  { name: 'Empresa 2', src: '/assets/EmpresasSparktreekeadas/LogoRTPSanCristobal.png' },
-  { name: 'Empresa 3', src: '/assets/EmpresasSparktreekeadas/logo3.png' },
-  { name: 'Empresa 4', src: '/assets/EmpresasSparktreekeadas/logo4.png' },
-  { name: 'Empresa 5', src: '/assets/EmpresasSparktreekeadas/logo5.png' },
-  { name: 'Empresa 6', src: '/assets/EmpresasSparktreekeadas/logo6.png' },
+  { name: 'Empresa 1', src: '/assets/EmpresasSparktreekeadas/logo1.webp' },
+  { name: 'RTP San Cristóbal', src: '/assets/EmpresasSparktreekeadas/logo-rtp.webp' },
 ];
 
 
@@ -156,7 +152,7 @@ export const ServiceHero: React.FC<ServiceHeroProps> = ({ onNavigate }) => {
       {/* Marcas de logos con carrusel y fondo de glassmorfismo*/}
       <div className="absolute bottom-0 left-0 w-full z-30 bg-black/40 backdrop-blur-lg border-t border-white/10 py-6 overflow-hidden group/marquee">
         <div className="flex w-max animate-marquee items-center">
-          {[...logos, ...logos, ...logos, ...logos].map((logo, index) => (
+          {Array.from({ length: 8 }, () => logos).flat().map((logo, index) => (
             <div
               key={index}
               className="mx-12 md:mx-20 shrink-0 flex items-center justify-center transition-all duration-500 cursor-pointer scale-100 hover:scale-110 select-none group/logo"
@@ -186,7 +182,7 @@ export const ServiceHero: React.FC<ServiceHeroProps> = ({ onNavigate }) => {
       <style>{`
         @keyframes marquee {
           0% { transform: translateX(0); }
-          100% { transform: translateX(-25%); }
+          100% { transform: translateX(-12.5%); }
         }
         .animate-marquee {
           animation: marquee 20s linear infinite;

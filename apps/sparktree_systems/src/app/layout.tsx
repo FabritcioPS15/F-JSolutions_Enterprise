@@ -27,7 +27,7 @@ const spaceGrotesk = Space_Grotesk({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: 'SparkTree Systems | Soluciones tecnológicas para empresas',
-  description: 'Desarrollo de software, infraestructura TI y hardware corporativo para empresas que quieren avanzar.',
+  description: 'Desarrollo de software, infraestructura TI y soporte técnico para empresas que quieren avanzar.',
   generator: 'v0.app',
   icons: {
     icon: [{ url: '/favicon.svg', type: 'image/svg+xml' }],

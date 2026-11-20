@@ -10,6 +10,7 @@ import {
   Building2,
   Cable,
   ChevronDown,
+  ChevronLeft,
   ChevronRight,
   CircleHelp,
   Clock,
@@ -48,6 +49,7 @@ import {
   Zap,
 } from 'lucide-react'
 import { FaTeamspeak } from 'react-icons/fa6'
+import { SiReact } from 'react-icons/si'
 import { categories as catalogCategories } from '@/lib/catalog'
 import {
   popularSearches,
@@ -55,7 +57,14 @@ import {
   searchSiteGrouped,
   type SiteSearchType,
 } from '@/lib/site-search'
-import { mainNav, itServicesMenu, infrastructureMenu, softwareDevMenu, companyMenu } from '@/lib/navigation'
+import {
+  mainNav,
+  itServicesMenu,
+  infrastructureMenu,
+  softwareDevMenu,
+  companyMenu,
+  type NavMenuItem,
+} from '@/lib/navigation'
 import { ThemeToggle } from '@/components/theme/theme-toggle'
 import { storeUrl } from '@/lib/store-url'
 
@@ -119,6 +128,9 @@ const sectionIcons: Record<string, React.ElementType> = {
   'desarrollo-de-software': Code2,
   empresa: Compass,
 }
+
+// Acceso directo destacado junto a "Desarrollo de software".
+const SOFTWARE_QUICK_LINK = '/sistemas/sistemas-web-a-medida'
 
 // ─── Componente: Mobile Accordion ─────────────────────────────────────────────────────────────
 
@@ -219,7 +231,15 @@ function MobileAccordion({
 
 // ─── Componente: Menú Desplegable Compacto ───────────────────────────────────────────────
 
-function CompactDropdown({ items, onClose }: { items: Array<{ label: string; href: string; desc?: string; variant?: 'general' }>; onClose: () => void }) {
+function CompactDropdown({
+  items,
+  onClose,
+  className = 'left-0',
+}: {
+  items: Array<{ label: string; href: string; desc?: string; variant?: 'general' }>
+  onClose: () => void
+  className?: string
+}) {
   const ref = useRef<HTMLDivElement>(null)
   const pathname = usePathname()
   useOnClickOutside(ref, onClose)
@@ -234,7 +254,7 @@ function CompactDropdown({ items, onClose }: { items: Array<{ label: string; hre
     <div
       ref={ref}
       role="dialog"
-      className="absolute left-0 top-[calc(100%+4px)] z-[60] w-80 rounded-xl border border-border bg-card shadow-[0_12px_40px_rgba(15,23,42,0.12)] animate-in fade-in slide-in-from-top-2 duration-200"
+      className={`absolute top-[calc(100%+4px)] z-[60] w-80 rounded-xl border border-border bg-card shadow-[0_12px_40px_rgba(15,23,42,0.12)] animate-in fade-in slide-in-from-top-2 duration-200 ${className}`}
     >
       <div className="p-2">
         {items.map((item, index) => {
@@ -279,6 +299,207 @@ function CompactDropdown({ items, onClose }: { items: Array<{ label: string; hre
             </div>
           )
         })}
+      </div>
+    </div>
+  )
+}
+
+// ─── Componente: Mega menú con vista previa ──────────────────────────────────────────────
+
+const previewPalettes = [
+  'from-[#0B3A63] via-[#12568C] to-[#1769AA]',
+  'from-[#0A3C52] via-[#0F6E8C] to-[#00B8D9]',
+  'from-[#102A43] via-[#1769AA] to-[#00B8D9]',
+  'from-[#0E2A52] via-[#12568C] to-[#1769AA]',
+  'from-[#0A3350] via-[#177A9B] to-[#00B8D9]',
+  'from-[#111C3F] via-[#1B4F82] to-[#1769AA]',
+]
+
+function MegaDropdown({
+  items,
+  sectionLabel,
+  onClose,
+  className = 'left-0',
+}: {
+  items: NavMenuItem[]
+  sectionLabel: string
+  onClose: () => void
+  className?: string
+}) {
+  const ref = useRef<HTMLDivElement>(null)
+  const pathname = usePathname()
+  useOnClickOutside(ref, onClose)
+
+  const isItemActive = (href: string) => {
+    const [path, hash] = href.split('#')
+    if (!pathname || hash) return false
+    return pathname === path || pathname.startsWith(`${path}/`)
+  }
+
+  const options = items.filter((item) => item.variant !== 'general')
+  const general = items.find((item) => item.variant === 'general')
+  const [activeIndex, setActiveIndex] = useState(() => {
+    const current = options.findIndex((item) => isItemActive(item.href))
+    return current >= 0 ? current : 0
+  })
+
+  if (options.length === 0) return null
+
+  const total = options.length
+  const preview = options[Math.min(activeIndex, total - 1)]
+  const PreviewIcon = preview.icon ? getIcon(preview.icon) : MousePointer2
+  const palette = previewPalettes[activeIndex % previewPalettes.length]
+  const goTo = (index: number) => setActiveIndex(((index % total) + total) % total)
+
+  return (
+    <div
+      ref={ref}
+      role="dialog"
+      aria-label={sectionLabel}
+      onKeyDown={(event) => {
+        if (event.key === 'Escape') onClose()
+      }}
+      className={`absolute top-[calc(100%+6px)] z-[60] w-[720px] max-w-[calc(100vw-2rem)] rounded-2xl border border-border bg-card p-3 shadow-[0_24px_60px_-24px_rgba(15,23,42,0.35)] animate-in fade-in slide-in-from-top-2 duration-200 xl:w-[880px] ${className}`}
+    >
+      <div className="flex items-stretch gap-3">
+        {/* Opciones en dos filas de tres */}
+        <div className="grid flex-1 auto-rows-fr grid-cols-3 gap-1.5">
+          {options.map((item, index) => {
+            const active = isItemActive(item.href)
+            const selected = index === activeIndex
+            const Icon = item.icon ? getIcon(item.icon) : MousePointer2
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={onClose}
+                onMouseEnter={() => setActiveIndex(index)}
+                onFocus={() => setActiveIndex(index)}
+                aria-current={active ? 'page' : undefined}
+                className={`group relative flex h-full flex-col justify-center gap-2 rounded-xl border p-2.5 transition-colors duration-150 ${
+                  selected
+                    ? 'border-[#1769AA]/35 bg-tint-blue/50'
+                    : 'border-transparent hover:border-border hover:bg-muted/70'
+                }`}
+              >
+                <span
+                  className={`grid size-8 place-items-center rounded-lg border transition-colors duration-150 ${
+                    selected
+                      ? 'border-[#1769AA]/25 bg-card text-[#1769AA]'
+                      : 'border-border bg-muted text-muted-foreground group-hover:text-blue-ink'
+                  }`}
+                >
+                  <Icon className="size-4" />
+                </span>
+                <span
+                  className={`text-[12.5px] font-semibold leading-snug ${
+                    selected ? 'text-blue-ink' : 'text-foreground'
+                  }`}
+                >
+                  {item.label}
+                </span>
+                {active && (
+                  <span
+                    aria-hidden="true"
+                    className="absolute right-2.5 top-2.5 size-1.5 rounded-full bg-[#1769AA]"
+                  />
+                )}
+              </Link>
+            )
+          })}
+        </div>
+
+        {/* Minicarrusel de vista previa + enlace general */}
+        <div className="flex w-[264px] shrink-0 flex-col gap-2 xl:w-[296px]">
+          <div className="relative flex min-h-[212px] flex-1 flex-col justify-between overflow-hidden rounded-xl p-3.5 text-white">
+            <div
+              aria-hidden="true"
+              className={`absolute inset-0 bg-gradient-to-br ${palette}`}
+            />
+            <div
+              aria-hidden="true"
+              className="absolute -right-8 -top-10 size-36 rounded-full bg-white/10 blur-2xl"
+            />
+            <div
+              aria-hidden="true"
+              className="absolute -bottom-12 -left-6 size-32 rounded-full bg-black/20 blur-2xl"
+            />
+
+            <div
+              key={activeIndex}
+              className="relative flex flex-1 animate-in fade-in flex-col duration-200"
+            >
+              <div className="flex items-center justify-between gap-2">
+                <span className="truncate rounded-full bg-white/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.12em] text-white/80">
+                  {sectionLabel}
+                </span>
+                <span className="text-[10px] font-semibold tabular-nums text-white/70">
+                  {String(activeIndex + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
+                </span>
+              </div>
+
+              <span className="mt-3 grid size-11 place-items-center rounded-xl border border-white/20 bg-white/10 backdrop-blur-sm">
+                <PreviewIcon aria-hidden="true" className="size-5" />
+              </span>
+
+              <p className="mt-2.5 text-sm font-bold leading-snug">{preview.label}</p>
+              {preview.desc && (
+                <p className="mt-1 text-[11px] leading-snug text-white/75">{preview.desc}</p>
+              )}
+            </div>
+
+            <div className="relative mt-3 flex items-center justify-between gap-2">
+              <div className="flex items-center gap-1.5">
+                {options.map((item, index) => (
+                  <button
+                    key={item.href}
+                    type="button"
+                    onClick={() => goTo(index)}
+                    aria-label={`Ver ${item.label}`}
+                    aria-pressed={index === activeIndex}
+                    className={`h-1.5 rounded-full transition-all duration-200 ${
+                      index === activeIndex ? 'w-5 bg-white' : 'w-1.5 bg-white/40 hover:bg-white/70'
+                    }`}
+                  />
+                ))}
+              </div>
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  onClick={() => goTo(activeIndex - 1)}
+                  aria-label="Opción anterior"
+                  className="grid size-6 place-items-center rounded-full border border-white/25 bg-white/10 text-white/80 transition-colors hover:bg-white/20 hover:text-white"
+                >
+                  <ChevronLeft aria-hidden="true" className="size-3.5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => goTo(activeIndex + 1)}
+                  aria-label="Opción siguiente"
+                  className="grid size-6 place-items-center rounded-full border border-white/25 bg-white/10 text-white/80 transition-colors hover:bg-white/20 hover:text-white"
+                >
+                  <ChevronRight aria-hidden="true" className="size-3.5" />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {general && (
+            <Link
+              href={general.href}
+              onClick={onClose}
+              aria-current={isItemActive(general.href) ? 'page' : undefined}
+              className={`flex h-10 items-center justify-center gap-2 rounded-xl px-3 text-xs font-bold text-white transition-colors ${
+                isItemActive(general.href)
+                  ? 'bg-[#12568C] ring-2 ring-[#1769AA]/30'
+                  : 'bg-[#1769AA] shadow-[0_8px_20px_-12px_rgba(23,105,170,0.8)] hover:bg-[#12568C]'
+              }`}
+            >
+              {general.label}
+              <ArrowRight aria-hidden="true" className="size-3.5" />
+            </Link>
+          )}
+        </div>
       </div>
     </div>
   )
@@ -335,7 +556,6 @@ type DropdownItem = {
 const groupIcons: Record<string, React.ElementType> = {
   Recientes: Clock,
   Explorar: Compass,
-  Productos: Package,
   Categorías: Tag,
   'Desarrollo de software': Code2,
   Servicios: Wrench,
@@ -344,7 +564,6 @@ const groupIcons: Record<string, React.ElementType> = {
 }
 
 const typeIcons: Record<DropdownType, React.ElementType> = {
-  product: Package,
   system: Code2,
   service: Wrench,
   category: Tag,
@@ -532,7 +751,7 @@ function SearchAutocomplete({
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setFocused(true)}
           onKeyDown={handleKeyDown}
-          placeholder="Buscar productos, servicios o soluciones..."
+          placeholder="Buscar servicios, soluciones o secciones..."
           autoComplete="off"
           enterKeyHint="search"
           role="combobox"
@@ -646,27 +865,16 @@ function SearchAutocomplete({
                       activeIndex === index ? 'bg-tint-blue' : 'hover:bg-muted'
                     }`}
                   >
-                    {/* Icon / image */}
-                    {result.type === 'product' && result.image ? (
-                      <div className="flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-border bg-card">
-                        <img
-                          src={result.image}
-                          alt=""
-                          className="size-full object-cover"
-                          loading="lazy"
-                        />
-                      </div>
-                    ) : (
-                      <div
-                        className={`flex size-9 shrink-0 items-center justify-center rounded-lg border ${
-                          result.type === 'category' || result.type === 'system'
-                            ? 'border-blue-ink/25 bg-tint-blue text-blue-ink'
-                            : 'border-border bg-muted text-muted-foreground'
-                        }`}
-                      >
-                        <TypeIcon className="size-3.5" aria-hidden="true" />
-                      </div>
-                    )}
+                    {/* Icon */}
+                    <div
+                      className={`flex size-9 shrink-0 items-center justify-center rounded-lg border ${
+                        result.type === 'category' || result.type === 'system'
+                          ? 'border-blue-ink/25 bg-tint-blue text-blue-ink'
+                          : 'border-border bg-muted text-muted-foreground'
+                      }`}
+                    >
+                      <TypeIcon className="size-3.5" aria-hidden="true" />
+                    </div>
 
                     {/* Text */}
                     <div className="min-w-0 flex-1">
@@ -1036,43 +1244,71 @@ export function EnhancedHeader() {
             {mainNav.map((link, index) => {
               const active = isActive(link)
               const dropdownKey = link.label.toLowerCase().replace(/ /g, '-')
+              const isSoftware = dropdownKey === 'desarrollo-de-software'
               const refMap: Record<string, React.RefObject<HTMLDivElement | null>> = {
                 'servicios-ti': servicesRef,
                 'infraestructura-ti': infrastructureRef,
                 'desarrollo-de-software': softwareRef,
                 empresa: companyRef,
               }
-              const itemsMap: Record<string, Array<{ label: string; href: string; desc?: string }>> = {
+              const itemsMap: Record<string, NavMenuItem[]> = {
                 'servicios-ti': itServicesMenu,
                 'infraestructura-ti': infrastructureMenu,
                 'desarrollo-de-software': softwareDevMenu,
                 empresa: companyMenu,
               }
+              const usesMegaMenu = dropdownKey !== 'empresa'
+              const megaAlign =
+                dropdownKey === 'desarrollo-de-software' ? 'left-1/2 -translate-x-1/2' : 'left-0'
 
               return (
                 <div key={index} className="relative" ref={refMap[dropdownKey]}>
                   {link.hasMenu ? (
                     <>
-                      <button
-                        type="button"
-                        onClick={() => toggle(dropdownKey)}
-                        aria-expanded={openDropdown === dropdownKey}
-                        aria-haspopup="dialog"
-                        aria-current={active ? 'page' : undefined}
-                        className={`relative flex h-10 items-center gap-1.5 rounded-lg px-3 text-sm font-semibold transition-colors ${active
-                            ? 'text-blue-ink'
-                            : 'text-muted-foreground hover:text-blue-ink'
-                          }`}
-                      >
-                        {link.label}
-                        <ChevronDown
-                          className={`size-3.5 transition-transform duration-200 ${openDropdown === dropdownKey ? 'rotate-180' : ''}`}
-                        />
-                        {active && <ActiveIndicator />}
-                      </button>
-                      {openDropdown === dropdownKey && (
-                        <CompactDropdown items={itemsMap[dropdownKey] || []} onClose={closeAll} />
-                      )}
+                      <div className="flex items-center">
+                        {isSoftware && (
+                          <Link
+                            href={SOFTWARE_QUICK_LINK}
+                            aria-label="Sistemas web a medida"
+                            title="Sistemas web a medida"
+                            aria-current={isPathActive(SOFTWARE_QUICK_LINK) ? 'page' : undefined}
+                            className="group/react mr-0.5 grid size-7 place-items-center rounded-lg text-[#61DAFB] transition-colors hover:bg-muted"
+                          >
+                            <SiReact
+                              aria-hidden="true"
+                              className="size-[18px] transition-transform duration-500 group-hover/react:rotate-180"
+                            />
+                          </Link>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => toggle(dropdownKey)}
+                          aria-expanded={openDropdown === dropdownKey}
+                          aria-haspopup="dialog"
+                          aria-current={active ? 'page' : undefined}
+                          className={`relative flex h-10 items-center gap-1.5 rounded-lg text-sm font-semibold transition-colors ${isSoftware ? 'pl-1 pr-3' : 'px-3'} ${active
+                              ? 'text-blue-ink'
+                              : 'text-muted-foreground hover:text-blue-ink'
+                            }`}
+                        >
+                          {link.label}
+                          <ChevronDown
+                            className={`size-3.5 transition-transform duration-200 ${openDropdown === dropdownKey ? 'rotate-180' : ''}`}
+                          />
+                          {active && <ActiveIndicator />}
+                        </button>
+                      </div>
+                      {openDropdown === dropdownKey &&
+                        (usesMegaMenu ? (
+                          <MegaDropdown
+                            items={itemsMap[dropdownKey] || []}
+                            sectionLabel={link.label}
+                            onClose={closeAll}
+                            className={megaAlign}
+                          />
+                        ) : (
+                          <CompactDropdown items={itemsMap[dropdownKey] || []} onClose={closeAll} />
+                        ))}
                     </>
                   ) : (
                     <Link
@@ -1175,6 +1411,7 @@ export function EnhancedHeader() {
               {mainNav.map((link, index) => {
                 const active = isActive(link)
                 const dropdownKey = link.label.toLowerCase().replace(/ /g, '-')
+                const isSoftware = dropdownKey === 'desarrollo-de-software'
                 const isSectionOpen = openMobileSection === dropdownKey
 
                 const getSubmenu = () => {
@@ -1193,14 +1430,30 @@ export function EnhancedHeader() {
                 }
 
                 return (
-                  <div key={index}>
+                  <div key={index} className={isSoftware ? 'flex items-start gap-2' : undefined}>
+                    {isSoftware && (
+                      <Link
+                        href={SOFTWARE_QUICK_LINK}
+                        onClick={markMobileNavigation}
+                        aria-label="Sistemas web a medida"
+                        title="Sistemas web a medida"
+                        aria-current={isPathActive(SOFTWARE_QUICK_LINK) ? 'page' : undefined}
+                        className="mt-1 flex size-12 shrink-0 flex-col items-center justify-center gap-0.5 rounded-2xl border border-border bg-card text-[#61DAFB] transition-colors hover:border-[#1769AA]/30 hover:bg-muted"
+                      >
+                        <SiReact aria-hidden="true" className="size-5" />
+                        <span className="text-[8px] font-bold uppercase tracking-[0.08em] text-muted-foreground">
+                          React
+                        </span>
+                      </Link>
+                    )}
+                    <div className="min-w-0 flex-1">
                     {link.hasMenu ? (
                       <MobileAccordion
                         label={link.label}
                         isOpen={isSectionOpen}
                         onToggle={() => toggleMobile(dropdownKey)}
                         active={active}
-                        icon={sectionIcons[dropdownKey]}
+                        icon={isSoftware ? undefined : sectionIcons[dropdownKey]}
                         count={getSubmenu().filter((item) => item.variant !== 'general').length}
                       >
                         <div className="space-y-0.5">
@@ -1292,6 +1545,7 @@ export function EnhancedHeader() {
                         <ChevronRight className="size-4 text-muted-foreground" />
                       </Link>
                     )}
+                    </div>
                   </div>
                 )
               })}

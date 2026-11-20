@@ -101,57 +101,114 @@ export default function GroupPage() {
         />
 
         <div className="relative mx-auto max-w-6xl px-5 pb-20 pt-32 sm:px-8 sm:pb-24 sm:pt-40">
-          <p
-            className="hero-rise flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-forest-200"
-            style={{ animationDelay: '80ms' }}
-          >
-            <span className="size-1.5 rounded-full bg-forest-200" />
-            SparkTree Group · Lima, Perú
-          </p>
-          <h1
-            className="hero-rise mt-5 max-w-3xl font-display text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl"
-            style={{ animationDelay: '180ms' }}
-          >
-            Un ecosistema de empresas para crecer con orden.
-          </h1>
+          <div className="grid items-center gap-12 lg:grid-cols-[1.04fr_0.96fr] lg:gap-16">
+            <div className="min-w-0">
+              <p
+                className="hero-rise flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-forest-200"
+                style={{ animationDelay: '80ms' }}
+              >
+                <span className="size-1.5 rounded-full bg-forest-200" />
+                SparkTree Group · Lima, Perú
+              </p>
+              <h1
+                className="hero-rise mt-5 max-w-2xl font-display text-4xl font-semibold leading-[1.08] tracking-tight sm:text-5xl lg:text-[3.5rem]"
+                style={{ animationDelay: '180ms' }}
+              >
+                Un ecosistema de empresas para crecer con orden.
+              </h1>
 
-          <div className="hero-rise" style={{ animationDelay: '300ms' }}>
-            <HeroTypewriter items={HERO_HIGHLIGHTS} />
-          </div>
+              <div className="hero-rise" style={{ animationDelay: '300ms' }}>
+                <HeroTypewriter items={HERO_HIGHLIGHTS} />
+              </div>
 
-          <p
-            className="hero-rise mt-5 max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg"
-            style={{ animationDelay: '420ms' }}
-          >
-            Marca, tecnología, formación, equipamiento y respaldo legal. Cada unidad mantiene su
-            especialidad y trabaja con las demás para que tu empresa no tenga que coordinar cinco
-            proveedores distintos.
-          </p>
+              <p
+                className="hero-rise mt-5 max-w-xl text-base leading-relaxed text-white/70 sm:text-lg"
+                style={{ animationDelay: '420ms' }}
+              >
+                Cada unidad mantiene su especialidad y trabaja con las demás para que tu empresa no
+                tenga que coordinar cinco proveedores distintos.
+              </p>
 
-          <div
-            className="hero-rise mt-9 flex flex-wrap items-center gap-3"
-            style={{ animationDelay: '520ms' }}
-          >
-            <a
-              href="#unidades"
-              className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-forest-800 transition hover:bg-forest-200"
+              <div
+                className="hero-rise mt-9 flex flex-wrap items-center gap-3"
+                style={{ animationDelay: '520ms' }}
+              >
+                <a
+                  href="#unidades"
+                  className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-forest-800 transition hover:bg-forest-200"
+                >
+                  Conocer las unidades
+                  <ArrowRight className="size-4" />
+                </a>
+                <a
+                  href={groupWhatsapp}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/20 px-6 py-3 text-sm font-semibold text-white transition hover:border-white/40 hover:bg-white/10"
+                >
+                  <MessageCircle className="size-4" />
+                  Coordinar una reunión
+                </a>
+              </div>
+            </div>
+
+            <aside
+              className="hero-rise hidden lg:block"
+              style={{ animationDelay: '360ms' }}
+              aria-label="Unidades del ecosistema SparkTree"
             >
-              Conocer las unidades
-              <ArrowRight className="size-4" />
-            </a>
-            <a
-              href={groupWhatsapp}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border border-white/20 px-6 py-3 text-sm font-semibold text-white transition hover:border-white/40 hover:bg-white/10"
-            >
-              <MessageCircle className="size-4" />
-              Coordinar una reunión
-            </a>
+              <div className="rounded-3xl border border-white/12 bg-white/[0.055] p-3 shadow-[0_38px_90px_-52px_rgba(0,0,0,0.8)] backdrop-blur-sm">
+                <div className="flex items-center justify-between px-3 pb-2.5 pt-2">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.22em] text-forest-200/80">
+                    Ecosistema SparkTree
+                  </p>
+                  <span className="text-[11px] text-white/40">5 unidades</span>
+                </div>
+                <ul className="space-y-0.5">
+                  {UNITS.map((unit) => {
+                    const Icon = UNIT_ICONS[unit.slug] ?? Building2
+                    return (
+                      <li key={unit.slug}>
+                        <a
+                          href={unit.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="group flex items-center gap-3.5 rounded-2xl px-3 py-2.5 transition hover:bg-white/[0.07]"
+                        >
+                          <span
+                            className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-white/10"
+                            style={{
+                              backgroundColor: `${unit.accent}24`,
+                              color: `color-mix(in srgb, ${unit.accent} 72%, white)`,
+                            }}
+                          >
+                            <Icon className="size-[18px]" strokeWidth={1.75} />
+                          </span>
+                          <span className="min-w-0 flex-1">
+                            <span className="block truncate font-display text-sm font-semibold text-white">
+                              {unit.name}
+                            </span>
+                            <span className="block truncate text-xs text-white/50">
+                              {unit.tagline}
+                            </span>
+                          </span>
+                          <ArrowUpRight className="size-4 shrink-0 text-white/20 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-white/70" />
+                        </a>
+                      </li>
+                    )
+                  })}
+                </ul>
+                <p className="mt-2 flex items-start gap-2.5 rounded-2xl bg-white/[0.04] px-3.5 py-3 text-xs leading-relaxed text-white/55">
+                  <Network className="mt-0.5 size-4 shrink-0 text-forest-200" />
+                  Un solo punto de contacto para todo el ecosistema, sin repetir tu contexto en cada
+                  unidad.
+                </p>
+              </div>
+            </aside>
           </div>
 
           <dl
-            className="hero-rise mt-14 grid max-w-2xl grid-cols-1 gap-6 border-t border-white/10 pt-8 sm:grid-cols-3"
+            className="hero-rise mt-16 grid grid-cols-1 gap-6 border-t border-white/10 pt-8 sm:grid-cols-3 sm:gap-0 sm:divide-x sm:divide-white/10"
             style={{ animationDelay: '640ms' }}
           >
             {[
@@ -159,7 +216,7 @@ export default function GroupPage() {
               { value: '1', label: 'punto de contacto' },
               { value: '360°', label: 'visión del negocio' },
             ].map((stat) => (
-              <div key={stat.label}>
+              <div key={stat.label} className="sm:px-6 sm:first:pl-0 sm:last:pr-0">
                 <dt className="font-display text-3xl font-semibold text-white">{stat.value}</dt>
                 <dd className="mt-1 text-xs uppercase tracking-[0.16em] text-white/50">
                   {stat.label}

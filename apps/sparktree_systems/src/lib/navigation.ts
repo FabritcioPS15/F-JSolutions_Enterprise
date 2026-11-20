@@ -21,7 +21,6 @@ const infrastructureServicePaths = getServicesByCategory('Infraestructura TI').m
 
 export const mainNav: MainNavItem[] = [
   { label: 'Inicio', href: '/' },
-  { label: 'Tienda', href: storeUrl('/productos') },
   {
     label: 'Servicios TI',
     href: '/servicios',
@@ -36,7 +35,12 @@ export const mainNav: MainNavItem[] = [
     activeExact: ['/infraestructura-ti'],
     activeMatch: infrastructureServicePaths,
   },
-  { label: 'Desarrollo de software', href: '/sistemas', hasMenu: true },
+  {
+    label: 'Desarrollo de software',
+    href: '/sistemas',
+    hasMenu: true,
+    activeMatch: ['/sistemas'],
+  },
   {
     label: 'Empresa',
     href: '/nosotros',
@@ -49,6 +53,7 @@ export const mainNav: MainNavItem[] = [
       '/contacto',
     ],
   },
+  { label: 'Tienda', href: storeUrl('/productos') },
 ]
 
 // ─── Menús de Servicios ──────────────────────────────────────────────────────────────────

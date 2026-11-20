@@ -4,7 +4,7 @@ import { SearchPage } from '@/components/sections/search-page'
 
 export const metadata: Metadata = {
   title: 'Buscar | SparkTree Systems',
-  description: 'Busca productos, servicios, desarrollo de software y secciones de SparkTree Systems.',
+  description: 'Busca servicios, desarrollo de software, categorías y secciones de SparkTree Systems.',
   robots: { index: false, follow: true },
 }
 
