@@ -284,46 +284,6 @@ function ContactCard() {
         </div>
 
         <div className="mt-4 space-y-2">
-          <a
-            href={`tel:${EMPRESA.telefono.replace(/\s/g, '')}`}
-            className="group flex items-center gap-3 rounded-xl border border-border bg-card px-3 py-2.5 transition hover:border-[#1769AA]/30 hover:bg-muted"
-          >
-            <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-tint-blue text-blue-ink">
-              <Phone aria-hidden="true" className="size-3.5" />
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="block text-[9px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
-                Teléfono
-              </span>
-              <span className="block text-[11px] font-bold text-foreground">{EMPRESA.telefono}</span>
-            </span>
-            <ArrowUpRight
-              aria-hidden="true"
-              className="size-3.5 shrink-0 text-muted-foreground transition group-hover:text-blue-ink"
-            />
-          </a>
-
-          <a
-            href={`mailto:${EMPRESA.email}`}
-            className="group flex items-center gap-3 rounded-xl border border-border bg-card px-3 py-2.5 transition hover:border-[#1769AA]/30 hover:bg-muted"
-          >
-            <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-tint-blue text-blue-ink">
-              <Mail aria-hidden="true" className="size-3.5" />
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="block text-[9px] font-semibold uppercase tracking-[0.1em] text-muted-foreground">
-                Correo
-              </span>
-              <span className="block truncate text-[11px] font-bold text-foreground">
-                {EMPRESA.email}
-              </span>
-            </span>
-            <ArrowUpRight
-              aria-hidden="true"
-              className="size-3.5 shrink-0 text-muted-foreground transition group-hover:text-blue-ink"
-            />
-          </a>
-
           <div className="flex items-center gap-3 rounded-xl border border-border bg-card px-3 py-2.5">
             <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-tint-blue text-blue-ink">
               <MapPin aria-hidden="true" className="size-3.5" />

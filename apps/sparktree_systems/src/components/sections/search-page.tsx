@@ -17,7 +17,7 @@ import {
   Wrench,
 } from 'lucide-react'
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
-import { HERO_BODY, HERO_TITLE_SIZE } from '@/components/heroes/hero-primitives'
+import { HERO_BODY, HERO_TITLE_SIZE, HERO_VIEWPORT_BODY } from '@/components/heroes/hero-primitives'
 import { storeUrl } from '@/lib/store-url'
 import {
   popularSearches,
@@ -115,7 +115,7 @@ export function SearchPage() {
 
       {/* Buscador */}
       <section className="hero-viewport-detail flex items-center bg-gradient-to-br from-[#102A43] via-[#102A43] to-[#12568C]">
-        <div className={`mx-auto w-full max-w-[1100px] px-4 sm:px-6 lg:px-8 ${HERO_BODY}`}>
+        <div className={`mx-auto w-full max-w-[1100px] px-4 sm:px-6 lg:px-8 ${HERO_BODY} ${HERO_VIEWPORT_BODY}`}>
           <p className="text-[10.5px] font-semibold uppercase tracking-[0.16em] text-[#75D7E8]">
             Buscador
           </p>

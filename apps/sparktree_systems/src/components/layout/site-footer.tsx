@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { ChevronDown } from 'lucide-react'
+import { ChevronDown, Mail, Phone } from 'lucide-react'
 import { EMPRESA } from '@/lib/constants'
 import { storeUrl } from '@/lib/store-url'
 import { cn } from '@/lib/utils'
@@ -239,17 +239,36 @@ export function SiteFooter() {
               />
             </Link>
 
-            {/* RUC de la empresa, junto al logotipo */}
-            <div
-              className="flex items-center gap-2.5 rounded-full border border-[#17324A] bg-[#0B2236]/60 px-3 py-1.5 sm:rounded-none sm:border-0 sm:border-l sm:bg-transparent sm:px-0 sm:py-0 sm:pl-6"
-              aria-label="RUC de la empresa"
-            >
-              <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
-                RUC
-              </span>
-              <span className="text-sm font-semibold tracking-wide text-[#E2E8F0] tabular-nums">
-                {EMPRESA.ruc}
-              </span>
+            {/* RUC y contacto directo, junto al logotipo */}
+            <div className="flex flex-col gap-2.5 sm:gap-2 sm:border-l sm:border-[#17324A] sm:pl-6">
+              <div
+                className="flex w-fit items-center gap-2.5 rounded-full border border-[#17324A] bg-[#0B2236]/60 px-3 py-1.5 sm:rounded-none sm:border-0 sm:bg-transparent sm:px-0 sm:py-0"
+                aria-label="RUC de la empresa"
+              >
+                <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-muted-foreground">
+                  RUC
+                </span>
+                <span className="text-sm font-semibold tracking-wide text-[#E2E8F0] tabular-nums">
+                  {EMPRESA.ruc}
+                </span>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5" aria-label="Contacto directo">
+                <a
+                  href={`tel:${EMPRESA.telefono.replace(/\s/g, '')}`}
+                  className={`inline-flex items-center gap-1.5 rounded-sm text-[13px] font-semibold text-[#E2E8F0] transition-colors duration-200 hover:text-[#9FE2EF] motion-reduce:transition-none ${FOCUS_STYLE}`}
+                >
+                  <Phone aria-hidden="true" className="size-3.5 text-[#75D7E8]" />
+                  {EMPRESA.telefono}
+                </a>
+                <a
+                  href={`mailto:${EMPRESA.email}`}
+                  className={`inline-flex items-center gap-1.5 rounded-sm text-[13px] font-semibold text-[#E2E8F0] transition-colors duration-200 hover:text-[#9FE2EF] motion-reduce:transition-none ${FOCUS_STYLE}`}
+                >
+                  <Mail aria-hidden="true" className="size-3.5 text-[#75D7E8]" />
+                  {EMPRESA.email}
+                </a>
+              </div>
             </div>
           </div>
 

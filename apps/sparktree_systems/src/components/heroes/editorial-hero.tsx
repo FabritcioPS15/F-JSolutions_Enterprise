@@ -45,7 +45,7 @@ export function EditorialHero({
         <div
           className={cn(
             'grid grid-cols-1 gap-8',
-            aside && 'lg:grid-cols-[minmax(0,1fr)_320px] lg:items-end lg:gap-12',
+            aside && 'lg:grid-cols-[minmax(0,1fr)_320px] lg:items-center lg:gap-12',
           )}
         >
           <div className="min-w-0 max-w-[780px]">

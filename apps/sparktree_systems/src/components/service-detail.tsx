@@ -172,7 +172,7 @@ export function ServiceDetail({
             className="absolute inset-0 bg-gradient-to-t from-[#08192A] via-transparent to-transparent"
           />
 
-          <div className={`relative w-full mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8 ${HERO_BODY}`}>
+          <div className={`relative mx-auto flex w-full max-w-[1280px] flex-1 flex-col justify-center px-4 sm:px-6 lg:px-8 ${HERO_BODY}`}>
             <div className="max-w-2xl">
               <h1
                 className={`font-heading font-bold tracking-[-0.04em] text-white ${HERO_TITLE_SIZE.lg} leading-[1.08] sm:leading-[1.04]`}
@@ -198,27 +198,12 @@ export function ServiceDetail({
                 Respuesta a solicitudes en menos de 24 horas hábiles.
               </p>
             </div>
-
-            <div className="mt-4 flex flex-wrap gap-3">
-              <a
-                href={phoneHref}
-                className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.06] px-3 py-2 text-xs font-semibold text-muted-foreground/60 backdrop-blur transition hover:bg-white/10 hover:text-white"
-              >
-                <Phone className="size-4 text-[#75D7E8]" /> {EMPRESA.telefono}
-              </a>
-              <a
-                href={`mailto:${EMPRESA.email}`}
-                className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.06] px-3 py-2 text-xs font-semibold text-muted-foreground/60 backdrop-blur transition hover:bg-white/10 hover:text-white"
-              >
-                <Mail className="size-4 text-[#75D7E8]" /> {EMPRESA.email}
-              </a>
-            </div>
           </div>
         </section>
       ) : (
         <section className="hero-viewport-detail relative flex items-center overflow-hidden border-b border-border bg-gradient-to-br from-muted via-white to-brand-soft">
           <div className="pointer-events-none absolute -right-32 -top-24 size-96 rounded-full bg-[#1769AA]/10 blur-3xl" />
-          <div className={`relative mx-auto grid w-full max-w-[1280px] grid-cols-1 gap-10 px-4 sm:px-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:px-8 ${HERO_BODY}`}>
+          <div className={`relative mx-auto flex w-full max-w-[1280px] flex-1 flex-col justify-center px-4 sm:px-6 lg:px-8 ${HERO_BODY}`}>
             <div className="min-w-0">
               <h1
                 className={`max-w-2xl font-heading font-bold tracking-[-0.04em] text-foreground ${HERO_TITLE_SIZE.lg} leading-[1.08] sm:leading-[1.04]`}
@@ -244,26 +229,6 @@ export function ServiceDetail({
                 Respuesta a solicitudes en menos de 24 horas hábiles.
               </p>
             </div>
-
-            <aside className="min-w-0 rounded-3xl border border-border bg-card/90 p-6 shadow-xl shadow-[#0B2236]/5 backdrop-blur">
-              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
-                Datos del servicio
-              </p>
-              <div className="mt-5 space-y-2">
-                <a
-                  href={phoneHref}
-                  className="flex items-center gap-2 rounded-xl bg-muted px-3 py-2.5 text-xs font-semibold text-foreground transition hover:bg-tint-blue"
-                >
-                  <Phone className="size-4 text-blue-ink" /> {EMPRESA.telefono}
-                </a>
-                <a
-                  href={`mailto:${EMPRESA.email}`}
-                  className="flex items-center gap-2 rounded-xl bg-muted px-3 py-2.5 text-xs font-semibold text-foreground transition hover:bg-tint-blue"
-                >
-                  <Mail className="size-4 text-blue-ink" /> {EMPRESA.email}
-                </a>
-              </div>
-            </aside>
           </div>
         </section>
       )}

@@ -270,7 +270,7 @@ function CompactDropdown({
     <div
       ref={ref}
       role="dialog"
-      className={`absolute top-[calc(100%+4px)] z-[60] w-80 rounded-xl border border-border bg-card shadow-[0_12px_40px_rgba(15,23,42,0.12)] animate-in fade-in duration-100 ${className}`}
+      className={`absolute top-[calc(100%+4px)] z-[60] w-80 rounded-xl border border-border bg-card shadow-[0_12px_40px_rgba(15,23,42,0.12)] animate-in fade-in slide-in-from-top-1 zoom-in-[98%] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:animate-none ${className}`}
     >
       <div className="p-2">
         {items.map((item, index) => {
@@ -359,6 +359,17 @@ function MegaDropdown({
   const [placement, setPlacement] = useState<{ left: number; top: number; caret: number } | null>(
     null,
   )
+  const [leavingIndex, setLeavingIndex] = useState<number | null>(null)
+  const previousIndex = useRef(activeIndex)
+
+  // Vista previa: crossfade real entre la opción saliente y la entrante.
+  useEffect(() => {
+    if (previousIndex.current === activeIndex) return
+    setLeavingIndex(previousIndex.current)
+    previousIndex.current = activeIndex
+    const timer = window.setTimeout(() => setLeavingIndex(null), 220)
+    return () => window.clearTimeout(timer)
+  }, [activeIndex])
 
   // Ancla el panel al botón del menú y lo mantiene dentro de la pantalla.
   useLayoutEffect(() => {
@@ -388,9 +399,32 @@ function MegaDropdown({
   const total = options.length
   const gridColumns = total === 4 ? 'grid-cols-2' : 'grid-cols-3'
   const preview = options[Math.min(activeIndex, total - 1)]
-  const PreviewIcon = preview.icon ? getIcon(preview.icon) : MousePointer2
   const palette = previewPalettes[activeIndex % previewPalettes.length]
   const goTo = (index: number) => setActiveIndex(((index % total) + total) % total)
+
+  const renderPreviewContent = (index: number) => {
+    const item = options[Math.min(index, total - 1)]
+    const Icon = item.icon ? getIcon(item.icon) : MousePointer2
+    return (
+      <>
+        <div className="flex items-center justify-between gap-2">
+          <span className="truncate rounded-full bg-white/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-white/85">
+            {sectionLabel}
+          </span>
+          <span className="text-[10px] font-semibold tabular-nums text-white/70">
+            {String(index + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
+          </span>
+        </div>
+
+        <span className="mt-3.5 grid size-12 place-items-center rounded-2xl border border-white/25 bg-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.15)] backdrop-blur-sm">
+          <Icon aria-hidden="true" className="size-[22px]" />
+        </span>
+
+        <p className="mt-3 text-[15px] font-bold leading-snug">{item.label}</p>
+        {item.desc && <p className="mt-1 text-[11.5px] leading-relaxed text-white/80">{item.desc}</p>}
+      </>
+    )
+  }
 
   return (
     <div
@@ -405,7 +439,7 @@ function MegaDropdown({
         top: placement?.top ?? 0,
         visibility: placement ? 'visible' : 'hidden',
       }}
-      className="fixed z-[60] w-[720px] max-w-[calc(100vw-2rem)] rounded-2xl border border-border/80 bg-card p-3.5 shadow-[0_30px_70px_-30px_rgba(15,23,42,0.45)] ring-1 ring-slate-900/5 animate-in fade-in duration-100 xl:w-[880px]"
+      className="fixed z-[60] w-[720px] origin-top max-w-[calc(100vw-2rem)] rounded-2xl border border-border/80 bg-card p-3.5 shadow-[0_30px_70px_-30px_rgba(15,23,42,0.45)] ring-1 ring-slate-900/5 animate-in fade-in slide-in-from-top-2 zoom-in-[98%] duration-[220ms] ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:animate-none xl:w-[880px]"
     >
       <span
         aria-hidden="true"
@@ -428,7 +462,8 @@ function MegaDropdown({
                 onMouseEnter={() => setActiveIndex(index)}
                 onFocus={() => setActiveIndex(index)}
                 aria-current={active ? 'page' : undefined}
-                className={`group relative flex h-full flex-col gap-1.5 rounded-xl border p-3 transition-all duration-150 ${
+                style={{ animationDelay: `${50 + Math.min(index, 6) * 18}ms` }}
+                className={`group relative flex h-full animate-in fade-in slide-in-from-top-1 fill-mode-both flex-col gap-1.5 rounded-xl border p-3 transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:animate-none ${
                   selected
                     ? 'border-[#1769AA]/30 bg-tint-blue/45 shadow-[0_10px_24px_-20px_rgba(23,105,170,0.6)]'
                     : 'border-transparent hover:border-border hover:bg-muted/60'
@@ -487,23 +522,21 @@ function MegaDropdown({
             />
 
             <div className="relative flex flex-1 flex-col">
-              <div className="flex items-center justify-between gap-2">
-                <span className="truncate rounded-full bg-white/15 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-white/85">
-                  {sectionLabel}
-                </span>
-                <span className="text-[10px] font-semibold tabular-nums text-white/70">
-                  {String(activeIndex + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
-                </span>
-              </div>
-
-              <span className="mt-3.5 grid size-12 place-items-center rounded-2xl border border-white/25 bg-white/10 shadow-[inset_0_1px_0_rgba(255,255,255,0.15)] backdrop-blur-sm">
-                <PreviewIcon aria-hidden="true" className="size-[22px]" />
-              </span>
-
-              <p className="mt-3 text-[15px] font-bold leading-snug">{preview.label}</p>
-              {preview.desc && (
-                <p className="mt-1 text-[11.5px] leading-relaxed text-white/80">{preview.desc}</p>
+              {leavingIndex !== null && leavingIndex !== activeIndex && (
+                <div
+                  key={`leaving-${leavingIndex}`}
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-0 flex flex-col animate-out fade-out duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] fill-mode-forwards motion-reduce:hidden"
+                >
+                  {renderPreviewContent(leavingIndex)}
+                </div>
               )}
+              <div
+                key={preview.href}
+                className="relative flex flex-1 animate-in flex-col fade-in duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:animate-none"
+              >
+                {renderPreviewContent(activeIndex)}
+              </div>
             </div>
 
             <div className="relative mt-3 flex items-center justify-between gap-2">
