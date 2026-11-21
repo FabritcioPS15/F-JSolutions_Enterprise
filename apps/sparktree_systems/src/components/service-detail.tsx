@@ -16,6 +16,7 @@ import {
 } from 'lucide-react'
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
 import { Breadcrumbs } from '@/components/layout/breadcrumbs'
+import { AddToQuoteButton } from '@/components/quote/add-to-quote-button'
 import { HERO_BODY, HERO_TITLE_SIZE } from '@/components/heroes/hero-primitives'
 import { FaqAccordion } from '@/components/ui/faq-accordion'
 import { ProcessSequence } from '@/components/ui/process-sequence'
@@ -182,12 +183,10 @@ export function ServiceDetail({
                 {service.intro}
               </p>
               <div className="mt-6 flex flex-col gap-2.5 sm:mt-7 sm:flex-row sm:flex-wrap">
-                <Link
-                  href={`/cotizador-servicios?servicio=${service.slug}`}
+                <AddToQuoteButton
+                  slug={service.slug}
                   className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#1769AA] px-5 text-sm font-bold text-white transition hover:bg-[#12568C] sm:w-auto"
-                >
-                  Solicitar cotización <ArrowRight className="size-4" />
-                </Link>
+                />
                 <Link
                   href="/contacto"
                   className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-white/25 bg-white/5 px-5 text-sm font-bold text-white backdrop-blur transition hover:border-white/50 hover:bg-white/10 sm:w-auto"
@@ -230,12 +229,10 @@ export function ServiceDetail({
                 {service.intro}
               </p>
               <div className="mt-6 flex flex-col gap-2.5 sm:mt-7 sm:flex-row sm:flex-wrap">
-                <Link
-                  href={`/cotizador-servicios?servicio=${service.slug}`}
+                <AddToQuoteButton
+                  slug={service.slug}
                   className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#1769AA] px-5 text-sm font-bold text-white transition hover:bg-[#12568C] sm:w-auto"
-                >
-                  Solicitar cotización <ArrowRight className="size-4" />
-                </Link>
+                />
                 <Link
                   href="/contacto"
                   className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-border bg-card px-5 text-sm font-bold text-foreground transition hover:border-[#1769AA] hover:text-blue-ink sm:w-auto"
@@ -436,12 +433,10 @@ export function ServiceDetail({
                 diagnóstico inicial no tiene costo.
               </p>
               <div className="mt-6 flex flex-wrap gap-3">
-                <Link
-                  href={`/cotizador-servicios?servicio=${service.slug}`}
+                <AddToQuoteButton
+                  slug={service.slug}
                   className="inline-flex h-11 items-center gap-2 rounded-xl bg-[#1769AA] px-5 text-sm font-bold text-white transition hover:bg-[#12568C]"
-                >
-                  Solicitar cotización <ArrowRight className="size-4" />
-                </Link>
+                />
                 <a
                   href={phoneHref}
                   className="inline-flex h-11 items-center gap-2 rounded-xl border border-input bg-card px-5 text-sm font-bold text-foreground transition hover:border-[#1769AA] hover:text-blue-ink"

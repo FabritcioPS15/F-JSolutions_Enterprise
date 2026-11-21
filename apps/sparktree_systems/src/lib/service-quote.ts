@@ -392,40 +392,104 @@ export function formatEstimate(min: number, max: number, billing: QuoteBilling) 
   return `${formatPen(min)} – ${formatPen(max)}${billing === 'mensual' ? ' al mes' : ''}`
 }
 
-export function buildQuoteItems(
-  title: string,
-  estimate: ServiceQuoteEstimate,
-): Array<{ name: string; quantity: number }> {
-  const items: Array<{ name: string; quantity: number }> = [
-    {
-      name: `${title} — estimación referencial ${formatEstimate(estimate.min, estimate.max, estimate.billing)}`,
-      quantity: 1,
-    },
-  ]
+export type QuoteSelection = {
+  title: string
+  category: ServiceCategory
+  config: ServiceQuoteConfig
+  scope: QuoteScope
+}
 
-  for (const line of estimate.lines) {
-    if (line.quantity !== undefined) {
-      if (line.quantity > 0) items.push({ name: line.label, quantity: line.quantity })
+export type QuoteGroupItem = {
+  title: string
+  category: ServiceCategory
+  estimate: ServiceQuoteEstimate
+}
+
+export type QuoteGroupEstimate = {
+  items: QuoteGroupItem[]
+  project: { min: number; max: number } | null
+  monthly: { min: number; max: number } | null
+}
+
+export function estimateQuoteGroup(selections: QuoteSelection[]): QuoteGroupEstimate {
+  const items = selections.map((selection) => ({
+    title: selection.title,
+    category: selection.category,
+    estimate: estimateServiceQuote(selection.config, selection.scope),
+  }))
+
+  let projectMin = 0
+  let projectMax = 0
+  let monthlyMin = 0
+  let monthlyMax = 0
+
+  for (const item of items) {
+    if (item.estimate.billing === 'mensual') {
+      monthlyMin += item.estimate.min
+      monthlyMax += item.estimate.max
     } else {
-      items.push({ name: `${line.label}: ${line.value}`, quantity: 1 })
+      projectMin += item.estimate.min
+      projectMax += item.estimate.max
+    }
+  }
+
+  return {
+    items,
+    project: projectMin > 0 ? { min: roundMoney(projectMin), max: roundMoney(projectMax) } : null,
+    monthly: monthlyMin > 0 ? { min: roundMoney(monthlyMin), max: roundMoney(monthlyMax) } : null,
+  }
+}
+
+export function formatGroupEstimate(group: {
+  project: { min: number; max: number } | null
+  monthly: { min: number; max: number } | null
+}) {
+  const parts: string[] = []
+
+  if (group.project) {
+    const label = group.monthly ? ' (proyecto)' : ''
+    parts.push(`${formatPen(group.project.min)} – ${formatPen(group.project.max)}${label}`)
+  }
+  if (group.monthly) {
+    parts.push(`${formatPen(group.monthly.min)} – ${formatPen(group.monthly.max)} al mes`)
+  }
+
+  return parts.join(' + ')
+}
+
+export function buildGroupQuoteItems(group: QuoteGroupEstimate) {
+  const items: Array<{ name: string; quantity: number }> = []
+
+  for (const item of group.items) {
+    items.push({
+      name: `${item.title} — estimación referencial ${formatEstimate(
+        item.estimate.min,
+        item.estimate.max,
+        item.estimate.billing,
+      )}`,
+      quantity: 1,
+    })
+
+    for (const line of item.estimate.lines) {
+      if (line.quantity !== undefined) {
+        if (line.quantity > 0) {
+          items.push({ name: `${item.title}: ${line.label}`, quantity: line.quantity })
+        }
+      } else {
+        items.push({ name: `${item.title}: ${line.label} — ${line.value}`, quantity: 1 })
+      }
     }
   }
 
   return items
 }
 
-export function buildQuoteNotes({
-  title,
-  category,
-  estimate,
-  scope,
+export function buildGroupQuoteNotes({
+  group,
   comments,
   contactPreference,
 }: {
-  title: string
-  category: ServiceCategory
-  estimate: ServiceQuoteEstimate
-  scope: QuoteScope
+  group: QuoteGroupEstimate
   comments?: string
   contactPreference?: string
 }) {
@@ -437,19 +501,28 @@ export function buildQuoteNotes({
 
   const lines = [
     'Solicitud desde el cotizador de servicios (SparkTree Systems).',
-    `Servicio: ${title} (${category}).`,
-    `Estimación referencial: ${formatEstimate(estimate.min, estimate.max, estimate.billing)}. El precio final puede variar según los requerimientos del cliente y el diagnóstico técnico.`,
-    'No incluye IGV.',
+    `Servicios solicitados: ${group.items.length}.`,
   ]
 
-  const scopeText = estimate.lines
-    .map((line) => `${line.label}: ${line.value}`)
-    .join(' · ')
-  if (scopeText) lines.push(`Alcance declarado: ${scopeText}.`)
+  group.items.forEach((item, index) => {
+    const scopeText = item.estimate.lines
+      .map((line) => `${line.label}: ${line.value}`)
+      .join(' · ')
+    const scope = scopeText ? ` Alcance: ${scopeText}.` : ''
+    lines.push(
+      `${index + 1}. ${item.title} (${item.category}) — Estimación referencial: ${formatEstimate(
+        item.estimate.min,
+        item.estimate.max,
+        item.estimate.billing,
+      )}.${scope}`,
+    )
+  })
 
-  if (scope.coverage !== 'remoto') {
-    lines.push(`Modalidad de soporte: ${coverageLabels[scope.coverage]}.`)
-  }
+  lines.push(
+    `Total estimado: ${formatGroupEstimate(group)}. El precio final puede variar según los requerimientos del cliente y el diagnóstico técnico.`,
+    'No incluye IGV.',
+  )
+
   if (contactPreference) {
     lines.push(`Preferencia de contacto: ${preferenceLabels[contactPreference] ?? contactPreference}.`)
   }

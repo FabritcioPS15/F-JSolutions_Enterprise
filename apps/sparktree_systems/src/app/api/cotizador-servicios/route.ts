@@ -2,15 +2,18 @@ import { NextRequest, NextResponse } from 'next/server'
 import { isEmail } from '@fj-solutions/contracts/domain'
 import type { ServiceCategory } from '@/lib/services'
 import {
-  buildQuoteItems,
-  buildQuoteNotes,
+  buildGroupQuoteItems,
+  buildGroupQuoteNotes,
   createScopeFor,
-  estimateServiceQuote,
+  estimateQuoteGroup,
   getServiceQuoteConfig,
+  type QuoteKind,
   type QuoteScope,
+  type QuoteSelection,
 } from '@/lib/service-quote'
 
 const API_URL = (process.env.HELPDESK_API_URL ?? 'http://localhost:4000/api/v1').replace(/\/+$/, '')
+const MAX_SERVICES = 8
 
 const categories: ServiceCategory[] = [
   'Soporte TI',
@@ -18,9 +21,21 @@ const categories: ServiceCategory[] = [
   'Desarrollo de software',
 ]
 
-type IncomingPayload = {
-  service?: { slug?: unknown; title?: unknown; category?: unknown }
+const kindCategory: Record<QuoteKind, ServiceCategory> = {
+  soporte: 'Soporte TI',
+  infraestructura: 'Infraestructura TI',
+  software: 'Desarrollo de software',
+}
+
+type IncomingService = {
+  slug?: unknown
+  title?: unknown
+  category?: unknown
   scope?: Record<string, unknown>
+}
+
+type IncomingPayload = {
+  services?: IncomingService[]
   contact?: {
     name?: unknown
     company?: unknown
@@ -44,6 +59,24 @@ function integer(value: unknown, fallback: number, min: number, max: number) {
   return Math.min(max, Math.max(min, Math.trunc(parsed)))
 }
 
+function sanitizeScope(rawScope: Record<string, unknown> | undefined, config: ReturnType<typeof getServiceQuoteConfig>): QuoteScope {
+  const defaults = createScopeFor(config)
+  const raw = rawScope && typeof rawScope === 'object' ? rawScope : {}
+
+  return {
+    devices: integer(raw.devices, defaults.devices, 0, 1000),
+    sites: integer(raw.sites, defaults.sites, 1, 100),
+    points: integer(raw.points, defaults.points, 0, 2000),
+    modules: integer(raw.modules, defaults.modules, 0, 100),
+    users: integer(raw.users, defaults.users, 0, 5000),
+    integrations: integer(raw.integrations, defaults.integrations, 0, 50),
+    coverage: raw.coverage === 'programado' || raw.coverage === 'extendido' ? raw.coverage : 'remoto',
+    mobileApp: raw.mobileApp === true,
+    dataMigration: raw.dataMigration === true,
+    urgency: raw.urgency === 'prioritario' ? 'prioritario' : 'normal',
+  }
+}
+
 export async function POST(request: NextRequest) {
   let payload: IncomingPayload
 
@@ -56,41 +89,56 @@ export async function POST(request: NextRequest) {
     )
   }
 
-  const serviceSlug = text(payload.service?.slug, 120)
-  const serviceTitle = text(payload.service?.title, 200)
-  const serviceCategory = categories.includes(payload.service?.category as ServiceCategory)
-    ? (payload.service?.category as ServiceCategory)
-    : undefined
+  const incoming = Array.isArray(payload.services) ? payload.services : []
 
-  if (!/^[a-z0-9-]{2,120}$/.test(serviceSlug) || serviceTitle.length < 2) {
+  if (incoming.length === 0) {
     return NextResponse.json(
-      { success: false, message: 'Selecciona el servicio que quieres cotizar.' },
+      { success: false, message: 'Selecciona al menos un servicio para cotizar.' },
       { status: 400 },
     )
   }
 
-  const config = getServiceQuoteConfig(serviceSlug, serviceCategory)
-  const defaults = createScopeFor(config)
-  const rawScope = payload.scope ?? {}
-
-  const coverage = rawScope.coverage
-  const urgency = rawScope.urgency
-
-  const scope: QuoteScope = {
-    devices: integer(rawScope.devices, defaults.devices, 0, 1000),
-    sites: integer(rawScope.sites, defaults.sites, 1, 100),
-    points: integer(rawScope.points, defaults.points, 0, 2000),
-    modules: integer(rawScope.modules, defaults.modules, 0, 100),
-    users: integer(rawScope.users, defaults.users, 0, 5000),
-    integrations: integer(rawScope.integrations, defaults.integrations, 0, 50),
-    coverage:
-      coverage === 'programado' || coverage === 'extendido' ? coverage : 'remoto',
-    mobileApp: rawScope.mobileApp === true,
-    dataMigration: rawScope.dataMigration === true,
-    urgency: urgency === 'prioritario' ? 'prioritario' : 'normal',
+  if (incoming.length > MAX_SERVICES) {
+    return NextResponse.json(
+      { success: false, message: `Puedes cotizar hasta ${MAX_SERVICES} servicios a la vez.` },
+      { status: 400 },
+    )
   }
 
-  const estimate = estimateServiceQuote(config, scope)
+  const seen = new Set<string>()
+  const selections: QuoteSelection[] = []
+
+  for (const item of incoming) {
+    const slug = text(item?.slug, 120)
+    const title = text(item?.title, 200)
+
+    if (!/^[a-z0-9-]{2,120}$/.test(slug) || title.length < 2 || seen.has(slug)) {
+      return NextResponse.json(
+        { success: false, message: 'Revisa los servicios seleccionados e inténtalo nuevamente.' },
+        { status: 400 },
+      )
+    }
+
+    seen.add(slug)
+    const config = getServiceQuoteConfig(
+      slug,
+      categories.includes(item?.category as ServiceCategory)
+        ? (item.category as ServiceCategory)
+        : undefined,
+    )
+    const category = categories.includes(item?.category as ServiceCategory)
+      ? (item.category as ServiceCategory)
+      : kindCategory[config.kind]
+
+    selections.push({
+      title,
+      category,
+      config,
+      scope: sanitizeScope(item?.scope, config),
+    })
+  }
+
+  const group = estimateQuoteGroup(selections)
 
   const name = text(payload.contact?.name, 200)
   const company = text(payload.contact?.company, 200)
@@ -130,7 +178,6 @@ export async function POST(request: NextRequest) {
   }
 
   const hasDocument = Boolean(documentType && documentNumber)
-  const category = serviceCategory ?? 'Desarrollo de software'
 
   try {
     const response = await fetch(`${API_URL}/quotes/public`, {
@@ -144,15 +191,12 @@ export async function POST(request: NextRequest) {
         documentType: hasDocument ? documentType : undefined,
         documentNumber: hasDocument ? documentNumber : undefined,
         contactPreference,
-        generalNotes: buildQuoteNotes({
-          title: serviceTitle,
-          category,
-          estimate,
-          scope,
+        generalNotes: buildGroupQuoteNotes({
+          group,
           comments: comments || undefined,
           contactPreference,
         }),
-        items: buildQuoteItems(serviceTitle, estimate),
+        items: buildGroupQuoteItems(group),
       }),
       signal: AbortSignal.timeout(15_000),
       cache: 'no-store',
@@ -187,9 +231,8 @@ export async function POST(request: NextRequest) {
         createdAt: data.data?.createdAt,
       },
       estimate: {
-        min: estimate.min,
-        max: estimate.max,
-        billing: estimate.billing,
+        project: group.project,
+        monthly: group.monthly,
       },
     })
   } catch (error) {
