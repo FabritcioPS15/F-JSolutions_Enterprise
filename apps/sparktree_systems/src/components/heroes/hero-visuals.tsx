@@ -529,9 +529,9 @@ export function SoftwareVisual() {
 
             <div className="mt-2.5 grid grid-cols-3 gap-1.5">
               {[
-                { value: '1,284', label: 'Registros' },
-                { value: '92%', label: 'Automatizado' },
-                { value: '3.2 h', label: 'Ahorro diario' },
+                { value: '3', label: 'Etapas' },
+                { value: '2', label: 'Completadas' },
+                { value: '7 d', label: 'Historial' },
               ].map((item) => (
                 <div key={item.label} className="rounded-lg border border-border bg-card px-2 py-1.5">
                   <p className="font-heading text-[11px] font-bold tracking-tight text-foreground">{item.value}</p>

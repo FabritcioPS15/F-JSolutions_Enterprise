@@ -1,522 +1,225 @@
-'use client'
-
-import { useState, useMemo } from 'react'
 import Link from 'next/link'
 import {
   ArrowRight,
-  ArrowUpRight,
-  Briefcase,
-  Building2,
-  CheckCircle2,
-  Clock,
-  Compass,
-  Cpu,
-  GraduationCap,
-  HardDrive,
-  HeartHandshake,
+  ClipboardList,
+  FileCheck2,
   Layers,
-  Network,
-  Phone,
-  Rocket,
-  Search,
-  Server,
+  Lock,
   ShieldCheck,
-  ShoppingBag,
-  Sparkles,
-  Stethoscope,
-  Truck,
-  Users,
-  Workflow,
-  type LucideIcon,
+  Target,
 } from 'lucide-react'
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
 import { EditorialHero } from '@/components/heroes'
 import { HeroAction } from '@/components/heroes/hero-primitives'
-import { EMPRESA } from '@/lib/constants'
+import { Reveal } from '@/components/home/reveal'
+import { ProcessSequence } from '@/components/ui/process-sequence'
 
 const CONTAINER = 'mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8'
 
-type ProjectSector = 'todos' | 'servicios' | 'retail' | 'distribucion' | 'salud' | 'educacion' | 'logistica'
-
-interface CaseStudy {
-  id: string
-  sectorId: ProjectSector
-  icon: LucideIcon
-  title: string
-  clientType: string
-  context: string
-  challenge: string
-  solution: string[]
-  results: { label: string; metric: string }[]
-  technologies: string[]
-  duration: string
-  quote?: {
-    text: string
-    author: string
-    role: string
-  }
-}
-
-const caseStudies: CaseStudy[] = [
+const caseFields = [
   {
-    id: 'red-corporativa-sede',
-    sectorId: 'servicios',
-    icon: Briefcase,
-    title: 'Modernización de red y conectividad corporativa para sede de 65 colaboradores',
-    clientType: 'Firma de consultoría legal y contable',
-    context: 'La sede dependía de equipamiento doméstico heterogéneo y cableado estructurado sin etiquetar ni certificar, sufriendo caídas diarias en horas pico.',
-    challenge: 'Garantizar disponibilidad del 99.8% sin interrumpir las operaciones del bufete durante la jornada laboral.',
-    solution: [
-      'Auditoría y levantamiento de topología existente con certificación de puntos',
-      'Despliegue de switches administrables Gigabit PoE+ y segmentación por VLANs (Voz, Datos, Visitas)',
-      'Instalación de Access Points Wi-Fi 6 empresariales con cobertura unificada (Roaming rápido)',
-      'Organización integral de rack de comunicaciones y rotulación de patch panels con documentación digital',
-    ],
-    results: [
-      { label: 'Disponibilidad de red', metric: '99.95%' },
-      { label: 'Caídas en horas pico', metric: '0 incidencias' },
-      { label: 'Velocidad de transferencia LAN', metric: '10x más rápida' },
-    ],
-    technologies: ['VLANs', 'Wi-Fi 6', 'PoE+ Switches', 'Cableado Cat6A', 'Firewall Hardware'],
-    duration: '3 semanas',
-    quote: {
-      text: 'SparkTree Systems ordenó nuestro caos de red en un fin de semana. No tuvimos ni una hora de corte en horario laboral.',
-      author: 'Carlos Meneses',
-      role: 'Gerente de Administración y Finanzas',
-    },
+    icon: Target,
+    title: 'Contexto',
+    copy: 'Sector, tamaño de la operación y situación inicial, publicados solo con autorización del cliente.',
   },
   {
-    id: 'mesa-ayuda-remota',
-    sectorId: 'retail',
-    icon: ShoppingBag,
-    title: 'Mesa de ayuda unificada y mantenimiento preventivo para cadena con 8 puntos de venta',
-    clientType: 'Cadena de tiendas de conveniencia y tecnología',
-    context: 'Las incidencias operativas en cajas y terminales se reportaban por chat informal, provocando demoras de hasta 48 horas en la atención de fallas.',
-    challenge: 'Centralizar los requerimientos en un único canal con SLA garantizado inferior a 2 horas para cajas de cobro.',
-    solution: [
-      'Implementación de sistema de tickets con asignación automática por criticidad',
-      'Soporte remoto con monitorización de telemetría y salud de discos en tiempo real',
-      'Mantenimiento preventivo bimensual en sitio fuera del horario comercial',
-      'Estandarización de imágenes de sistema en terminales POS para restauración veloz en <20 min',
-    ],
-    results: [
-      { label: 'Tiempo medio de respuesta', metric: '<35 min' },
-      { label: 'Reducción de paradas en caja', metric: '-82%' },
-      { label: 'Equipos bajo inventario activo', metric: '100%' },
-    ],
-    technologies: ['Helpdesk SLA', 'Monitoreo RMM', 'POS Imaging', 'Soporte 24/7', 'Inventario QR'],
-    duration: 'Servicio continuo (3+ años)',
-    quote: {
-      text: 'Tener a un equipo responsable que responde en minutos cuando se traba una caja es indispensable para no perder ventas.',
-      author: 'Milagros Valencia',
-      role: 'Jefa de Operaciones Retail',
-    },
+    icon: ClipboardList,
+    title: 'Reto tecnológico',
+    copy: 'El problema concreto que debía resolverse, sin generalidades ni promesas fuera del alcance.',
   },
   {
-    id: 'sistema-inventario-distribucion',
-    sectorId: 'distribucion',
-    icon: Truck,
-    title: 'Plataforma web de gestión de inventarios multisede, ventas y facturación electrónica',
-    clientType: 'Distribuidora mayorista de repuestos industriales',
-    context: 'El control de stock se llevaba en múltiples hojas de Excel desincronizadas, lo que originaba desfases de stock y retrasos en los despachos.',
-    challenge: 'Migrar a una plataforma web segura en la nube con actualización inmediata entre almacén central y dos locales de despacho.',
-    solution: [
-      'Desarrollo de aplicación web modular (React + Node.js) con interfaz intuitiva y roles diferenciados',
-      'Módulo de transferencias entre sedes con control de números de serie y guías de remisión',
-      'Integración con web services de SUNAT para emisión directa de comprobantes de pago',
-      'Dashboard analítico para gerencia con alertas automáticas de reposición de inventario',
-    ],
-    results: [
-      { label: 'Tiempo en cierres de mes', metric: 'De 4 días a 2 horas' },
-      { label: 'Precisión de inventario físico vs sistema', metric: '99.4%' },
-      { label: 'Tiempo promedio de facturación', metric: '-65%' },
-    ],
-    technologies: ['React', 'Node.js', 'PostgreSQL', 'API Facturación SUNAT', 'AWS Cloud'],
-    duration: '4 meses de desarrollo + soporte',
-    quote: {
-      text: 'El sistema diseñado por SparkTree Systems eliminó los errores en despachos y nos dio visión exacta de la mercadería.',
-      author: 'Ricardo Alvarado',
-      role: 'Director General',
-    },
+    icon: Layers,
+    title: 'Solución implementada',
+    copy: 'Qué se instaló, configuró o desarrolló, con tecnologías, plazos y responsables identificados.',
   },
   {
-    id: 'respaldos-seguridad-clinica',
-    sectorId: 'salud',
-    icon: Stethoscope,
-    title: 'Estrategia de respaldo 3-2-1, seguridad y plan de continuidad para historias clínicas',
-    clientType: 'Centro médico de diagnóstico por imágenes',
-    context: 'Disponían de copias locales en discos externos sin pruebas de restauración programadas ni cifrado de datos conforme a normativas de salud.',
-    challenge: 'Asegurar la inmutabilidad de imágenes médicas DICOM y disponibilidad inmediata ante eventuales contingencias o ciberataques.',
-    solution: [
-      'Diseño e implementación de arquitectura de respaldos 3-2-1 (Copia local en NAS RAID + Nube inmutable cifrada)',
-      'Automatización de pruebas periódicas de restauración con simulación de contingencia',
-      'Segmentación de servidores PACS/RIS con políticas estrictas de firewall y acceso Zero Trust',
-      'Capacitación al personal administrativo en prevención de phishing y seguridad digital',
-    ],
-    results: [
-      { label: 'RPO (Pérdida máxima de datos)', metric: '<15 min' },
-      { label: 'RTO (Tiempo de recuperación)', metric: '<1.5 horas' },
-      { label: 'Cifrado de extremo a extremo', metric: 'AES-256' },
-    ],
-    technologies: ['NAS Synology RAID', 'Backup Inmutable S3', 'AES-256', 'Veeam Backup', 'Zero Trust'],
-    duration: '4 semanas',
-    quote: {
-      text: 'La tranquilidad de saber que las historias clínicas y estudios de nuestros pacientes están 100% blindados no tiene precio.',
-      author: 'Dra. Patricia Huamán',
-      role: 'Directora Médica',
-    },
-  },
-  {
-    id: 'suministro-despliegue-colegio',
-    sectorId: 'educacion',
-    icon: GraduationCap,
-    title: 'Suministro corporativo, configuración de imagen base y despliegue de 80 equipos para campus',
-    clientType: 'Institución educativa privada',
-    context: 'La apertura del nuevo ciclo lectivo requería equipar dos laboratorios de cómputo y estaciones docentes en un plazo improrrogable de 10 días.',
-    challenge: 'Suministrar hardware de alto rendimiento asegurando consistencia de software, congelamiento de disco y garantía in-situ.',
-    solution: [
-      'Asesoría técnica y adquisición por volumen con mejores condiciones comerciales y garantía directa',
-      'Creación y validación de imagen de sistema con paquetería educativa y software de bloqueo por reinicio',
-      'Despliegue masivo por red en 48 horas con rotulación física de activos y vinculación en Active Directory',
-      'Acta formal de entrega técnica con inventario detallado de números de serie y periféricos',
-    ],
-    results: [
-      { label: 'Estaciones desplegadas a tiempo', metric: '80 / 80 equipos' },
-      { label: 'Tiempo de despliegue por equipo', metric: '6 min (PXE)' },
-      { label: 'Satisfacción del personal docente', metric: '100%' },
-    ],
-    technologies: ['PXE Network Boot', 'Sysprep Windows 11', 'Deep Freeze', 'Active Directory', 'HP & Lenovo'],
-    duration: '10 días calendario',
-    quote: {
-      text: 'Cumplieron con la entrega antes del inicio de clases y dejaron todo listo para que los alumnos entraran a usar las computadoras.',
-      author: 'Ing. Raúl Cárdenas',
-      role: 'Coordinador de Tecnologías Educativas',
-    },
-  },
-  {
-    id: 'automatizacion-reportes-logistica',
-    sectorId: 'logistica',
-    icon: Workflow,
-    title: 'Automatización de indicadores de trazabilidad y panel de control logístico en tiempo real',
-    clientType: 'Operador logístico de transporte de carga',
-    context: 'Cada semana un equipo de tres personas compilaba manualmente guías y tiempos de entrega, perdiendo visibilidad de demoras en rutas críticas.',
-    challenge: 'Conectar hojas de ruta GPS con el sistema de despacho para obtener KPIs en tiempo real sin recargar de trabajo a los coordinadores.',
-    solution: [
-      'Desarrollo de pipeline de datos automatizado que sincroniza tracking satelital con órdenes de entrega',
-      'Dashboard interactivo con alertas inmediatas sobre vehículos detenidos o rutas desviadas',
-      'Envío automático de notificaciones vía WhatsApp y correo a clientes finales con estado de pedido',
-      'Exportación en un clic de indicadores operativos para reuniones semanales de directorio',
-    ],
-    results: [
-      { label: 'Ahorro de horas hombre semanales', metric: '18 horas' },
-      { label: 'Detección temprana de demoras', metric: 'Inmediata (<5 min)' },
-      { label: 'Mejora en satisfacción de clientes', metric: '+34%' },
-    ],
-    technologies: ['Python ETL', 'PostgreSQL', 'Metabase Dashboard', 'WhatsApp Business API', 'Webhooks'],
-    duration: '5 semanas',
+    icon: FileCheck2,
+    title: 'Resultados verificables',
+    copy: 'Indicadores medidos junto al cliente y documentados. Sin cifras estimadas ni resultados inventados.',
   },
 ]
 
-const sectors: { id: ProjectSector; label: string }[] = [
-  { id: 'todos', label: 'Todos los sectores' },
-  { id: 'servicios', label: 'Servicios Profesionales' },
-  { id: 'retail', label: 'Comercio y Retail' },
-  { id: 'distribucion', label: 'Distribución' },
-  { id: 'salud', label: 'Salud' },
-  { id: 'educacion', label: 'Educación' },
-  { id: 'logistica', label: 'Logística' },
+const caseSlots = [
+  {
+    sector: 'Caso 01',
+    title: 'Espacio reservado para el primer proyecto publicado',
+  },
+  {
+    sector: 'Caso 02',
+    title: 'Espacio reservado para el siguiente proyecto',
+  },
+  {
+    sector: 'Caso 03',
+    title: 'Espacio reservado para el siguiente proyecto',
+  },
 ]
-
-const sectorLabelById = new Map(sectors.map((sector) => [sector.id, sector.label]))
 
 export function ProjectsPage() {
-  const [selectedSector, setSelectedSector] = useState<ProjectSector>('todos')
-  const [searchFilter, setSearchFilter] = useState('')
-
-  const filteredStudies = useMemo(() => {
-    return caseStudies.filter((study) => {
-      const matchesSector = selectedSector === 'todos' || study.sectorId === selectedSector
-      const matchesSearch =
-        searchFilter.trim() === '' ||
-        study.title.toLowerCase().includes(searchFilter.toLowerCase()) ||
-        study.clientType.toLowerCase().includes(searchFilter.toLowerCase()) ||
-        study.technologies.some((t) => t.toLowerCase().includes(searchFilter.toLowerCase())) ||
-        study.context.toLowerCase().includes(searchFilter.toLowerCase())
-      return matchesSector && matchesSearch
-    })
-  }, [selectedSector, searchFilter])
-
   return (
     <div className="min-h-screen bg-card text-foreground selection:bg-[#1769AA]/15 selection:text-blue-ink">
       <EnhancedHeader />
 
       <main>
-        {/* Hero Editorial */}
         <EditorialHero
           id="hero-proyectos"
           title={
             <>
-              Experiencia comprobada en{' '}
-              <span className="text-blue-ink">infraestructura, software y soporte TI</span>
+              Proyectos y experiencia, <span className="text-blue-ink">documentados con rigor</span>
             </>
           }
-          description="Conoce cómo acompañamos a empresas, instituciones y comercios a resolver retos técnicos reales con metodologías claras, plazos cumplidos y resultados medibles."
+          description="Publicamos un proyecto solo cuando el alcance es real, los resultados se pueden sustentar y el cliente autoriza su difusión. Mientras preparamos los primeros casos, aquí está el estándar con el que documentamos cada implementación."
           meta={[
-            '12+ años en el mercado',
-            '850+ clientes corporativos',
-            'SLA 99.8% garantizado',
-            'Atención en Lima y provincias',
+            'Casos publicados con autorización',
+            'Resultados verificables, sin estimaciones',
+            'Documentación técnica por proyecto',
+            'Nombres y logos según consentimiento',
           ]}
           actions={
             <div className="flex flex-wrap items-center gap-3">
               <HeroAction href="/contacto" variant="primary">
-                Conversar sobre tu proyecto
+                Cuéntanos tu proyecto
               </HeroAction>
               <HeroAction href="/como-trabajamos" variant="secondary">
-                Ver cómo trabajamos
+                Ver metodología
               </HeroAction>
             </div>
           }
         />
 
-        {/* Indicadores clave */}
-        <section className="border-y border-border bg-muted py-10" aria-label="Cifras clave">
+        {/* Estándar de documentación */}
+        <section className="border-y border-border bg-muted py-16 sm:py-20" aria-labelledby="estandar-title">
           <div className={CONTAINER}>
-            <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
-              <div className="border-l-2 border-[#1769AA] pl-4">
-                <p className="font-heading text-3xl font-bold tracking-tight text-foreground sm:text-4xl">850+</p>
-                <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Empresas atendidas</p>
-              </div>
-              <div className="border-l-2 border-[#1769AA] pl-4">
-                <p className="font-heading text-3xl font-bold tracking-tight text-foreground sm:text-4xl">2,400+</p>
-                <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Equipos gestionados</p>
-              </div>
-              <div className="border-l-2 border-[#1769AA] pl-4">
-                <p className="font-heading text-3xl font-bold tracking-tight text-foreground sm:text-4xl">&lt;35 min</p>
-                <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Tiempo promedio respuesta</p>
-              </div>
-              <div className="border-l-2 border-[#1769AA] pl-4">
-                <p className="font-heading text-3xl font-bold tracking-tight text-foreground sm:text-4xl">99.8%</p>
-                <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Uptime promedio en redes</p>
-              </div>
-            </div>
-          </div>
-        </section>
+            <Reveal className="max-w-2xl">
+              <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-ink">Estándar de publicación</p>
+              <h2 id="estandar-title" className="mt-2 font-heading text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+                Qué incluirá cada caso
+              </h2>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                Una ficha completa permite evaluar si la solución se parece a lo que tu empresa necesita. Por eso no
+                publicamos fragmentos sueltos ni testimonios sin contexto.
+              </p>
+            </Reveal>
 
-        {/* Filtros y buscador */}
-        <section className="pt-12 sm:pt-16 pb-6" aria-label="Filtro de proyectos">
-          <div className={CONTAINER}>
-            <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-              <div>
-                <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-ink">Portafolio de soluciones</p>
-                <h2 className="mt-1 font-heading text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
-                  Casos de estudio por sector
-                </h2>
-              </div>
-
-              {/* Buscador interactivo */}
-              <div className="relative w-full sm:w-80">
-                <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-                <input
-                  type="text"
-                  value={searchFilter}
-                  onChange={(e) => setSearchFilter(e.target.value)}
-                  placeholder="Buscar por tecnología, reto..."
-                  className="h-10 w-full rounded-xl border border-input bg-card pl-10 pr-4 text-sm text-foreground outline-none transition placeholder:text-muted-foreground focus:border-[#1769AA] focus:ring-2 focus:ring-[#1769AA]/15"
-                />
-              </div>
-            </div>
-
-            {/* Selector por chips */}
-            <div className="mt-6 flex flex-wrap gap-2">
-              {sectors.map((sector) => {
-                const active = selectedSector === sector.id
+            <ProcessSequence layout="grid" className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {caseFields.map((field, index) => {
+                const Icon = field.icon
                 return (
-                  <button
-                    key={sector.id}
-                    type="button"
-                    onClick={() => setSelectedSector(sector.id)}
-                    aria-pressed={active}
-                    className={`rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-all ${
-                      active
-                        ? 'bg-[#1769AA] text-white shadow-sm'
-                        : 'border border-border bg-card text-muted-foreground hover:border-input hover:bg-muted'
-                    }`}
+                  <div
+                    key={field.title}
+                    className="relative h-full overflow-hidden rounded-2xl border border-border bg-card p-5 shadow-xs transition duration-300 hover:border-[#1769AA]/35 hover:shadow-sm motion-reduce:transition-none"
                   >
-                    {sector.label}
-                  </button>
+                    <div className="flex items-center justify-between">
+                      <span className="process-number font-heading text-xl font-extrabold text-muted-foreground/50">
+                        0{index + 1}
+                      </span>
+                      <span className="grid size-8 place-items-center rounded-lg bg-tint-blue text-blue-ink">
+                        <Icon className="size-4" />
+                      </span>
+                    </div>
+                    <h3 className="mt-4 font-heading text-sm font-bold text-foreground">{field.title}</h3>
+                    <p className="mt-1.5 text-[11.5px] leading-relaxed text-muted-foreground">{field.copy}</p>
+                  </div>
                 )
               })}
-            </div>
+            </ProcessSequence>
+
+            <Reveal delay={80}>
+              <div className="mt-6 flex flex-col gap-3 rounded-2xl border border-[#1769AA]/20 bg-card p-5 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-start gap-3">
+                  <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-tint-blue text-blue-ink">
+                    <Lock className="size-4" />
+                  </span>
+                  <p className="text-xs leading-relaxed text-muted-foreground">
+                    <span className="font-bold text-foreground">Privacidad por defecto:</span> no mostramos nombres de
+                    personas, logos ni cifras internas sin permiso escrito. La confidencialidad de tu operación es
+                    parte del servicio.
+                  </p>
+                </div>
+                <Link
+                  href="/politica-de-privacidad"
+                  className="inline-flex shrink-0 items-center gap-1.5 text-xs font-bold text-blue-ink transition hover:text-[#0F86B8]"
+                >
+                  Política de privacidad
+                  <ArrowRight className="size-3.5" />
+                </Link>
+              </div>
+            </Reveal>
           </div>
         </section>
 
-        {/* Lista de Casos de Estudio */}
-        <section className="pb-16 sm:pb-24" aria-label="Listado de casos de estudio">
+        {/* Casos en preparación */}
+        <section className="bg-card py-16 sm:py-20" aria-labelledby="casos-title">
           <div className={CONTAINER}>
-            {filteredStudies.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-input bg-muted py-16 text-center">
-                <Search className="mx-auto size-8 text-muted-foreground" />
-                <h3 className="mt-3 text-base font-semibold text-foreground">No encontramos proyectos con ese criterio</h3>
-                <p className="mt-1 text-sm text-muted-foreground">Intenta ajustar el filtro de sector o limpiar el término de búsqueda.</p>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSelectedSector('todos')
-                    setSearchFilter('')
-                  }}
-                  className="mt-4 rounded-lg bg-[#1769AA] px-4 py-2 text-xs font-semibold text-white transition hover:bg-[#12568C]"
-                >
-                  Restablecer filtros
-                </button>
+            <Reveal className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+              <div className="max-w-2xl">
+                <p className="text-xs font-bold uppercase tracking-[0.16em] text-brand-ink">Publicación progresiva</p>
+                <h2 id="casos-title" className="mt-2 font-heading text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+                  Casos en preparación
+                </h2>
+                <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                  Estos espacios se completarán con proyectos reales a medida que sus fichas sean validadas por el
+                  cliente. No anticipamos contenido para llenar la página.
+                </p>
               </div>
-            ) : (
-              <div className="grid gap-8 lg:grid-cols-2">
-                {filteredStudies.map((study) => {
-                  const Icon = study.icon
-                  const sectorLabel = sectorLabelById.get(study.sectorId) ?? ''
-                  return (
-                    <article
-                      key={study.id}
-                      className="group flex flex-col justify-between rounded-2xl border border-border bg-card p-6 shadow-sm transition duration-200 hover:border-[#1769AA]/40 hover:shadow-md sm:p-8"
-                    >
-                      <div>
-                        {/* Top header */}
-                        <div className="flex items-center justify-between gap-3 border-b border-border pb-4">
-                          <div className="flex items-center gap-2.5">
-                            <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-tint-blue text-blue-ink">
-                              <Icon className="size-4" />
-                            </span>
-                            <div>
-                              <button
-                                type="button"
-                                onClick={() => setSelectedSector(study.sectorId)}
-                                aria-label={`Ver proyectos del sector ${sectorLabel}`}
-                                className="rounded-sm text-left text-[11px] font-bold uppercase tracking-wider text-blue-ink underline-offset-2 transition hover:text-blue-ink hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#1769AA]/40"
-                              >
-                                {sectorLabel}
-                              </button>
-                              <p className="text-xs text-muted-foreground">{study.clientType}</p>
-                            </div>
-                          </div>
-                          <span className="inline-flex items-center gap-1 rounded-full bg-muted px-2.5 py-0.5 text-[11px] font-medium text-muted-foreground">
-                            <Clock className="size-3" />
-                            {study.duration}
+              <span className="inline-flex shrink-0 items-center gap-1.5 self-start rounded-full border border-border bg-muted px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.12em] text-foreground/70">
+                <ShieldCheck className="size-3.5 text-[#0E7490]" />
+                Contenido verificado
+              </span>
+            </Reveal>
+
+            <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {caseSlots.map((slot, index) => (
+                <Reveal key={index} delay={index * 70} className="h-full">
+                  <div className="flex h-full min-h-[220px] flex-col justify-between rounded-2xl border border-dashed border-[#1769AA]/30 bg-muted/60 p-5">
+                    <div>
+                      <span className="inline-flex rounded-full bg-tint-blue px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.12em] text-blue-ink">
+                        {slot.sector}
+                      </span>
+                      <p className="mt-4 font-heading text-sm font-bold leading-snug text-foreground/80">
+                        {slot.title}
+                      </p>
+                    </div>
+                    <div className="space-y-2" aria-hidden="true">
+                      {['Contexto', 'Reto', 'Solución', 'Resultados'].map((field) => (
+                        <div key={field} className="flex items-center gap-2">
+                          <span className="h-1 w-1 rounded-full bg-[#1769AA]/40" />
+                          <span className="h-1.5 flex-1 rounded-full bg-[#1769AA]/10" />
+                          <span className="w-14 text-[8px] font-semibold uppercase tracking-wide text-muted-foreground/70">
+                            {field}
                           </span>
                         </div>
-
-                        {/* Title & Context */}
-                        <h3 className="mt-5 font-heading text-lg font-bold leading-snug text-foreground sm:text-xl">
-                          {study.title}
-                        </h3>
-
-                        <div className="mt-3 rounded-lg bg-muted p-3 text-xs leading-relaxed text-muted-foreground">
-                          <strong className="font-semibold text-foreground">Contexto inicial: </strong>
-                          {study.context}
-                        </div>
-
-                        {/* Actions implemented */}
-                        <div className="mt-4 space-y-2">
-                          <p className="text-xs font-bold uppercase tracking-wider text-foreground">
-                            Solución técnica implementada:
-                          </p>
-                          <ul className="space-y-1.5 text-xs text-muted-foreground">
-                            {study.solution.map((item, idx) => (
-                              <li key={idx} className="flex items-start gap-2">
-                                <CheckCircle2 className="mt-0.5 size-3.5 shrink-0 text-blue-ink" />
-                                <span>{item}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-
-                        {/* Metrics banner */}
-                        <div className="mt-5 grid grid-cols-3 gap-2 rounded-xl border border-blue-ink/25 bg-tint-blue/50 p-3">
-                          {study.results.map((res, idx) => (
-                            <div key={idx} className="text-center">
-                              <p className="font-heading text-sm font-bold text-blue-ink sm:text-base">{res.metric}</p>
-                              <p className="mt-0.5 text-[10px] font-medium text-muted-foreground leading-tight">{res.label}</p>
-                            </div>
-                          ))}
-                        </div>
-
-                        {/* Client quote if available */}
-                        {study.quote && (
-                          <div className="mt-4 border-l-2 border-[#1769AA] pl-3 py-1 text-xs italic text-muted-foreground">
-                            &ldquo;{study.quote.text}&rdquo;
-                            <span className="block mt-1 font-semibold not-italic text-foreground">
-                              — {study.quote.author}, <span className="font-normal text-muted-foreground">{study.quote.role}</span>
-                            </span>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Bottom tags & footer */}
-                      <div className="mt-6 border-t border-border pt-4">
-                        <div className="flex flex-wrap items-center justify-between gap-3">
-                          <div className="flex flex-wrap gap-1.5">
-                            {study.technologies.map((tech) => (
-                              <span
-                                key={tech}
-                                className="rounded-md border border-border bg-card px-2 py-0.5 text-[10px] font-medium text-muted-foreground"
-                              >
-                                {tech}
-                              </span>
-                            ))}
-                          </div>
-                          <Link
-                            href="/contacto"
-                            className="inline-flex items-center gap-1 text-xs font-bold text-blue-ink transition hover:text-blue-ink"
-                          >
-                            Consultar similar
-                            <ArrowRight className="size-3" />
-                          </Link>
-                        </div>
-                      </div>
-                    </article>
-                  )
-                })}
-              </div>
-            )}
+                      ))}
+                    </div>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
           </div>
         </section>
 
-        {/* Banner de llamada a la acción */}
-        <section className="border-t border-border bg-[#0B2236] py-16 text-white" aria-label="Contacto de proyectos">
+        {/* CTA */}
+        <section className="bg-[#0B2236] py-16 text-white sm:py-20" aria-labelledby="proyectos-cta-title">
           <div className={CONTAINER}>
-            <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
-              <div>
-                <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#00B8D9]">
-                  ¿Tienes un proyecto en mente?
-                </p>
-                <h2 className="mt-2 font-heading text-2xl font-bold tracking-tight text-white sm:text-3xl">
-                  Evaluemos la infraestructura o software de tu empresa
-                </h2>
-                <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-                  Agenda una sesión de diagnóstico inicial sin costo con un especialista técnico de SparkTree Systems.
-                  Revisamos tus requerimientos y te entregamos una propuesta clara con alcance y presupuesto cerrado.
-                </p>
-              </div>
-
-              <div className="flex flex-wrap items-center gap-3">
+            <Reveal>
+              <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
+                <div className="max-w-2xl">
+                  <h2 id="proyectos-cta-title" className="font-heading text-2xl font-bold tracking-tight text-white sm:text-3xl">
+                    Tu proyecto puede ser el próximo caso documentado
+                  </h2>
+                  <p className="mt-3 text-sm leading-relaxed text-[#B9CBDA]">
+                    Cuéntanos el reto de tu empresa. Evaluamos el alcance, proponemos un plan y dejamos todo por
+                    escrito antes de empezar.
+                  </p>
+                </div>
                 <Link
                   href="/contacto"
-                  className="inline-flex h-11 items-center gap-2 rounded-xl bg-[#1769AA] px-6 text-sm font-bold text-white transition hover:bg-[#12568C]"
+                  className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#1769AA] px-6 text-sm font-bold text-white transition hover:bg-[#12568C] sm:w-auto"
                 >
-                  Solicitar diagnóstico
+                  Solicitar asesoría
                   <ArrowRight className="size-4" />
                 </Link>
-                <Link
-                  href={`https://wa.me/${EMPRESA.telefono.replace(/[^0-9]/g, '')}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex h-11 items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-5 text-sm font-semibold text-white transition hover:bg-white/20"
-                >
-                  <Phone className="size-4" />
-                  Escribir al WhatsApp
-                </Link>
               </div>
-            </div>
+            </Reveal>
           </div>
         </section>
       </main>

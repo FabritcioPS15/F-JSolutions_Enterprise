@@ -28,9 +28,27 @@ const quoteCartServices = serviceDefinitions.map(({ slug, title, category }) => 
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: 'SparkTree Systems | Soluciones tecnológicas para empresas',
-  description: 'Desarrollo de software, infraestructura TI y soporte técnico para empresas que quieren avanzar.',
+  title: 'SparkTree Systems | Tecnología para empresas: infraestructura, soporte y seguridad',
+  description:
+    'Diseñamos, implementamos y gestionamos soluciones tecnológicas que conectan, protegen y potencian las operaciones de tu negocio.',
   generator: 'v0.app',
+  applicationName: 'SparkTree Systems',
+  openGraph: {
+    type: 'website',
+    locale: 'es_PE',
+    siteName: 'SparkTree Systems',
+    title: 'SparkTree Systems | Tecnología para empresas',
+    description:
+      'Infraestructura TI, soporte gestionado, seguridad tecnológica y equipamiento para empresas en Lima y el Perú.',
+    url: '/',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'SparkTree Systems | Tecnología para empresas',
+    description:
+      'Infraestructura TI, soporte gestionado, seguridad tecnológica y equipamiento para empresas.',
+  },
+  robots: { index: true, follow: true },
   icons: {
     icon: [{ url: '/favicon.svg', type: 'image/svg+xml' }],
     apple: '/apple-icon.png',

@@ -39,10 +39,10 @@ import { storeUrl } from '@/lib/store-url'
 const CONTAINER = 'mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8'
 
 const stats = [
-  { value: '12+', label: 'Años de experiencia' },
-  { value: '850+', label: 'Clientes atendidos' },
-  { value: '2,400+', label: 'Equipos gestionados' },
-  { value: '<24 h', label: 'Tiempo de respuesta' },
+  { value: 'Sin costo', label: 'Diagnóstico inicial' },
+  { value: 'Por escrito', label: 'Alcance y plazos' },
+  { value: 'Con acta', label: 'Entrega documentada' },
+  { value: 'Directo', label: 'Canal de soporte' },
 ]
 
 const values = [

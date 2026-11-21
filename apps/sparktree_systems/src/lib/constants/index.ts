@@ -16,6 +16,9 @@ export const EMPRESA = {
   },
 } as const
 
+// No se publica un RUC incompleto: mientras siga como marcador se muestra como pendiente.
+export const EMPRESA_RUC = /^\d{11}$/.test(EMPRESA.ruc) ? EMPRESA.ruc : 'Por confirmar'
+
 // ─── Navegacion ────────────────────────────────────────────────────────────────
 export const NAV_LINKS = [
   { label: 'Inicio', href: '/' },

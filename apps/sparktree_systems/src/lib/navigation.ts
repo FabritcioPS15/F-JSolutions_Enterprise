@@ -22,7 +22,7 @@ const infrastructureServicePaths = getServicesByCategory('Infraestructura TI').m
 export const mainNav: MainNavItem[] = [
   { label: 'Inicio', href: '/' },
   {
-    label: 'Empresa',
+    label: 'Nosotros',
     href: '/nosotros',
     hasMenu: true,
     activeMatch: [
@@ -94,12 +94,13 @@ export const softwareDevMenu: NavMenuItem[] = [
   { label: 'Ver desarrollo de software', href: '/sistemas', variant: 'general' },
 ]
 
-// ─── Menú Empresa ─────────────────────────────────────────────────────────────────────
+// ─── Menú Nosotros ─────────────────────────────────────────────────────────────────────
 
 export const companyMenu: NavMenuItem[] = [
   { label: 'Sobre nosotros', href: '/nosotros', desc: 'Trayectoria, valores y equipo técnico', icon: 'Compass' },
-  { label: 'Proyectos y experiencia', href: '/proyectos', desc: 'Casos de éxito y sectores atendidos', icon: 'FolderKanban' },
+  { label: 'Proyectos y experiencia', href: '/proyectos', desc: 'Implementaciones y sectores atendidos', icon: 'FolderKanban' },
   { label: 'Cómo trabajamos', href: '/como-trabajamos', desc: 'Metodología, etapas y garantías', icon: 'Route' },
   { label: 'Preguntas frecuentes', href: '/preguntas-frecuentes', desc: 'Respuestas a consultas habituales', icon: 'CircleHelp' },
+  { label: 'Ecosistema', href: '/#ecosistema', desc: 'Systems, Studio y Store', icon: 'Sparkles' },
   { label: 'Contacto', href: '/contacto', desc: 'Canales directos de atención y cotización', icon: 'Mail' },
 ]

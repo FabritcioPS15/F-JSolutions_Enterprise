@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Building2 } from 'lucide-react'
 import { LegalPage, type LegalSection } from '@/components/legal-page'
-import { EMPRESA } from '@/lib/constants'
+import { EMPRESA, EMPRESA_RUC } from '@/lib/constants'
 import { SITE_NAME } from '@/lib/site'
 
 const TITLE = 'Información legal | SparkTree Systems'
@@ -28,7 +28,7 @@ const sections: LegalSection[] = [
     title: 'Datos de la empresa',
     paragraphs: [
       `Razón social: ${EMPRESA.nombre}.`,
-      `RUC: ${EMPRESA.ruc}.`,
+      `RUC: ${EMPRESA_RUC}.`,
       `Domicilio: ${EMPRESA.direccion}.`,
       `Teléfono: ${EMPRESA.telefono}. Correo: ${EMPRESA.email}.`,
       `Horario de atención: ${EMPRESA.horario}.`,

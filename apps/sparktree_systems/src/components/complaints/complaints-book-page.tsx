@@ -26,7 +26,7 @@ import {
   HeroSection,
   HeroTitle,
 } from '@/components/heroes/hero-primitives'
-import { EMPRESA } from '@/lib/constants'
+import { EMPRESA, EMPRESA_RUC } from '@/lib/constants'
 import { cn } from '@/lib/utils'
 import type { ComplaintStatusView } from '@fj-solutions/contracts/complaints-book'
 
@@ -822,7 +822,7 @@ export function ComplaintsBookPage() {
               <dl className="mt-3 space-y-2 text-[11.5px] leading-5 text-muted-foreground">
                 <div>
                   <dt className="font-semibold text-foreground/80">RUC</dt>
-                  <dd>{EMPRESA.ruc}</dd>
+                  <dd>{EMPRESA_RUC}</dd>
                 </div>
                 <div>
                   <dt className="font-semibold text-foreground/80">Domicilio</dt>

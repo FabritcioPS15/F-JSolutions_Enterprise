@@ -20,6 +20,7 @@ import {
   FileText,
   FolderKanban,
   Globe,
+  GraduationCap,
   HardDrive,
   Headset,
   Home,
@@ -91,10 +92,12 @@ const iconMap: Record<string, React.ElementType> = {
   Boxes,
   Cable,
   CircleHelp,
+  Code2,
   Compass,
   Cpu,
   FolderKanban,
   Globe,
+  GraduationCap,
   HardDrive,
   Headset,
   Laptop,
@@ -110,6 +113,7 @@ const iconMap: Record<string, React.ElementType> = {
   Route,
   Server,
   ShieldCheck,
+  Sparkles,
   Store,
   Workflow,
   Wrench,
@@ -122,12 +126,11 @@ function getIcon(iconName: string) {
 
 const sectionIcons: Record<string, React.ElementType> = {
   inicio: Home,
-  tienda: Store,
-  store: Store,
+  nosotros: Compass,
   'servicios-ti': Headset,
   'infraestructura-ti': Network,
   'desarrollo-de-software': Code2,
-  empresa: Compass,
+  tienda: Store,
 }
 
 // Bloque de medios del menú móvil: reemplaza image/video/href por el contenido definitivo.
@@ -240,81 +243,6 @@ function MobileAccordion({
             {children}
           </div>
         </div>
-      </div>
-    </div>
-  )
-}
-
-// ─── Componente: Menú Desplegable Compacto ───────────────────────────────────────────────
-
-function CompactDropdown({
-  items,
-  onClose,
-  className = 'left-0',
-}: {
-  items: Array<{ label: string; href: string; desc?: string; variant?: 'general' }>
-  onClose: () => void
-  className?: string
-}) {
-  const ref = useRef<HTMLDivElement>(null)
-  const pathname = usePathname()
-  useOnClickOutside(ref, onClose)
-
-  const isItemActive = (href: string) => {
-    const [path, hash] = href.split('#')
-    if (!pathname || hash) return false
-    return pathname === path || pathname.startsWith(`${path}/`)
-  }
-
-  return (
-    <div
-      ref={ref}
-      role="dialog"
-      className={`absolute top-[calc(100%+4px)] z-[60] w-80 rounded-xl border border-border bg-card shadow-[0_12px_40px_rgba(15,23,42,0.12)] animate-in fade-in slide-in-from-top-1 zoom-in-[98%] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:animate-none ${className}`}
-    >
-      <div className="p-2">
-        {items.map((item, index) => {
-          const active = isItemActive(item.href)
-          const isGeneral = item.variant === 'general'
-          return (
-            <div key={index} className={isGeneral ? 'mt-2 border-t border-border pt-2' : undefined}>
-              <Link
-                href={item.href}
-                onClick={onClose}
-                aria-current={active ? 'page' : undefined}
-                className={`flex items-center gap-3 rounded-lg px-4 py-3 text-sm transition-colors ${
-                  isGeneral
-                    ? active
-                      ? 'bg-[#12568C] text-white ring-2 ring-[#1769AA]/25'
-                      : 'bg-[#1769AA] text-white shadow-[0_8px_20px_-12px_rgba(23,105,170,0.8)] hover:bg-[#12568C]'
-                    : active
-                      ? 'bg-tint-blue text-blue-ink'
-                      : 'text-foreground hover:bg-muted hover:text-blue-ink'
-                }`}
-              >
-                <span className="min-w-0 flex-1">
-                  <span className={isGeneral ? 'font-bold' : 'font-semibold'}>{item.label}</span>
-                  {item.desc && !isGeneral && (
-                    <span
-                      className={`mt-0.5 block text-xs ${
-                        active ? 'text-blue-ink' : 'text-muted-foreground'
-                      }`}
-                    >
-                      {item.desc}
-                    </span>
-                  )}
-                </span>
-                {isGeneral ? (
-                  <ArrowRight aria-hidden="true" className="size-4 shrink-0" />
-                ) : (
-                  active && (
-                    <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-[#1769AA]" />
-                  )
-                )}
-              </Link>
-            </div>
-          )
-        })}
       </div>
     </div>
   )
@@ -1134,20 +1062,20 @@ export function EnhancedHeader() {
   const [query, setQuery] = useState('')
   const [scrolled, setScrolled] = useState(false)
 
+  const companyRef = useRef<HTMLDivElement>(null)
   const servicesRef = useRef<HTMLDivElement>(null)
   const infrastructureRef = useRef<HTMLDivElement>(null)
   const softwareRef = useRef<HTMLDivElement>(null)
-  const companyRef = useRef<HTMLDivElement>(null)
   const mobileNavIntent = useRef(false)
   const mobileMenuPushed = useRef(false)
   const mobileMenuOpenedHref = useRef('')
 
   const closeAll = () => setOpenDropdown(null)
 
+  useOnClickOutside(companyRef, () => { if (openDropdown === 'nosotros') closeAll() })
   useOnClickOutside(servicesRef, () => { if (openDropdown === 'servicios-ti') closeAll() })
   useOnClickOutside(infrastructureRef, () => { if (openDropdown === 'infraestructura-ti') closeAll() })
   useOnClickOutside(softwareRef, () => { if (openDropdown === 'desarrollo-de-software') closeAll() })
-  useOnClickOutside(companyRef, () => { if (openDropdown === 'empresa') closeAll() })
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -1314,18 +1242,17 @@ export function EnhancedHeader() {
                   : 'text-muted-foreground hover:text-blue-ink'
               const dropdownKey = link.label.toLowerCase().replace(/ /g, '-')
               const refMap: Record<string, React.RefObject<HTMLDivElement | null>> = {
+                nosotros: companyRef,
                 'servicios-ti': servicesRef,
                 'infraestructura-ti': infrastructureRef,
                 'desarrollo-de-software': softwareRef,
-                empresa: companyRef,
               }
               const itemsMap: Record<string, NavMenuItem[]> = {
+                nosotros: companyMenu,
                 'servicios-ti': itServicesMenu,
                 'infraestructura-ti': infrastructureMenu,
                 'desarrollo-de-software': softwareDevMenu,
-                empresa: companyMenu,
               }
-              const usesMegaMenu = dropdownKey !== 'empresa'
 
               return (
                 <div key={index} className="relative" ref={refMap[dropdownKey]}>
@@ -1345,16 +1272,13 @@ export function EnhancedHeader() {
                         />
                         {active && <ActiveIndicator onDark={scrolled} />}
                       </button>
-                      {openDropdown === dropdownKey &&
-                        (usesMegaMenu ? (
-                          <MegaDropdown
-                            items={itemsMap[dropdownKey] || []}
-                            sectionLabel={link.label}
-                            onClose={closeAll}
-                          />
-                        ) : (
-                          <CompactDropdown items={itemsMap[dropdownKey] || []} onClose={closeAll} />
-                        ))}
+                      {openDropdown === dropdownKey && (
+                        <MegaDropdown
+                          items={itemsMap[dropdownKey] || []}
+                          sectionLabel={link.label}
+                          onClose={closeAll}
+                        />
+                      )}
                     </>
                   ) : (
                     <Link
@@ -1389,7 +1313,8 @@ export function EnhancedHeader() {
                   }`}
               >
                 <FaTeamspeak aria-hidden="true" className="size-4" />
-                <span>Asesoría</span>
+                <span className="hidden xl:inline">Solicitar asesoría</span>
+                <span className="xl:hidden">Asesoría</span>
               </Link>
             </div>
             </nav>
@@ -1483,14 +1408,14 @@ export function EnhancedHeader() {
 
                 const getSubmenu = () => {
                   switch (dropdownKey) {
+                    case 'nosotros':
+                      return companyMenu
                     case 'servicios-ti':
                       return itServicesMenu
                     case 'infraestructura-ti':
                       return infrastructureMenu
                     case 'desarrollo-de-software':
                       return softwareDevMenu
-                    case 'empresa':
-                      return companyMenu
                     default:
                       return []
                   }
@@ -1686,7 +1611,7 @@ export function EnhancedHeader() {
               className="flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#1769AA] to-[#12568C] px-4 py-3 text-[15px] font-bold text-white shadow-[0_10px_24px_-16px_rgba(23,105,170,0.9)] transition hover:from-[#12568C] hover:to-[#1769AA]"
             >
               <FaTeamspeak aria-hidden="true" className="size-4" />
-              <span>Asesoría</span>
+              <span>Solicitar asesoría</span>
             </Link>
             <div className="mt-2 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-[11px] font-medium text-muted-foreground">
               <a

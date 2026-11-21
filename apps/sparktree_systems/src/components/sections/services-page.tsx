@@ -164,8 +164,8 @@ const plans = [
     features: [
       'Hasta 30 equipos',
       'Remoto + visitas en sitio',
-      'SLA de respuesta en 4 h',
-      'Monitoreo 24/7',
+      'SLA de respuesta por escrito',
+      'Monitoreo programado',
       'Ciberseguridad gestionada',
       'Respaldo y recuperación',
     ],
@@ -197,10 +197,10 @@ const industries = [
 ]
 
 const stats = [
-  { value: '12+', label: 'Años de experiencia' },
-  { value: '850+', label: 'Clientes atendidos' },
-  { value: '2,400+', label: 'Equipos gestionados' },
-  { value: '98%', label: 'Satisfacción' },
+  { value: 'Sin costo', label: 'Diagnóstico inicial' },
+  { value: 'A medida', label: 'Alcance del servicio' },
+  { value: 'Cobertura', label: 'Remota y presencial' },
+  { value: 'Por escrito', label: 'Compromisos y SLA' },
 ]
 
 const faqs = [
