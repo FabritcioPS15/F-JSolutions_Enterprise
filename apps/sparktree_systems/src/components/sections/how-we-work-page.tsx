@@ -27,6 +27,7 @@ import {
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
 import { EditorialHero } from '@/components/heroes'
 import { HeroAction } from '@/components/heroes/hero-primitives'
+import { MediaBand } from '@/components/sections/media-band'
 import { ProcessSequence } from '@/components/ui/process-sequence'
 import { EMPRESA } from '@/lib/constants'
 import { storeUrl } from '@/lib/store-url'
@@ -241,6 +242,17 @@ export function HowWeWorkPage() {
             </div>
           </div>
         </section>
+
+        <MediaBand
+          eyebrow="En cada etapa"
+          title="Diagnóstico, propuesta, despliegue y acta: todo queda por escrito."
+          media={{
+            src: '/images/secciones/como-trabajamos-proceso.webp',
+            alt: 'Ilustración de una reunión de planificación con cronograma de fases, topología de red, documentos técnicos y una lista de verificación.',
+          }}
+          chips={['Diagnóstico', 'Cronograma', 'Documentación', 'SLA']}
+          action={{ label: 'Ver casos documentados', href: '/proyectos' }}
+        />
 
         {/* Paso a paso del proceso */}
         <section className="py-16 sm:py-24" aria-label="Etapas del proceso">

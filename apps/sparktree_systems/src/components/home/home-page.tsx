@@ -30,6 +30,7 @@ import {
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
 import { ExecutiveHero } from '@/components/home/executive-hero'
 import { Reveal } from '@/components/home/reveal'
+import { MediaBand } from '@/components/sections/media-band'
 import { ProcessSequence } from '@/components/ui/process-sequence'
 import { ECOSYSTEM_UNITS, GROUP_APP_URL } from '@/lib/ecosystem'
 import { storeUrl } from '@/lib/store-url'
@@ -454,6 +455,17 @@ export function HomePage() {
             </ProcessSequence>
           </div>
         </section>
+
+        <MediaBand
+          eyebrow="Operación conectada"
+          title="Infraestructura, soporte y software trabajando como un solo sistema."
+          media={{
+            src: '/images/secciones/home-operacion.webp',
+            alt: 'Ilustración isométrica de una oficina conectada: estaciones de trabajo, servidores, red, respaldo en la nube y personal técnico.',
+          }}
+          chips={['Redes', 'Servidores', 'Soporte', 'Software']}
+          action={{ label: 'Conocer cómo trabajamos', href: '/como-trabajamos' }}
+        />
 
         {/* 6. Soluciones para empresas */}
         <section className="border-b border-border bg-muted py-16 sm:py-20" aria-labelledby="empresas-title">

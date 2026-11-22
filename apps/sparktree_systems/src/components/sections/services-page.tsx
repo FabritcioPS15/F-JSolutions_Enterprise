@@ -2,12 +2,11 @@ import Link from 'next/link'
 import {
   ArrowRight,
   ArrowUpRight,
+  Boxes,
   Building2,
   CalendarRange,
   Check,
   ClipboardCheck,
-  Cloud,
-  Code2,
   GraduationCap,
   Handshake,
   Headset,
@@ -16,6 +15,7 @@ import {
   Mail,
   Network,
   Phone,
+  Printer,
   RefreshCw,
   Rocket,
   Server,
@@ -29,92 +29,24 @@ import {
 import { FaTeamspeak } from 'react-icons/fa6'
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
 import { ServiceHero } from '@/components/heroes'
+import { MediaBand } from '@/components/sections/media-band'
+import { ServiceQuoteForm } from '@/components/sections/service-quote-form'
 import { FaqAccordion } from '@/components/ui/faq-accordion'
 import { ProcessSequence } from '@/components/ui/process-sequence'
+import { getServicesByCategory } from '@/lib/services'
 import { storeUrl } from '@/lib/store-url'
 
-type ServiceItem = {
-  icon: LucideIcon
-  title: string
-  description: string
-  points: string[]
-  href: string
+const supportServices = getServicesByCategory('Soporte TI')
+
+const supportServiceIcons: Record<string, LucideIcon> = {
+  'soporte-tecnico': Headset,
+  'mantenimiento-de-equipos': Wrench,
+  'instalacion-de-software': Laptop,
+  'configuracion-de-impresoras': Printer,
+  'soporte-empresarial': ShieldCheck,
 }
 
-const serviceList: ServiceItem[] = [
-  {
-    icon: Headset,
-    title: 'Soporte TI gestionado',
-    description:
-      'Una mesa de ayuda para todo tu equipo, con atención remota y visitas en sitio cuando la situación lo requiere.',
-    points: ['Mesa de ayuda y tickets', 'Soporte remoto y en sitio', 'Tiempos de respuesta (SLA)'],
-    href: '/servicios/soporte-empresarial',
-  },
-  {
-    icon: Network,
-    title: 'Redes y conectividad',
-    description:
-      'Diseñamos e implementamos redes estables, seguras y listas para soportar el crecimiento de tu operación.',
-    points: ['Wi-Fi empresarial', 'Cableado estructurado', 'Switches y routers gestionados'],
-    href: '/servicios/redes-y-conectividad',
-  },
-  {
-    icon: Server,
-    title: 'Servidores y nube',
-    description:
-      'Infraestructura on-premise o en la nube, dimensionada según la carga real de tus sistemas.',
-    points: ['Servidores físicos y virtuales', 'Migración a la nube', 'Monitoreo de disponibilidad'],
-    href: '/servicios/implementacion-de-infraestructura',
-  },
-  {
-    icon: ShieldCheck,
-    title: 'Ciberseguridad',
-    description:
-      'Protegemos la información de tu empresa con controles prácticos, respaldos y buenas prácticas.',
-    points: ['Protección de endpoints', 'Correo y accesos seguros', 'Políticas de respaldo'],
-    href: '/servicios#contacto',
-  },
-  {
-    icon: Code2,
-    title: 'Desarrollo de software',
-    description:
-      'Sistemas web y aplicaciones a medida para automatizar procesos y centralizar tu información.',
-    points: ['Sistemas web internos', 'Integración con facturación', 'Automatización de reportes'],
-    href: '/sistemas',
-  },
-  {
-    icon: Laptop,
-    title: 'Suministro de hardware',
-    description:
-      'Equipos corporativos con asesoría técnica, configuración inicial y garantía respaldada por marca.',
-    points: ['Laptops y desktops', 'Monitores e impresoras', 'Compras por volumen'],
-    href: '/servicios/equipamiento-tecnologico-empresarial',
-  },
-  {
-    icon: Wrench,
-    title: 'Mantenimiento preventivo',
-    description:
-      'Planes programados para reducir fallas, extender la vida útil de los equipos y evitar paradas.',
-    points: ['Limpieza y revisión', 'Actualización de software', 'Reporte de estado'],
-    href: '/servicios/mantenimiento-de-equipos',
-  },
-  {
-    icon: Cloud,
-    title: 'Respaldo y continuidad',
-    description:
-      'Estrategias de backup y recuperación para que un incidente no detenga tu negocio.',
-    points: ['Respaldos automáticos', 'Recuperación ante desastres', 'Pruebas de restauración'],
-    href: '/servicios/implementacion-de-infraestructura',
-  },
-  {
-    icon: GraduationCap,
-    title: 'Capacitación tecnológica',
-    description:
-      'Formación práctica para que tu equipo use las herramientas con seguridad y aproveche su potencial.',
-    points: ['Office y herramientas cloud', 'Buenas prácticas de seguridad', 'Talleres a medida'],
-    href: '/servicios#contacto',
-  },
-]
+const supportQuoteServices = supportServices.map(({ slug, title }) => ({ slug, title }))
 
 const process = [
   {
@@ -244,8 +176,8 @@ export function ServicesPage() {
         }
         description="Soporte técnico, mantenimiento, redes e infraestructura para mantener tus equipos y sistemas funcionando, con atención cercana y un plan de trabajo claro."
         primary={{
-          label: 'Solicitar asesoría',
-          href: '#contacto',
+          label: 'Armar mi cotización',
+          href: '#cotizacion',
           icon: <FaTeamspeak aria-hidden="true" className="size-4" />,
         }}
         secondary={{ label: 'Ver soporte TI', href: '/soporte-ti' }}
@@ -262,44 +194,60 @@ export function ServicesPage() {
         <div className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
           <div className="max-w-2xl">
             <p className="text-[11px] font-medium uppercase tracking-[0.18em] text-brand-ink">
-              Nuestros servicios
+              Servicios de TI
             </p>
             <h2 className="mt-2 text-3xl font-bold tracking-[-0.04em] text-foreground sm:text-4xl">
-              Todo lo que tu operación necesita
+              Los servicios que sostienen tu operación
             </h2>
             <p className="mt-3 text-sm leading-6 text-muted-foreground">
-              Elige un servicio puntual o combínalos en un plan integral. Nos adaptamos al tamaño y
-              la madurez tecnológica de tu empresa.
+              Elige un servicio puntual o combínalos en una misma cotización. Nos adaptamos al
+              tamaño y la madurez tecnológica de tu empresa.
             </p>
           </div>
 
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {serviceList.map((service) => (
-              <article
-                key={service.title}
-                className="group flex flex-col rounded-2xl border border-border bg-card p-6 transition hover:border-[#1769AA]/30 hover:shadow-lg hover:shadow-black/5"
-              >
-                <span className="grid size-12 place-items-center rounded-2xl bg-[#1769AA]/10 text-blue-ink transition group-hover:bg-[#1769AA] group-hover:text-white">
-                  <service.icon className="size-6" />
-                </span>
-                <h3 className="mt-4 text-base font-bold text-foreground">{service.title}</h3>
-                <p className="mt-2 text-xs leading-5 text-muted-foreground">{service.description}</p>
-                <ul className="mt-4 flex-1 space-y-2">
-                  {service.points.map((point) => (
-                    <li key={point} className="flex items-start gap-2 text-xs text-muted-foreground">
-                      <Check className="mt-0.5 size-3.5 shrink-0 text-brand-ink" />
-                      {point}
-                    </li>
-                  ))}
-                </ul>
+            {supportServices.map((service) => {
+              const ServiceIcon = supportServiceIcons[service.slug] ?? Headset
+              return (
                 <Link
-                  href={service.href}
-                  className="mt-5 inline-flex items-center gap-1.5 text-xs font-bold text-blue-ink hover:text-blue-ink"
+                  key={service.slug}
+                  href={`/servicios/${service.slug}`}
+                  className="group flex flex-col rounded-2xl border border-border bg-card p-6 transition hover:border-[#1769AA]/30 hover:shadow-lg hover:shadow-black/5"
                 >
-                  Saber más <ArrowUpRight className="size-3.5" />
+                  <span className="grid size-12 place-items-center rounded-2xl bg-[#1769AA]/10 text-blue-ink transition group-hover:bg-[#1769AA] group-hover:text-white">
+                    <ServiceIcon className="size-6" />
+                  </span>
+                  <h3 className="mt-4 text-base font-bold text-foreground">{service.title}</h3>
+                  <p className="mt-2 flex-1 text-xs leading-5 text-muted-foreground">
+                    {service.summary}
+                  </p>
+                  <span className="mt-5 inline-flex items-center gap-1.5 text-xs font-bold text-blue-ink">
+                    Saber más <ArrowUpRight className="size-3.5" />
+                  </span>
                 </Link>
-              </article>
-            ))}
+              )
+            })}
+            <Link
+              href="#alquiler"
+              className="group flex flex-col rounded-2xl border border-dashed border-input bg-card p-6 transition hover:border-[#1769AA]/40"
+            >
+              <span className="flex items-center gap-2">
+                <span className="grid size-12 place-items-center rounded-2xl bg-[#1769AA]/10 text-blue-ink">
+                  <Boxes className="size-6" />
+                </span>
+                <span className="rounded-full border border-input bg-card px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
+                  En evaluación
+                </span>
+              </span>
+              <h3 className="mt-4 text-base font-bold text-foreground">¿Alquiler de equipos?</h3>
+              <p className="mt-2 flex-1 text-xs leading-5 text-muted-foreground">
+                Laptops, PCs y equipos de oficina por proyecto o evento. Aún no es un servicio
+                activo: cuéntanos tu caso y ayúdanos a decidir.
+              </p>
+              <span className="mt-5 inline-flex items-center gap-1.5 text-xs font-bold text-blue-ink">
+                Ver la propuesta <ArrowUpRight className="size-3.5" />
+              </span>
+            </Link>
           </div>
         </div>
       </section>
@@ -405,6 +353,8 @@ export function ServicesPage() {
         </div>
       </section>
 
+      <ServiceQuoteForm services={supportQuoteServices} />
+
       <section className="bg-card">
         <div className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
@@ -444,6 +394,17 @@ export function ServicesPage() {
           </ProcessSequence>
         </div>
       </section>
+
+      <MediaBand
+        eyebrow="Soporte en campo"
+        title="Remoto cuando alcanza, en sitio cuando la operación lo exige."
+        media={{
+          src: '/images/secciones/servicios-soporte.webp',
+          alt: 'Ilustración de un técnico configurando un switch y un access point junto a una agente de mesa de ayuda.',
+        }}
+        chips={['Mesa de ayuda', 'Visitas programadas', 'Mantenimiento']}
+        action={{ label: 'Ver soporte TI', href: '/soporte-ti' }}
+      />
 
       <section className="border-y border-border bg-muted">
         <div className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6 lg:px-8 lg:py-16">

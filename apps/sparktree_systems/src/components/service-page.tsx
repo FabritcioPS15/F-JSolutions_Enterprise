@@ -3,18 +3,24 @@
 import Link from 'next/link'
 import {
   ArrowRight,
+  Boxes,
   Check,
   Code2,
   Headset,
+  Laptop,
   Mail,
   MonitorCog,
   Network,
   Phone,
+  Printer,
   Server,
   ShieldCheck,
   Wrench,
+  type LucideIcon,
 } from 'lucide-react'
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
+import { MediaBand } from '@/components/sections/media-band'
+import { ServiceQuoteForm } from '@/components/sections/service-quote-form'
 import {
   InfrastructureVisual,
   QuoteHero,
@@ -92,6 +98,18 @@ const content = {
   },
 } as const
 
+const supportServices = getServicesByCategory('Soporte TI')
+
+const supportServiceIcons: Record<string, LucideIcon> = {
+  'soporte-tecnico': Headset,
+  'mantenimiento-de-equipos': Wrench,
+  'instalacion-de-software': Laptop,
+  'configuracion-de-impresoras': Printer,
+  'soporte-empresarial': ShieldCheck,
+}
+
+const supportQuoteServices = supportServices.map(({ slug, title }) => ({ slug, title }))
+
 export function ServicePage({
   kind,
   softwareServices: softwareFromApi,
@@ -159,6 +177,19 @@ export function ServicePage({
         </section>
       )}
 
+      {kind === 'sistemas' && (
+        <MediaBand
+          eyebrow="Desarrollo por etapas"
+          title="Sistemas que ordenan la operación, no que la complican."
+          media={{
+            src: '/images/secciones/sistemas-software.webp',
+            alt: 'Ilustración isométrica de un desarrollador frente a paneles de software, un editor de código, una base de datos y una nube conectados.',
+          }}
+          chips={['Diseño funcional', 'Desarrollo', 'Soporte evolutivo']}
+          action={{ label: 'Cuéntanos tu proyecto', href: '#solicitud' }}
+        />
+      )}
+
       {kind === 'soporte' && (
         <ServiceHero
           eyebrow={item.eyebrow}
@@ -168,7 +199,7 @@ export function ServicePage({
             </>
           }
           description={item.description}
-          primary={{ label: 'Hablar con un especialista', href: '#solicitud' }}
+          primary={{ label: 'Armar mi cotización', href: '#cotizacion' }}
           secondary={{ label: 'Ver planes y cobertura', href: '/servicios' }}
           proof={['Soporte remoto y en sitio', 'Mantenimiento preventivo', 'Respuesta según SLA']}
           related={[
@@ -179,6 +210,67 @@ export function ServicePage({
           ]}
           visual={<SupportVisual />}
         />
+      )}
+
+      {kind === 'soporte' && (
+        <section className="border-b border-border bg-card">
+          <div className="mx-auto max-w-[1180px] px-4 py-12 sm:px-6 lg:px-8 lg:py-14">
+            <div className="max-w-2xl">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-brand-ink">
+                Servicios de TI
+              </p>
+              <h2 className="mt-2 text-3xl font-bold tracking-[-0.04em] sm:text-4xl">
+                ¿Qué necesitas resolver?
+              </h2>
+              <p className="mt-3 text-sm leading-6 text-muted-foreground">
+                Estos son nuestros servicios de soporte. Revisa el alcance de cada uno y agrega a la
+                cotización los que tu empresa necesite.
+              </p>
+            </div>
+            <div className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {supportServices.map((service) => {
+                const ServiceIcon = supportServiceIcons[service.slug] ?? Headset
+                return (
+                  <Link
+                    key={service.slug}
+                    href={`/servicios/${service.slug}`}
+                    className="group flex flex-col rounded-2xl border border-border bg-muted p-5 transition hover:border-[#1769AA]/30 hover:bg-card hover:shadow-lg hover:shadow-black/5"
+                  >
+                    <span className="grid size-9 place-items-center rounded-xl bg-card text-blue-ink shadow-sm transition group-hover:bg-[#1769AA] group-hover:text-white">
+                      <ServiceIcon className="size-4" />
+                    </span>
+                    <h3 className="mt-3 text-sm font-bold text-foreground">{service.title}</h3>
+                    <p className="mt-1.5 flex-1 text-xs leading-5 text-muted-foreground">{service.summary}</p>
+                    <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-blue-ink">
+                      Conocer el servicio <ArrowRight className="size-3.5" />
+                    </span>
+                  </Link>
+                )
+              })}
+              <Link
+                href="/servicios#alquiler"
+                className="group flex flex-col rounded-2xl border border-dashed border-input bg-muted p-5 transition hover:border-[#1769AA]/40 hover:bg-card"
+              >
+                <span className="flex items-center gap-2">
+                  <span className="grid size-9 place-items-center rounded-xl bg-card text-blue-ink shadow-sm">
+                    <Boxes className="size-4" />
+                  </span>
+                  <span className="rounded-full border border-input bg-card px-2 py-0.5 text-[9px] font-bold uppercase tracking-[0.12em] text-muted-foreground">
+                    En evaluación
+                  </span>
+                </span>
+                <h3 className="mt-3 text-sm font-bold text-foreground">¿Alquiler de equipos?</h3>
+                <p className="mt-1.5 flex-1 text-xs leading-5 text-muted-foreground">
+                  Laptops, PCs y equipos de oficina por proyecto o evento. Aún no es un servicio
+                  activo: cuéntanos tu caso y ayúdanos a decidir.
+                </p>
+                <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-bold text-blue-ink">
+                  Ver la propuesta <ArrowRight className="size-3.5" />
+                </span>
+              </Link>
+            </div>
+          </div>
+        </section>
       )}
 
       {kind === 'infraestructura' && (
@@ -231,6 +323,17 @@ export function ServicePage({
               </div>
             </div>
           </section>
+
+          <MediaBand
+            eyebrow="Implementación"
+            title="Redes y servidores instalados, probados y documentados."
+            media={{
+              src: '/images/secciones/infraestructura-red.webp',
+              alt: 'Ilustración de un rack abierto con switches, patch panels y cableado estructurado, con un técnico verificando desde una laptop.',
+            }}
+            chips={['Cableado estructurado', 'Racks y switches', 'Pruebas de estabilidad']}
+            action={{ label: 'Solicitar diagnóstico', href: '#solicitud' }}
+          />
         </>
       )}
 
@@ -250,6 +353,7 @@ export function ServicePage({
         />
       )}
 
+      {kind !== 'soporte' && (
       <section
         id="solicitud"
         className="mx-auto max-w-[1180px] scroll-mt-20 sm:scroll-mt-24 lg:scroll-mt-28 px-4 pb-14 pt-4 sm:px-6 lg:px-8"
@@ -352,6 +456,9 @@ export function ServicePage({
           </div>
         </div>
       </section>
+      )}
+
+      {kind === 'soporte' && <ServiceQuoteForm services={supportQuoteServices} />}
 
       <section className="border-y border-border bg-muted">
         <div className="mx-auto grid max-w-[1180px] gap-6 px-4 py-9 sm:grid-cols-3 sm:px-6">

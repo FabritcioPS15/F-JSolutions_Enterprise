@@ -31,6 +31,7 @@ import {
 import { EnhancedHeader } from '@/components/layout/enhanced-header'
 import { EditorialHero } from '@/components/heroes'
 import { HeroAction } from '@/components/heroes/hero-primitives'
+import { MediaBand } from '@/components/sections/media-band'
 import { FaqAccordion } from '@/components/ui/faq-accordion'
 import { ProcessSequence } from '@/components/ui/process-sequence'
 import { EMPRESA } from '@/lib/constants'
@@ -374,6 +375,18 @@ export function AboutPage() {
           </div>
         </div>
       </section>
+
+      <MediaBand
+        id="equipo"
+        eyebrow="Nuestro equipo"
+        title="Tecnología con trabajo en sitio y entregables documentados."
+        media={{
+          src: '/images/secciones/nosotros-equipo.webp',
+          alt: 'Ilustración de un equipo técnico revisando una topología de red frente a un rack de servidores.',
+        }}
+        chips={['Diagnóstico', 'Implementación', 'Acta de entrega']}
+        action={{ label: 'Conocer cómo trabajamos', href: '/como-trabajamos' }}
+      />
 
       {/* Proyectos y experiencia */}
       <section id="proyectos" className="scroll-mt-32 border-y border-border bg-muted">
