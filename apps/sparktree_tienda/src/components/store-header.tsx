@@ -18,7 +18,6 @@ import {
   UserRound,
   X,
 } from 'lucide-react'
-import { ThemeToggle } from '@/components/theme-toggle'
 import { COMPANY, ECOSYSTEM_NAV, GROUP_URL, STORE_NAV, corporateUrl } from '@/lib/store-nav'
 import { useQuote } from '@/lib/use-quote'
 
@@ -205,7 +204,7 @@ export function StoreHeader({ categories }: StoreHeaderProps) {
             <img
               src="/brand/sparktree-horizontal.png"
               alt="SparkTree Store"
-              className="h-10 w-auto object-contain transition-transform duration-200 group-hover:scale-105 brightness-0 dark:brightness-100 sm:h-11"
+              className="h-10 w-auto object-contain transition-transform duration-200 group-hover:scale-105 brightness-0 sm:h-11"
             />
             <span className="hidden flex-col leading-tight xl:flex">
               <span className="font-heading text-sm font-bold text-foreground">TIENDA OFICIAL</span>
@@ -215,32 +214,6 @@ export function StoreHeader({ categories }: StoreHeaderProps) {
             </span>
           </Link>
 
-          <div ref={categoriesRef} className="relative hidden lg:block">
-            <button
-              type="button"
-              onClick={() => {
-                setCategoriesOpen((value) => !value)
-                setEcosystemOpen(false)
-              }}
-              aria-expanded={categoriesOpen}
-              aria-haspopup="dialog"
-              className={`flex h-10 shrink-0 items-center gap-2 rounded-xl border px-4 text-[14px] font-semibold transition-all ${
-                categoriesOpen
-                  ? 'border-[#2563EB]/30 bg-tint-blue text-blue-ink'
-                  : 'border-border bg-card text-foreground hover:border-[#2563EB]/30 hover:bg-muted hover:text-blue-ink'
-              }`}
-            >
-              <LayoutGrid className="size-4" />
-              Categorías
-              <ChevronDown
-                className={`size-3.5 transition-transform duration-200 ${categoriesOpen ? 'rotate-180' : ''}`}
-              />
-            </button>
-            {categoriesOpen && (
-              <CategoryPanel categories={categories} onClose={() => setCategoriesOpen(false)} />
-            )}
-          </div>
-
           <form onSubmit={submitSearch} className="relative flex min-w-0 flex-1">
             <span className="sr-only">Buscar productos</span>
             <Search className="pointer-events-none absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
@@ -248,7 +221,7 @@ export function StoreHeader({ categories }: StoreHeaderProps) {
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Busca laptops, monitores, componentes..."
-              className="h-10 w-full rounded-xl border border-border bg-muted pl-10 pr-24 text-[14px] text-foreground outline-none transition placeholder:text-muted-foreground focus:border-[#2563EB] focus:bg-card focus:ring-2 focus:ring-[#2563EB]/15"
+              className="h-10 w-full rounded-xl border border-border bg-muted pl-10 pr-3 text-[14px] text-foreground outline-none transition placeholder:text-muted-foreground focus:border-[#2563EB] focus:bg-card focus:ring-2 focus:ring-[#2563EB]/15 sm:pr-24"
             />
             <button
               type="submit"
@@ -259,7 +232,6 @@ export function StoreHeader({ categories }: StoreHeaderProps) {
           </form>
 
           <div className="flex items-center gap-1 sm:gap-1.5">
-            <ThemeToggle />
             <Link
               href="/mi-cuenta"
               className="hidden items-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold text-muted-foreground transition hover:bg-muted hover:text-blue-ink xl:flex"
@@ -296,6 +268,32 @@ export function StoreHeader({ categories }: StoreHeaderProps) {
 
         <nav className="hidden border-t border-border lg:block" aria-label="Navegación principal">
           <div className="mx-auto flex max-w-[1280px] items-center gap-1 px-8">
+            <div ref={categoriesRef} className="relative shrink-0 py-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setCategoriesOpen((value) => !value)
+                  setEcosystemOpen(false)
+                }}
+                aria-expanded={categoriesOpen}
+                aria-haspopup="dialog"
+                className={`flex h-9 items-center gap-2 rounded-lg border px-3 text-[13px] font-bold transition-all ${
+                  categoriesOpen
+                    ? 'border-[#2563EB]/30 bg-tint-blue text-blue-ink'
+                    : 'border-border bg-muted text-foreground hover:border-[#2563EB]/30 hover:text-blue-ink'
+                }`}
+              >
+                <LayoutGrid className="size-4" />
+                Categorías
+                <ChevronDown
+                  className={`size-3.5 transition-transform duration-200 ${categoriesOpen ? 'rotate-180' : ''}`}
+                />
+              </button>
+              {categoriesOpen && (
+                <CategoryPanel categories={categories} onClose={() => setCategoriesOpen(false)} />
+              )}
+            </div>
+            <span aria-hidden="true" className="mx-2 h-5 w-px shrink-0 bg-border" />
             {STORE_NAV.map((link) => (
               <Link
                 key={link.href}
@@ -310,7 +308,7 @@ export function StoreHeader({ categories }: StoreHeaderProps) {
               </Link>
             ))}
             {ECOSYSTEM_NAV.length > 0 && (
-              <div ref={ecosystemRef} className="relative">
+              <div ref={ecosystemRef} className="relative ml-auto">
                 <button
                   type="button"
                   onClick={() => {
@@ -334,7 +332,7 @@ export function StoreHeader({ categories }: StoreHeaderProps) {
                   <div
                     role="menu"
                     aria-label="Otras empresas del grupo"
-                    className="absolute left-0 top-full z-50 w-[340px] rounded-2xl border border-border bg-card p-2 shadow-[0_8px_40px_rgba(15,23,42,0.10)]"
+                    className="absolute right-0 top-[calc(100%+8px)] z-50 w-[340px] rounded-2xl border border-border bg-card p-2 shadow-[0_8px_40px_rgba(15,23,42,0.10)]"
                   >
                     {ECOSYSTEM_NAV.map((unit) => (
                       <a

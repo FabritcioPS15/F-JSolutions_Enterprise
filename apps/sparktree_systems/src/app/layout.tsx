@@ -2,6 +2,8 @@ import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Fira_Sans } from 'next/font/google'
 import { SiteFooter } from '@/components/layout/site-footer'
+import { NavigationSkeleton } from '@/components/layout/navigation-skeleton'
+import { ScrollManager } from '@/components/layout/scroll-manager'
 import { QuoteCartWidget } from '@/components/quote/quote-cart-widget'
 import { ThemeScript } from '@/components/theme-script'
 import { serviceDefinitions } from '@/lib/services'
@@ -73,6 +75,8 @@ export default function RootLayout({
     >
       <body className="antialiased">
         <ThemeScript script={themeScript} />
+        <ScrollManager />
+        <NavigationSkeleton />
         {children}
         <SiteFooter />
         <QuoteCartWidget services={quoteCartServices} />
