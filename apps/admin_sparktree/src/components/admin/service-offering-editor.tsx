@@ -14,6 +14,8 @@ import {
   Trash2,
 } from 'lucide-react'
 import { useToast } from '@/components/admin/toast'
+import { useAdmin } from '@/components/admin/admin-provider'
+import { startAdminNavigation } from '@/components/admin/navigation-progress'
 import {
   EmptyState,
   Field,
@@ -97,6 +99,7 @@ type RelatedOption = {
 export function ServiceOfferingEditor({ serviceId }: { serviceId?: string }) {
   const router = useRouter()
   const toast = useToast()
+  const { notify } = useAdmin()
   const editing = Boolean(serviceId)
   const [draft, setDraft] = useState<Draft>(emptyDraft)
   const [slugTouched, setSlugTouched] = useState(false)
@@ -272,6 +275,15 @@ export function ServiceOfferingEditor({ serviceId }: { serviceId?: string }) {
         editing ? 'Servicio actualizado' : 'Servicio creado',
         `${saved.title} · ${saved.status === 'published' ? 'publicado' : 'en borrador'}`
       )
+      notify({
+        dedupeKey: `service:${saved.id}:saved:${saved.updatedAt}`,
+        title: editing ? 'Servicio actualizado' : 'Servicio creado',
+        description: `${saved.title} · ${saved.status === 'published' ? 'Publicado' : saved.status === 'archived' ? 'Archivado' : 'Borrador'}`,
+        href: `/servicios/${saved.id}/editar`,
+        unit: 'systems',
+        tone: saved.status === 'published' ? 'success' : 'info',
+      })
+      startAdminNavigation()
       router.push('/servicios')
       router.refresh()
     } catch (err) {

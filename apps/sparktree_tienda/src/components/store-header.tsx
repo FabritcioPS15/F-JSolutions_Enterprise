@@ -4,27 +4,51 @@ import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import {
+  AppWindow,
   ArrowRight,
   ArrowUpRight,
   ChevronDown,
   Clock,
+  Cpu,
   FileText,
+  Gamepad2,
+  HardDrive,
+  Headphones,
+  House,
+  Keyboard,
+  Laptop,
   LayoutGrid,
   Mail,
   MapPin,
+  MemoryStick,
   Menu,
+  Monitor,
+  Network,
+  Package,
   Phone,
+  Plug,
+  Printer,
   Search,
+  Server,
+  ShieldCheck,
+  Smartphone,
   UserRound,
   X,
+  type LucideIcon,
 } from 'lucide-react'
 import { COMPANY, ECOSYSTEM_NAV, GROUP_URL, STORE_NAV, corporateUrl } from '@/lib/store-nav'
 import { useQuote } from '@/lib/use-quote'
 
-type StoreCategory = { value: string; label: string }
+type StoreCategory = {
+  value: string
+  label: string
+  count?: number
+  subcategories?: { label: string; types: string[] }[]
+}
 
 type StoreHeaderProps = {
   categories: StoreCategory[]
+  brands: string[]
 }
 
 function useOnClickOutside(ref: React.RefObject<HTMLElement | null>, handler: () => void) {
@@ -42,59 +66,201 @@ function useOnClickOutside(ref: React.RefObject<HTMLElement | null>, handler: ()
   }, [ref, handler])
 }
 
-function CategoryPanel({
+const CATEGORY_ICONS: Record<string, LucideIcon> = {
+  'pc y servidores': Server,
+  'laptops y portatiles': Laptop,
+  laptops: Laptop,
+  'componentes de pc': Cpu,
+  componentes: Cpu,
+  monitores: Monitor,
+  'redes y conectividad': Network,
+  redes: Network,
+  almacenamiento: HardDrive,
+  perifericos: Keyboard,
+  'impresoras y escaneres': Printer,
+  accesorios: Package,
+  'audio y video': Headphones,
+  'cables y energia': Plug,
+  gaming: Gamepad2,
+  'hogar inteligente': House,
+  memoria: MemoryStick,
+  seguridad: ShieldCheck,
+  software: AppWindow,
+  telefonia: Smartphone,
+}
+
+function categoryIcon(label: string) {
+  const key = label
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+  return CATEGORY_ICONS[key] ?? Package
+}
+
+function CategoryMegaMenu({
   categories,
+  brands,
   onClose,
 }: {
   categories: StoreCategory[]
+  brands: string[]
   onClose: () => void
 }) {
+  const [activeValue, setActiveValue] = useState(
+    () =>
+      (categories.find((category) => category.subcategories?.length) ?? categories[0])?.value ?? ''
+  )
+  const active = categories.find((category) => category.value === activeValue) ?? categories[0]
+  const activeHref = active ? `/productos?categoria=${encodeURIComponent(active.value)}` : '/productos'
+
   return (
     <div
       role="dialog"
-      aria-label="Categorías de productos"
-      className="absolute left-0 top-[calc(100%+8px)] z-50 w-[640px] rounded-2xl border border-border bg-card shadow-[0_8px_40px_rgba(15,23,42,0.10)]"
+      aria-label="Mega menú de categorías"
+      className="mega-menu-panel absolute left-0 top-[calc(100%+10px)] z-50 flex max-h-[calc(100dvh-190px)] w-[min(1080px,calc(100vw-4rem))] flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-[0_24px_64px_-28px_rgba(15,23,42,0.35)]"
     >
-      <div className="flex items-center justify-between border-b border-border px-5 py-3.5">
-        <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-          Categorías de productos
-        </p>
+      <div className="grid min-h-0 flex-1 grid-cols-[420px_minmax(0,1fr)]">
+        <div className="overflow-y-auto border-r border-border bg-muted/60 p-2.5 [scrollbar-width:thin]">
+          <p className="px-2 pb-2 pt-1.5 text-[10.5px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
+            Categorías
+          </p>
+          <div className="grid grid-cols-2 gap-0.5">
+            {categories.map((category) => {
+              const Icon = categoryIcon(category.label)
+              const isActive = category.value === active?.value
+              return (
+                <Link
+                  key={category.value}
+                  href={`/productos?categoria=${encodeURIComponent(category.value)}`}
+                  onMouseEnter={() => setActiveValue(category.value)}
+                  onFocus={() => setActiveValue(category.value)}
+                  onClick={onClose}
+                  title={category.label}
+                  className={`group flex items-center gap-2 rounded-xl px-2.5 py-2 text-[12.5px] font-semibold transition-colors ${
+                    isActive
+                      ? 'bg-card text-blue-ink shadow-sm ring-1 ring-[#2563EB]/15'
+                      : 'text-foreground hover:bg-card/70 hover:text-blue-ink'
+                  }`}
+                >
+                  <span
+                    className={`grid size-7 shrink-0 place-items-center rounded-lg transition-colors ${
+                      isActive
+                        ? 'bg-tint-blue text-blue-ink'
+                        : 'bg-card text-muted-foreground group-hover:text-blue-ink'
+                    }`}
+                  >
+                    <Icon className="size-3.5" aria-hidden="true" />
+                  </span>
+                  <span className="min-w-0 flex-1 leading-tight">{category.label}</span>
+                  <span className="text-[10.5px] font-medium text-muted-foreground">
+                    {category.count ?? 0}
+                  </span>
+                </Link>
+              )
+            })}
+          </div>
+        </div>
+
+        <div className="flex min-h-0 flex-col overflow-y-auto p-5 [scrollbar-width:thin]">
+          <div className="flex items-start justify-between gap-4 border-b border-border pb-4">
+            <div>
+              <p className="text-[10.5px] font-bold uppercase tracking-[0.16em] text-brand-ink">
+                Explorar
+              </p>
+              <h3 className="mt-1 font-heading text-lg font-black text-foreground">
+                {active?.label}
+              </h3>
+            </div>
+            <Link
+              href={activeHref}
+              onClick={onClose}
+              className="mt-1 inline-flex shrink-0 items-center gap-1 text-xs font-bold text-blue-ink transition hover:text-brand-ink"
+            >
+              Ver categoría <ArrowRight className="size-3.5" />
+            </Link>
+          </div>
+
+          {active?.subcategories?.length ? (
+            <div className="mt-4 grid flex-1 content-start grid-cols-2 gap-x-6 gap-y-4">
+              {active.subcategories.map((sub) => (
+                <div key={sub.label} className="min-w-0">
+                  <Link
+                    href={`${activeHref}&subcategoria=${encodeURIComponent(sub.label)}`}
+                    onClick={onClose}
+                    className="text-[12.5px] font-bold text-foreground transition hover:text-blue-ink"
+                  >
+                    {sub.label}
+                  </Link>
+                  {sub.types.length > 0 && (
+                    <div className="mt-1 flex flex-wrap gap-x-2.5 gap-y-0.5">
+                      {sub.types.map((type) => (
+                        <Link
+                          key={type}
+                          href={`${activeHref}&subcategoria=${encodeURIComponent(sub.label)}&tipo=${encodeURIComponent(type)}`}
+                          onClick={onClose}
+                          className="text-[11px] text-muted-foreground transition hover:text-blue-ink"
+                        >
+                          {type}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="mt-4 flex-1 text-xs text-muted-foreground">
+              Explora los productos disponibles en esta categoría.
+            </p>
+          )}
+
+          <div className="mt-5 flex items-center justify-between gap-4 rounded-xl bg-[#172554] px-4 py-3">
+            <div>
+              <p className="text-[13px] font-bold text-white">Compra corporativa</p>
+              <p className="text-[11px] text-blue-100/75">
+                Cotiza varios equipos en una sola solicitud.
+              </p>
+            </div>
+            <Link
+              href="/cotizacion"
+              onClick={onClose}
+              className="inline-flex h-8 shrink-0 items-center gap-1.5 rounded-lg bg-[#F59E0B] px-3 text-[11.5px] font-bold text-[#172554] transition hover:bg-[#D97706]"
+            >
+              Cotizar <ArrowRight className="size-3.5" />
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex shrink-0 flex-wrap items-center justify-between gap-x-6 gap-y-2 border-t border-border bg-muted/40 px-5 py-3">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-[10.5px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
+            Marcas
+          </span>
+          {brands.map((brand) => (
+            <Link
+              key={brand}
+              href={`/productos?marca=${encodeURIComponent(brand)}`}
+              onClick={onClose}
+              className="rounded-full border border-border bg-card px-2.5 py-1 text-[11px] font-semibold text-foreground transition hover:border-[#2563EB]/40 hover:text-blue-ink"
+            >
+              {brand}
+            </Link>
+          ))}
+        </div>
         <Link
           href="/productos"
           onClick={onClose}
-          className="flex items-center gap-1 text-[13px] font-semibold text-blue-ink transition hover:text-brand-ink"
+          className="inline-flex items-center gap-1 text-xs font-bold text-blue-ink transition hover:text-brand-ink"
         >
-          Ver todo <ArrowRight className="size-3.5" />
-        </Link>
-      </div>
-      <div className="grid grid-cols-2 gap-px p-3 sm:grid-cols-3">
-        {categories.map((category) => (
-          <Link
-            key={category.value}
-            href={`/productos?categoria=${encodeURIComponent(category.value)}`}
-            onClick={onClose}
-            className="group flex items-center justify-between gap-2 rounded-xl px-3 py-2.5 text-[13px] font-medium text-foreground transition-colors hover:bg-muted hover:text-blue-ink"
-          >
-            <span className="truncate">{category.label}</span>
-            <ArrowRight className="size-3.5 shrink-0 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
-          </Link>
-        ))}
-      </div>
-      <div className="border-t border-border px-5 py-3">
-        <Link
-          href="/productos"
-          onClick={onClose}
-          className="flex items-center gap-2 text-[13px] font-semibold text-blue-ink transition hover:text-brand-ink"
-        >
-          Ver toda la tienda
-          <ArrowRight className="size-3.5" />
+          Ver toda la tienda <ArrowRight className="size-3.5" />
         </Link>
       </div>
     </div>
   )
 }
 
-export function StoreHeader({ categories }: StoreHeaderProps) {
+export function StoreHeader({ categories, brands }: StoreHeaderProps) {
   const pathname = usePathname()
   const router = useRouter()
   const quote = useQuote()
@@ -290,7 +456,11 @@ export function StoreHeader({ categories }: StoreHeaderProps) {
                 />
               </button>
               {categoriesOpen && (
-                <CategoryPanel categories={categories} onClose={() => setCategoriesOpen(false)} />
+                <CategoryMegaMenu
+                  categories={categories}
+                  brands={brands}
+                  onClose={() => setCategoriesOpen(false)}
+                />
               )}
             </div>
             <span aria-hidden="true" className="mx-2 h-5 w-px shrink-0 bg-border" />

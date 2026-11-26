@@ -182,33 +182,29 @@ function NavDropdown({ items, onClose }: { items: MenuItem[]; onClose: () => voi
             key={label}
             href={href}
             onClick={onClose}
-            className={`group flex items-start gap-3 rounded-xl px-3.5 py-3 transition-colors ${
-              highlight ? 'bg-tint-blue hover:bg-blue-ink/15' : 'hover:bg-muted'
-            }`}
+            className={`group flex items-start gap-3 rounded-xl px-3.5 py-3 transition-colors ${highlight ? 'bg-tint-blue hover:bg-blue-ink/15' : 'hover:bg-muted'
+              }`}
           >
             <span
-              className={`mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg border transition-colors ${
-                highlight
-                  ? 'border-[#1769AA]/20 bg-card text-blue-ink'
-                  : 'border-border bg-card text-muted-foreground group-hover:border-[#1769AA]/20 group-hover:bg-tint-blue group-hover:text-blue-ink'
-              }`}
+              className={`mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-lg border transition-colors ${highlight
+                ? 'border-[#1769AA]/20 bg-card text-blue-ink'
+                : 'border-border bg-card text-muted-foreground group-hover:border-[#1769AA]/20 group-hover:bg-tint-blue group-hover:text-blue-ink'
+                }`}
             >
               <Icon className="size-4" />
             </span>
             <span className="min-w-0 flex-1">
               <span
-                className={`block text-[13px] font-semibold leading-snug ${
-                  highlight ? 'text-blue-ink' : 'text-foreground group-hover:text-blue-ink'
-                }`}
+                className={`block text-[13px] font-semibold leading-snug ${highlight ? 'text-blue-ink' : 'text-foreground group-hover:text-blue-ink'
+                  }`}
               >
                 {label}
               </span>
               <span className="block text-[11.5px] leading-snug text-muted-foreground">{desc}</span>
             </span>
             <ArrowRight
-              className={`ml-auto mt-1.5 size-3.5 shrink-0 text-muted-foreground transition-opacity ${
-                highlight ? 'opacity-100 text-blue-ink' : 'opacity-0 group-hover:opacity-100'
-              }`}
+              className={`ml-auto mt-1.5 size-3.5 shrink-0 text-muted-foreground transition-opacity ${highlight ? 'opacity-100 text-blue-ink' : 'opacity-0 group-hover:opacity-100'
+                }`}
             />
           </Link>
         ))}
@@ -310,9 +306,8 @@ export function SiteHeader({ quoteCount = 0, onQuoteClick }: SiteHeaderProps) {
       {/* Top bar */}
       <div
         data-surface="dark"
-        className={`overflow-hidden bg-[#0B1B33] text-muted-foreground/60 transition-[max-height,opacity] duration-200 ease-out ${
-          topBarClosed ? 'max-h-0 opacity-0' : 'max-h-24 opacity-100'
-        }`}
+        className={`overflow-hidden bg-[#0B1B33] text-muted-foreground/60 transition-[max-height,opacity] duration-200 ease-out ${topBarClosed ? 'max-h-0 opacity-0' : 'max-h-24 opacity-100'
+          }`}
       >
         <div className="mx-auto flex max-w-[1280px] flex-wrap items-center justify-between gap-x-6 gap-y-1 px-4 py-2 text-[11.5px] font-medium sm:px-6 lg:px-8">
           <div className="flex flex-wrap items-center gap-x-5 gap-y-1">
@@ -346,14 +341,12 @@ export function SiteHeader({ quoteCount = 0, onQuoteClick }: SiteHeaderProps) {
 
       {/* Main bar */}
       <div
-        className={`border-b border-border bg-card/90 backdrop-blur-xl transition-shadow duration-300 ${
-          topBarClosed ? 'shadow-[0_12px_32px_-16px_rgba(15,23,42,0.35)]' : 'shadow-none'
-        }`}
+        className={`border-b border-border bg-card/90 backdrop-blur-xl transition-shadow duration-300 ${topBarClosed ? 'shadow-[0_12px_32px_-16px_rgba(15,23,42,0.35)]' : 'shadow-none'
+          }`}
       >
         <div
-          className={`mx-auto flex max-w-[1280px] items-center gap-3 px-4 transition-[padding] duration-300 sm:px-6 lg:gap-6 lg:px-8 ${
-            topBarClosed ? 'py-2.5' : 'py-4 lg:py-5'
-          }`}
+          className={`mx-auto flex max-w-[1280px] items-center gap-3 px-4 transition-[padding] duration-300 sm:px-6 lg:gap-6 lg:px-8 ${topBarClosed ? 'py-2.5' : 'py-4 lg:py-5'
+            }`}
         >
 
           {/* Logo */}
@@ -365,9 +358,9 @@ export function SiteHeader({ quoteCount = 0, onQuoteClick }: SiteHeaderProps) {
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/brand/sparktree-horizontal.png"
+              src="/Logotipo_SparkTree_Systems.svg"
               alt="SparkTree Systems"
-              className="h-10 sm:h-11 w-auto object-contain transition-transform duration-200 group-hover:scale-105 brightness-0 dark:brightness-100"
+              className="h-12 w-auto object-contain transition-transform duration-200 group-hover:scale-105 brightness-0 dark:invert sm:h-16 lg:h-18"
             />
           </Link>
 
@@ -378,11 +371,10 @@ export function SiteHeader({ quoteCount = 0, onQuoteClick }: SiteHeaderProps) {
               onClick={() => toggle('categories')}
               aria-expanded={openDropdown === 'categories'}
               aria-haspopup="dialog"
-              className={`flex h-10 shrink-0 items-center gap-2 rounded-xl border px-4 text-[14px] font-semibold transition-all ${
-                openDropdown === 'categories'
-                  ? 'border-[#1769AA]/30 bg-tint-blue text-blue-ink'
-                  : 'border-border bg-card text-foreground hover:border-[#1769AA]/30 hover:bg-muted hover:text-blue-ink'
-              }`}
+              className={`flex h-10 shrink-0 items-center gap-2 rounded-xl border px-4 text-[14px] font-semibold transition-all ${openDropdown === 'categories'
+                ? 'border-[#1769AA]/30 bg-tint-blue text-blue-ink'
+                : 'border-border bg-card text-foreground hover:border-[#1769AA]/30 hover:bg-muted hover:text-blue-ink'
+                }`}
             >
               <LayoutGrid className="size-4" />
               Categorías
@@ -466,18 +458,17 @@ export function SiteHeader({ quoteCount = 0, onQuoteClick }: SiteHeaderProps) {
               const active = isActive(link.href)
               const dropKey =
                 link.label === 'Servicios' ? 'servicios' :
-                link.label === 'Sistemas' ? 'sistemas' : null
+                  link.label === 'Sistemas' ? 'sistemas' : null
 
               if (!dropKey) {
                 return (
                   <Link
                     key={link.href}
                     href={link.href}
-                    className={`border-b-2 px-3 py-4 text-[14px] font-semibold transition-colors ${
-                      active
-                        ? 'border-[#1769AA] text-blue-ink'
-                        : 'border-transparent text-muted-foreground hover:text-blue-ink'
-                    }`}
+                    className={`border-b-2 px-3 py-4 text-[14px] font-semibold transition-colors ${active
+                      ? 'border-[#1769AA] text-blue-ink'
+                      : 'border-transparent text-muted-foreground hover:text-blue-ink'
+                      }`}
                   >
                     {link.label}
                   </Link>
@@ -495,11 +486,10 @@ export function SiteHeader({ quoteCount = 0, onQuoteClick }: SiteHeaderProps) {
                     onClick={() => toggle(dropKey)}
                     aria-expanded={isOpen}
                     aria-haspopup="dialog"
-                    className={`flex items-center gap-1 border-b-2 px-3 py-4 text-[14px] font-semibold transition-colors ${
-                      active || isOpen
-                        ? 'border-[#1769AA] text-blue-ink'
-                        : 'border-transparent text-muted-foreground hover:text-blue-ink'
-                    }`}
+                    className={`flex items-center gap-1 border-b-2 px-3 py-4 text-[14px] font-semibold transition-colors ${active || isOpen
+                      ? 'border-[#1769AA] text-blue-ink'
+                      : 'border-transparent text-muted-foreground hover:text-blue-ink'
+                      }`}
                   >
                     {link.label}
                     <ChevronDown
@@ -548,11 +538,10 @@ export function SiteHeader({ quoteCount = 0, onQuoteClick }: SiteHeaderProps) {
                 key={link.href}
                 href={link.href}
                 onClick={() => setMenuOpen(false)}
-                className={`rounded-xl px-4 py-3 text-sm font-semibold transition-colors ${
-                  isActive(link.href)
-                    ? 'bg-tint-blue text-blue-ink'
-                    : 'text-foreground hover:bg-muted'
-                }`}
+                className={`rounded-xl px-4 py-3 text-sm font-semibold transition-colors ${isActive(link.href)
+                  ? 'bg-tint-blue text-blue-ink'
+                  : 'text-foreground hover:bg-muted'
+                  }`}
               >
                 {link.label}
               </Link>

@@ -3,11 +3,14 @@
 import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import {
+  AlertTriangle,
   Bell,
   BookOpenCheck,
   Check,
+  CheckCheck,
   CheckCircle2,
   FileText,
+  History,
   Inbox,
   Package,
   PackageCheck,
@@ -23,11 +26,13 @@ import {
   btnSecondary,
 } from '@/components/admin/ui'
 import { formatDate, getStockState, quoteStatusLabels, stockLabels } from '@/lib/admin/format'
+import { moduleForPathname } from '@/lib/admin/access'
 import {
   isLowStockProduct,
   isNewRequest,
   isOpenOrder,
   isPendingQuote,
+  type AdminNotification,
 } from '@/lib/admin/notifications'
 import { orderStatusLabels } from '@/lib/admin/operations'
 import { cn } from '@/lib/utils'
@@ -71,16 +76,49 @@ const toneStyles = {
   amber: 'bg-amber-500/10 text-warning-ink ring-amber-500/25',
 } as const
 
+const activityToneStyles = {
+  info: 'bg-tint-brand text-brand-ink ring-[#5946A6]/20',
+  success: 'bg-emerald-500/10 text-success-ink ring-emerald-500/25',
+  warning: 'bg-amber-500/10 text-warning-ink ring-amber-500/25',
+} as const
+
+const unitLabels: Record<AdminNotification['unit'], string> = {
+  systems: 'SparkTree Systems',
+  store: 'SparkTree Store',
+  studio: 'SparkTree Studio',
+  sistema: 'Sistema',
+}
+
+function ActivityIcon({ tone }: { tone: AdminNotification['tone'] }) {
+  const Icon = tone === 'warning' ? AlertTriangle : tone === 'success' ? CheckCircle2 : Bell
+  return <Icon className="size-4" aria-hidden="true" />
+}
+
 function byNewest(a: string, b: string) {
   return new Date(b).getTime() - new Date(a).getTime()
 }
 
 export function NotificationsView() {
-  const { hydrated, can, quotes, orders, requests, products } = useAdmin()
+  const {
+    hydrated,
+    can,
+    quotes,
+    orders,
+    requests,
+    products,
+    notifications,
+    markNotificationRead,
+    markAllNotificationsRead,
+  } = useAdmin()
   const [complaints, setComplaints] = useState<Complaint[] | null>(null)
   const [selectedAreas, setSelectedAreas] = useState<NotificationArea[]>(allAreas)
 
   const canViewComplaints = can('complaints')
+  const visibleNotifications = notifications.filter((notification) => {
+    const module = moduleForPathname(notification.href.split('?')[0] ?? notification.href)
+    return module ? can(module) : true
+  })
+  const unreadCount = visibleNotifications.filter((notification) => !notification.readAt).length
 
   useEffect(() => {
     if (!canViewComplaints) return
@@ -255,7 +293,15 @@ export function NotificationsView() {
       <PageHeader
         eyebrow="General"
         title="Notificaciones"
-        description="Avisos pendientes de cotizaciones, pedidos, consultas, reclamos y stock del catálogo."
+        description="Avisos pendientes, cambios recientes e incidencias de sincronización del panel."
+        actions={
+          unreadCount > 0 ? (
+            <button type="button" className={btnSecondary} onClick={markAllNotificationsRead}>
+              <CheckCheck className="size-4" aria-hidden="true" />
+              Marcar todas como leídas
+            </button>
+          ) : undefined
+        }
       />
 
       <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Filtrar notificaciones por área">
@@ -328,6 +374,75 @@ export function NotificationsView() {
           </p>
         </div>
       </div>
+
+      {visibleNotifications.length > 0 && (
+        <SectionCard
+          title="Actividad reciente"
+          description="Historial de altas, ediciones, cambios de estado e incidencias del sistema."
+          icon={History}
+          action={
+            unreadCount > 0 ? (
+              <span className="rounded-full bg-rose-500/10 px-2.5 py-1 text-[10.5px] font-semibold text-rose-600 ring-1 ring-inset ring-rose-500/20">
+                {unreadCount} sin leer
+              </span>
+            ) : undefined
+          }
+          bodyClassName="p-2"
+        >
+          <ul className="divide-y divide-border/70">
+            {visibleNotifications.slice(0, 30).map((notification) => (
+              <li key={notification.id} className={cn(!notification.readAt && 'bg-muted/35')}>
+                <div className="flex items-start gap-3 rounded-xl px-3 py-3">
+                  <span
+                    className={cn(
+                      'grid size-9 shrink-0 place-items-center rounded-xl ring-1 ring-inset',
+                      activityToneStyles[notification.tone]
+                    )}
+                  >
+                    <ActivityIcon tone={notification.tone} />
+                  </span>
+                  <Link
+                    href={notification.href}
+                    onClick={() => markNotificationRead(notification.id)}
+                    className="min-w-0 flex-1 group"
+                  >
+                    <span className="flex flex-wrap items-center gap-2">
+                      {!notification.readAt && (
+                        <span className="size-1.5 shrink-0 rounded-full bg-rose-500" aria-label="Sin leer" />
+                      )}
+                      <span className="text-xs font-semibold text-foreground transition group-hover:text-[#5946A6]">
+                        {notification.title}
+                      </span>
+                    </span>
+                    <span className="mt-1 block text-[11px] leading-relaxed text-muted-foreground">
+                      {notification.description}
+                    </span>
+                    <span className="mt-1.5 block text-[9.5px] text-muted-foreground/80">
+                      {unitLabels[notification.unit]} · {formatDate(notification.createdAt)}
+                    </span>
+                  </Link>
+                  {!notification.readAt && (
+                    <button
+                      type="button"
+                      onClick={() => markNotificationRead(notification.id)}
+                      className="grid size-8 shrink-0 place-items-center rounded-lg text-muted-foreground transition hover:bg-muted hover:text-foreground"
+                      aria-label={`Marcar “${notification.title}” como leída`}
+                      title="Marcar como leída"
+                    >
+                      <Check className="size-4" aria-hidden="true" />
+                    </button>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+          {visibleNotifications.length > 30 && (
+            <p className="px-3 py-2 text-[10.5px] text-muted-foreground">
+              Mostrando los 30 avisos más recientes de {visibleNotifications.length}.
+            </p>
+          )}
+        </SectionCard>
+      )}
 
       {total === 0 ? (
         allSelected ? (

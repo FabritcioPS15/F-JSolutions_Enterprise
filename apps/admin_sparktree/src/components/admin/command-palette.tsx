@@ -6,6 +6,7 @@ import {
   BarChart3,
   BookOpenCheck,
   Boxes,
+  Cpu,
   FilePlus,
   FileText,
   FolderTree,
@@ -20,6 +21,7 @@ import {
   PackagePlus,
   Scale,
   Search,
+  ShoppingBag,
   Settings,
   ShieldCheck,
   SlidersHorizontal,
@@ -31,6 +33,7 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 import { useAdmin } from '@/components/admin/admin-provider'
+import { startAdminNavigation } from '@/components/admin/navigation-progress'
 import { moduleByHref } from '@/lib/admin/access'
 import { formatCurrency } from '@/lib/admin/format'
 
@@ -74,6 +77,9 @@ export function CommandPalette({
       { title: 'Reportes y analítica', href: '/reportes', icon: BarChart3, group: 'Navegación' },
       { title: 'Actividad reciente', href: '/actividad', icon: History, group: 'Navegación' },
       { title: 'Unidades de negocio del grupo', href: '/unidades', icon: Network, group: 'Navegación' },
+      { title: 'Gestionar SparkTree Systems', href: '/unidades/systems', icon: Cpu, group: 'Navegación' },
+      { title: 'Gestionar SparkTree Store', href: '/unidades/store', icon: ShoppingBag, group: 'Navegación' },
+      { title: 'Gestionar SparkTree Studio', href: '/unidades/studio', icon: Globe2, group: 'Navegación' },
       { title: 'Casos legales', href: '/legal', icon: Scale, group: 'Navegación' },
       { title: 'Linkeador: páginas de enlaces', href: '/links', icon: Link2, group: 'Navegación' },
       { title: 'Catálogo de productos', href: '/productos', icon: Package, group: 'Navegación' },
@@ -237,6 +243,7 @@ export function CommandPalette({
       const item = filteredItems[selectedIndex]
       if (item) {
         onClose()
+        startAdminNavigation()
         router.push(item.href)
       }
     } else if (e.key === 'Escape') {
@@ -327,6 +334,7 @@ export function CommandPalette({
                       type="button"
                       onClick={() => {
                         onClose()
+                        startAdminNavigation()
                         router.push(item.href)
                       }}
                       onMouseEnter={() => setSelectedIndex(index)}

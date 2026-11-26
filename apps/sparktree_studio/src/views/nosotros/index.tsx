@@ -1,5 +1,5 @@
 import { usePageMeta } from '@/hooks/usePageMeta';
-import { Target, Eye, Shield } from 'lucide-react';
+import { ArrowUpRight, Cpu, Eye, Network, Shield, ShoppingBag, Target } from 'lucide-react';
 import PageBanner from '@/components/ui/PageBanner';
 import { GrTechnology } from "react-icons/gr";
 import { FaPaintbrush, FaChartSimple, FaArrowsToDot } from "react-icons/fa6";
@@ -9,6 +9,34 @@ import { GoPeople } from "react-icons/go";
 interface NosotrosProps {
   onNavigate?: (page: string) => void;
 }
+
+const systemsFallbackUrl = process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : 'https://fjsolutions.pe'
+const systemsUrl = (
+  process.env.NEXT_PUBLIC_URL_SYSTEMS ?? process.env.NEXT_PUBLIC_SYSTEMS_URL ?? systemsFallbackUrl
+).replace(/\/+$/, '')
+const storeUrl = (
+  process.env.NEXT_PUBLIC_STORE_APP_URL ?? process.env.NEXT_PUBLIC_URL_STORE ?? 'http://localhost:3006'
+).replace(/\/+$/, '')
+const groupUrl = (
+  process.env.NEXT_PUBLIC_GROUP_APP_URL ?? process.env.NEXT_PUBLIC_URL_GROUP ?? 'http://localhost:3008'
+).replace(/\/+$/, '')
+
+const ecosystemUnits = [
+  {
+    name: 'SparkTree Systems',
+    description: 'Infraestructura TI, soporte y software a medida para tu empresa.',
+    href: systemsUrl,
+    Icon: Cpu,
+    iconClass: 'bg-cyan-50 text-cyan-700',
+  },
+  {
+    name: 'SparkTree Store',
+    description: 'Equipos, componentes y licencias con asesoría corporativa.',
+    href: storeUrl,
+    Icon: ShoppingBag,
+    iconClass: 'bg-blue-50 text-blue-700',
+  },
+]
 
 export default function Nosotros({ onNavigate }: NosotrosProps) {
   usePageMeta({
@@ -161,6 +189,52 @@ export default function Nosotros({ onNavigate }: NosotrosProps) {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section className="border-t border-gray-100 bg-gray-50 py-14 md:py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="mb-8 max-w-2xl">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-emerald-600">Ecosistema SparkTree</p>
+            <h2 className="mt-2 text-2xl font-bold tracking-tight text-gray-900 md:text-3xl">
+              Tu siguiente paso puede estar en otra unidad.
+            </h2>
+            <p className="mt-3 text-sm leading-relaxed text-gray-600 md:text-base">
+              Si necesitas tecnología, equipamiento o una visión integral, estamos conectados para ayudarte.
+            </p>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            {ecosystemUnits.map(({ name, description, href, Icon, iconClass }) => (
+              <a
+                key={name}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-start gap-4 rounded-2xl border border-gray-200 bg-white p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-emerald-200 hover:shadow-lg md:p-6"
+              >
+                <span className={`flex size-11 shrink-0 items-center justify-center rounded-xl ${iconClass}`}>
+                  <Icon className="size-5" aria-hidden="true" />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-lg font-bold text-gray-900">{name}</span>
+                  <span className="mt-1 block text-sm leading-relaxed text-gray-600">{description}</span>
+                </span>
+                <ArrowUpRight className="mt-1 size-5 shrink-0 text-gray-400 transition-colors group-hover:text-emerald-600" aria-hidden="true" />
+              </a>
+            ))}
+          </div>
+
+          <a
+            href={groupUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group mt-5 inline-flex items-center gap-2 text-sm font-medium text-gray-600 transition-colors hover:text-emerald-700"
+          >
+            <Network className="size-4 shrink-0" aria-hidden="true" />
+            <span>Conoce <strong className="font-semibold text-gray-900">SparkTree Group</strong>, el ecosistema que conecta todas nuestras unidades.</span>
+            <ArrowUpRight className="size-4 shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden="true" />
+          </a>
         </div>
       </section>
     </div>

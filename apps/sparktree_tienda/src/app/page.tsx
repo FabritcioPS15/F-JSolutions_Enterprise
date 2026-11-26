@@ -21,7 +21,6 @@ import { categoryLabel, listCategories, matchesCategory } from '@/lib/catalog-qu
 
 const heroSlides: HeroSlide[] = [
   {
-    eyebrow: 'Laptops corporativas y gaming',
     title: 'Renueva tus laptops con garantía oficial',
     description:
       'Lenovo, HP, Dell y ASUS en stock. Guarda tu modelo en la cotización y recibe el precio formal con disponibilidad.',
@@ -34,7 +33,6 @@ const heroSlides: HeroSlide[] = [
     note: 'Envíos a todo el Perú',
   },
   {
-    eyebrow: 'PC y servidores',
     title: 'Arma tu infraestructura desde cero',
     description:
       'Torres corporativas, servidores tower y mini PCs listos para desplegar en tu oficina o centro de datos.',
@@ -47,7 +45,6 @@ const heroSlides: HeroSlide[] = [
     note: 'Atención a empresas y particulares',
   },
   {
-    eyebrow: 'Redes y conectividad',
     title: 'Wi-Fi 6 y switches para tu oficina',
     description:
       'Routers mesh, access points y switches gestionables de TP-Link y Ubiquiti para redes estables.',
@@ -60,7 +57,6 @@ const heroSlides: HeroSlide[] = [
     note: 'Asesoría de ingenieros',
   },
   {
-    eyebrow: 'Impresión y escaneo',
     title: 'Impresoras de alto volumen para tu empresa',
     description:
       'Tanque de tinta, láser color y escáneres dúplex con soporte especializado y consumibles originales.',
@@ -71,6 +67,54 @@ const heroSlides: HeroSlide[] = [
     productHref: '/productos/hp-smart-tank-580',
     productLabel: 'HP Smart Tank 580',
     note: 'Garantía corporativa',
+  },
+  {
+    title: 'Potencia tu PC con componentes de alto rendimiento',
+    description:
+      'Procesadores AMD e Intel, tarjetas gráficas NVIDIA y placas madre para armar o actualizar tu equipo.',
+    image: 'https://images.unsplash.com/photo-1591488320449-011701bb6704?w=1200&q=80&auto=format&fit=crop',
+    imageAlt: 'Tarjeta gráfica ASUS RTX 4060',
+    categoryHref: '/productos?categoria=Componentes',
+    categoryLabel: 'Ver componentes',
+    productHref: '/productos/asus-rtx-4060-8gb',
+    productLabel: 'RTX 4060 8GB',
+    note: 'Componentes originales',
+  },
+  {
+    title: 'Monitores para trabajar y jugar sin límites',
+    description:
+      'Paneles IPS, resolución 4K y altas tasas de refresco de Samsung, LG, Dell y ASUS.',
+    image: 'https://images.unsplash.com/photo-1547082299-de196ea013d6?w=1200&q=80&auto=format&fit=crop',
+    imageAlt: 'Monitor curvo Samsung Odyssey G5',
+    categoryHref: '/productos?categoria=Monitores',
+    categoryLabel: 'Ver monitores',
+    productHref: '/productos/monitor-samsung-odyssey-g5',
+    productLabel: 'Odyssey G5 27"',
+    note: 'Garantía corporativa',
+  },
+  {
+    title: 'Guarda y respalda tu información con SSD y NAS',
+    description:
+      'SSD NVMe de alta velocidad, discos duros de gran capacidad y NAS Synology para tu empresa.',
+    image: 'https://images.unsplash.com/photo-1531492746076-161ca9bcad58?w=1200&q=80&auto=format&fit=crop',
+    imageAlt: 'Disco duro para almacenamiento y respaldo',
+    categoryHref: '/productos?categoria=Almacenamiento',
+    categoryLabel: 'Ver almacenamiento',
+    productHref: '/productos/samsung-990-evo-1tb',
+    productLabel: 'SSD 990 EVO 1TB',
+    note: 'Envíos a todo el Perú',
+  },
+  {
+    title: 'Completa tu puesto de trabajo',
+    description:
+      'Teclados, mouse ergonómico y headsets de Logitech, Razer y HyperX para tu oficina o setup gamer.',
+    image: 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=1200&q=80&auto=format&fit=crop',
+    imageAlt: 'Teclado y mouse para escritorio',
+    categoryHref: '/productos?categoria=Perif%C3%A9ricos',
+    categoryLabel: 'Ver periféricos',
+    productHref: '/productos/logitech-mx-master-3s',
+    productLabel: 'MX Master 3S',
+    note: 'Cotización en línea',
   },
 ]
 
@@ -186,10 +230,10 @@ export default function StoreHomePage() {
   }))
 
   return (
-    <main className="mx-auto w-full max-w-[1280px] px-4 pb-16 sm:px-6 lg:px-8">
-      <section className="pt-6">
-        <HomeHeroCarousel slides={heroSlides} />
+    <main className="w-full pb-16">
+      <HomeHeroCarousel slides={heroSlides} />
 
+      <div className="mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8">
         <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {benefits.map(({ icon: Icon, title, text }) => (
             <div
@@ -206,9 +250,8 @@ export default function StoreHomePage() {
             </div>
           ))}
         </div>
-      </section>
 
-      <div className="mt-10 space-y-12 sm:mt-12 lg:space-y-16">
+        <div className="mt-10 space-y-12 sm:mt-12 lg:space-y-16">
         <section aria-labelledby="home-categorias">
           <h2
             id="home-categorias"
@@ -339,6 +382,7 @@ export default function StoreHomePage() {
             </div>
           </div>
         </section>
+        </div>
       </div>
     </main>
   )

@@ -90,34 +90,13 @@ export default function Footer({ onNavigate, currentPage, isExiting = false }: F
           <div className="footer-reveal reveal space-y-6 w-full lg:w-auto flex flex-col items-center lg:items-start">
             <button
               onClick={() => onNavigate('home')}
-              className="group relative flex items-center transition-transform duration-500 hover:scale-105"
+              className="group flex items-center transition-transform duration-500 hover:scale-105"
             >
-              {/* White Logo Base */}
               <img
-                src="/brand/sparktree-horizontal.png"
-                alt="SparkTree"
-                className="h-16 lg:h-20 w-auto object-contain brightness-110"
+                src="/assets/Logotipo_SparkTree_Studio-degradado-blanco.png"
+                alt="SparkTree Studio"
+                className="h-16 lg:h-20 w-auto object-contain"
               />
-              {/* Liquid Tint Overlay (Preserves Logo Details & Anti-aliasing) */}
-              <div 
-                className="absolute inset-0 mix-blend-multiply pointer-events-none overflow-hidden"
-                style={{
-                  WebkitMaskImage: `url('/brand/sparktree-horizontal.png')`,
-                  WebkitMaskSize: 'contain',
-                  WebkitMaskRepeat: 'no-repeat',
-                  WebkitMaskPosition: 'center',
-                  maskImage: `url('/brand/sparktree-horizontal.png')`,
-                  maskSize: 'contain',
-                  maskRepeat: 'no-repeat',
-                  maskPosition: 'center',
-                }}
-              >
-                {/* Wavy liquid wrapper */}
-                <div className="absolute left-1/2 top-full w-[200%] aspect-square -translate-x-1/2 translate-y-2 group-hover:-translate-y-[60%] transition-transform duration-1000 ease-in-out">
-                  {/* Spinning blob to create waves */}
-                  <div className="w-full h-full bg-[#41f0a5] rounded-[45%] animate-[spin_5s_linear_infinite]" />
-                </div>
-              </div>
             </button>
             <p className="hidden lg:block text-gray-400 text-sm max-w-xs leading-relaxed">
               Impulsando el crecimiento digital de tu empresa con soluciones innovadoras y personalizadas.

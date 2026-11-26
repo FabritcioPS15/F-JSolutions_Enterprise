@@ -19,6 +19,7 @@ import {
   Trash2,
 } from 'lucide-react'
 import { useAdmin } from '@/components/admin/admin-provider'
+import { startAdminNavigation } from '@/components/admin/navigation-progress'
 import { ConfirmDialog } from '@/components/admin/confirm-dialog'
 import { ProductThumb } from '@/components/admin/product-thumb'
 import { useToast } from '@/components/admin/toast'
@@ -128,6 +129,7 @@ export function ProductDetail({ id }: { id: string }) {
     const copy = duplicateProduct(product.id)
     if (!copy) return
     toast.success('Producto duplicado', `Se creó “${copy.name}” como borrador.`)
+    startAdminNavigation()
     router.push(`/productos/${copy.id}/editar`)
   }
 
@@ -136,6 +138,7 @@ export function ProductDetail({ id }: { id: string }) {
     deleteProduct(product.id)
     toast.success('Producto eliminado', product.name)
     setConfirmDelete(false)
+    startAdminNavigation()
     router.push('/productos')
   }
 

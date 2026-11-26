@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import {
@@ -73,7 +73,9 @@ import { storeUrl } from '@/lib/store-url'
 function useOnClickOutside(ref: React.RefObject<HTMLElement | null>, handler: () => void) {
   useEffect(() => {
     const listener = (e: MouseEvent | TouchEvent) => {
-      if (!ref.current || ref.current.contains(e.target as Node)) return
+      const target = e.target
+      if (target instanceof Element && target.closest('[data-nav-dropdown]')) return
+      if (!ref.current || ref.current.contains(target as Node)) return
       handler()
     }
     document.addEventListener('mousedown', listener)
@@ -1050,6 +1052,19 @@ function StoreRedirectDialog({ onClose }: { onClose: () => void }) {
   )
 }
 
+function subscribeToScroll(onChange: () => void) {
+  window.addEventListener('scroll', onChange, { passive: true })
+  return () => window.removeEventListener('scroll', onChange)
+}
+
+function getScrollSnapshot() {
+  return window.scrollY > 0
+}
+
+function getServerScrollSnapshot() {
+  return false
+}
+
 // ─── Componente: Enhanced Header ─────────────────────────────────────────────────────────
 
 export function EnhancedHeader() {
@@ -1060,7 +1075,7 @@ export function EnhancedHeader() {
   const [openMobileSection, setOpenMobileSection] = useState<string | null>(null)
   const [redirectOpen, setRedirectOpen] = useState(false)
   const [query, setQuery] = useState('')
-  const [scrolled, setScrolled] = useState(false)
+  const scrolled = useSyncExternalStore(subscribeToScroll, getScrollSnapshot, getServerScrollSnapshot)
 
   const companyRef = useRef<HTMLDivElement>(null)
   const servicesRef = useRef<HTMLDivElement>(null)
@@ -1069,8 +1084,28 @@ export function EnhancedHeader() {
   const mobileNavIntent = useRef(false)
   const mobileMenuPushed = useRef(false)
   const mobileMenuOpenedHref = useRef('')
+  const dropdownSourceRef = useRef<'hover' | 'click' | null>(null)
+  const dropdownHoverOpenTimerRef = useRef<number | null>(null)
+  const dropdownHoverCloseTimerRef = useRef<number | null>(null)
 
-  const closeAll = () => setOpenDropdown(null)
+  const clearDropdownHoverTimers = useCallback(() => {
+    if (dropdownHoverOpenTimerRef.current !== null) {
+      window.clearTimeout(dropdownHoverOpenTimerRef.current)
+      dropdownHoverOpenTimerRef.current = null
+    }
+    if (dropdownHoverCloseTimerRef.current !== null) {
+      window.clearTimeout(dropdownHoverCloseTimerRef.current)
+      dropdownHoverCloseTimerRef.current = null
+    }
+  }, [])
+
+  const closeAll = useCallback(() => {
+    clearDropdownHoverTimers()
+    dropdownSourceRef.current = null
+    setOpenDropdown(null)
+  }, [clearDropdownHoverTimers])
+
+  useEffect(() => () => clearDropdownHoverTimers(), [clearDropdownHoverTimers])
 
   useOnClickOutside(companyRef, () => { if (openDropdown === 'nosotros') closeAll() })
   useOnClickOutside(servicesRef, () => { if (openDropdown === 'servicios-ti') closeAll() })
@@ -1088,14 +1123,7 @@ export function EnhancedHeader() {
     }
     document.addEventListener('keydown', handler)
     return () => document.removeEventListener('keydown', handler)
-  }, [])
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 0)
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
+  }, [closeAll])
 
   // Bloquea el scroll de la página mientras el menú móvil está abierto.
   useEffect(() => {
@@ -1122,7 +1150,7 @@ export function EnhancedHeader() {
     setMenuOpen(false)
     closeAll()
     setOpenMobileSection(null)
-  }, [pathname])
+  }, [pathname, closeAll])
 
   // El botón "Atrás" del navegador cierra el menú móvil antes de abandonar la página.
   useEffect(() => {
@@ -1198,7 +1226,42 @@ export function EnhancedHeader() {
     setRedirectOpen(true)
   }
 
-  const toggle = (key: string) => setOpenDropdown((prev) => (prev === key ? null : key))
+  const openDropdownOnHover = (key: string) => {
+    clearDropdownHoverTimers()
+    if (openDropdown === key && dropdownSourceRef.current !== null) return
+
+    dropdownHoverOpenTimerRef.current = window.setTimeout(() => {
+      dropdownHoverOpenTimerRef.current = null
+      dropdownSourceRef.current = 'hover'
+      setOpenDropdown(key)
+    }, 120)
+  }
+
+  const closeDropdownOnHover = () => {
+    clearDropdownHoverTimers()
+    if (dropdownSourceRef.current !== 'hover') return
+
+    dropdownHoverCloseTimerRef.current = window.setTimeout(() => {
+      dropdownHoverCloseTimerRef.current = null
+      const activeElement = document.activeElement
+      if (activeElement instanceof Element && activeElement.closest('[data-nav-dropdown]')) return
+
+      dropdownSourceRef.current = null
+      setOpenDropdown(null)
+    }, 180)
+  }
+
+  const toggle = (key: string) => {
+    clearDropdownHoverTimers()
+    if (openDropdown === key && dropdownSourceRef.current === 'hover') {
+      dropdownSourceRef.current = 'click'
+      return
+    }
+
+    const next = openDropdown === key ? null : key
+    dropdownSourceRef.current = next ? 'click' : null
+    setOpenDropdown(next)
+  }
   const toggleMobile = (key: string) => setOpenMobileSection((prev) => (prev === key ? null : key))
 
   return (
@@ -1220,9 +1283,9 @@ export function EnhancedHeader() {
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/brand/sparktree-horizontal.png"
+              src="/Logotipo_SparkTree_Systems.svg"
               alt="SparkTree Systems"
-              className={`h-12 w-auto object-contain transition-[transform,filter] duration-300 group-hover:scale-105 ${scrolled ? 'brightness-0 invert' : 'brightness-0 dark:brightness-100'
+              className={`h-12 w-auto object-contain transition-[transform,filter] duration-300 group-hover:scale-105 sm:h-16 lg:h-18 ${scrolled ? 'brightness-0 invert' : 'brightness-0 dark:invert'
                 }`}
             />
           </Link>
@@ -1255,7 +1318,18 @@ export function EnhancedHeader() {
               }
 
               return (
-                <div key={index} className="relative" ref={refMap[dropdownKey]}>
+                <div
+                  key={index}
+                  className="relative"
+                  ref={refMap[dropdownKey]}
+                  data-nav-dropdown={link.hasMenu ? dropdownKey : undefined}
+                  onPointerEnter={link.hasMenu ? (event) => {
+                    if (event.pointerType === 'mouse') openDropdownOnHover(dropdownKey)
+                  } : undefined}
+                  onPointerLeave={link.hasMenu ? (event) => {
+                    if (event.pointerType === 'mouse') closeDropdownOnHover()
+                  } : undefined}
+                >
                   {link.hasMenu ? (
                     <>
                       <button
@@ -1371,9 +1445,9 @@ export function EnhancedHeader() {
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/brand/sparktree-horizontal.png"
+                src="/Logotipo_SparkTree_Systems.svg"
                 alt="SparkTree Systems"
-                className="h-12 w-auto object-contain transition-transform duration-200 group-hover:scale-105 brightness-0 dark:brightness-100"
+                className="h-12 w-auto object-contain transition-transform duration-200 group-hover:scale-105 brightness-0 dark:invert sm:h-16 lg:h-18"
               />
             </Link>
 

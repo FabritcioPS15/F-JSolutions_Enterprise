@@ -2,10 +2,9 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import Link from 'next/link'
-import { ArrowRight, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react'
+import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react'
 
 export type HeroSlide = {
-  eyebrow: string
   title: string
   description: string
   image: string
@@ -48,7 +47,7 @@ export function HomeHeroCarousel({ slides }: { slides: HeroSlide[] }) {
     <section
       aria-roledescription="carrusel"
       aria-label="Productos y categorías destacadas"
-      className="relative overflow-hidden rounded-3xl border border-border bg-[#172554] shadow-[0_28px_60px_-42px_rgba(23,37,84,0.85)]"
+      className="relative w-full overflow-hidden border-b border-border bg-[#172554]"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
@@ -80,12 +79,8 @@ export function HomeHeroCarousel({ slides }: { slides: HeroSlide[] }) {
                 isActive ? 'opacity-100' : 'pointer-events-none opacity-0'
               }`}
             >
-              <div className="relative z-10 flex flex-col justify-center px-6 py-10 sm:px-10 sm:py-12 lg:py-14">
-                <span className="inline-flex w-fit items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-semibold text-blue-50 backdrop-blur">
-                  <Sparkles className="size-3.5 text-[#F59E0B]" aria-hidden="true" />
-                  {slide.eyebrow}
-                </span>
-                <h2 className="mt-4 max-w-xl font-heading text-3xl font-black leading-tight text-white sm:text-4xl">
+              <div className="relative z-10 flex flex-col justify-center px-4 py-10 sm:px-6 sm:py-12 lg:py-14 lg:pl-[max(2rem,calc((100vw-1280px)/2+2rem))] lg:pr-10">
+                <h2 className="max-w-xl font-heading text-3xl font-black leading-tight text-white sm:text-4xl">
                   {slide.title}
                 </h2>
                 <p className="mt-3 max-w-lg text-sm text-blue-100/90">{slide.description}</p>
@@ -124,7 +119,7 @@ export function HomeHeroCarousel({ slides }: { slides: HeroSlide[] }) {
         })}
       </div>
 
-      <div className="relative z-10 flex items-center justify-between gap-4 border-t border-white/10 px-6 py-3 sm:px-10">
+      <div className="relative z-10 flex items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:pl-[max(2rem,calc((100vw-1280px)/2+2rem))] lg:pr-10">
         <div className="flex items-center gap-1.5" role="group" aria-label="Seleccionar banner">
           {slides.map((slide, index) => (
             <button
@@ -134,7 +129,7 @@ export function HomeHeroCarousel({ slides }: { slides: HeroSlide[] }) {
               aria-label={`Ver banner ${index + 1}: ${slide.title}`}
               aria-current={index === active}
               className={`h-1.5 rounded-full transition-all ${
-                index === active ? 'w-7 bg-white' : 'w-1.5 bg-white/40 hover:bg-white/70'
+                index === active ? 'w-7 bg-white' : 'w-1.5 bg-white/30 hover:bg-white/60'
               }`}
             />
           ))}
@@ -144,7 +139,7 @@ export function HomeHeroCarousel({ slides }: { slides: HeroSlide[] }) {
             type="button"
             onClick={() => goTo(active - 1)}
             aria-label="Banner anterior"
-            className="grid size-8 place-items-center rounded-lg border border-white/15 text-white/80 transition hover:border-white/40 hover:bg-white/10 hover:text-white"
+            className="grid size-8 place-items-center rounded-lg bg-transparent text-white/80 transition hover:bg-white/10 hover:text-white"
           >
             <ChevronLeft className="size-4" aria-hidden="true" />
           </button>
@@ -152,7 +147,7 @@ export function HomeHeroCarousel({ slides }: { slides: HeroSlide[] }) {
             type="button"
             onClick={() => goTo(active + 1)}
             aria-label="Banner siguiente"
-            className="grid size-8 place-items-center rounded-lg border border-white/15 text-white/80 transition hover:border-white/40 hover:bg-white/10 hover:text-white"
+            className="grid size-8 place-items-center rounded-lg bg-transparent text-white/80 transition hover:bg-white/10 hover:text-white"
           >
             <ChevronRight className="size-4" aria-hidden="true" />
           </button>

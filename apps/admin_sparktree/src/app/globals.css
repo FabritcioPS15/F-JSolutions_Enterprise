@@ -638,6 +638,15 @@ html {
   }
 }
 
+@keyframes admin-navigation-progress {
+  from {
+    transform: translateX(-110%);
+  }
+  to {
+    transform: translateX(410%);
+  }
+}
+
 @media (max-width: 1023px) {
   .login-light-orb--brand {
     top: auto;

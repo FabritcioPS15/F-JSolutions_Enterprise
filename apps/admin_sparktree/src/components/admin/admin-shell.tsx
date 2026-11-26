@@ -11,6 +11,7 @@ import {
   Boxes,
   Building2,
   Cpu,
+  ChevronDown,
   ChevronRight,
   ExternalLink,
   FileText,
@@ -35,6 +36,7 @@ import {
   Settings,
   ShieldCheck,
   ShieldX,
+  ShoppingBag,
   ShoppingCart,
   SlidersHorizontal,
   Tags,
@@ -50,6 +52,10 @@ import { EmptyState, btnSecondary } from '@/components/admin/ui'
 import { ThemeToggle } from '@/components/theme/theme-toggle'
 import { CommandPalette } from '@/components/admin/command-palette'
 import { NotificationsMenu } from '@/components/admin/notifications-menu'
+import {
+  NavigationProgress,
+  startAdminNavigation,
+} from '@/components/admin/navigation-progress'
 import { permissionModules } from '@/lib/admin/permissions'
 import { getStockState } from '@/lib/admin/format'
 import { openOrderStatuses } from '@/lib/admin/operations'
@@ -85,6 +91,116 @@ type NavSection = {
   items: NavItem[]
 }
 
+type SidebarUnit = 'general' | 'systems' | 'store' | 'studio'
+
+type SidebarUnitOption = {
+  id: SidebarUnit
+  label: string
+  shortLabel: string
+  description: string
+  href: string
+  symbol: string
+  tone: string
+}
+
+const sidebarUnits: SidebarUnitOption[] = [
+  {
+    id: 'general',
+    label: 'Ecosistema SparkTree',
+    shortLabel: 'Ecosistema',
+    description: 'Todas las unidades',
+    href: '/unidades',
+    symbol: '/brand/sparktree-symbol.png',
+    tone: 'ring-[#7A67C9]/35 bg-[#7A67C9]/10',
+  },
+  {
+    id: 'systems',
+    label: 'SparkTree Systems',
+    shortLabel: 'Systems',
+    description: 'Tecnología e infraestructura',
+    href: '/unidades/systems',
+    symbol: '/brand/sparktree-systems.png',
+    tone: 'ring-sky-400/25 bg-sky-400/[0.08]',
+  },
+  {
+    id: 'store',
+    label: 'SparkTree Store',
+    shortLabel: 'Store',
+    description: 'Productos y equipamiento TI',
+    href: '/unidades/store',
+    symbol: '/brand/sparktree-store.png',
+    tone: 'ring-amber-400/25 bg-amber-400/[0.08]',
+  },
+  {
+    id: 'studio',
+    label: 'SparkTree Studio',
+    shortLabel: 'Studio',
+    description: 'Desarrollo y experiencias digitales',
+    href: '/unidades/studio',
+    symbol: '/brand/sparktree-studio.png',
+    tone: 'ring-cyan-400/25 bg-cyan-400/[0.08]',
+  },
+]
+
+const generalUnitPaths = ['/', '/reportes', '/actividad', '/notificaciones']
+const systemUnitPaths = [
+  '/usuarios',
+  '/roles',
+  '/areas',
+  '/configuracion',
+  '/auditoria',
+  '/seguridad',
+  '/integraciones',
+]
+
+const unitNavigation: Record<SidebarUnit, Partial<Record<NavArea, string[]>>> = {
+  general: {},
+  systems: {
+    general: generalUnitPaths,
+    catalogo: ['/productos', '/inventario'],
+    servicios: ['/servicios', '/proyectos'],
+    comercial: ['/cotizaciones'],
+    atencion: ['/solicitudes'],
+    sistema: systemUnitPaths,
+  },
+  store: {
+    general: generalUnitPaths,
+    catalogo: ['/productos', '/inventario', '/categorias', '/marcas', '/atributos', '/proveedores'],
+    comercial: ['/cotizaciones', '/pedidos', '/clientes'],
+    sistema: systemUnitPaths,
+  },
+  studio: {
+    general: generalUnitPaths,
+    servicios: ['/proyectos', '/links'],
+    comercial: ['/cotizaciones', '/clientes'],
+    atencion: ['/solicitudes'],
+    sistema: systemUnitPaths,
+  },
+}
+
+const unitSectionLabels: Partial<Record<SidebarUnit, Partial<Record<NavArea, string>>>> = {
+  systems: {
+    catalogo: 'Productos e inventario',
+    servicios: 'Servicios y proyectos',
+    comercial: 'Cotizaciones',
+  },
+  studio: {
+    servicios: 'Proyectos y enlaces',
+    comercial: 'Clientes y cotizaciones',
+  },
+}
+
+function unitForPathname(pathname: string): SidebarUnit | null {
+  return sidebarUnits.find((unit) => pathname === unit.href)?.id ?? null
+}
+
+function unitContainsPath(unit: SidebarUnit, pathname: string) {
+  if (unit === 'general' || unitForPathname(pathname) === unit) return true
+  return Object.values(unitNavigation[unit]).some((paths) =>
+    paths?.some((path) => pathname === path || pathname.startsWith(`${path}/`))
+  )
+}
+
 const storeUrl = process.env.NEXT_PUBLIC_STORE_URL ?? 'http://localhost:3000'
 
 // Categoría que contiene una ruta. Se usa para abrir el grupo correcto desde el
@@ -117,7 +233,6 @@ const areaPaths: { area: NavArea; path: string }[] = [
   { area: 'sistema', path: '/auditoria' },
   { area: 'sistema', path: '/seguridad' },
   { area: 'sistema', path: '/integraciones' },
-  { area: 'sistema', path: '/notificaciones' },
 ]
 
 function areaForPath(path: string): NavArea | null {
@@ -141,6 +256,15 @@ function getBreadcrumb(pathname: string) {
   if (pathname === '/notificaciones') return { section: 'General', title: 'Notificaciones' }
   if (pathname === '/unidades') {
     return { section: 'Unidades de negocio', title: 'Ecosistema SparkTree' }
+  }
+  if (pathname === '/unidades/systems') {
+    return { section: 'Unidades de negocio', title: 'SparkTree Systems' }
+  }
+  if (pathname === '/unidades/store') {
+    return { section: 'Unidades de negocio', title: 'SparkTree Store' }
+  }
+  if (pathname === '/unidades/studio') {
+    return { section: 'Unidades de negocio', title: 'SparkTree Studio' }
   }
   if (pathname === '/legal') {
     return { section: 'Unidades de negocio', title: 'Casos legales' }
@@ -226,13 +350,23 @@ export function AdminShell({
     requests,
     settings,
     catalogSource,
-    catalogError,
     commercialSource,
-    commercialError,
     projectsSource,
+    notifications,
+    markNotificationRead,
+    markAllNotificationsRead,
   } = useAdmin()
   const [open, setOpen] = useState(false)
   const [collapsed, setCollapsed] = useState(false)
+  const [selectedUnit, setSelectedUnit] = useState<SidebarUnit>(
+    () => unitForPathname(pathname) ?? 'general'
+  )
+  const [unitMenuOpen, setUnitMenuOpen] = useState(false)
+  const [collapsedUnitMenuPos, setCollapsedUnitMenuPos] = useState<{
+    top: number
+    left: number
+  } | null>(null)
+  const [unitReady, setUnitReady] = useState(false)
   // Acordeón de una sola categoría abierta a la vez. Arranca con el grupo de la
   // ruta actual para que la opción activa ya esté visible en el primer render.
   const [openArea, setOpenArea] = useState<NavArea | null>(() => areaForPath(pathname))
@@ -249,8 +383,12 @@ export function AdminShell({
   const flyoutRef = useRef<HTMLDivElement>(null)
   const buttonRefs = useRef<Partial<Record<NavArea, HTMLDivElement | null>>>({})
   const profileRef = useRef<HTMLDivElement>(null)
+  const unitMenuRef = useRef<HTMLDivElement>(null)
+  const collapsedUnitMenuRef = useRef<HTMLDivElement>(null)
+  const collapsedUnitMenuPanelRef = useRef<HTMLDivElement>(null)
   const navRef = useRef<HTMLElement | null>(null)
   const asideRef = useRef<HTMLElement | null>(null)
+  const initialPathRef = useRef(pathname)
   const initials = getInitials(user.name)
 
   // Atajo global Ctrl + K / Cmd + K para el Command Palette
@@ -274,9 +412,72 @@ export function AdminShell({
   }, [])
 
   useEffect(() => {
+    const routeUnit = unitForPathname(initialPathRef.current)
+    if (routeUnit) {
+      setUnitReady(true)
+      return
+    }
+    try {
+      const stored = window.localStorage.getItem('fj-admin-sidebar-unit')
+      if (sidebarUnits.some((unit) => unit.id === stored)) {
+        const candidate = stored as SidebarUnit
+        setSelectedUnit(unitContainsPath(candidate, initialPathRef.current) ? candidate : 'general')
+      }
+    } catch {
+      // La unidad seleccionada se mantiene solo durante esta sesión.
+    }
+    setUnitReady(true)
+  }, [])
+
+  useEffect(() => {
+    const routeUnit = unitForPathname(pathname)
+    if (routeUnit) {
+      setSelectedUnit(routeUnit)
+      return
+    }
+    setSelectedUnit((current) =>
+      current === 'general' || unitContainsPath(current, pathname) ? current : 'general'
+    )
+  }, [pathname])
+
+  useEffect(() => {
+    if (!unitReady) return
+    try {
+      window.localStorage.setItem('fj-admin-sidebar-unit', selectedUnit)
+    } catch {
+      // La selección sigue funcionando sin persistencia.
+    }
+  }, [selectedUnit, unitReady])
+
+  useEffect(() => {
     setOpen(false)
     setProfileOpen(false)
+    setUnitMenuOpen(false)
+    setCollapsedUnitMenuPos(null)
   }, [pathname])
+
+  useEffect(() => {
+    if (!unitMenuOpen) return
+    function handlePointer(event: MouseEvent) {
+      const target = event.target as Node
+      if (
+        !unitMenuRef.current?.contains(target) &&
+        !collapsedUnitMenuRef.current?.contains(target) &&
+        !collapsedUnitMenuPanelRef.current?.contains(target)
+      ) {
+        setUnitMenuOpen(false)
+      }
+    }
+    function handleKey(event: KeyboardEvent) {
+      if (event.key === 'Escape') setUnitMenuOpen(false)
+    }
+    document.addEventListener('mousedown', handlePointer)
+    document.addEventListener('keydown', handleKey)
+    return () => {
+      document.removeEventListener('mousedown', handlePointer)
+      document.removeEventListener('keydown', handleKey)
+    }
+  }, [unitMenuOpen])
 
   // La cuenta de empresa no tiene resumen: su panel es su página pública.
   useEffect(() => {
@@ -381,6 +582,35 @@ export function AdminShell({
     })
   }
 
+  function toggleCollapsedUnitMenu() {
+    if (unitMenuOpen) {
+      setUnitMenuOpen(false)
+      setCollapsedUnitMenuPos(null)
+      return
+    }
+    const rect = collapsedUnitMenuRef.current?.getBoundingClientRect()
+    if (!rect) return
+    setCollapsedUnitMenuPos({
+      top: Math.max(8, Math.min(rect.top, window.innerHeight - 280)),
+      left: Math.min(rect.right + 8, window.innerWidth - 248),
+    })
+    setUnitMenuOpen(true)
+  }
+
+  function selectUnit(unit: SidebarUnit) {
+    const destination = sidebarUnits.find((option) => option.id === unit)
+    if (!destination) return
+    setSelectedUnit(unit)
+    setOpenArea(unit === 'general' ? 'unidades' : null)
+    setFlyoutArea(null)
+    setFlyoutPos(null)
+    setUnitMenuOpen(false)
+    setCollapsedUnitMenuPos(null)
+    setOpen(false)
+    startAdminNavigation()
+    router.push(destination.href)
+  }
+
   // El área activa es excluyente: al pulsar una categoría se muestran solo sus
   // opciones y al volver a pulsarla se regresa a la vista completa.
   function areaRailClass(active: boolean) {
@@ -458,6 +688,7 @@ export function AdminShell({
         { href: '/', label: 'Resumen', icon: LayoutDashboard, exact: true },
         { href: '/reportes', label: 'Reportes y métricas', icon: BarChart3 },
         { href: '/actividad', label: 'Actividad reciente', icon: History },
+        { href: '/notificaciones', label: 'Notificaciones', icon: Bell },
       ],
     },
     {
@@ -466,6 +697,9 @@ export function AdminShell({
       icon: Network,
       items: [
         { href: '/unidades', label: 'Ecosistema', icon: Network },
+        { href: '/unidades/systems', label: 'SparkTree Systems', icon: Cpu },
+        { href: '/unidades/store', label: 'SparkTree Store', icon: ShoppingBag },
+        { href: '/unidades/studio', label: 'SparkTree Studio', icon: Globe2 },
         {
           href: '/legal',
           label: 'Casos legales',
@@ -571,21 +805,32 @@ export function AdminShell({
         { href: '/auditoria', label: 'Auditoría del sistema', icon: History },
         { href: '/seguridad', label: 'Seguridad', icon: ShieldCheck },
         { href: '/integraciones', label: 'Integraciones', icon: Cpu },
-        { href: '/notificaciones', label: 'Centro de notificaciones', icon: Bell },
       ],
     },
   ]
 
   // El sidebar lista solo lo que el rol puede ver. Es la misma matriz que revisa
   // el BFF antes de reenviar a la API, así que ocultar no es la única barrera.
-  const permittedSections = sections
-    .map((section) => ({
-      ...section,
-      items: section.items.filter((item) => {
-        const module = moduleByHref[item.href]
-        return !module || can(module)
-      }),
-    }))
+  const permittedSections = sections.map((section) => ({
+    ...section,
+    items: section.items.filter((item) => {
+      const module = moduleByHref[item.href]
+      return !module || can(module)
+    }),
+  }))
+
+  const visibleSections = permittedSections
+    .map((section) => {
+      const allowedPaths = unitNavigation[selectedUnit][section.area]
+      return {
+        ...section,
+        label: unitSectionLabels[selectedUnit]?.[section.area] ?? section.label,
+        items:
+          selectedUnit === 'general'
+            ? section.items
+            : section.items.filter((item) => allowedPaths?.includes(item.href)),
+      }
+    })
     .filter((section) => section.items.length > 0)
 
   // Pendientes por categoría: se muestran como insignia roja aunque el grupo
@@ -594,15 +839,17 @@ export function AdminShell({
     return section.items.reduce((sum, item) => sum + (item.badge ?? 0), 0)
   }
 
-  const notificationTotal = permittedSections.reduce(
-    (sum, section) => sum + pendingForSection(section),
-    0
-  )
-
   // Entrar directo por URL abre la categoría que contiene la página actual.
   useEffect(() => {
-    setOpenArea(areaForPath(pathname))
-  }, [pathname])
+    const area = areaForPath(pathname)
+    const routeUnit = unitForPathname(pathname)
+    const canOpen =
+      area &&
+      (routeUnit
+        ? routeUnit === 'general'
+        : selectedUnit === 'general' || !!unitNavigation[selectedUnit][area])
+    setOpenArea(canOpen ? area : null)
+  }, [pathname, selectedUnit])
 
   useEffect(() => {
     navRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
@@ -616,9 +863,11 @@ export function AdminShell({
     permissionModules.find((module) => module.key === requestedModule)?.label ?? requestedModule
 
   const breadcrumb = getBreadcrumb(pathname)
+  const currentUnit = sidebarUnits.find((unit) => unit.id === selectedUnit) ?? sidebarUnits[0]!
 
   return (
     <div className="min-h-screen bg-background">
+      <NavigationProgress collapsed={collapsed} />
       {open && (
         <div
           className="fixed inset-0 z-40 bg-slate-950/50 backdrop-blur-sm lg:hidden"
@@ -631,21 +880,22 @@ export function AdminShell({
         ref={asideRef}
         data-surface="dark"
         className={cn(
-          'fixed inset-y-0 left-0 z-50 flex w-[316px] max-w-full flex-col overflow-x-hidden border-r border-slate-800/80 bg-[#0E0A1C] text-slate-400 transition-[transform,width] duration-300 ease-out lg:translate-x-0',
+          'fixed inset-y-0 left-0 z-50 flex w-[292px] max-w-full flex-col overflow-visible border-r border-slate-800/60 bg-[#0E0A1C] text-slate-400 transition-[transform,width] duration-300 ease-out lg:translate-x-0',
           open ? 'translate-x-0' : '-translate-x-full',
-          collapsed && 'lg:w-[92px]'
+          collapsed && 'lg:w-[76px]'
         )}
         aria-label="Navegación principal"
       >
         <div
           className={cn(
-            'relative flex h-20 shrink-0 items-center gap-3 border-b border-slate-800/80 px-4',
+            'relative flex h-16 shrink-0 items-center gap-2 px-3',
             collapsed && 'lg:justify-center lg:px-0'
           )}
         >
           <Link
             href="/"
             onClick={() => setOpen(false)}
+            onNavigate={startAdminNavigation}
             className="group flex min-w-0 flex-1 items-center transition-transform duration-200"
             aria-label="SparkTree Admin, inicio"
           >
@@ -654,7 +904,7 @@ export function AdminShell({
               src="/brand/sparktree-horizontal.png"
               alt="SparkTree Admin"
               className={cn(
-                'h-10 w-auto shrink-0 object-contain transition duration-200 group-hover:scale-105 sm:h-11',
+                'h-9 w-auto shrink-0 object-contain transition duration-200 group-hover:scale-105',
                 collapsed && 'lg:hidden'
               )}
             />
@@ -664,7 +914,7 @@ export function AdminShell({
               alt=""
               aria-hidden="true"
               className={cn(
-                'hidden h-10 w-auto shrink-0 object-contain transition duration-200 group-hover:scale-105 sm:h-11',
+                'hidden h-9 w-auto shrink-0 object-contain transition duration-200 group-hover:scale-105',
                 collapsed && 'lg:block'
               )}
             />
@@ -674,7 +924,7 @@ export function AdminShell({
             type="button"
             onClick={toggleCollapsed}
             className={cn(
-              'hidden size-8 shrink-0 place-items-center rounded-xl text-slate-400 transition hover:bg-white/[0.08] hover:text-white lg:grid',
+              'hidden size-7 shrink-0 place-items-center rounded-lg text-slate-500 transition hover:bg-white/[0.06] hover:text-white lg:grid',
               collapsed && 'lg:hidden'
             )}
             aria-label="Contraer menú lateral"
@@ -693,18 +943,124 @@ export function AdminShell({
           </button>
         </div>
 
+        <div ref={unitMenuRef} className={cn('relative mx-2.5 mt-2 shrink-0', collapsed && 'lg:hidden')}>
+          <button
+            type="button"
+            onClick={() => setUnitMenuOpen((previous) => !previous)}
+            aria-label={`Unidad actual: ${currentUnit.label}. Cambiar unidad de negocio`}
+            aria-haspopup="menu"
+            aria-expanded={unitMenuOpen}
+            className={cn(
+              'group flex w-full items-center gap-2 rounded-xl border p-2 text-left transition duration-200',
+              unitMenuOpen
+                ? 'border-[#7A67C9]/40 bg-white/[0.045]'
+                : 'border-slate-800/60 bg-white/[0.025] hover:border-slate-700 hover:bg-white/[0.04]'
+            )}
+          >
+            <span
+              className={cn(
+                'grid h-9 w-9 shrink-0 place-items-center overflow-hidden rounded-lg ring-1',
+                currentUnit.tone
+              )}
+              aria-hidden="true"
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={currentUnit.symbol}
+                alt=""
+                className={cn(
+                  'w-auto object-contain',
+                  selectedUnit === 'general' ? 'h-5' : 'h-7 max-w-[32px]'
+                )}
+              />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block text-[9px] font-bold uppercase tracking-[0.15em] text-slate-500">
+                Unidad actual
+              </span>
+              <span className="mt-0.5 block truncate text-[12.5px] font-bold text-white">
+                {currentUnit.label}
+              </span>
+            </span>
+            <ChevronDown
+              className={cn(
+                'size-4 shrink-0 text-slate-500 transition-transform duration-200',
+                unitMenuOpen && 'rotate-180 text-[#C5BDF2]'
+              )}
+              aria-hidden="true"
+            />
+          </button>
+
+          {unitMenuOpen && (
+            <div
+              role="menu"
+              aria-label="Unidades de negocio"
+              className="absolute left-0 right-0 top-full z-50 mt-1.5 overflow-hidden rounded-xl border border-slate-700/70 bg-[#171128] p-1 shadow-2xl shadow-black/40 ring-1 ring-white/[0.04] animate-in fade-in slide-in-from-top-1 duration-150"
+            >
+              <p className="px-2.5 pb-1.5 pt-1 text-[9px] font-bold uppercase tracking-[0.16em] text-slate-500">
+                Cambiar de unidad
+              </p>
+              {sidebarUnits.map((unit) => {
+                const active = unit.id === selectedUnit
+                return (
+                  <button
+                    key={unit.id}
+                    type="button"
+                    role="menuitemradio"
+                    aria-checked={active}
+                    onClick={() => selectUnit(unit.id)}
+                    className={cn(
+                      'flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left transition-colors duration-150',
+                      active
+                        ? 'bg-[#7A67C9]/15 text-white'
+                        : 'text-slate-300 hover:bg-white/[0.05] hover:text-white'
+                    )}
+                  >
+                    <span
+                      className={cn(
+                        'grid h-8 w-8 shrink-0 place-items-center overflow-hidden rounded-lg ring-1',
+                        unit.tone
+                      )}
+                      aria-hidden="true"
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={unit.symbol}
+                        alt=""
+                        className={cn(
+                          'w-auto object-contain',
+                          unit.id === 'general' ? 'h-4.5' : 'h-6 max-w-[29px]'
+                        )}
+                      />
+                    </span>
+                    <span className="min-w-0 flex-1">
+                          <span className="block truncate text-[12px] font-bold">{unit.label}</span>
+                          <span className="mt-0.5 block truncate text-[9.5px] font-medium text-slate-500">
+                        {unit.description}
+                      </span>
+                    </span>
+                    {active && (
+                      <span className="size-1.5 shrink-0 rounded-full bg-[#C5BDF2]" aria-hidden="true" />
+                    )}
+                  </button>
+                )
+              })}
+            </div>
+          )}
+        </div>
+
         <button
           type="button"
           onClick={() => setCommandOpen(true)}
           className={cn(
-            'mx-3 mt-3 flex shrink-0 items-center gap-2.5 rounded-xl border border-slate-800/80 bg-[#0D1320] px-3 py-2.5 text-xs text-slate-400 transition hover:border-slate-700 hover:text-slate-200',
+            'mx-2.5 mt-2 flex shrink-0 items-center gap-2 rounded-lg px-2.5 py-2 text-[11px] text-slate-400 transition hover:bg-white/[0.035] hover:text-slate-200',
             collapsed && 'lg:hidden'
           )}
           aria-label="Abrir buscador y comandos (Ctrl + K)"
         >
-          <Search className="size-3.5 shrink-0" aria-hidden="true" />
+          <Search className="size-3.5 shrink-0 text-slate-500" aria-hidden="true" />
           <span className="truncate">Buscar en el panel…</span>
-          <kbd className="ml-auto rounded border border-slate-800 bg-[#0E0A1C] px-1 py-0.5 font-mono text-[8.5px] font-bold text-slate-500">
+          <kbd className="ml-auto text-[8.5px] font-semibold text-slate-600">
             Ctrl K
           </kbd>
         </button>
@@ -713,17 +1069,17 @@ export function AdminShell({
           ref={navRef}
           data-sidebar-scroll
           className={cn(
-            'flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain px-3 pb-5 pt-3 scrollbar-thin',
+            'flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain px-2.5 pb-4 pt-2 scrollbar-thin',
             collapsed && 'lg:hidden'
           )}
         >
           <div className="flex flex-col">
-            {permittedSections.length === 0 && (
+            {visibleSections.length === 0 && (
               <p className="px-3 py-6 text-center text-[11px] leading-relaxed text-slate-500">
                 Tu rol no tiene secciones habilitadas.
               </p>
             )}
-            {permittedSections.map((section) => {
+            {visibleSections.map((section) => {
               const SectionIcon = section.icon
               const isOpen = openArea === section.area
               const sectionPending = pendingForSection(section)
@@ -732,10 +1088,8 @@ export function AdminShell({
                 <div
                   key={section.area}
                   className={cn(
-                    'mb-1 rounded-xl border transition-colors duration-150',
-                    isOpen
-                      ? 'border-slate-800/80 bg-white/[0.018]'
-                      : 'border-transparent'
+                    'mb-0.5 rounded-lg transition-colors duration-150',
+                    isOpen && 'bg-white/[0.025]'
                   )}
                 >
                   <button
@@ -744,15 +1098,15 @@ export function AdminShell({
                     aria-expanded={isOpen}
                     aria-controls={`nav-group-${section.area}`}
                     className={cn(
-                      'flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-[14px] font-semibold transition-colors',
+                      'flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-[13px] font-semibold transition-colors',
                       isOpen
-                        ? 'bg-white/[0.02] text-white'
-                        : 'text-slate-400 hover:bg-white/[0.04] hover:text-white'
+                        ? 'text-white'
+                        : 'text-slate-400 hover:bg-white/[0.035] hover:text-white'
                     )}
                   >
                     <SectionIcon
                       className={cn(
-                        'size-[18px] shrink-0 transition-colors',
+                        'size-[17px] shrink-0 transition-colors',
                         isOpen ? 'text-[#C5BDF2]' : 'text-slate-500'
                       )}
                       aria-hidden="true"
@@ -760,7 +1114,7 @@ export function AdminShell({
                     <span className="min-w-0 flex-1 truncate">{section.label}</span>
                     {sectionPending > 0 && (
                       <span
-                        className="grid size-[19px] shrink-0 place-items-center rounded-full bg-rose-500 text-[10px] font-bold leading-none text-white aspect-square shadow-xs"
+                        className="grid size-[18px] shrink-0 place-items-center rounded-full bg-rose-500 text-[9.5px] font-bold leading-none text-white aspect-square"
                         title={
                           sectionPending === 1
                             ? '1 aviso pendiente en esta categoría'
@@ -787,7 +1141,7 @@ export function AdminShell({
                   {isOpen && (
                     <div
                       id={`nav-group-${section.area}`}
-                      className="relative px-2 pb-2 pl-8 before:absolute before:bottom-3 before:left-[19px] before:top-0 before:w-px before:bg-slate-800/80"
+                      className="relative px-2 pb-1.5 pl-7 before:absolute before:bottom-2 before:left-[15px] before:top-0 before:w-px before:bg-slate-800/60"
                     >
                       <ul className="space-y-0.5">
                         {section.items.map((item) => {
@@ -802,17 +1156,18 @@ export function AdminShell({
                               <Link
                                 href={item.href}
                                 onClick={() => setOpen(false)}
+                                onNavigate={startAdminNavigation}
                                 aria-current={active ? 'page' : undefined}
                                 className={cn(
-                                  'group relative flex min-h-9 items-center gap-2.5 rounded-lg px-3 py-2 text-[13.5px] font-medium leading-tight transition-colors duration-150',
+                                  'group relative flex min-h-8 items-center gap-2 rounded-md px-2.5 py-1.5 text-[12.5px] font-medium leading-tight transition-colors duration-150',
                                   active
-                                    ? 'bg-gradient-to-r from-[#7A67C9]/20 to-[#8876D9]/5 font-semibold text-white shadow-[inset_0_0_0_1px_rgba(122,103,201,0.20)]'
-                                    : 'text-slate-400 hover:bg-white/[0.04] hover:text-white'
+                                    ? 'bg-[#7A67C9]/15 font-semibold text-white'
+                                    : 'text-slate-400 hover:bg-white/[0.035] hover:text-white'
                                 )}
                               >
                                 <Icon
                                   className={cn(
-                                    'size-[17px] shrink-0 transition-colors',
+                                    'size-4 shrink-0 transition-colors',
                                     active
                                       ? 'text-[#C5BDF2]'
                                       : 'text-slate-500 group-hover:text-slate-300'
@@ -822,7 +1177,7 @@ export function AdminShell({
                                 <span className="truncate">{item.label}</span>
                                 {hasBadge && (
                                   <span
-                                    className="ml-auto grid size-[19px] shrink-0 place-items-center rounded-full bg-rose-500 text-[10px] font-bold leading-none text-white aspect-square shadow-xs"
+                                    className="ml-auto grid size-[18px] shrink-0 place-items-center rounded-full bg-rose-500 text-[9.5px] font-bold leading-none text-white aspect-square"
                                     title={item.badgeHint ?? `${item.badge} pendientes`}
                                     aria-label={item.badgeHint ?? `${item.badge} pendientes`}
                                   >
@@ -849,99 +1204,139 @@ export function AdminShell({
         </nav>
 
         {collapsed && (
-          <nav
-            data-sidebar-scroll
-            aria-label="Categorías"
-            className="hidden min-h-0 flex-1 flex-col items-center gap-2 overflow-y-auto overflow-x-hidden overscroll-contain px-0 py-3 scrollbar-thin lg:flex"
-          >
-            {permittedSections.map((section) => {
-              const SectionIcon = section.icon
-              const isActive = areaForPath(pathname) === section.area
-              const isFlyoutOpen = flyoutArea === section.area
-              const sectionPending = pendingForSection(section)
-
-              return (
-                <div
-                  key={section.area}
-                  className="relative w-full flex justify-center"
-                  ref={(el) => { buttonRefs.current[section.area] = el }}
+          <>
+            <div
+              ref={collapsedUnitMenuRef}
+              className={cn(
+                'relative mx-auto hidden w-12 shrink-0 rounded-xl border bg-transparent lg:block',
+                unitMenuOpen
+                  ? 'border-[#7A67C9]/40 bg-[#7A67C9]/10'
+                  : 'border-transparent hover:border-slate-800 hover:bg-white/[0.025]'
+              )}
+              title={currentUnit.label}
+            >
+              <button
+                type="button"
+                onClick={toggleCollapsedUnitMenu}
+                aria-label={`Unidad actual: ${currentUnit.label}. Cambiar unidad de negocio`}
+                aria-haspopup="menu"
+                aria-expanded={unitMenuOpen}
+                className="flex w-full flex-col items-center justify-center gap-0.5 px-1 py-1.5"
+              >
+                <span
+                  className={cn('grid size-5 place-items-center rounded-md ring-1', currentUnit.tone)}
+                  aria-hidden="true"
                 >
-                  <button
-                    type="button"
-                    onClick={() => openFlyout(section.area)}
-                    title={
-                      sectionPending > 0
-                        ? `${section.label} · ${sectionPending} pendientes`
-                        : section.label
-                    }
-                    aria-label={`Ver opciones de ${section.label}`}
-                    aria-expanded={isFlyoutOpen}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={currentUnit.symbol}
+                    alt=""
                     className={cn(
-                      'group relative flex w-full max-w-[80px] flex-col items-center justify-center gap-1.5 rounded-2xl py-2.5 px-1 transition-all duration-200',
-                      isActive || isFlyoutOpen
-                        ? 'bg-gradient-to-b from-[#7A67C9]/20 to-[#5946A6]/10 text-white shadow-xs ring-1 ring-[#7A67C9]/40'
-                        : 'text-slate-400 hover:bg-white/[0.06] hover:text-white'
+                      'w-auto object-contain',
+                      selectedUnit === 'general' ? 'h-3.5' : 'h-4 max-w-[17px]'
                     )}
+                  />
+                </span>
+                <span className="max-w-full truncate text-[8.5px] font-semibold text-slate-400">
+                  {currentUnit.shortLabel}
+                </span>
+              </button>
+            </div>
+
+            <nav
+              data-sidebar-scroll
+              aria-label="Categorías"
+              className="hidden min-h-0 flex-1 flex-col items-center gap-1 overflow-y-auto overflow-x-hidden overscroll-contain px-0 py-2 scrollbar-thin lg:flex"
+            >
+              {visibleSections.map((section) => {
+                const SectionIcon = section.icon
+                const isActive = areaForPath(pathname) === section.area
+                const isFlyoutOpen = flyoutArea === section.area
+                const sectionPending = pendingForSection(section)
+
+                return (
+                  <div
+                    key={section.area}
+                    className="relative w-full flex justify-center"
+                    ref={(el) => { buttonRefs.current[section.area] = el }}
                   >
-                    <span className="relative grid size-9 place-items-center rounded-xl transition duration-200 group-hover:scale-105">
-                      <SectionIcon
-                        className={cn(
-                          'size-5.5 shrink-0 transition-colors',
-                          isActive || isFlyoutOpen ? 'text-[#C5BDF2]' : 'text-slate-400 group-hover:text-white'
-                        )}
-                        aria-hidden="true"
-                      />
-                      {sectionPending > 0 && (
-                        <span
-                          className="absolute -right-1 -top-1 grid size-5 place-items-center rounded-full bg-rose-500 text-[10px] font-extrabold leading-none text-white aspect-square shadow-sm ring-2 ring-[#0E0A1C]"
-                          aria-hidden="true"
-                        >
-                          {sectionPending > 99 ? '99+' : sectionPending}
-                        </span>
-                      )}
-                    </span>
-                    <span
+                    <button
+                      type="button"
+                      onClick={() => openFlyout(section.area)}
+                      title={
+                        sectionPending > 0
+                          ? `${section.label} · ${sectionPending} pendientes`
+                          : section.label
+                      }
+                      aria-label={`Ver opciones de ${section.label}`}
+                      aria-expanded={isFlyoutOpen}
                       className={cn(
-                        'text-[10px] font-semibold leading-tight text-center truncate max-w-[70px]',
-                        isActive || isFlyoutOpen ? 'text-white font-bold' : 'text-slate-400 group-hover:text-slate-200'
+                        'group relative flex w-full max-w-[64px] flex-col items-center justify-center gap-1 rounded-xl py-2 px-1 transition-colors duration-200',
+                        isActive || isFlyoutOpen
+                          ? 'bg-[#7A67C9]/15 text-white'
+                          : 'text-slate-400 hover:bg-white/[0.045] hover:text-white'
                       )}
                     >
-                      {section.label.split(' ')[0]}
-                    </span>
-                  </button>
-                </div>
-              )
-            })}
-            <button
-              type="button"
-              onClick={toggleCollapsed}
-              className="group mt-3 flex w-full max-w-[80px] items-center justify-center gap-1.5 rounded-2xl bg-gradient-to-b from-[#5946A6]/30 to-[#4A3A8F]/20 py-2.5 text-[#C5BDF2] ring-1 ring-[#7A67C9]/40 transition-all duration-200 hover:from-[#5946A6]/50 hover:to-[#4A3A8F]/35 hover:text-white hover:ring-[#7A67C9]/70 hover:shadow-lg hover:shadow-indigo-900/30"
-              aria-label="Expandir menú lateral"
-              title="Expandir menú"
-            >
-              <PanelLeftOpen className="size-4.5 transition-transform duration-200 group-hover:translate-x-0.5" />
-            </button>
-          </nav>
+                      <span className="relative grid size-8 place-items-center transition duration-200 group-hover:scale-105">
+                        <SectionIcon
+                          className={cn(
+                            'size-5 shrink-0 transition-colors',
+                            isActive || isFlyoutOpen ? 'text-[#C5BDF2]' : 'text-slate-400 group-hover:text-white'
+                          )}
+                          aria-hidden="true"
+                        />
+                        {sectionPending > 0 && (
+                          <span
+                            className="absolute -right-0.5 -top-0.5 grid size-4 place-items-center rounded-full bg-rose-500 text-[8px] font-extrabold leading-none text-white aspect-square ring-2 ring-[#0E0A1C]"
+                            aria-hidden="true"
+                          >
+                            {sectionPending > 99 ? '99+' : sectionPending}
+                          </span>
+                        )}
+                      </span>
+                      <span
+                        className={cn(
+                          'text-[9.5px] font-medium leading-tight text-center truncate max-w-[60px]',
+                          isActive || isFlyoutOpen ? 'text-white font-bold' : 'text-slate-400 group-hover:text-slate-200'
+                        )}
+                      >
+                        {section.label.split(' ')[0]}
+                      </span>
+                    </button>
+                  </div>
+                )
+              })}
+              <button
+                type="button"
+                onClick={toggleCollapsed}
+                className="group mt-2 grid size-9 shrink-0 place-items-center rounded-lg text-slate-500 transition-colors duration-150 hover:bg-white/[0.04] hover:text-white"
+                aria-label="Expandir menú lateral"
+                title="Expandir menú"
+              >
+                <PanelLeftOpen className="size-4.5" />
+              </button>
+            </nav>
+          </>
         )}
 
         {/* ── Portal flyout — se monta en document.body para escapar overflow ── */}
         {collapsed && flyoutArea && flyoutPos &&
           createPortal(
             (() => {
-              const section = permittedSections.find((s) => s.area === flyoutArea)
+              const section = visibleSections.find((s) => s.area === flyoutArea)
               if (!section) return null
               const SectionIcon = section.icon
               return (
                 <div
                   ref={flyoutRef}
                   style={{ position: 'fixed', top: flyoutPos.top, left: flyoutPos.left, zIndex: 9999 }}
-                  className="w-56 rounded-2xl border border-slate-700/70 bg-[#14102A] shadow-2xl shadow-black/70 ring-1 ring-white/[0.06] animate-in fade-in slide-in-from-left-2 duration-150"
+                  className="w-56 rounded-xl border border-slate-700/60 bg-[#171128] p-1.5 shadow-xl shadow-black/30 animate-in fade-in slide-in-from-left-2 duration-150"
                 >
-                  <div className="flex items-center gap-2 border-b border-slate-800/80 px-3.5 py-3">
+                  <div className="flex items-center gap-2 px-2.5 pb-2 pt-1.5">
                     <SectionIcon className="size-4 shrink-0 text-[#C5BDF2]" aria-hidden="true" />
-                    <span className="text-[13px] font-bold text-slate-100">{section.label}</span>
+                    <span className="text-[12.5px] font-semibold text-slate-100">{section.label}</span>
                   </div>
-                  <ul className="p-2 space-y-0.5">
+                  <ul className="space-y-0.5">
                     {section.items.map((item) => {
                       const Icon = item.icon
                       const active = item.exact
@@ -953,12 +1348,13 @@ export function AdminShell({
                           <Link
                             href={item.href}
                             onClick={() => { setFlyoutArea(null); setFlyoutPos(null) }}
+                            onNavigate={startAdminNavigation}
                             aria-current={active ? 'page' : undefined}
                             className={cn(
-                              'flex items-center gap-2.5 rounded-xl px-3 py-2 text-[13px] font-medium transition-colors duration-150',
+                              'flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-[12.5px] font-medium transition-colors duration-150',
                               active
-                                ? 'bg-gradient-to-r from-[#7A67C9]/25 to-[#8876D9]/10 font-semibold text-white shadow-[inset_0_0_0_1px_rgba(122,103,201,0.25)]'
-                                : 'text-slate-400 hover:bg-white/[0.06] hover:text-white'
+                                ? 'bg-[#7A67C9]/15 font-semibold text-white'
+                                : 'text-slate-400 hover:bg-white/[0.04] hover:text-white'
                             )}
                           >
                             <Icon
@@ -983,29 +1379,90 @@ export function AdminShell({
           )
         }
 
-        <div className="shrink-0 border-t border-slate-800/80 bg-[#0B0817] px-3 py-3">
-          {!collapsed && (
-            <div className="flex items-center gap-3">
-              <span className="grid size-9 shrink-0 place-items-center rounded-xl bg-[#7A67C9]/15 text-[#C5BDF2] ring-1 ring-[#7A67C9]/25">
-                <Building2 className="size-4.5" />
+        {!collapsed && (
+          <div className="shrink-0 px-3 py-2.5">
+            <div className="flex items-center gap-2.5">
+              <span className="grid size-8 shrink-0 place-items-center rounded-lg bg-white/[0.035] text-slate-400">
+                <Building2 className="size-4" />
               </span>
               <div className="min-w-0 flex-1">
-                <p className="truncate text-[13px] font-bold leading-snug text-slate-100">
+                <p className="truncate text-[12px] font-semibold leading-snug text-slate-200">
                   {settings.legalName}
                 </p>
-                <p className="text-[11.5px] font-semibold tabular-nums text-slate-400">
+                <p className="text-[10.5px] font-medium tabular-nums text-slate-500">
                   RUC&nbsp;{settings.ruc}
                 </p>
               </div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </aside>
+
+      {collapsed && unitMenuOpen && collapsedUnitMenuPos &&
+        createPortal(
+          <div
+            ref={collapsedUnitMenuPanelRef}
+            role="menu"
+            aria-label="Unidades de negocio"
+            style={{ position: 'fixed', top: collapsedUnitMenuPos.top, left: collapsedUnitMenuPos.left, zIndex: 9999 }}
+            className="hidden max-h-[calc(100vh-1rem)] w-60 overflow-y-auto rounded-xl border border-slate-700/70 bg-[#171128] p-1 shadow-2xl shadow-black/40 ring-1 ring-white/[0.04] animate-in fade-in slide-in-from-left-2 duration-150 lg:block"
+          >
+            <p className="px-2.5 pb-1.5 pt-1 text-[9px] font-bold uppercase tracking-[0.16em] text-slate-500">
+              Cambiar de unidad
+            </p>
+            {sidebarUnits.map((unit) => {
+              const active = unit.id === selectedUnit
+              return (
+                <button
+                  key={unit.id}
+                  type="button"
+                  role="menuitemradio"
+                  aria-checked={active}
+                  onClick={() => selectUnit(unit.id)}
+                  className={cn(
+                    'flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left transition-colors duration-150',
+                    active
+                      ? 'bg-[#7A67C9]/15 text-white'
+                      : 'text-slate-300 hover:bg-white/[0.05] hover:text-white'
+                  )}
+                >
+                  <span
+                    className={cn(
+                      'grid h-8 w-8 shrink-0 place-items-center overflow-hidden rounded-lg ring-1',
+                      unit.tone
+                    )}
+                    aria-hidden="true"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={unit.symbol}
+                      alt=""
+                      className={cn(
+                        'w-auto object-contain',
+                        unit.id === 'general' ? 'h-4.5' : 'h-6 max-w-[29px]'
+                      )}
+                    />
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-[12px] font-bold">{unit.label}</span>
+                    <span className="mt-0.5 block truncate text-[9.5px] font-medium text-slate-500">
+                      {unit.description}
+                    </span>
+                  </span>
+                  {active && (
+                    <span className="size-1.5 shrink-0 rounded-full bg-[#C5BDF2]" aria-hidden="true" />
+                  )}
+                </button>
+              )
+            })}
+          </div>,
+          document.body
+        )}
 
       <div
         className={cn(
           'flex min-h-screen flex-col transition-[padding] duration-300',
-          collapsed ? 'lg:pl-[92px]' : 'lg:pl-[316px]'
+          collapsed ? 'lg:pl-[76px]' : 'lg:pl-[292px]'
         )}
       >
         <header className="sticky top-0 z-30 border-b border-border/80 bg-card/85 backdrop-blur-lg">
@@ -1067,6 +1524,9 @@ export function AdminShell({
                   complaints: complaintCount,
                 }}
                 can={can}
+                notifications={notifications}
+                onMarkRead={markNotificationRead}
+                onMarkAllRead={markAllNotificationsRead}
                 onRefresh={loadComplaints}
               />
 
@@ -1114,6 +1574,7 @@ export function AdminShell({
                       <Link
                         href="/configuracion"
                         onClick={() => setProfileOpen(false)}
+                        onNavigate={startAdminNavigation}
                         className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-xs font-semibold text-muted-foreground transition hover:bg-muted hover:text-foreground"
                         role="menuitem"
                       >
@@ -1142,24 +1603,6 @@ export function AdminShell({
           </div>
         </header>
 
-        {catalogError ? (
-          <div className="mx-auto w-full max-w-[1440px] px-4 pt-4 sm:px-6 lg:px-8">
-            <p className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-2.5 text-xs text-warning-ink">
-              El catálogo no está sincronizado con la base de datos. Se mantiene el respaldo
-              local. {catalogError}
-            </p>
-          </div>
-        ) : null}
-
-        {commercialError ? (
-          <div className="mx-auto w-full max-w-[1440px] px-4 pt-4 sm:px-6 lg:px-8">
-            <p className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-2.5 text-xs text-warning-ink">
-              Clientes y cotizaciones no están sincronizados con la base de datos. Se mantiene el
-              respaldo local. {commercialError}
-            </p>
-          </div>
-        ) : null}
-
         <main className="mx-auto w-full max-w-[1440px] flex-1 px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
           {blockedByPermission ? (
             <EmptyState
@@ -1167,7 +1610,7 @@ export function AdminShell({
               title="Sin acceso a esta sección"
               description={`Tu rol (${user.roleName}) no tiene el permiso de lectura de ${blockedModuleLabel}. Un superadministrador puede ampliarlo desde Usuarios y permisos.`}
               action={
-                <Link href="/" className={btnSecondary}>
+                <Link href="/" className={btnSecondary} onNavigate={startAdminNavigation}>
                   Volver al resumen
                 </Link>
               }

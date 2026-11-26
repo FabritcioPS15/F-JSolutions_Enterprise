@@ -17,6 +17,7 @@ import {
 } from 'lucide-react'
 import { ConfirmDialog } from '@/components/admin/confirm-dialog'
 import { RowActions } from '@/components/admin/row-actions'
+import { useAdmin } from '@/components/admin/admin-provider'
 import { useToast } from '@/components/admin/toast'
 import {
   EmptyState,
@@ -72,6 +73,7 @@ function storePath(service: ServiceOffering) {
 
 export function ServicesView() {
   const toast = useToast()
+  const { notify } = useAdmin()
   const [services, setServices] = useState<ServiceOffering[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -139,6 +141,14 @@ export function ServicesView() {
         nextStatus === 'published' ? 'Servicio publicado' : 'Servicio despublicado',
         updated.title
       )
+      notify({
+        dedupeKey: `service:${updated.id}:status:${updated.updatedAt}`,
+        title: nextStatus === 'published' ? 'Servicio publicado' : 'Servicio despublicado',
+        description: updated.title,
+        href: `/servicios/${updated.id}/editar`,
+        unit: 'systems',
+        tone: nextStatus === 'published' ? 'success' : 'info',
+      })
     } catch (err) {
       toast.error(
         'No se pudo cambiar el estado',
@@ -157,6 +167,14 @@ export function ServicesView() {
       await deleteServiceOffering(target.id)
       setServices((prev) => prev.filter((item) => item.id !== target.id))
       toast.success('Servicio eliminado', target.title)
+      notify({
+        dedupeKey: `service:${target.id}:deleted:${Date.now()}`,
+        title: 'Servicio eliminado',
+        description: target.title,
+        href: '/servicios',
+        unit: 'systems',
+        tone: 'warning',
+      })
     } catch (err) {
       toast.error(
         'No se pudo eliminar el servicio',

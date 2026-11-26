@@ -3,7 +3,7 @@
 import { FaWhatsapp, FaX, FaInstagram, FaLinkedin, FaTiktok, FaMagnifyingGlass } from 'react-icons/fa6';
 import { CgMenuRight } from 'react-icons/cg';
 import { Home as HomeIcon, Wrench, Folder, FileText, Briefcase, Newspaper } from 'lucide-react';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Project } from '@/data/projects';
 import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import AnimatedButton from './ui/AnimatedButton';
@@ -31,6 +31,37 @@ export default function Header({ currentPage, onNavigate, isExiting = false }: H
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const mobileSearchRef = useRef<HTMLDivElement | null>(null);
   const [dbProjects, setDbProjects] = useState<Project[]>([]);
+  const servicesDropdownSourceRef = useRef<'hover' | 'click' | null>(null);
+  const servicesHoverOpenTimerRef = useRef<number | null>(null);
+  const servicesHoverCloseTimerRef = useRef<number | null>(null);
+
+  const clearServicesHoverTimers = useCallback(() => {
+    if (servicesHoverOpenTimerRef.current !== null) {
+      window.clearTimeout(servicesHoverOpenTimerRef.current);
+      servicesHoverOpenTimerRef.current = null;
+    }
+    if (servicesHoverCloseTimerRef.current !== null) {
+      window.clearTimeout(servicesHoverCloseTimerRef.current);
+      servicesHoverCloseTimerRef.current = null;
+    }
+  }, []);
+
+  const closeServicesDropdown = useCallback(() => {
+    clearServicesHoverTimers();
+    servicesDropdownSourceRef.current = null;
+    setIsServicesDropdownOpen(false);
+  }, [clearServicesHoverTimers]);
+
+  useEffect(() => () => clearServicesHoverTimers(), [clearServicesHoverTimers]);
+
+  useEffect(() => {
+    if (!isServicesDropdownOpen) return;
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') closeServicesDropdown();
+    };
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [isServicesDropdownOpen, closeServicesDropdown]);
 
   useEffect(() => {
     async function fetchProjectsForSearch() {
@@ -177,7 +208,7 @@ export default function Header({ currentPage, onNavigate, isExiting = false }: H
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Element;
       if (!target.closest('.services-dropdown') && !target.closest('[data-nav-item="services"]')) {
-        setIsServicesDropdownOpen(false);
+        closeServicesDropdown();
       }
     };
 
@@ -185,7 +216,7 @@ export default function Header({ currentPage, onNavigate, isExiting = false }: H
       document.addEventListener('mousedown', handleClickOutside);
       return () => document.removeEventListener('mousedown', handleClickOutside);
     }
-  }, [isServicesDropdownOpen]);
+  }, [isServicesDropdownOpen, closeServicesDropdown]);
 
   // Close search when clicking outside
   useEffect(() => {
@@ -310,33 +341,67 @@ export default function Header({ currentPage, onNavigate, isExiting = false }: H
     { id: 'service-content', label: 'Marketing de contenido', description: 'Conecta con tu audiencia' },
   ];
 
+  const openServicesDropdownOnHover = () => {
+    clearServicesHoverTimers();
+    if (isServicesDropdownOpen && servicesDropdownSourceRef.current !== null) return;
+
+    servicesHoverOpenTimerRef.current = window.setTimeout(() => {
+      servicesHoverOpenTimerRef.current = null;
+      servicesDropdownSourceRef.current = 'hover';
+      setIsServicesDropdownOpen(true);
+    }, 120);
+  };
+
+  const closeServicesDropdownOnHover = () => {
+    clearServicesHoverTimers();
+    if (servicesDropdownSourceRef.current !== 'hover') return;
+
+    servicesHoverCloseTimerRef.current = window.setTimeout(() => {
+      servicesHoverCloseTimerRef.current = null;
+      const activeElement = document.activeElement;
+      if (activeElement instanceof Element && activeElement.closest('[data-nav-item="services"]')) return;
+
+      servicesDropdownSourceRef.current = null;
+      setIsServicesDropdownOpen(false);
+    }, 180);
+  };
+
+  const toggleServicesDropdown = () => {
+    clearServicesHoverTimers();
+    const next = !isServicesDropdownOpen;
+    servicesDropdownSourceRef.current = next ? 'click' : null;
+    setIsServicesDropdownOpen(next);
+  };
+
+  const handleServicesClick = () => {
+    clearServicesHoverTimers();
+    if (isServicesDropdownOpen && servicesDropdownSourceRef.current === 'hover') {
+      servicesDropdownSourceRef.current = 'click';
+      return;
+    }
+
+    const next = !isServicesDropdownOpen;
+    servicesDropdownSourceRef.current = next ? 'click' : null;
+    setIsServicesDropdownOpen(next);
+  };
+
   const handleNavClick = (pageId: string) => {
     console.log('Header: Navigating to:', pageId); // Debug log
     onNavigate(pageId);
     setIsMobileMenuOpen(false);
-    setIsServicesDropdownOpen(false);
-  };
-
-  const handleServicesClick = () => {
-    // Si el dropdown está abierto, lo cerramos
-    if (isServicesDropdownOpen) {
-      setIsServicesDropdownOpen(false);
-    } else {
-      // Si está cerrado, lo abrimos
-      setIsServicesDropdownOpen(true);
-    }
+    closeServicesDropdown();
   };
 
   const handleServicesMainClick = () => {
     // Navegar a la página de servicios y cerrar el dropdown
     onNavigate('services');
-    setIsServicesDropdownOpen(false);
+    closeServicesDropdown();
     setIsMobileMenuOpen(false);
   };
 
   const handleServiceClick = (serviceId: string) => {
     onNavigate(serviceId);
-    setIsServicesDropdownOpen(false);
+    closeServicesDropdown();
     setIsMobileMenuOpen(false);
   };
 
@@ -353,18 +418,17 @@ export default function Header({ currentPage, onNavigate, isExiting = false }: H
           {/* Logo */}
           <button
             onClick={() => onNavigate('home')}
-            className={`transition-transform duration-300 hover:scale-105 ${isMounted ? 'animate-slide-in-top entrance-stagger-1' : 'opacity-0'}`}
+            className={`shrink-0 transition-transform duration-300 hover:scale-105 ${isMounted ? 'animate-slide-in-top entrance-stagger-1' : 'opacity-0'}`}
           >
             <img
-              src="/brand/sparktree-horizontal.png"
+              src={shouldNavItemsBeWhite ? '/assets/Logotipo_SparkTree_Studio-degradado-blanco.png' : '/assets/Logotipo_SparkTree_Studio-degradado.png'}
               alt="SparkTree Studio"
-              className={`h-10 sm:h-11 w-auto object-contain transition-all duration-300 ${shouldNavItemsBeWhite ? 'brightness-0 invert' : 'brightness-0'
-                }`}
+              className={`h-14 lg:h-12 xl:h-16 w-auto object-contain transition-all duration-300 ${isHomeTop ? 'brightness-0 invert' : ''}`}
             />
           </button>
 
           {/* Desktop Navigation LA BARRA DEL MENÚ :V PARA MOVER LA POSICION CON ML PS*/}
-          <nav ref={desktopNavRef} className="hidden lg:flex items-center gap-2 relative px-1 py-0.5 ml-32">
+          <nav ref={desktopNavRef} className="hidden lg:flex items-center gap-2 relative px-1 py-0.5 ml-4 lg:ml-6 xl:ml-32">
             {/* Animated active indicator */}
             <span
               className={`absolute bottom-1 h-[3px] rounded-full transition-all duration-300 ease-out bg-[#41f0a5] shadow-[0_0_10px_rgba(65,240,165,0.8)] ${indicatorVisible ? 'opacity-100' : 'opacity-0'}`}
@@ -372,7 +436,17 @@ export default function Header({ currentPage, onNavigate, isExiting = false }: H
               aria-hidden
             />
             {navItems.map((item, idx) => (
-              <div key={item.id} className={`relative ${isMounted ? `animate-slide-in-top entrance-stagger-${idx + 2}` : 'opacity-0'}`} data-nav-item={item.id}>
+              <div
+                key={item.id}
+                className={`relative ${isMounted ? `animate-slide-in-top entrance-stagger-${idx + 2}` : 'opacity-0'}`}
+                data-nav-item={item.id}
+                onPointerEnter={item.hasDropdown ? (event) => {
+                  if (event.pointerType === 'mouse') openServicesDropdownOnHover();
+                } : undefined}
+                onPointerLeave={item.hasDropdown ? (event) => {
+                  if (event.pointerType === 'mouse') closeServicesDropdownOnHover();
+                } : undefined}
+              >
                 {item.hasDropdown ? (
                   <div className="flex items-center">
                     <button
@@ -391,6 +465,8 @@ export default function Header({ currentPage, onNavigate, isExiting = false }: H
                     </button>
                     <button
                       onClick={handleServicesClick}
+                      aria-label="Mostrar servicios"
+                      aria-expanded={isServicesDropdownOpen}
                       aria-current={(currentPage === item.id || currentPage.startsWith('service-')) ? 'page' : undefined}
                       className={`text-base font-medium tracking-tight transition-all duration-300 hover:scale-[1.05] hover:-translate-y-0.5 relative -ml-1 pl-1 pr-2.5 py-2 rounded-r-md ${shouldNavItemsBeWhite
                         ? 'text-white hover:text-[#41f0a5] hover:drop-shadow-[0_0_8px_rgba(65,240,165,0.5)]'
@@ -696,9 +772,9 @@ export default function Header({ currentPage, onNavigate, isExiting = false }: H
               className="transition-transform active:scale-95"
             >
               <img
-                src="/brand/sparktree-horizontal.png"
+                src="/assets/Logotipo_SparkTree_Studio-degradado.png"
                 alt="SparkTree Studio"
-                className="h-10 sm:h-11 w-auto object-contain brightness-0"
+                className="h-14 w-auto object-contain"
               />
             </button>
             <button
@@ -719,7 +795,8 @@ export default function Header({ currentPage, onNavigate, isExiting = false }: H
                     <div className="space-y-1" data-nav-item={item.id}>
                       <div className="flex items-center group">
                         <button
-                          onClick={handleServicesClick}
+                          onClick={toggleServicesDropdown}
+                          aria-expanded={isServicesDropdownOpen}
                           className={`flex-1 text-left py-3 px-4 text-4xl font-black tracking-tighter transition-all duration-300 ${currentPage === item.id || currentPage.startsWith('service-')
                             ? 'text-[#41f0a5] active-relieve'
                             : 'text-gray-900 hover:text-[#41f0a5]'
@@ -728,7 +805,9 @@ export default function Header({ currentPage, onNavigate, isExiting = false }: H
                           {item.label}
                         </button>
                         <button
-                          onClick={handleServicesClick}
+                          onClick={toggleServicesDropdown}
+                          aria-label="Mostrar servicios"
+                          aria-expanded={isServicesDropdownOpen}
                           className="p-3 text-gray-400"
                         >
                           <svg

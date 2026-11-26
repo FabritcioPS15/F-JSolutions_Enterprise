@@ -38,6 +38,7 @@ type Unit = {
   tagline: string
   description: string
   href: string
+  adminHref?: string
   accent: string
   icon: LucideIcon
   modules: UnitModule[]
@@ -51,6 +52,7 @@ const units: Unit[] = [
     description:
       'Estrategia de marca, sitios web, SEO y campañas. Los proyectos y las páginas de enlaces se gestionan desde el panel.',
     href: process.env.NEXT_PUBLIC_URL_STUDIO ?? 'https://sparktree.pe',
+    adminHref: '/unidades/studio',
     accent: '#10B981',
     icon: Megaphone,
     modules: [
@@ -65,6 +67,7 @@ const units: Unit[] = [
     description:
       'Software, infraestructura y equipamiento corporativo. Concentra el catálogo, el inventario y la operación comercial.',
     href: process.env.NEXT_PUBLIC_URL_SYSTEMS ?? 'https://fjsolutions.com.pe',
+    adminHref: '/unidades/systems',
     accent: '#00B8D9',
     icon: Cpu,
     modules: [
@@ -93,7 +96,8 @@ const units: Unit[] = [
     description:
       'Laptops, servidores, redes y licencias. Comparte catálogo, pedidos y clientes con la operación de Systems.',
     href: process.env.NEXT_PUBLIC_STORE_URL ?? 'http://localhost:3006',
-    accent: '#5946A6',
+    adminHref: '/unidades/store',
+    accent: '#2563EB',
     icon: ShoppingBag,
     modules: [
       { label: 'Productos', href: '/productos', module: 'products' },
@@ -327,15 +331,26 @@ export function UnitsView() {
                   )}
                 </div>
 
-                <a
-                  href={unit.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="mt-auto inline-flex items-center gap-1.5 pt-5 text-[11.5px] font-semibold text-muted-foreground transition hover:text-foreground"
-                >
-                  Abrir sitio
-                  <ArrowUpRight className="size-3.5" aria-hidden="true" />
-                </a>
+                <div className="mt-auto flex flex-wrap items-center justify-between gap-3 pt-5">
+                  {unit.adminHref && (
+                    <Link
+                      href={unit.adminHref}
+                      className="inline-flex items-center gap-1.5 text-[11.5px] font-semibold text-[#5946A6] transition hover:text-[#4A3A8F]"
+                    >
+                      Gestionar unidad
+                      <ArrowUpRight className="size-3.5" aria-hidden="true" />
+                    </Link>
+                  )}
+                  <a
+                    href={unit.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1.5 text-[11.5px] font-semibold text-muted-foreground transition hover:text-foreground"
+                  >
+                    Abrir sitio
+                    <ArrowUpRight className="size-3.5" aria-hidden="true" />
+                  </a>
+                </div>
               </div>
             </article>
           )

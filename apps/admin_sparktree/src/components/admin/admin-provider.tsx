@@ -2,14 +2,23 @@
 
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
   type ReactNode,
 } from 'react'
 import { createSeedData } from '@/lib/admin/seed'
 import { accessFromSession, createCan, type Access, type CanFunction } from '@/lib/admin/access'
 import { withMutationGuard } from '@/lib/admin/mutation-acl'
+import {
+  ADMIN_NOTIFICATIONS_STORAGE_KEY,
+  buildDataChangeNotifications,
+  parseAdminNotifications,
+  type AdminNotification,
+  type AdminNotificationInput,
+} from '@/lib/admin/notifications'
 import { useToast } from '@/components/admin/toast'
 import type { SessionUser } from '@/lib/auth/types'
 import { buildQuoteCode, slugify, statusLabels } from '@/lib/admin/format'
@@ -185,6 +194,11 @@ type AdminContextValue = {
   inventorySource: 'local' | 'api'
   inventoryError: string | null
   refreshInventory: () => Promise<void>
+  notifications: AdminNotification[]
+  unreadNotificationCount: number
+  notify: (input: AdminNotificationInput) => void
+  markNotificationRead: (id: string) => void
+  markAllNotificationsRead: () => void
   products: AdminProduct[]
   categories: Category[]
   brands: Brand[]
@@ -311,6 +325,33 @@ type AdminContextValue = {
   resetData: () => void
   exportData: () => string
   importData: (raw: string) => void
+}
+
+const ADMIN_SYSTEM_ALERTS_STORAGE_KEY = 'fj-admin-system-alerts-v1'
+
+type PersistedSystemAlerts = {
+  alerts: Record<string, string | null>
+  episodes: Record<string, number>
+}
+
+function parsePersistedSystemAlerts(raw: string | null): PersistedSystemAlerts {
+  if (!raw) return { alerts: {}, episodes: {} }
+  try {
+    const value = JSON.parse(raw) as Partial<PersistedSystemAlerts>
+    const alerts = Object.fromEntries(
+      Object.entries(value.alerts ?? {}).filter(
+        ([, error]) => typeof error === 'string' || error === null
+      )
+    )
+    const episodes = Object.fromEntries(
+      Object.entries(value.episodes ?? {}).filter(
+        ([, episode]) => typeof episode === 'number' && Number.isFinite(episode) && episode > 0
+      )
+    )
+    return { alerts, episodes }
+  } catch {
+    return { alerts: {}, episodes: {} }
+  }
 }
 
 const AdminContext = createContext<AdminContextValue | null>(null)
@@ -1329,9 +1370,41 @@ export function AdminProvider({
   const [inventoryError, setInventoryError] = useState<string | null>(null)
   const [helpdeskError, setHelpdeskError] = useState<string | null>(null)
   const [helpdeskSynced, setHelpdeskSynced] = useState(false)
+  const [systemAlertsReady, setSystemAlertsReady] = useState(false)
+  const [notifications, setNotifications] = useState<AdminNotification[]>([])
+  const [notificationsReady, setNotificationsReady] = useState(false)
+  const previousDataRef = useRef<AdminData | null>(null)
+  const previousSystemAlertsRef = useRef<Record<string, string | null>>({})
+  const systemAlertEpisodesRef = useRef<Record<string, number>>({})
+  const systemAlertsReadyRef = useRef(false)
 
-  useEffect(() => {
-    void refreshCatalog().catch(() => undefined)
+  const notify = useCallback((input: AdminNotificationInput) => {
+    const createdAt = input.createdAt ?? new Date().toISOString()
+    const notification: AdminNotification = {
+      ...input,
+      id: uid('notificacion'),
+      createdAt,
+    }
+    setNotifications((previous) => {
+      if (previous.some((item) => item.dedupeKey === input.dedupeKey)) return previous
+      return [notification, ...previous]
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+        .slice(0, 80)
+    })
+  }, [])
+
+  const markNotificationRead = useCallback((id: string) => {
+    const readAt = new Date().toISOString()
+    setNotifications((previous) =>
+      previous.map((item) => (item.id === id ? { ...item, readAt } : item))
+    )
+  }, [])
+
+  const markAllNotificationsRead = useCallback(() => {
+    const readAt = new Date().toISOString()
+    setNotifications((previous) =>
+      previous.map((item) => (item.readAt ? item : { ...item, readAt }))
+    )
   }, [])
 
   function syncCatalog(task: Promise<unknown>) {
@@ -1497,7 +1570,25 @@ export function AdminProvider({
       if (stored) setData(parseData(stored))
     } catch (error) {
       console.warn('No se pudo leer el catálogo local de SparkTree Systems.', error)
+    }
+    try {
+      const storedAlerts = parsePersistedSystemAlerts(
+        window.localStorage.getItem(ADMIN_SYSTEM_ALERTS_STORAGE_KEY)
+      )
+      previousSystemAlertsRef.current = storedAlerts.alerts
+      systemAlertEpisodesRef.current = storedAlerts.episodes
+    } catch {
+      previousSystemAlertsRef.current = {}
+      systemAlertEpisodesRef.current = {}
+    }
+    try {
+      setNotifications(
+        parseAdminNotifications(window.localStorage.getItem(ADMIN_NOTIFICATIONS_STORAGE_KEY))
+      )
+    } catch {
+      setNotifications([])
     } finally {
+      setNotificationsReady(true)
       setHydrated(true)
     }
   }, [])
@@ -1515,28 +1606,183 @@ export function AdminProvider({
   }, [data, hydrated])
 
   useEffect(() => {
-    if (!hydrated) return
-    void refreshRequests().catch(() => undefined)
-  }, [hydrated])
+    if (!notificationsReady) return
+    try {
+      window.localStorage.setItem(
+        ADMIN_NOTIFICATIONS_STORAGE_KEY,
+        JSON.stringify(notifications)
+      )
+    } catch {
+      return
+    }
+  }, [notifications, notificationsReady])
+
+  useEffect(() => {
+    if (!hydrated || !notificationsReady) return
+    if (!systemAlertsReady) {
+      previousDataRef.current = data
+      systemAlertsReadyRef.current = false
+      return
+    }
+    if (!systemAlertsReadyRef.current) {
+      previousDataRef.current = data
+      systemAlertsReadyRef.current = true
+      return
+    }
+    const previous = previousDataRef.current
+    if (!previous) {
+      previousDataRef.current = data
+      return
+    }
+    if (previous === data) return
+
+    for (const notification of buildDataChangeNotifications(previous, data)) {
+      notify(notification)
+    }
+    previousDataRef.current = data
+  }, [data, hydrated, notificationsReady, systemAlertsReady, notify])
+
+  useEffect(() => {
+    if (!hydrated || !systemAlertsReady) return
+    const alerts: Array<{
+      key: string
+      error: string | null
+      title: string
+      recoveredTitle: string
+      localMessage: string
+      href: string
+      unit: AdminNotificationInput['unit']
+    }> = [
+      {
+        key: 'catalog',
+        error: catalogError,
+        title: 'Catálogo sin sincronizar',
+        recoveredTitle: 'Catálogo sincronizado',
+        localMessage: 'El catálogo se mantiene en el respaldo local.',
+        href: '/productos',
+        unit: 'systems',
+      },
+      {
+        key: 'commercial',
+        error: commercialError,
+        title: 'Clientes y cotizaciones sin sincronizar',
+        recoveredTitle: 'Información comercial sincronizada',
+        localMessage: 'Los clientes y las cotizaciones se mantienen en el respaldo local.',
+        href: '/cotizaciones',
+        unit: 'store',
+      },
+      {
+        key: 'projects',
+        error: projectsError,
+        title: 'Proyectos sin sincronizar',
+        recoveredTitle: 'Proyectos sincronizados',
+        localMessage: 'Los proyectos se mantienen en el respaldo local.',
+        href: '/proyectos',
+        unit: 'studio',
+      },
+      {
+        key: 'settings',
+        error: settingsError,
+        title: 'Configuración sin sincronizar',
+        recoveredTitle: 'Configuración sincronizada',
+        localMessage: 'La configuración se mantiene en el respaldo local.',
+        href: '/configuracion',
+        unit: 'sistema',
+      },
+      {
+        key: 'inventory',
+        error: inventoryError,
+        title: 'Inventario sin sincronizar',
+        recoveredTitle: 'Inventario sincronizado',
+        localMessage: 'Los movimientos se mantienen en el respaldo local.',
+        href: '/inventario',
+        unit: 'systems',
+      },
+      {
+        key: 'helpdesk',
+        error: helpdeskError,
+        title: 'Mesa de ayuda sin sincronizar',
+        recoveredTitle: 'Mesa de ayuda sincronizada',
+        localMessage: 'Las solicitudes se mantienen en el respaldo local.',
+        href: '/solicitudes',
+        unit: 'systems',
+      },
+    ]
+
+    let changed = false
+    for (const alert of alerts) {
+      const previous = previousSystemAlertsRef.current
+      const hadPrevious = Object.prototype.hasOwnProperty.call(previous, alert.key)
+      const previousError = previous[alert.key]
+      if (hadPrevious && previousError === alert.error) continue
+      previous[alert.key] = alert.error
+      changed = true
+
+      if (alert.error) {
+        const episode = (systemAlertEpisodesRef.current[alert.key] ?? 0) + 1
+        systemAlertEpisodesRef.current[alert.key] = episode
+        notify({
+          dedupeKey: `system:${alert.key}:error:${episode}`,
+          title: alert.title,
+          description: `${alert.localMessage} ${alert.error}`,
+          href: alert.href,
+          unit: alert.unit,
+          tone: 'warning',
+        })
+      } else if (hadPrevious && previousError) {
+        const episode = systemAlertEpisodesRef.current[alert.key] ?? 1
+        notify({
+          dedupeKey: `system:${alert.key}:recovered:${episode}`,
+          title: alert.recoveredTitle,
+          description: 'La conexión con la base de datos volvió a estar disponible.',
+          href: alert.href,
+          unit: alert.unit,
+          tone: 'success',
+        })
+      }
+    }
+
+    if (changed) {
+      try {
+        window.localStorage.setItem(
+          ADMIN_SYSTEM_ALERTS_STORAGE_KEY,
+          JSON.stringify({
+            alerts: previousSystemAlertsRef.current,
+            episodes: systemAlertEpisodesRef.current,
+          })
+        )
+      } catch {
+        return
+      }
+    }
+  }, [
+    hydrated,
+    systemAlertsReady,
+    catalogError,
+    commercialError,
+    projectsError,
+    settingsError,
+    inventoryError,
+    helpdeskError,
+    notify,
+  ])
 
   useEffect(() => {
     if (!hydrated) return
-    void refreshCommercial().catch(() => undefined)
-  }, [hydrated])
-
-  useEffect(() => {
-    if (!hydrated) return
-    void refreshProjects().catch(() => undefined)
-  }, [hydrated])
-
-  useEffect(() => {
-    if (!hydrated) return
-    void refreshSettings().catch(() => undefined)
-  }, [hydrated])
-
-  useEffect(() => {
-    if (!hydrated) return
-    void refreshInventory().catch(() => undefined)
+    let active = true
+    void Promise.allSettled([
+      refreshCatalog(),
+      refreshRequests(),
+      refreshCommercial(),
+      refreshProjects(),
+      refreshSettings(),
+      refreshInventory(),
+    ]).finally(() => {
+      if (active) setSystemAlertsReady(true)
+    })
+    return () => {
+      active = false
+    }
   }, [hydrated])
 
   useEffect(() => {
@@ -3692,6 +3938,11 @@ export function AdminProvider({
         inventorySource,
         inventoryError,
         refreshInventory,
+        notifications,
+        unreadNotificationCount: notifications.filter((item) => !item.readAt).length,
+        notify,
+        markNotificationRead,
+        markAllNotificationsRead,
         products: data.products,
         categories: data.categories,
         brands: data.brands,

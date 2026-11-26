@@ -1,19 +1,15 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter, Space_Grotesk } from 'next/font/google'
+import { Fira_Sans } from 'next/font/google'
 import { StoreFooter } from '@/components/store-footer'
 import { StoreHeader } from '@/components/store-header'
-import { listCategories } from '@/lib/catalog-query'
+import { products, getTaxonomyCategory } from '@/lib/catalog'
+import { listBrands, listCategories } from '@/lib/catalog-query'
 import './globals.css'
 
-const inter = Inter({
+const firaSans = Fira_Sans({
   subsets: ['latin'],
-  variable: '--font-inter',
-  display: 'swap',
-})
-
-const spaceGrotesk = Space_Grotesk({
-  subsets: ['latin'],
-  variable: '--font-space-grotesk',
+  weight: ['400', '500', '600', '700', '800', '900'],
+  variable: '--font-fira-sans',
   display: 'swap',
 })
 
@@ -34,12 +30,32 @@ export const viewport: Viewport = {
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const categories = listCategories().map(({ value, label }) => ({ value, label }))
+  const categories = listCategories().map(({ value, label, count }) => {
+    const taxonomy = getTaxonomyCategory(value)
+    return {
+      value,
+      label,
+      count,
+      subcategories:
+        taxonomy?.subcategories.map((sub) => ({
+          label: sub.label,
+          types: sub.subSubcategories?.map((type) => type.label) ?? [],
+        })) ?? [],
+    }
+  })
+
+  const brandCounts = new Map<string, number>()
+  for (const product of products) {
+    brandCounts.set(product.brand, (brandCounts.get(product.brand) ?? 0) + 1)
+  }
+  const topBrands = listBrands()
+    .sort((a, b) => (brandCounts.get(b) ?? 0) - (brandCounts.get(a) ?? 0))
+    .slice(0, 10)
 
   return (
-    <html lang="es" className={`${inter.variable} ${spaceGrotesk.variable}`}>
+    <html lang="es" className={firaSans.variable}>
       <body className="min-h-screen bg-background text-foreground antialiased">
-        <StoreHeader categories={categories} />
+        <StoreHeader categories={categories} brands={topBrands} />
         {children}
         <StoreFooter categories={categories} />
       </body>

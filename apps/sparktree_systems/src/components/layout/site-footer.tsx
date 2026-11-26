@@ -225,9 +225,9 @@ export function SiteFooter() {
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/brand/sparktree-horizontal.png"
+                src="/Logotipo_SparkTree_Systems.svg"
                 alt="SparkTree Systems"
-                className="h-14 w-auto object-contain brightness-0 invert transition-transform duration-200 group-hover:scale-105 motion-reduce:transition-none"
+                className="h-20 w-auto object-contain brightness-0 invert transition-transform duration-200 group-hover:scale-105 motion-reduce:transition-none"
               />
             </Link>
 

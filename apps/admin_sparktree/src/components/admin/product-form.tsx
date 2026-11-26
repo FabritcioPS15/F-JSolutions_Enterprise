@@ -33,6 +33,7 @@ import {
   X,
 } from 'lucide-react'
 import { useAdmin } from '@/components/admin/admin-provider'
+import { startAdminNavigation } from '@/components/admin/navigation-progress'
 import { CategoryGlyph } from '@/components/admin/category-icon'
 import { ImageCropDialog } from '@/components/admin/image-crop-dialog'
 import { Modal } from '@/components/admin/modal'
@@ -767,6 +768,7 @@ export function ProductForm({
       toast.success('Producto creado', `${input.name} ya forma parte del catálogo.`)
     }
 
+    startAdminNavigation()
     router.push('/productos')
   }
 

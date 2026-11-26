@@ -215,7 +215,7 @@ export default async function handler(req: any, res: any) {
             
             <div style="padding: 35px 30px 25px 30px; border-bottom: 1px solid #262626; text-align: center; background-color: #0f0f0f;">
               <!-- Asegúrate de reemplazar 'https://www.tudominio.com' por tu dominio real donde esté alojada la imagen -->
-              <img src="https://tudominio.com/assets/sparktree-horizontal.png" alt="Sparktree Logo" style="max-width: 180px; height: auto;" />
+              <img src="https://tudominio.com/assets/Logotipo_SparkTree_Studio-degradado-blanco.png" alt="SparkTree Studio" style="max-width: 180px; height: auto;" />
               <h2 style="margin: 25px 0 0 0; color: #41f0a5; font-size: 16px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase;">Nueva Solicitud de Contacto</h2>
             </div>
 
