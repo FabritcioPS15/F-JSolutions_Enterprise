@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { ComplaintsBookPage } from '@/components/complaints/complaints-book-page'
+import { SITE_NAME, SOCIAL_IMAGE } from '@/lib/site'
 
 const TITLE = 'Libro de Reclamaciones Virtual | SparkTree Systems'
 const DESCRIPTION =
@@ -13,9 +14,16 @@ export const metadata: Metadata = {
     title: TITLE,
     description: DESCRIPTION,
     url: '/libro-de-reclamaciones',
-    siteName: 'SparkTree Systems',
+    siteName: SITE_NAME,
     locale: 'es_PE',
     type: 'website',
+    images: [SOCIAL_IMAGE],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: TITLE,
+    description: DESCRIPTION,
+    images: [SOCIAL_IMAGE.url],
   },
 }
 

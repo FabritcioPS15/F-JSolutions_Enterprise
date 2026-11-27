@@ -43,21 +43,12 @@ export const metadata: Metadata = {
       'Agencia líder de marketing digital en Lima. Especialistas en diseño web profesional, SEO posicionamiento, branding y automatización con IA. Transforma tu negocio con resultados reales.',
     url: 'https://sparktree.pe/',
     siteName: 'SparkTree',
-    images: [
-      {
-        url: '/assets/branding.webp',
-        width: 1200,
-        height: 630,
-        alt: 'SparkTree Marketing Digital',
-      },
-    ],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'SparkTree Studio | Agencia de Marketing Digital en Lima',
     description:
       'Especialistas en diseño web, SEO, branding y automatización con IA. Transforma tu negocio con resultados reales.',
-    images: ['/assets/branding.webp'],
   },
 };
 

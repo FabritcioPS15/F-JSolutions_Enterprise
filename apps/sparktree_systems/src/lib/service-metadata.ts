@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { getServicePathFor, type ServiceDefinition } from './services'
-import { SITE_NAME } from './site'
+import { SITE_NAME, SOCIAL_IMAGE } from './site'
 
 export function getServiceMetadata(service: ServiceDefinition): Metadata {
   const path = getServicePathFor(service)
@@ -17,15 +17,13 @@ export function getServiceMetadata(service: ServiceDefinition): Metadata {
       siteName: SITE_NAME,
       locale: 'es_PE',
       type: 'website',
-      images: service.heroImage
-        ? [{ url: service.heroImage.src, alt: service.heroImage.alt }]
-        : undefined,
+      images: [{ ...SOCIAL_IMAGE, alt: `${title} | SparkTree Systems` }],
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description: service.summary,
-      images: service.heroImage ? [service.heroImage.src] : undefined,
+      images: [SOCIAL_IMAGE.url],
     },
   }
 }

@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { ShieldCheck } from 'lucide-react'
 import { LegalPage, type LegalSection } from '@/components/legal-page'
 import { EMPRESA } from '@/lib/constants'
-import { SITE_NAME } from '@/lib/site'
+import { SITE_NAME, SOCIAL_IMAGE } from '@/lib/site'
 
 const TITLE = 'Política de privacidad | SparkTree Systems'
 const DESCRIPTION =
@@ -19,6 +19,13 @@ export const metadata: Metadata = {
     siteName: SITE_NAME,
     locale: 'es_PE',
     type: 'website',
+    images: [SOCIAL_IMAGE],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: TITLE,
+    description: DESCRIPTION,
+    images: [SOCIAL_IMAGE.url],
   },
 }
 
